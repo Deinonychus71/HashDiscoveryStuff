@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Force.Crc32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace BruteForceHash
 {
@@ -92,7 +94,7 @@ namespace BruteForceHash
 			return output;
 		}
 
-		private void RunDictionaries(string candidate, string combinationPattern, Dictionary<string, List<string>> dictWords, string delimiter)
+		private void RunDictionaries(string candidate, string combinationPattern, Dictionary<string, List<string>> dictWords, uint hexValue, string delimiter)
         {
 			string wordSize;
 			bool lastWord = false;
@@ -114,20 +116,20 @@ namespace BruteForceHash
 			{
 				if (lastWord)
 				{
-					TestCandidate($"{candidate}{word}");
+					TestCandidate($"{candidate}{word}", hexValue);
 				}
 				else
 				{
-					RunDictionaries($"{candidate}{word}{delimiter}", combinationPattern, dictWords, delimiter);
+					RunDictionaries($"{candidate}{word}{delimiter}", combinationPattern, dictWords, hexValue, delimiter);
 				}
 			}
 		}
 
-		private void TestCandidate(string candidate)
+		private void TestCandidate(string candidate, uint hexValue)
         {
-			if (candidate == "air_sp_all")
-				Console.WriteLine("FOUND");
-			//Console.WriteLine(candidate);
+			var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate));
+			if (testValue == hexValue)
+				Console.WriteLine(candidate);
 		}
 
 		public void Run(int stringLength, uint hexValue, string delimiter = "_")
@@ -143,8 +145,7 @@ namespace BruteForceHash
 			
 			foreach(var combinationPattern in combinationPatterns)
             {
-				Console.WriteLine(combinationPattern);
-				RunDictionaries(candidate, combinationPattern, dictionaries, delimiter);
+				RunDictionaries(candidate, combinationPattern, dictionaries, hexValue, delimiter);
 			}
 		}
     }
