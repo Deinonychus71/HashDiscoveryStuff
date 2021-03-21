@@ -12,6 +12,8 @@ namespace BruteForceHash
 {
     public class BruteForceDictionary
     {
+		private Queue<string> _queue;
+
 		private IEnumerable<string> GenerateCombinations(int stringLength, string delimiter)
         {
 			var alreadyFoundMap = new Dictionary<int, List<string>>();
@@ -71,7 +73,7 @@ namespace BruteForceHash
 			return returnCombinations;
 		}
 
-		private Dictionary<string, List<string>> GetDictionaries(int stringLength, string delimiter)
+		private Dictionary<string, List<string>> GetDictionaries(int stringLength, string delimiter, bool skipDigits)
         {
 			var output = new Dictionary<string, List<string>>();
 			var lengthSkip = delimiter.Length > 0 ? stringLength - delimiter.Length : stringLength + 1;
@@ -87,7 +89,7 @@ namespace BruteForceHash
                 {
 					if (word.Length > stringLength || word.Length == lengthSkip || word.Length == 0)
 						continue;
-					if (word.Any(char.IsDigit))
+					if (skipDigits && word.Any(char.IsDigit))
 						continue;
 
 					var lengthStr = word.Length.ToString();
@@ -111,7 +113,7 @@ namespace BruteForceHash
 			else
 			{
 				wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(delimiter));
-				combinationPattern = combinationPattern.Substring(combinationPattern.IndexOf(delimiter) + delimiter.Length);
+				combinationPattern = combinationPattern[(combinationPattern.IndexOf(delimiter) + delimiter.Length)..];
 				
 			}
 
@@ -139,11 +141,18 @@ namespace BruteForceHash
         {
 			var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate.ToString()));
 			if (testValue == hexValue)
+			{
 				Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Value found: {candidate}");
+				_queue.Enqueue(candidate.ToString());
+				File.AppendAllLines($"0x{hexValue:x}.txt", new string[1] { $"{candidate}" });
+			}
 		}
 
-		public void Run(int stringLength, uint hexValue, string delimiter = "_", string prefix = "", bool skipDigits = false, int nbrThreads = 16)
+		public async Task Run(int stringLength, uint hexValue, string delimiter = "_", string prefix = "", bool skipDigits = false, int nbrThreads = 16)
         {
+			_queue = new Queue<string>();
+			Directory.CreateDirectory("Results");
+
 			//Calculate stringLength after prefix;
 			stringLength -= prefix.Length;
 
@@ -151,7 +160,7 @@ namespace BruteForceHash
 			var combinationPatterns = GenerateCombinations(stringLength, delimiter);
 
 			//Load dictionary
-			var dictionaries = GetDictionaries(stringLength, delimiter);
+			var dictionaries = GetDictionaries(stringLength, delimiter, skipDigits);
 
 			//Run
 			var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(nbrThreads);
@@ -160,6 +169,22 @@ namespace BruteForceHash
 			// Create a TaskFactory and pass it our custom scheduler.
 			TaskFactory factory = new TaskFactory(taskScheduler);
 			CancellationTokenSource cts = new CancellationTokenSource();
+			CancellationTokenSource queueCts = new CancellationTokenSource();
+
+			_ = Task.Run(async () =>
+			{
+                while (!queueCts.IsCancellationRequested)
+                {
+					var dequeueMessages = new List<string>();
+					while (_queue.TryDequeue(out string result))
+						dequeueMessages.Add(result);
+
+					if(dequeueMessages.Count > 0)
+						File.AppendAllLines($"Results/0x{hexValue:x}.txt", dequeueMessages);
+					
+					await Task.Delay(1000);
+                }
+			});
 
 			foreach (var combinationPattern in combinationPatterns)
             {
@@ -179,6 +204,9 @@ namespace BruteForceHash
 			// Wait for the tasks to complete before displaying a completion message.
 			Task.WaitAll(tasks.ToArray());
 			cts.Dispose();
+
+			await Task.Delay(2000);
+			queueCts.Cancel();
 		}
     }
 }
