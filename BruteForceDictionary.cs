@@ -90,7 +90,6 @@ namespace BruteForceHash
 						output[lengthStr].Add(word);
 				}
             }
-
 			return output;
 		}
 
@@ -129,7 +128,7 @@ namespace BruteForceHash
         {
 			var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate));
 			if (testValue == hexValue)
-				Console.WriteLine(candidate);
+				Console.WriteLine($"Value found: {candidate}");
 		}
 
 		public void Run(int stringLength, uint hexValue, string delimiter = "_")
@@ -141,6 +140,7 @@ namespace BruteForceHash
 			var dictionaries = GetDictionaries(stringLength, delimiter);
 
 			//Run
+			//StringBuilder strBuilder = new StringBuilder();
 			string candidate = string.Empty;
 			
 			foreach(var combinationPattern in combinationPatterns)
