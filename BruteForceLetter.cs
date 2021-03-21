@@ -12,7 +12,7 @@ namespace BruteForceHash
         private static readonly string _validStartChars = "etainoshrdlucmfwygpbvkqjxz";
         private static byte[] _validBytes = null;
 
-        public void Run(int valueLength, uint hexToFind)
+        public void Run(int valueLength, uint hexToFind, string inputPrefix)
         {
             //Valid bytes
             Console.WriteLine($"Enter valid characters (Default: {_validChars}");
@@ -29,11 +29,6 @@ namespace BruteForceHash
                 inputValidStartChars = _validStartChars;
             Console.WriteLine($"Will use {inputValidStartChars}");
             byte[] validStartBytes = Encoding.ASCII.GetBytes(inputValidStartChars);
-
-            //Prefix?
-            Console.WriteLine($"Try prefix? (Default: None)");
-            string inputPrefix = Console.ReadLine();
-            Console.WriteLine($"Prefix: {inputPrefix}");
 
             //Bruteforcing
             Console.WriteLine($"Starting at {DateTime.Now.ToLongTimeString()}...");

@@ -1,9 +1,12 @@
-﻿using Force.Crc32;
+﻿using BruteForceHash.Helpers;
+using Force.Crc32;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BruteForceHash
 {
@@ -84,6 +87,8 @@ namespace BruteForceHash
                 {
 					if (word.Length > stringLength || word.Length == lengthSkip || word.Length == 0)
 						continue;
+					if (word.Any(char.IsDigit))
+						continue;
 
 					var lengthStr = word.Length.ToString();
 					if (!output[lengthStr].Contains(word))
@@ -93,7 +98,7 @@ namespace BruteForceHash
 			return output;
 		}
 
-		private void RunDictionaries(string candidate, string combinationPattern, Dictionary<string, List<string>> dictWords, uint hexValue, string delimiter)
+		private void RunDictionaries(StringBuilder candidate, string combinationPattern, Dictionary<string, List<string>> dictWords, uint hexValue, string delimiter)
         {
 			string wordSize;
 			bool lastWord = false;
@@ -115,24 +120,33 @@ namespace BruteForceHash
 			{
 				if (lastWord)
 				{
-					TestCandidate($"{candidate}{word}", hexValue);
+					candidate.Append(word);
+					TestCandidate(candidate, hexValue);
+					candidate.Remove(candidate.Length - word.Length, word.Length);
 				}
 				else
 				{
-					RunDictionaries($"{candidate}{word}{delimiter}", combinationPattern, dictWords, hexValue, delimiter);
+					candidate.Append(word);
+					candidate.Append(delimiter);
+					RunDictionaries(candidate, combinationPattern, dictWords, hexValue, delimiter);
+					int length = delimiter.Length + word.Length;
+					candidate.Remove(candidate.Length - length, length);
 				}
 			}
 		}
 
-		private void TestCandidate(string candidate, uint hexValue)
+		private void TestCandidate(StringBuilder candidate, uint hexValue)
         {
-			var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate));
+			var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate.ToString()));
 			if (testValue == hexValue)
-				Console.WriteLine($"Value found: {candidate}");
+				Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Value found: {candidate}");
 		}
 
-		public void Run(int stringLength, uint hexValue, string delimiter = "_")
+		public void Run(int stringLength, uint hexValue, string delimiter = "_", string prefix = "", bool skipDigits = false, int nbrThreads = 16)
         {
+			//Calculate stringLength after prefix;
+			stringLength -= prefix.Length;
+
 			//Generate combinations
 			var combinationPatterns = GenerateCombinations(stringLength, delimiter);
 
@@ -140,13 +154,31 @@ namespace BruteForceHash
 			var dictionaries = GetDictionaries(stringLength, delimiter);
 
 			//Run
-			//StringBuilder strBuilder = new StringBuilder();
-			string candidate = string.Empty;
-			
-			foreach(var combinationPattern in combinationPatterns)
+			var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(nbrThreads);
+			var tasks = new List<Task>();
+
+			// Create a TaskFactory and pass it our custom scheduler.
+			TaskFactory factory = new TaskFactory(taskScheduler);
+			CancellationTokenSource cts = new CancellationTokenSource();
+
+			foreach (var combinationPattern in combinationPatterns)
             {
-				RunDictionaries(candidate, combinationPattern, dictionaries, hexValue, delimiter);
+				var task = factory.StartNew(() =>
+				{
+					var strBuilder = new StringBuilder();
+					if (!string.IsNullOrEmpty(prefix))
+					{
+						strBuilder.Append(prefix);
+					}
+					Console.WriteLine($"Running Pattern: {combinationPattern}");
+					RunDictionaries(strBuilder, combinationPattern, dictionaries, hexValue, delimiter);
+				});
+				tasks.Add(task);
 			}
+
+			// Wait for the tasks to complete before displaying a completion message.
+			Task.WaitAll(tasks.ToArray());
+			cts.Dispose();
 		}
     }
 }
