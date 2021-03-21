@@ -153,7 +153,6 @@ namespace BruteForceHash
             {
                 Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - >>>> Value found: {candidate} <<<<");
                 _queue.Enqueue(candidate.ToString());
-                File.AppendAllLines($"0x{hexValue:x}.txt", new string[1] { $"{candidate}" });
             }
         }
 
