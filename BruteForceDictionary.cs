@@ -195,6 +195,8 @@ namespace BruteForceHash
                 }
             });
 
+            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Combinations found: {combinationPatterns.Count()}");
+
             foreach (var combinationPattern in combinationPatterns)
             {
                 var task = factory.StartNew(() =>
