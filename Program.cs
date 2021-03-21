@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommandLine;
+using System;
 using System.Threading.Tasks;
 
 namespace BruteForceHash
@@ -7,28 +8,32 @@ namespace BruteForceHash
     {
         static async Task Main(string[] args)
         {
-            //Get Hex
-            Console.WriteLine("Enter hex to find: (for ex: 0x105274ba4f, 0x0ff71e57ec, 0x1d7feb1956 or 0x21bee0c6ef)");
-            string input = Console.ReadLine();
-            var split = input.Split("x".ToCharArray());
-            var lengthStr = split[1].Substring(0, 2);
-            var valueStr = split[1][2..];
-            var length = Convert.ToInt32(lengthStr, 16);
-            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Length: {length}");
-            var hexToFind = Convert.ToUInt32(valueStr, 16);
-            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Value to find: 0x{hexToFind:x}");
+            await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (o) =>
+            {
+                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Hex Value: {o.HexValue}");
 
-            //Prefix?
-            Console.WriteLine($"Try prefix? (Default: None)");
-            string inputPrefix = Console.ReadLine();
-            Console.WriteLine($"Prefix: {inputPrefix}");
+                string input = o.HexValue;
+                var split = input.Split("x".ToCharArray());
+                var lengthStr = split[1].Substring(0, 2);
+                var valueStr = split[1][2..];
+                var length = Convert.ToInt32(lengthStr, 16);
+                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Length: {length}");
+                var hexToFind = Convert.ToUInt32(valueStr, 16);
 
-            //Run script
-            await new BruteForceDictionary().Run(length, hexToFind, "_", inputPrefix, true, 32);
-            //new BruteForceLetter().Run(length, hexToFind, inputPrefix);
+                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Delimiter: {o.Delimiter}");
+                if (!string.IsNullOrEmpty(o.Prefix))
+                    Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Prefix: {o.Prefix}");
+                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Number of Threads: {o.NbrThreads}");
+                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Words Limit: {o.WordsLimit}");
+                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Skip Digits: {o.SkipDigits}");
 
-            Console.WriteLine("{DateTime.Now.ToUniversalTime()} - Done!");
-            Console.ReadKey();
+                //Run script
+                await new BruteForceDictionary().Run(length, hexToFind, o.Delimiter, o.Prefix, o.SkipDigits, o.WordsLimit, o.NbrThreads);
+                //new BruteForceLetter().Run(length, hexToFind, inputPrefix);
+
+                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Done!");
+                Console.ReadKey();
+            });
         }
     }
 }
