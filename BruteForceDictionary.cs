@@ -14,7 +14,7 @@ namespace BruteForceHash
     {
         private readonly Logger _logger;
         private readonly IEnumerable<string> _combinationPatterns;
-        private readonly Dictionary<string, List<string>> _dictionaries;
+        private readonly Dictionary<string, HashSet<string>> _dictionaries;
         private readonly Options _options;
         private readonly uint _hexValue;
         private readonly string _delimiter;
@@ -146,37 +146,6 @@ namespace BruteForceHash
             return returnCombinations;
         }
 
-        /**private Dictionary<string, List<string>> GetDictionaries(int stringLength, string delimiter, bool skipDigits, bool forceLowerCase)
-        {
-            var output = new Dictionary<string, List<string>>();
-            var lengthSkip = delimiter.Length > 0 ? stringLength - delimiter.Length : stringLength + 1;
-
-            for (int i = 1; i <= stringLength; i++)
-                output.Add($"{{{i}}}", new List<string>());
-
-            var allDictionaries = Directory.GetFiles("Dictionaries", "*.txt");
-            foreach (var dictionaryPath in allDictionaries)
-            {
-                var allWords = File.ReadAllLines(dictionaryPath);
-                foreach (var word in allWords)
-                {
-                    if (word.Length > stringLength || word.Length == lengthSkip || word.Length == 0)
-                        continue;
-                    if (skipDigits && word.Any(char.IsDigit))
-                        continue;
-
-                    var lengthStr = $"{{{word.Length}}}";
-                    var wordToAdd = word;
-                    if (forceLowerCase)
-                        wordToAdd = word.ToLower();
-
-                    if (!output[lengthStr].Contains(wordToAdd))
-                        output[lengthStr].Add(wordToAdd);
-                }
-            }
-            return output;
-        }*/
-
         private void RunDictionaries(StringBuilder candidate, string combinationPattern)
         {
             string wordSize;
@@ -224,14 +193,14 @@ namespace BruteForceHash
 
     public static class DictionariesHelper
     {
-        private static Dictionary<string, List<string>> _dictionary = new Dictionary<string, List<string>>();
-        private static Dictionary<string, List<string>> _dictionaryNoDigit = new Dictionary<string, List<string>>();
-        private static Dictionary<string, List<string>> _dictionaryNoDigitLowerCase = new Dictionary<string, List<string>>();
-        private static Dictionary<string, List<string>> _dictionaryLowerCase = new Dictionary<string, List<string>>();
+        private static readonly Dictionary<string, HashSet<string>> _dictionary = new Dictionary<string, HashSet<string>>();
+        private static readonly Dictionary<string, HashSet<string>> _dictionaryNoDigit = new Dictionary<string, HashSet<string>>();
+        private static readonly Dictionary<string, HashSet<string>> _dictionaryNoDigitLowerCase = new Dictionary<string, HashSet<string>>();
+        private static readonly Dictionary<string, HashSet<string>> _dictionaryLowerCase = new Dictionary<string, HashSet<string>>();
 
-        public static Dictionary<string, List<string>> GetDictionaries(bool skipDigits, bool forceLowerCase)
+        public static Dictionary<string, HashSet<string>> GetDictionaries(bool skipDigits, bool forceLowerCase)
         {
-            Dictionary<string, List<string>> dictionary = null;
+            Dictionary<string, HashSet<string>> dictionary = null;
 
             if (skipDigits && forceLowerCase)
                 dictionary = _dictionaryNoDigitLowerCase;
@@ -247,7 +216,7 @@ namespace BruteForceHash
 
             //Fill if no data present
             for (int i = 1; i <= 100; i++)
-                dictionary.Add($"{{{i}}}", new List<string>());
+                dictionary.Add($"{{{i}}}", new HashSet<string>());
 
             var allDictionaries = Directory.GetFiles("Dictionaries", "*.txt");
             foreach (var dictionaryPath in allDictionaries)
