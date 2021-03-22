@@ -77,10 +77,14 @@ namespace BruteForceHash
             }
 
             var output = new List<string>();
+            var excludePatterns = _options.ExcludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             foreach (var combination in alreadyFoundMap[stringLength])
             {
                 var nbrChar = combination.Split(delimiter);
-                if (nbrChar.Length <= wordsLimit)
+                if (nbrChar.Length <= wordsLimit && 
+                    !excludePatterns.Any(p => combination.Contains(p)) && 
+                    (includePatterns.Length == 0 || includePatterns.Any(p => combination.Contains(p))))
                     output.Add(combination);
             }
 
@@ -92,7 +96,7 @@ namespace BruteForceHash
             var returnCombinations = new List<string>();
             if (stringLength == 1)
             {
-                returnCombinations.Add("1");
+                returnCombinations.Add("{1}");
             }
             else if (stringLength == 0)
             {
@@ -122,11 +126,11 @@ namespace BruteForceHash
                     {
                         if (remainingStringPattern == "ended")
                         {
-                            returnCombinations.Add(pattern);
+                            returnCombinations.Add($"{{{pattern}}}");
                         }
                         else if (remainingStringPattern != "invalid")
                         {
-                            returnCombinations.Add($"{pattern}{delimiter}{remainingStringPattern}");
+                            returnCombinations.Add($"{{{pattern}}}{delimiter}{remainingStringPattern}");
                         }
                     }
 
@@ -142,7 +146,7 @@ namespace BruteForceHash
             var lengthSkip = delimiter.Length > 0 ? stringLength - delimiter.Length : stringLength + 1;
 
             for (int i = 1; i <= stringLength; i++)
-                output.Add(i.ToString(), new List<string>());
+                output.Add($"{{{i}}}", new List<string>());
 
             var allDictionaries = Directory.GetFiles("Dictionaries", "*.txt");
             foreach (var dictionaryPath in allDictionaries)
@@ -155,7 +159,7 @@ namespace BruteForceHash
                     if (skipDigits && word.Any(char.IsDigit))
                         continue;
 
-                    var lengthStr = word.Length.ToString();
+                    var lengthStr = $"{{{word.Length}}}";
                     if (!output[lengthStr].Contains(word))
                         output[lengthStr].Add(word);
                 }
