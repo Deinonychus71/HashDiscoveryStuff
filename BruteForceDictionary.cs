@@ -46,7 +46,12 @@ namespace BruteForceHash
             TaskFactory factory = new TaskFactory(taskScheduler);
             CancellationTokenSource cts = new CancellationTokenSource();
 
-            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Combinations found: {_combinationPatterns.Count()}");
+            _logger.Log($"Delimiter: {_delimiter}");
+            _logger.Log($"Words Limit: {_options.WordsLimit}");
+            _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
+            _logger.Log($"Include Patterns: {_options.IncludePatterns}");
+            _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
+            _logger.Log("-----------------------------------------");
 
             foreach (var combinationPattern in _combinationPatterns)
             {
@@ -57,7 +62,7 @@ namespace BruteForceHash
                     {
                         strBuilder.Append(_options.Prefix);
                     }
-                    Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Running Pattern: {combinationPattern}");
+                    _logger.Log($"Running Pattern: {combinationPattern}", false);
                     RunDictionaries(strBuilder, combinationPattern);
                 });
                 tasks.Add(task);

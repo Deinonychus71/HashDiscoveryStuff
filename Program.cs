@@ -39,13 +39,10 @@ namespace BruteForceHash
                     logger.Log($"Length: {length}");
                     var hexToFind = Convert.ToUInt32(valueStr, 16);
 
-                    logger.Log($"Delimiter: {o.Delimiter}");
                     if (!string.IsNullOrEmpty(o.Prefix))
                         logger.Log($"Prefix: {o.Prefix}");
                     logger.Log($"Number of Threads: {o.NbrThreads}");
-                    logger.Log($"Words Limit: {o.WordsLimit}");
                     logger.Log($"Skip Digits: {o.SkipDigits}");
-                    logger.Log("-----------------------------------------");
 
                     //Run script
                     if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))

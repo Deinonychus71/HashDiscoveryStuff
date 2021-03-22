@@ -37,7 +37,7 @@ namespace BruteForceHash.Helpers
             });
         }
 
-        public void Log(string line)
+        public void Log(string line, bool saveInQueue = true)
         {
             Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - {line}");
             _queue.Enqueue(line);
