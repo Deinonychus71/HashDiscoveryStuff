@@ -12,7 +12,7 @@ namespace BruteForceHash
         private static readonly string _validStartChars = "etainoshrdlucmfwygpbvkqjxz";
         private static byte[] _validBytes = null;
 
-        public void Run(int valueLength, uint hexToFind, string inputPrefix)
+        public async Task Run(int valueLength, uint hexToFind, string inputPrefix)
         {
             //Valid bytes
             Console.WriteLine($"Enter valid characters (Default: {_validChars}");

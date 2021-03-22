@@ -1,5 +1,7 @@
-﻿using CommandLine;
+﻿using BruteForceHash.Helpers;
+using CommandLine;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace BruteForceHash
@@ -10,26 +12,53 @@ namespace BruteForceHash
         {
             await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (o) =>
             {
-                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Hex Value: {o.HexValue}");
+                //Get Hex
+                if (string.IsNullOrEmpty(o.HexValue))
+                {
+                    Console.WriteLine("Enter hex to find: (for ex: 0x105274ba4f)");
+                    o.HexValue = Console.ReadLine();
+                }
 
-                string input = o.HexValue;
-                var split = input.Split("x".ToCharArray());
-                var lengthStr = split[1].Substring(0, 2);
-                var valueStr = split[1][2..];
-                var length = Convert.ToInt32(lengthStr, 16);
-                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Length: {length}");
-                var hexToFind = Convert.ToUInt32(valueStr, 16);
-
-                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Delimiter: {o.Delimiter}");
-                if (!string.IsNullOrEmpty(o.Prefix))
-                    Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Prefix: {o.Prefix}");
-                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Number of Threads: {o.NbrThreads}");
-                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Words Limit: {o.WordsLimit}");
-                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Skip Digits: {o.SkipDigits}");
+                var hexValuesEntries = o.HexValue.Split(",", StringSplitOptions.RemoveEmptyEntries);
 
                 //Run script
-                await new BruteForceDictionary().Run(length, hexToFind, o.Delimiter, o.Prefix, o.SkipDigits, o.WordsLimit, o.NbrThreads);
-                //new BruteForceLetter().Run(length, hexToFind, inputPrefix);
+                Directory.CreateDirectory("Results");
+                foreach (var hexValueEntry in hexValuesEntries)
+                {
+                    Console.WriteLine($"-----------------------------------------");
+                    using var logger = new Logger($"Results/{hexValueEntry}_{o.Method}_{DateTime.Now:o}.txt");
+                    logger.Init();
+
+                    var input = hexValueEntry.Trim();
+                    logger.Log($"Hex Value: {input}");
+
+                    var split = input.Split("x".ToCharArray());
+                    var lengthStr = split[1].Substring(0, 2);
+                    var valueStr = split[1][2..];
+                    var length = Convert.ToInt32(lengthStr, 16);
+                    logger.Log($"Length: {length}");
+                    var hexToFind = Convert.ToUInt32(valueStr, 16);
+
+                    logger.Log($"Delimiter: {o.Delimiter}");
+                    if (!string.IsNullOrEmpty(o.Prefix))
+                        logger.Log($"Prefix: {o.Prefix}");
+                    logger.Log($"Number of Threads: {o.NbrThreads}");
+                    logger.Log($"Words Limit: {o.WordsLimit}");
+                    logger.Log($"Skip Digits: {o.SkipDigits}");
+                    logger.Log("-----------------------------------------");
+
+                    //Run script
+                    if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
+                        new BruteForceDictionary(logger, o, length, hexToFind).Run();
+                    else if (o.Method.Equals("letter", StringComparison.OrdinalIgnoreCase))
+                        await new BruteForceLetter().Run(length, hexToFind, o.Prefix);
+                    else
+                        logger.Log("Method invalid");
+
+                    logger.Log("-----------------------------------------");
+
+                    await Task.Delay(2000);
+                }
 
                 Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Done!");
                 Console.ReadKey();

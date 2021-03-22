@@ -12,7 +12,61 @@ namespace BruteForceHash
 {
     public class BruteForceDictionary
     {
-        private Queue<string> _queue;
+        private readonly Logger _logger;
+        private readonly IEnumerable<string> _combinationPatterns;
+        private readonly Dictionary<string, List<string>> _dictionaries;
+        private readonly Options _options;
+        private readonly uint _hexValue;
+        private readonly string _delimiter;
+
+        public BruteForceDictionary(Logger logger, Options options, int stringLength, uint hexValue)
+        {
+            _logger = logger;
+            _options = options;
+            _hexValue = hexValue;
+            _delimiter = options.Delimiter;
+
+            //Calculate stringLength after prefix;
+            stringLength -= options.Prefix.Length;
+
+            //Generate combinations
+            _combinationPatterns = GenerateCombinations(stringLength, _delimiter, options.WordsLimit);
+
+            //Load dictionary
+            _dictionaries = GetDictionaries(stringLength, _delimiter, options.SkipDigits);
+        }
+
+        public void Run()
+        {
+            //Run
+            var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads);
+            var tasks = new List<Task>();
+
+            // Create a TaskFactory and pass it our custom scheduler.
+            TaskFactory factory = new TaskFactory(taskScheduler);
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Combinations found: {_combinationPatterns.Count()}");
+
+            foreach (var combinationPattern in _combinationPatterns)
+            {
+                var task = factory.StartNew(() =>
+                {
+                    var strBuilder = new StringBuilder();
+                    if (!string.IsNullOrEmpty(_options.Prefix))
+                    {
+                        strBuilder.Append(_options.Prefix);
+                    }
+                    Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Running Pattern: {combinationPattern}");
+                    RunDictionaries(strBuilder, combinationPattern);
+                });
+                tasks.Add(task);
+            }
+
+            // Wait for the tasks to complete before displaying a completion message.
+            Task.WaitAll(tasks.ToArray());
+            cts.Dispose();
+        }
 
         private IEnumerable<string> GenerateCombinations(int stringLength, string delimiter, int wordsLimit)
         {
@@ -109,114 +163,48 @@ namespace BruteForceHash
             return output;
         }
 
-        private void RunDictionaries(StringBuilder candidate, string combinationPattern, Dictionary<string, List<string>> dictWords, uint hexValue, string delimiter)
+        private void RunDictionaries(StringBuilder candidate, string combinationPattern)
         {
             string wordSize;
             bool lastWord = false;
 
-            if (!combinationPattern.Contains(delimiter))
+            if (!combinationPattern.Contains(_delimiter))
             {
                 wordSize = combinationPattern;
                 lastWord = true;
             }
             else
             {
-                wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(delimiter));
-                combinationPattern = combinationPattern[(combinationPattern.IndexOf(delimiter) + delimiter.Length)..];
+                wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
+                combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + _delimiter.Length)..];
 
             }
 
-            var words = dictWords[wordSize];
+            var words = _dictionaries[wordSize];
             foreach (var word in words)
             {
                 if (lastWord)
                 {
                     candidate.Append(word);
-                    TestCandidate(candidate, hexValue);
+                    TestCandidate(candidate);
                     candidate.Remove(candidate.Length - word.Length, word.Length);
                 }
                 else
                 {
                     candidate.Append(word);
-                    candidate.Append(delimiter);
-                    RunDictionaries(candidate, combinationPattern, dictWords, hexValue, delimiter);
-                    int length = delimiter.Length + word.Length;
+                    candidate.Append(_delimiter);
+                    RunDictionaries(candidate, combinationPattern);
+                    int length = _delimiter.Length + word.Length;
                     candidate.Remove(candidate.Length - length, length);
                 }
             }
         }
 
-        private void TestCandidate(StringBuilder candidate, uint hexValue)
+        private void TestCandidate(StringBuilder candidate)
         {
             var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate.ToString()));
-            if (testValue == hexValue)
-            {
-                Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - >>>> Value found: {candidate} <<<<");
-                _queue.Enqueue(candidate.ToString());
-            }
-        }
-
-        public async Task Run(int stringLength, uint hexValue, string delimiter = "_", string prefix = "", bool skipDigits = false, int wordsLimit = 20, int nbrThreads = 16)
-        {
-            _queue = new Queue<string>();
-            Directory.CreateDirectory("Results");
-
-            //Calculate stringLength after prefix;
-            stringLength -= prefix.Length;
-
-            //Generate combinations
-            var combinationPatterns = GenerateCombinations(stringLength, delimiter, wordsLimit);
-
-            //Load dictionary
-            var dictionaries = GetDictionaries(stringLength, delimiter, skipDigits);
-
-            //Run
-            var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(nbrThreads);
-            var tasks = new List<Task>();
-
-            // Create a TaskFactory and pass it our custom scheduler.
-            TaskFactory factory = new TaskFactory(taskScheduler);
-            CancellationTokenSource cts = new CancellationTokenSource();
-            CancellationTokenSource queueCts = new CancellationTokenSource();
-
-            _ = Task.Run(async () =>
-            {
-                while (!queueCts.IsCancellationRequested)
-                {
-                    var dequeueMessages = new List<string>();
-                    while (_queue.TryDequeue(out string result))
-                        dequeueMessages.Add(result);
-
-                    if (dequeueMessages.Count > 0)
-                        File.AppendAllLines($"Results/0x{hexValue:x}.txt", dequeueMessages);
-
-                    await Task.Delay(1000);
-                }
-            });
-
-            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Combinations found: {combinationPatterns.Count()}");
-
-            foreach (var combinationPattern in combinationPatterns)
-            {
-                var task = factory.StartNew(() =>
-                {
-                    var strBuilder = new StringBuilder();
-                    if (!string.IsNullOrEmpty(prefix))
-                    {
-                        strBuilder.Append(prefix);
-                    }
-                    Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Running Pattern: {combinationPattern}");
-                    RunDictionaries(strBuilder, combinationPattern, dictionaries, hexValue, delimiter);
-                });
-                tasks.Add(task);
-            }
-
-            // Wait for the tasks to complete before displaying a completion message.
-            Task.WaitAll(tasks.ToArray());
-            cts.Dispose();
-
-            await Task.Delay(2000);
-            queueCts.Cancel();
+            if (testValue == _hexValue)
+                _logger.Log(candidate.ToString());
         }
     }
 }
