@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BruteForceHash": {
+      "commandName": "Project",
+      "commandLineArgs": "--include_word \"can\" --nbr_threads 1"
+    }
+  }
+}

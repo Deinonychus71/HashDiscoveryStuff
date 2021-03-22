@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace BruteForceHash
             _options = options;
             _hexValue = hexValue;
             _delimiter = options.Delimiter;
+            _options.IncludeWord = _options.IncludeWord.ToLower();
 
             //Calculate stringLength after prefix;
             stringLength -= options.Prefix.Length;
@@ -91,7 +93,22 @@ namespace BruteForceHash
                 if (nbrChar.Length <= wordsLimit && 
                     !excludePatterns.Any(p => combination.Contains(p)) && 
                     (includePatterns.Length == 0 || includePatterns.Any(p => combination.Contains(p))))
+                {
+                    if (!string.IsNullOrEmpty(_options.IncludeWord))
+                    {
+                        var combinationMatch = $"{{{_options.IncludeWord.Length}}}";
+                        if (!combination.Contains(combinationMatch))
+                            continue;
+                        var nbrMatch = Regex.Matches(combination, @"\{3\}").Count;
+                        for(int i = 0; i < nbrMatch; i++)
+                        {
+                            output.Add(ReplaceNthOccurrence(combination, combinationMatch, _options.IncludeWord, i + 1));
+                        }
+                        continue;
+                    }
                     output.Add(combination);
+                }
+                    
             }
 
             return output.OrderBy(p => p.Length);
@@ -159,26 +176,43 @@ namespace BruteForceHash
             else
             {
                 wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
+                if(!wordSize.StartsWith("{"))
+                {
+                    var wordLength = wordSize.Length;
+                    candidate.Append(wordSize);
+                    combinationPattern = combinationPattern[(wordLength + _delimiter.Length)..];
+                    RunDictionaries(candidate, combinationPattern);
+                    candidate.Remove(candidate.Length - wordLength, wordLength);
+                    return;
+                }
                 combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + _delimiter.Length)..];
-
             }
 
-            var words = _dictionaries[wordSize];
-            foreach (var word in words)
+            if (lastWord && !wordSize.StartsWith("{"))
             {
-                if (lastWord)
+                candidate.Append(combinationPattern);
+                TestCandidate(candidate);
+                candidate.Remove(candidate.Length - combinationPattern.Length, combinationPattern.Length);
+            }
+            else
+            {
+                var words = _dictionaries[wordSize];
+                foreach (var word in words)
                 {
-                    candidate.Append(word);
-                    TestCandidate(candidate);
-                    candidate.Remove(candidate.Length - word.Length, word.Length);
-                }
-                else
-                {
-                    candidate.Append(word);
-                    candidate.Append(_delimiter);
-                    RunDictionaries(candidate, combinationPattern);
-                    int length = _delimiter.Length + word.Length;
-                    candidate.Remove(candidate.Length - length, length);
+                    if (lastWord)
+                    {
+                        candidate.Append(word);
+                        TestCandidate(candidate);
+                        candidate.Remove(candidate.Length - word.Length, word.Length);
+                    }
+                    else
+                    {
+                        candidate.Append(word);
+                        candidate.Append(_delimiter);
+                        RunDictionaries(candidate, combinationPattern);
+                        int length = _delimiter.Length + word.Length;
+                        candidate.Remove(candidate.Length - length, length);
+                    }
                 }
             }
         }
@@ -188,6 +222,20 @@ namespace BruteForceHash
             var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate.ToString()));
             if (testValue == _hexValue)
                 _logger.Log(candidate.ToString());
+        }
+
+        private string ReplaceNthOccurrence(string obj, string find, string replace, int nthOccurrence)
+        {
+            if (nthOccurrence > 0)
+            {
+                MatchCollection matchCollection = Regex.Matches(obj, Regex.Escape(find));
+                if (matchCollection.Count >= nthOccurrence)
+                {
+                    Match match = matchCollection[nthOccurrence - 1];
+                    return obj.Remove(match.Index, match.Length).Insert(match.Index, replace);
+                }
+            }
+            return obj;
         }
     }
 

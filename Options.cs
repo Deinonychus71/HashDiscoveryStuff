@@ -18,6 +18,8 @@ namespace BruteForceHash
         public string ExcludePatterns { get; set; }
         [Option('i', "include_patterns", Required = false, Default = "", HelpText = "Only run patterns that include are specific here (typically: '{3}' would run any pattern containing a 3 letter word, separated by comma) (for dictionary hash)")]
         public string IncludePatterns { get; set; }
+        [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear (for dictionary hash).")]
+        public string IncludeWord { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary hash).")]
         public int WordsLimit { get; set; }
         [Option('f', "force_lowercase", Required = false, Default = true, HelpText = "Force all words to be lowercase (for dictionary hash).")]
