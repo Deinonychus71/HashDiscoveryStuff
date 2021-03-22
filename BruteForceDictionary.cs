@@ -178,9 +178,10 @@ namespace BruteForceHash
                 wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
                 if(!wordSize.StartsWith("{"))
                 {
-                    var wordLength = wordSize.Length;
+                    var wordLength = wordSize.Length + _delimiter.Length;
                     candidate.Append(wordSize);
-                    combinationPattern = combinationPattern[(wordLength + _delimiter.Length)..];
+                    candidate.Append(_delimiter);
+                    combinationPattern = combinationPattern[(wordLength)..];
                     RunDictionaries(candidate, combinationPattern);
                     candidate.Remove(candidate.Length - wordLength, wordLength);
                     return;
