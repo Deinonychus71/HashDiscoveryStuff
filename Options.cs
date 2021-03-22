@@ -20,6 +20,8 @@ namespace BruteForceHash
         public string IncludePatterns { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary hash).")]
         public int WordsLimit { get; set; }
+        [Option('f', "force_lowercase", Required = false, Default = true, HelpText = "Force all words to be lowercase (for dictionary hash).")]
+        public bool ForceLowercase { get; set; }
         [Option('t', "nbr_threads", Required = false, Default = 16, HelpText = "Nbr of threads to run.")]
         public int NbrThreads { get; set; }
     }

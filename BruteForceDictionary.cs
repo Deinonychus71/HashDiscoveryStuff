@@ -33,7 +33,7 @@ namespace BruteForceHash
             _combinationPatterns = GenerateCombinations(stringLength, _delimiter, options.WordsLimit);
 
             //Load dictionary
-            _dictionaries = GetDictionaries(stringLength, _delimiter, options.SkipDigits);
+            _dictionaries = DictionariesHelper.GetDictionaries(options.SkipDigits, options.ForceLowercase);
         }
 
         public void Run()
@@ -51,6 +51,7 @@ namespace BruteForceHash
             _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
             _logger.Log($"Include Patterns: {_options.IncludePatterns}");
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
+            _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Count)}");
             _logger.Log("-----------------------------------------");
 
             foreach (var combinationPattern in _combinationPatterns)
@@ -145,7 +146,7 @@ namespace BruteForceHash
             return returnCombinations;
         }
 
-        private Dictionary<string, List<string>> GetDictionaries(int stringLength, string delimiter, bool skipDigits)
+        /**private Dictionary<string, List<string>> GetDictionaries(int stringLength, string delimiter, bool skipDigits, bool forceLowerCase)
         {
             var output = new Dictionary<string, List<string>>();
             var lengthSkip = delimiter.Length > 0 ? stringLength - delimiter.Length : stringLength + 1;
@@ -165,12 +166,16 @@ namespace BruteForceHash
                         continue;
 
                     var lengthStr = $"{{{word.Length}}}";
-                    if (!output[lengthStr].Contains(word))
-                        output[lengthStr].Add(word);
+                    var wordToAdd = word;
+                    if (forceLowerCase)
+                        wordToAdd = word.ToLower();
+
+                    if (!output[lengthStr].Contains(wordToAdd))
+                        output[lengthStr].Add(wordToAdd);
                 }
             }
             return output;
-        }
+        }*/
 
         private void RunDictionaries(StringBuilder candidate, string combinationPattern)
         {
@@ -214,6 +219,57 @@ namespace BruteForceHash
             var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate.ToString()));
             if (testValue == _hexValue)
                 _logger.Log(candidate.ToString());
+        }
+    }
+
+    public static class DictionariesHelper
+    {
+        private static Dictionary<string, List<string>> _dictionary = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> _dictionaryNoDigit = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> _dictionaryNoDigitLowerCase = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> _dictionaryLowerCase = new Dictionary<string, List<string>>();
+
+        public static Dictionary<string, List<string>> GetDictionaries(bool skipDigits, bool forceLowerCase)
+        {
+            Dictionary<string, List<string>> dictionary = null;
+
+            if (skipDigits && forceLowerCase)
+                dictionary = _dictionaryNoDigitLowerCase;
+            if (skipDigits && !forceLowerCase)
+                dictionary = _dictionaryNoDigit;
+            if (!skipDigits && forceLowerCase)
+                dictionary = _dictionaryLowerCase;
+            if (!skipDigits && !forceLowerCase)
+                dictionary = _dictionary;
+
+            if (dictionary.Count != 0)
+                return dictionary;
+
+            //Fill if no data present
+            for (int i = 1; i <= 100; i++)
+                dictionary.Add($"{{{i}}}", new List<string>());
+
+            var allDictionaries = Directory.GetFiles("Dictionaries", "*.txt");
+            foreach (var dictionaryPath in allDictionaries)
+            {
+                var allWords = File.ReadAllLines(dictionaryPath);
+                foreach (var word in allWords)
+                {
+                    if (word.Length == 0)
+                        continue;
+                    if (skipDigits && word.Any(char.IsDigit))
+                        continue;
+
+                    var lengthStr = $"{{{word.Length}}}";
+                    var wordToAdd = word;
+                    if (forceLowerCase)
+                        wordToAdd = word.ToLower();
+
+                    if (!dictionary[lengthStr].Contains(wordToAdd))
+                        dictionary[lengthStr].Add(wordToAdd);
+                }
+            }
+            return dictionary;
         }
     }
 }
