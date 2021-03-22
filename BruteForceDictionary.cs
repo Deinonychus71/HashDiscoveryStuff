@@ -50,8 +50,12 @@ namespace BruteForceHash
 
             _logger.Log($"Delimiter: {_delimiter}");
             _logger.Log($"Words Limit: {_options.WordsLimit}");
-            _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
-            _logger.Log($"Include Patterns: {_options.IncludePatterns}");
+            if(!string.IsNullOrEmpty(_options.ExcludePatterns))
+                _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
+            if (!string.IsNullOrEmpty(_options.IncludePatterns))
+                _logger.Log($"Include Patterns: {_options.IncludePatterns}");
+            if (!string.IsNullOrEmpty(_options.IncludeWord))
+                _logger.Log($"Include Word: {_options.IncludeWord}");
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Count)}");
             _logger.Log("-----------------------------------------");
