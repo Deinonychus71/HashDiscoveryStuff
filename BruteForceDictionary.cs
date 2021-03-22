@@ -99,7 +99,7 @@ namespace BruteForceHash
                         var combinationMatch = $"{{{_options.IncludeWord.Length}}}";
                         if (!combination.Contains(combinationMatch))
                             continue;
-                        var nbrMatch = Regex.Matches(combination, @"\{3\}").Count;
+                        var nbrMatch = Regex.Matches(combination, "\\{" + _options.IncludeWord.Length + "\\}").Count;
                         for(int i = 0; i < nbrMatch; i++)
                         {
                             output.Add(ReplaceNthOccurrence(combination, combinationMatch, _options.IncludeWord, i + 1));

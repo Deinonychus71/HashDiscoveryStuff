@@ -2,7 +2,7 @@
   "profiles": {
     "BruteForceHash": {
       "commandName": "Project",
-      "commandLineArgs": "--include_word \"can\" --nbr_threads 1"
+      "commandLineArgs": "--include_word \"hide\" --words_limit 3 --nbr_threads 1"
     }
   }
 }
