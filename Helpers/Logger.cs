@@ -40,7 +40,8 @@ namespace BruteForceHash.Helpers
         public void Log(string line, bool saveInQueue = true)
         {
             Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - {line}");
-            _queue.Enqueue(line);
+            if(saveInQueue)
+                _queue.Enqueue(line);
         }
 
         public void Dispose()
