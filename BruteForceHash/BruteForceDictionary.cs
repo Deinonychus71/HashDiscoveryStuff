@@ -18,7 +18,10 @@ namespace BruteForceHash
         private readonly Dictionary<string, HashSet<string>> _dictionaries;
         private readonly Options _options;
         private readonly uint _hexValue;
+        private readonly int _stringLength;
         private readonly string _delimiter;
+        private readonly byte[] _delimiterBytes;
+        private readonly int _delimiterLength;
 
         public BruteForceDictionary(Logger logger, Options options, int stringLength, uint hexValue)
         {
@@ -26,16 +29,18 @@ namespace BruteForceHash
             _options = options;
             _hexValue = hexValue;
             _delimiter = options.Delimiter;
+            _delimiterBytes = Encoding.ASCII.GetBytes(options.Delimiter);
+            _delimiterLength = _delimiterBytes.Length;
             _options.IncludeWord = _options.IncludeWord.ToLower();
 
             //Calculate stringLength after prefix;
-            stringLength -= options.Prefix.Length;
+            _stringLength = stringLength;
 
             //Generate combinations
-            _combinationPatterns = GenerateCombinations(stringLength, _delimiter, options.WordsLimit);
+            _combinationPatterns = GenerateCombinations(_stringLength - options.Prefix.Length, options.Delimiter, options.WordsLimit);
 
             //Load dictionary
-            _dictionaries = DictionariesHelper.GetDictionaries(options.SkipDigits, options.ForceLowercase);
+            _dictionaries = GetDictionaries(options.SkipDigits, options.ForceLowercase);
         }
 
         public void Run()
@@ -64,10 +69,10 @@ namespace BruteForceHash
             {
                 var task = factory.StartNew(() =>
                 {
-                    var strBuilder = new StringBuilder();
+                    var strBuilder = new ByteString(_stringLength);
                     if (!string.IsNullOrEmpty(_options.Prefix))
                     {
-                        strBuilder.Append(_options.Prefix);
+                        strBuilder.Append(_options.Prefix, 0);
                     }
                     _logger.Log($"Running Pattern: {combinationPattern}", false);
                     RunDictionaries(strBuilder, combinationPattern);
@@ -167,7 +172,7 @@ namespace BruteForceHash
             return returnCombinations;
         }
 
-        private void RunDictionaries(StringBuilder candidate, string combinationPattern)
+        private void RunDictionaries(ByteString candidate, string combinationPattern)
         {
             string wordSize;
             bool lastWord = false;
@@ -182,22 +187,22 @@ namespace BruteForceHash
                 wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
                 if(!wordSize.StartsWith("{"))
                 {
-                    var wordLength = wordSize.Length + _delimiter.Length;
+                    var wordLength = wordSize.Length + _delimiterLength;
                     candidate.Append(wordSize);
-                    candidate.Append(_delimiter);
+                    candidate.Append(_delimiterBytes);
                     combinationPattern = combinationPattern[(wordLength)..];
                     RunDictionaries(candidate, combinationPattern);
-                    candidate.Remove(candidate.Length - wordLength, wordLength);
+                    candidate.Cursor -= wordLength;
                     return;
                 }
-                combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + _delimiter.Length)..];
+                combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + _delimiterLength)..];
             }
 
             if (lastWord && !wordSize.StartsWith("{"))
             {
                 candidate.Append(combinationPattern);
                 TestCandidate(candidate);
-                candidate.Remove(candidate.Length - combinationPattern.Length, combinationPattern.Length);
+                candidate.Cursor -= combinationPattern.Length;
             }
             else
             {
@@ -208,23 +213,22 @@ namespace BruteForceHash
                     {
                         candidate.Append(word);
                         TestCandidate(candidate);
-                        candidate.Remove(candidate.Length - word.Length, word.Length);
+                        candidate.Cursor -= word.Length;
                     }
                     else
                     {
                         candidate.Append(word);
-                        candidate.Append(_delimiter);
+                        candidate.Append(_delimiterBytes);
                         RunDictionaries(candidate, combinationPattern);
-                        int length = _delimiter.Length + word.Length;
-                        candidate.Remove(candidate.Length - length, length);
+                        candidate.Cursor -= _delimiterLength + word.Length;
                     }
                 }
             }
         }
 
-        private void TestCandidate(StringBuilder candidate)
+        private void TestCandidate(ByteString candidate)
         {
-            var testValue = Crc32Algorithm.Compute(Encoding.ASCII.GetBytes(candidate.ToString()));
+            var testValue = Crc32Algorithm.Compute(candidate.Value);
             if (testValue == _hexValue)
                 _logger.Log(candidate.ToString());
         }
@@ -242,30 +246,10 @@ namespace BruteForceHash
             }
             return obj;
         }
-    }
 
-    public static class DictionariesHelper
-    {
-        private static readonly Dictionary<string, HashSet<string>> _dictionary = new Dictionary<string, HashSet<string>>();
-        private static readonly Dictionary<string, HashSet<string>> _dictionaryNoDigit = new Dictionary<string, HashSet<string>>();
-        private static readonly Dictionary<string, HashSet<string>> _dictionaryNoDigitLowerCase = new Dictionary<string, HashSet<string>>();
-        private static readonly Dictionary<string, HashSet<string>> _dictionaryLowerCase = new Dictionary<string, HashSet<string>>();
-
-        public static Dictionary<string, HashSet<string>> GetDictionaries(bool skipDigits, bool forceLowerCase)
+        private Dictionary<string, HashSet<string>> GetDictionaries(bool skipDigits, bool forceLowerCase)
         {
-            Dictionary<string, HashSet<string>> dictionary = null;
-
-            if (skipDigits && forceLowerCase)
-                dictionary = _dictionaryNoDigitLowerCase;
-            if (skipDigits && !forceLowerCase)
-                dictionary = _dictionaryNoDigit;
-            if (!skipDigits && forceLowerCase)
-                dictionary = _dictionaryLowerCase;
-            if (!skipDigits && !forceLowerCase)
-                dictionary = _dictionary;
-
-            if (dictionary.Count != 0)
-                return dictionary;
+            Dictionary<string, HashSet<string>> dictionary = new Dictionary<string, HashSet<string>>();
 
             //Fill if no data present
             for (int i = 1; i <= 100; i++)
