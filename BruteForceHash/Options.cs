@@ -10,8 +10,8 @@ namespace BruteForceHash
         public string Method { get; set; }
         [Option('p', "prefix", Required = false, Default = "", HelpText = "Prefix to apply before the search (optional).")]
         public string Prefix { get; set; }
-        [Option('d', "delimiter", Required = false, Default = "_", HelpText = "Delimiter (for dictionary hash).")]
-        public string Delimiter { get; set; }
+        [Option('d', "delimiter", Required = false, Default = '_', HelpText = "Delimiter (for dictionary hash).")]
+        public char Delimiter { get; set; }
         [Option('s', "skip_digits", Required = false, Default = false, HelpText = "To skip all digits search.")]
         public bool SkipDigits { get; set; }
         [Option('r', "exclude_patterns", Required = false, Default = "", HelpText = "Remove some patterns (typically: '{1}_{1}' will remove any pattern with two consecutive one-letter words, separated by comma) (for dictionary hash)")]
