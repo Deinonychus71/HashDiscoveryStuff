@@ -60,6 +60,7 @@ namespace BruteForceHash
             if (!string.IsNullOrEmpty(_options.IncludeWord))
                 _logger.Log($"Include Word: {_options.IncludeWord}");
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
+            _logger.Log($"Dictionaries: {_options.UseDictionaries}");
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             _logger.Log("-----------------------------------------");
 
@@ -254,7 +255,12 @@ namespace BruteForceHash
             for (int i = 1; i <= 100; i++) 
                 dictionary.Add($"{{{i}}}", new HashSet<string>());
 
-            var allDictionaries = Directory.GetFiles("Dictionaries", "*.txt");
+            string[] allDictionaries;
+            if (Directory.Exists("Dictionaries") && _options.UseDictionaries == "*")
+                allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
+            else
+                allDictionaries = _options.UseDictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
+
             foreach (var dictionaryPath in allDictionaries)
             {
                 var allWords = File.ReadAllLines(dictionaryPath);

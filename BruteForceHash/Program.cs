@@ -58,7 +58,8 @@ namespace BruteForceHash
                 }
 
                 Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Done!");
-                Console.ReadKey();
+                if (o.ConfirmEnd)
+                    Console.ReadKey();
             });
         }
     }

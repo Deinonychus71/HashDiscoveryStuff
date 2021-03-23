@@ -53,6 +53,7 @@ namespace BruteForceHash.GUI
             this.cbWordsLimit = new System.Windows.Forms.ComboBox();
             this.lblDictionaries = new System.Windows.Forms.Label();
             this.chklDictionaries = new System.Windows.Forms.CheckedListBox();
+            this.btnStart = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblHexValues
@@ -121,6 +122,7 @@ namespace BruteForceHash.GUI
             // txtDelimiter
             // 
             this.txtDelimiter.Location = new System.Drawing.Point(382, 98);
+            this.txtDelimiter.MaxLength = 1;
             this.txtDelimiter.Name = "txtDelimiter";
             this.txtDelimiter.Size = new System.Drawing.Size(37, 23);
             this.txtDelimiter.TabIndex = 7;
@@ -344,14 +346,25 @@ namespace BruteForceHash.GUI
             this.chklDictionaries.FormattingEnabled = true;
             this.chklDictionaries.Location = new System.Drawing.Point(123, 302);
             this.chklDictionaries.Name = "chklDictionaries";
-            this.chklDictionaries.Size = new System.Drawing.Size(296, 112);
+            this.chklDictionaries.Size = new System.Drawing.Size(296, 166);
             this.chklDictionaries.TabIndex = 23;
+            // 
+            // btnStart
+            // 
+            this.btnStart.Location = new System.Drawing.Point(123, 488);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(213, 23);
+            this.btnStart.TabIndex = 24;
+            this.btnStart.Text = "START";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.OnBtnStartClick);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(447, 604);
+            this.ClientSize = new System.Drawing.Size(447, 533);
+            this.Controls.Add(this.btnStart);
             this.Controls.Add(this.chklDictionaries);
             this.Controls.Add(this.lblDictionaries);
             this.Controls.Add(this.cbWordsLimit);
@@ -409,6 +422,7 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.ComboBox cbWordsLimit;
         private System.Windows.Forms.Label lblDictionaries;
         private System.Windows.Forms.CheckedListBox chklDictionaries;
+        private System.Windows.Forms.Button btnStart;
     }
 }
 

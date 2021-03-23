@@ -14,12 +14,16 @@ namespace BruteForceHash
         public char Delimiter { get; set; }
         [Option('s', "skip_digits", Required = false, Default = false, HelpText = "To skip all digits search.")]
         public bool SkipDigits { get; set; }
+        [Option('e', "confirm_end", Required = false, Default = true, HelpText = "Confirm before exiting the window.")]
+        public bool ConfirmEnd { get; set; }
         [Option('r', "exclude_patterns", Required = false, Default = "", HelpText = "Remove some patterns (typically: '{1}_{1}' will remove any pattern with two consecutive one-letter words, separated by comma) (for dictionary hash)")]
         public string ExcludePatterns { get; set; }
         [Option('i', "include_patterns", Required = false, Default = "", HelpText = "Only run patterns that include are specific here (typically: '{3}' would run any pattern containing a 3 letter word, separated by comma) (for dictionary hash)")]
         public string IncludePatterns { get; set; }
         [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear (for dictionary hash).")]
         public string IncludeWord { get; set; }
+        [Option('D', "use_dictionaries", Required = false, Default = "*", HelpText = "List all the dictionaries to use (separated by semi-colon) (for dictionary hash).")]
+        public string UseDictionaries { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary hash).")]
         public int WordsLimit { get; set; }
         [Option('f', "force_lowercase", Required = false, Default = true, HelpText = "Force all words to be lowercase (for dictionary hash).")]

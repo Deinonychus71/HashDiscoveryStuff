@@ -2,7 +2,7 @@
   "profiles": {
     "BruteForceHash": {
       "commandName": "Project",
-      "commandLineArgs": "--words_limit 3 --nbr_threads 1 --method letter --prefix bgm_"
+      "commandLineArgs": "--nbr_threads 8 --method Dictionary --words_limit 3 --skip_digits False --force_lowercase True --use_dictionaries \"*\" --include_word \"\" --include_patterns \"\" --exclude_patterns \"\" --delimiter \"_\" --prefix \"\" --hex_value \"0x10005d116c\""
     }
   }
 }
