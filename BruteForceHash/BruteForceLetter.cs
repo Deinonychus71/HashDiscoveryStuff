@@ -1,25 +1,50 @@
-﻿using Force.Crc32;
+﻿using BruteForceHash.Helpers;
+using Force.Crc32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BruteForceHash
 {
     public class BruteForceLetter
     {
+        private readonly Logger _logger;
+        private readonly Options _options;
+        private readonly uint _hexValue;
+        private readonly int _stringLength;
         private static readonly string _validChars = "etainoshrdlucmfwygpbvkqjxz0123456789_./:-";
         private static readonly string _validStartChars = "etainoshrdlucmfwygpbvkqjxz";
         private static byte[] _validBytes = null;
+        private readonly string _prefix;
 
-        public async Task Run(int valueLength, uint hexToFind, string inputPrefix)
+        public BruteForceLetter(Logger logger, Options options, int stringLength, uint hexValue)
         {
+            _logger = logger;
+            _options = options;
+            _hexValue = hexValue;
+            _stringLength = stringLength;
+            _prefix = options.Prefix;
+        }
+
+        public void Run()
+        {
+            //Run
+            var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads);
+            var tasks = new List<Task>();
+
+            // Create a TaskFactory and pass it our custom scheduler.
+            TaskFactory factory = new TaskFactory(taskScheduler);
+            CancellationTokenSource cts = new CancellationTokenSource();
+
             //Valid bytes
             Console.WriteLine($"Enter valid characters (Default: {_validChars}");
             string inputValidChars = Console.ReadLine();
             if (string.IsNullOrEmpty(inputValidChars))
                 inputValidChars = _validChars;
-            Console.WriteLine($"Will use {inputValidChars}");
+            _logger.Log($"Will use {inputValidChars}");
             _validBytes = Encoding.ASCII.GetBytes(inputValidChars);
 
             //Valid bytes
@@ -27,55 +52,58 @@ namespace BruteForceHash
             string inputValidStartChars = Console.ReadLine();
             if (string.IsNullOrEmpty(inputValidStartChars))
                 inputValidStartChars = _validStartChars;
-            Console.WriteLine($"Will use {inputValidStartChars}");
+            _logger.Log($"Will use {inputValidStartChars} for first characters");
             byte[] validStartBytes = Encoding.ASCII.GetBytes(inputValidStartChars);
 
             //Bruteforcing
-            Console.WriteLine($"Starting at {DateTime.Now.ToLongTimeString()}...");
-            Task[] tasks = new Task[validStartBytes.Length];
+            _logger.Log("-----------------------------------------");
+
             for (var t = 0; t < validStartBytes.Length; t++)
             {
-                var buffer = new byte[valueLength];
-                for (var p = 0; p < inputPrefix.Length; p++)
+                var buffer = new byte[_stringLength];
+                for (var p = 0; p < _prefix.Length; p++)
                 {
-                    buffer[p] = (byte)inputPrefix[p];
+                    buffer[p] = (byte)_prefix[p];
                 }
-                buffer[inputPrefix.Length] = validStartBytes[t];
-                tasks[t] = Task.Run(() =>
+                buffer[_prefix.Length] = validStartBytes[t];
+
+                var task = factory.StartNew(() =>
                 {
-                    Console.WriteLine($"Starting new thread for {Encoding.ASCII.GetString(new byte[1] { buffer[inputPrefix.Length] })}");
+                    _logger.Log($"Starting new thread for {Encoding.ASCII.GetString(new byte[1] { buffer[_prefix.Length] })}", false);
                     try
                     {
-                        DiveByte(buffer, inputPrefix.Length + 1, valueLength, hexToFind);
+                        DiveByte(buffer, _prefix.Length + 1);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"ERROR on thread {Encoding.ASCII.GetString(new byte[1] { buffer[inputPrefix.Length] })}: {e.Message}");
+                        _logger.Log($"ERROR on thread {Encoding.ASCII.GetString(new byte[1] { buffer[_prefix.Length] })}: {e.Message}");
                     }
                 });
+                tasks.Add(task);
             }
 
-            Task.WaitAll(tasks);
+            // Wait for the tasks to complete before displaying a completion message.
+            Task.WaitAll(tasks.ToArray());
+            cts.Dispose();
         }
 
-        private static void DiveByte(byte[] buffer, int level, int valueLength, uint hexToFind)
+        private void DiveByte(byte[] buffer, int level)
         {
             int levelp = level + 1;
             foreach (byte b in _validBytes)
             {
-                if (levelp < valueLength)
+                if (levelp < _stringLength)
                 {
                     buffer[level] = b;
-                    DiveByte(buffer, levelp, valueLength, hexToFind);
+                    DiveByte(buffer, levelp);
                     continue;
                 }
                 buffer[level] = b;
                 var testValue = Crc32Algorithm.Compute(buffer);
-                if (hexToFind == testValue)
+                if (_hexValue == testValue)
                 {
                     string value = Encoding.ASCII.GetString(buffer);
-                    Console.WriteLine(value);
-                    File.AppendAllLines($"0x{hexToFind:x}_{value[0]}.txt", new string[1] { $"0x{testValue:x}:{value}" });
+                    _logger.Log(value);
                 }
             }
         }

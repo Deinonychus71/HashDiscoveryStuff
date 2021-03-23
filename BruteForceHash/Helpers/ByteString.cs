@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace BruteForceHash.Helpers
 {
     public class ByteString
     {
-        private byte[] _value;
+        private readonly byte[] _value;
 
         public byte[] Value { get { return _value; } }
 

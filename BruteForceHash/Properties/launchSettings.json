@@ -2,7 +2,7 @@
   "profiles": {
     "BruteForceHash": {
       "commandName": "Project",
-      "commandLineArgs": "--words_limit 3 --nbr_threads 1 --include_word bgm"
+      "commandLineArgs": "--words_limit 3 --nbr_threads 1 --method letter --prefix bgm_"
     }
   }
 }

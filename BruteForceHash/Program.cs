@@ -48,7 +48,7 @@ namespace BruteForceHash
                     if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
                         new BruteForceDictionary(logger, o, length, hexToFind).Run();
                     else if (o.Method.Equals("letter", StringComparison.OrdinalIgnoreCase))
-                        await new BruteForceLetter().Run(length, hexToFind, o.Prefix);
+                        new BruteForceLetter(logger, o, length, hexToFind).Run();
                     else
                         logger.Log("Method invalid");
 
