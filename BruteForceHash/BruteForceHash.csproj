@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Dictionaries\dictionary_english.txt">
+    <None Update="Dictionaries\dictionary_english.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Dictionaries\dictsmash.txt">
+    <None Update="Dictionaries\dictionary_smash.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
