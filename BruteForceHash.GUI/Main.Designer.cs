@@ -44,9 +44,9 @@ namespace BruteForceHash.GUI
             this.lblNbThreads = new System.Windows.Forms.Label();
             this.cbNbThreads = new System.Windows.Forms.ComboBox();
             this.lblExcludePatterns = new System.Windows.Forms.Label();
-            this.txtIncludePatterns = new System.Windows.Forms.TextBox();
-            this.lblIncludePatterns = new System.Windows.Forms.Label();
             this.txtExcludePatterns = new System.Windows.Forms.TextBox();
+            this.lblIncludePatterns = new System.Windows.Forms.Label();
+            this.txtIncludePatterns = new System.Windows.Forms.TextBox();
             this.lblIncludeWord = new System.Windows.Forms.Label();
             this.txtIncludeWord = new System.Windows.Forms.TextBox();
             this.lblWordsLimit = new System.Windows.Forms.Label();
@@ -261,13 +261,13 @@ namespace BruteForceHash.GUI
             this.lblExcludePatterns.TabIndex = 14;
             this.lblExcludePatterns.Text = "Exclude Patterns:";
             // 
-            // txtIncludePatterns
+            // txtExcludePatterns
             // 
-            this.txtIncludePatterns.Location = new System.Drawing.Point(123, 178);
-            this.txtIncludePatterns.Name = "txtIncludePatterns";
-            this.txtIncludePatterns.PlaceholderText = "{1}_{1},{2}_{2}";
-            this.txtIncludePatterns.Size = new System.Drawing.Size(296, 23);
-            this.txtIncludePatterns.TabIndex = 15;
+            this.txtExcludePatterns.Location = new System.Drawing.Point(123, 178);
+            this.txtExcludePatterns.Name = "txtExcludePatterns";
+            this.txtExcludePatterns.PlaceholderText = "{1}_{1},{2}_{2}";
+            this.txtExcludePatterns.Size = new System.Drawing.Size(296, 23);
+            this.txtExcludePatterns.TabIndex = 15;
             // 
             // lblIncludePatterns
             // 
@@ -278,13 +278,13 @@ namespace BruteForceHash.GUI
             this.lblIncludePatterns.TabIndex = 16;
             this.lblIncludePatterns.Text = "Include Patterns:";
             // 
-            // txtExcludePatterns
+            // txtIncludePatterns
             // 
-            this.txtExcludePatterns.Location = new System.Drawing.Point(123, 219);
-            this.txtExcludePatterns.Name = "txtExcludePatterns";
-            this.txtExcludePatterns.PlaceholderText = "{3}";
-            this.txtExcludePatterns.Size = new System.Drawing.Size(296, 23);
-            this.txtExcludePatterns.TabIndex = 17;
+            this.txtIncludePatterns.Location = new System.Drawing.Point(123, 219);
+            this.txtIncludePatterns.Name = "txtIncludePatterns";
+            this.txtIncludePatterns.PlaceholderText = "{3}";
+            this.txtIncludePatterns.Size = new System.Drawing.Size(296, 23);
+            this.txtIncludePatterns.TabIndex = 17;
             // 
             // lblIncludeWord
             // 
@@ -371,9 +371,9 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.lblWordsLimit);
             this.Controls.Add(this.txtIncludeWord);
             this.Controls.Add(this.lblIncludeWord);
-            this.Controls.Add(this.txtExcludePatterns);
-            this.Controls.Add(this.lblIncludePatterns);
             this.Controls.Add(this.txtIncludePatterns);
+            this.Controls.Add(this.lblIncludePatterns);
+            this.Controls.Add(this.txtExcludePatterns);
             this.Controls.Add(this.lblExcludePatterns);
             this.Controls.Add(this.cbNbThreads);
             this.Controls.Add(this.lblNbThreads);
@@ -423,6 +423,7 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblDictionaries;
         private System.Windows.Forms.CheckedListBox chklDictionaries;
         private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.TextBox txtExcludePatterns1;
     }
 }
 

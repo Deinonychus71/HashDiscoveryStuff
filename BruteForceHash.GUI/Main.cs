@@ -53,11 +53,11 @@ namespace BruteForceHash.GUI
                 process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
                                                 $"--method {cbMethod.SelectedItem} " +
                                                 $"--words_limit {cbWordsLimit.SelectedItem} " +
-                                                $"--skip_digits {chkSkipDigits.Checked} " +
-                                                $"--force_lowercase {chkLowerCase.Checked} " +
+                                                $"{(chkSkipDigits.Checked ? "--skip_digits" : "")} " +
+                                                $"{(chkLowerCase.Checked ? "--force_lowercase" : "")} " +
                                                 $"--use_dictionaries \"{dictionaries}\" " +
                                                 $"--include_word \"{txtIncludeWord.Text}\" " +
-                                                $"--include_patterns \"{txtIncludeWord.Text}\" " +
+                                                $"--include_patterns \"{txtIncludePatterns.Text}\" " +
                                                 $"--exclude_patterns \"{txtExcludePatterns.Text}\" " +
                                                 $"--delimiter \"{txtDelimiter.Text}\" " +
                                                 $"--prefix \"{txtPrefix.Text}\" " +

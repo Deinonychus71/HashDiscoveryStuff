@@ -15,7 +15,7 @@ namespace BruteForceHash.Helpers
         public Logger(string file)
         {
             _file = file;
-            _queue = new Queue<string>();
+            _queue = new Queue<string>(10000);
             _queueCts = new CancellationTokenSource();
         }
 
