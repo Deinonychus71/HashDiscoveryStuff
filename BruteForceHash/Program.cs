@@ -47,22 +47,29 @@ namespace BruteForceHash
                     logger.Log($"Skip Digits: {o.SkipDigits}");
                     logger.Log($"Skip Specials: {o.SkipSpecials}");
 
-                    //Run script
-                    if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
-                        new BruteForceDictionary(logger, o, length, hexToFind).Run();
-                    else if (o.Method.Equals("letter", StringComparison.OrdinalIgnoreCase))
-                        new BruteForceLetter(logger, o, length, hexToFind).Run();
+                    if (o.Prefix.Length + o.Suffix.Length > length)
+                    {
+                        logger.Log($"Error: Prefix and/or Suffix is too long!");
+                    }
                     else
-                        logger.Log("Method invalid");
-
+                    {
+                        //Run script
+                        if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
+                            new BruteForceDictionary(logger, o, length, hexToFind).Run();
+                        else if (o.Method.Equals("letter", StringComparison.OrdinalIgnoreCase))
+                            new BruteForceLetter(logger, o, length, hexToFind).Run();
+                        else
+                            logger.Log("Method invalid");
+                        await Task.Delay(2000);
+                    }
                     logger.Log("-----------------------------------------");
-
-                    await Task.Delay(2000);
                 }
 
                 Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Done!");
                 if (o.ConfirmEnd)
                     Console.ReadKey();
+                else
+                    await Task.Delay(2000);
             });
         }
     }
