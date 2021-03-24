@@ -41,8 +41,11 @@ namespace BruteForceHash
 
                     if (!string.IsNullOrEmpty(o.Prefix))
                         logger.Log($"Prefix: {o.Prefix}");
+                    if (!string.IsNullOrEmpty(o.Suffix))
+                        logger.Log($"Suffix: {o.Suffix}");
                     logger.Log($"Number of Threads: {o.NbrThreads}");
                     logger.Log($"Skip Digits: {o.SkipDigits}");
+                    logger.Log($"Skip Specials: {o.SkipSpecials}");
 
                     //Run script
                     if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))

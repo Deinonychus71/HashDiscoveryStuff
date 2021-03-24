@@ -54,6 +54,10 @@ namespace BruteForceHash.GUI
             this.lblDictionaries = new System.Windows.Forms.Label();
             this.chklDictionaries = new System.Windows.Forms.CheckedListBox();
             this.btnStart = new System.Windows.Forms.Button();
+            this.lblSkipSpecials = new System.Windows.Forms.Label();
+            this.chkSpecials = new System.Windows.Forms.CheckBox();
+            this.lblSuffix = new System.Windows.Forms.Label();
+            this.txtSuffix = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lblHexValues
@@ -70,7 +74,7 @@ namespace BruteForceHash.GUI
             this.txtHexValues.Location = new System.Drawing.Point(123, 58);
             this.txtHexValues.Name = "txtHexValues";
             this.txtHexValues.PlaceholderText = "0x105274ba4f";
-            this.txtHexValues.Size = new System.Drawing.Size(296, 23);
+            this.txtHexValues.Size = new System.Drawing.Size(178, 23);
             this.txtHexValues.TabIndex = 1;
             // 
             // lblMethod
@@ -113,18 +117,18 @@ namespace BruteForceHash.GUI
             // lblDelimiter
             // 
             this.lblDelimiter.AutoSize = true;
-            this.lblDelimiter.Location = new System.Drawing.Point(250, 101);
+            this.lblDelimiter.Location = new System.Drawing.Point(328, 61);
             this.lblDelimiter.Name = "lblDelimiter";
-            this.lblDelimiter.Size = new System.Drawing.Size(90, 15);
+            this.lblDelimiter.Size = new System.Drawing.Size(58, 15);
             this.lblDelimiter.TabIndex = 6;
-            this.lblDelimiter.Text = "Word Delimiter:";
+            this.lblDelimiter.Text = "Delimiter:";
             // 
             // txtDelimiter
             // 
-            this.txtDelimiter.Location = new System.Drawing.Point(382, 98);
+            this.txtDelimiter.Location = new System.Drawing.Point(392, 58);
             this.txtDelimiter.MaxLength = 1;
             this.txtDelimiter.Name = "txtDelimiter";
-            this.txtDelimiter.Size = new System.Drawing.Size(37, 23);
+            this.txtDelimiter.Size = new System.Drawing.Size(27, 23);
             this.txtDelimiter.TabIndex = 7;
             this.txtDelimiter.Text = "_";
             this.txtDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -132,7 +136,7 @@ namespace BruteForceHash.GUI
             // chkSkipDigits
             // 
             this.chkSkipDigits.AutoSize = true;
-            this.chkSkipDigits.Location = new System.Drawing.Point(123, 141);
+            this.chkSkipDigits.Location = new System.Drawing.Point(404, 141);
             this.chkSkipDigits.Name = "chkSkipDigits";
             this.chkSkipDigits.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.chkSkipDigits.Size = new System.Drawing.Size(15, 14);
@@ -142,7 +146,7 @@ namespace BruteForceHash.GUI
             // lblSkipDigits
             // 
             this.lblSkipDigits.AutoSize = true;
-            this.lblSkipDigits.Location = new System.Drawing.Point(16, 140);
+            this.lblSkipDigits.Location = new System.Drawing.Point(333, 139);
             this.lblSkipDigits.Name = "lblSkipDigits";
             this.lblSkipDigits.Size = new System.Drawing.Size(65, 15);
             this.lblSkipDigits.TabIndex = 9;
@@ -151,18 +155,18 @@ namespace BruteForceHash.GUI
             // lblLowerCase
             // 
             this.lblLowerCase.AutoSize = true;
-            this.lblLowerCase.Location = new System.Drawing.Point(250, 140);
+            this.lblLowerCase.Location = new System.Drawing.Point(16, 139);
             this.lblLowerCase.Name = "lblLowerCase";
-            this.lblLowerCase.Size = new System.Drawing.Size(102, 15);
+            this.lblLowerCase.Size = new System.Drawing.Size(100, 15);
             this.lblLowerCase.TabIndex = 10;
-            this.lblLowerCase.Text = "Force Lower Case:";
+            this.lblLowerCase.Text = "Force Lower case:";
             // 
             // chkLowerCase
             // 
             this.chkLowerCase.AutoSize = true;
             this.chkLowerCase.Checked = true;
             this.chkLowerCase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkLowerCase.Location = new System.Drawing.Point(387, 141);
+            this.chkLowerCase.Location = new System.Drawing.Point(122, 140);
             this.chkLowerCase.Name = "chkLowerCase";
             this.chkLowerCase.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.chkLowerCase.Size = new System.Drawing.Size(15, 14);
@@ -247,9 +251,9 @@ namespace BruteForceHash.GUI
             "62",
             "63",
             "64"});
-            this.cbNbThreads.Location = new System.Drawing.Point(328, 18);
+            this.cbNbThreads.Location = new System.Drawing.Point(307, 18);
             this.cbNbThreads.Name = "cbNbThreads";
-            this.cbNbThreads.Size = new System.Drawing.Size(91, 23);
+            this.cbNbThreads.Size = new System.Drawing.Size(112, 23);
             this.cbNbThreads.TabIndex = 13;
             // 
             // lblExcludePatterns
@@ -359,11 +363,52 @@ namespace BruteForceHash.GUI
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.OnBtnStartClick);
             // 
+            // lblSkipSpecials
+            // 
+            this.lblSkipSpecials.AutoSize = true;
+            this.lblSkipSpecials.Location = new System.Drawing.Point(167, 140);
+            this.lblSkipSpecials.Name = "lblSkipSpecials";
+            this.lblSkipSpecials.Size = new System.Drawing.Size(77, 15);
+            this.lblSkipSpecials.TabIndex = 25;
+            this.lblSkipSpecials.Text = "Skip Specials:";
+            // 
+            // chkSpecials
+            // 
+            this.chkSpecials.AutoSize = true;
+            this.chkSpecials.Checked = true;
+            this.chkSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSpecials.Location = new System.Drawing.Point(250, 140);
+            this.chkSpecials.Name = "chkSpecials";
+            this.chkSpecials.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.chkSpecials.Size = new System.Drawing.Size(15, 14);
+            this.chkSpecials.TabIndex = 26;
+            this.chkSpecials.UseVisualStyleBackColor = true;
+            // 
+            // lblSuffix
+            // 
+            this.lblSuffix.AutoSize = true;
+            this.lblSuffix.Location = new System.Drawing.Point(250, 101);
+            this.lblSuffix.Name = "lblSuffix";
+            this.lblSuffix.Size = new System.Drawing.Size(40, 15);
+            this.lblSuffix.TabIndex = 27;
+            this.lblSuffix.Text = "Suffix:";
+            // 
+            // txtSuffix
+            // 
+            this.txtSuffix.Location = new System.Drawing.Point(305, 98);
+            this.txtSuffix.Name = "txtSuffix";
+            this.txtSuffix.Size = new System.Drawing.Size(114, 23);
+            this.txtSuffix.TabIndex = 28;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(447, 533);
+            this.Controls.Add(this.txtSuffix);
+            this.Controls.Add(this.lblSuffix);
+            this.Controls.Add(this.chkSpecials);
+            this.Controls.Add(this.lblSkipSpecials);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.chklDictionaries);
             this.Controls.Add(this.lblDictionaries);
@@ -389,6 +434,8 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.lblMethod);
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "BruteForceHash";
             this.ResumeLayout(false);
@@ -424,6 +471,11 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.CheckedListBox chklDictionaries;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.TextBox txtExcludePatterns1;
+        private System.Windows.Forms.Label lblSkipSpecials;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chkSpecials;
+        private System.Windows.Forms.Label lblSuffix;
+        private System.Windows.Forms.TextBox txtSuffix;
     }
 }
 

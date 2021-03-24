@@ -54,6 +54,7 @@ namespace BruteForceHash.GUI
                                                 $"--method {cbMethod.SelectedItem} " +
                                                 $"--words_limit {cbWordsLimit.SelectedItem} " +
                                                 $"{(chkSkipDigits.Checked ? "--skip_digits" : "")} " +
+                                                $"{(chkSpecials.Checked ? "--skip_specials" : "")} " +
                                                 $"{(chkLowerCase.Checked ? "--force_lowercase" : "")} " +
                                                 $"--use_dictionaries \"{dictionaries}\" " +
                                                 $"--include_word \"{txtIncludeWord.Text}\" " +
@@ -61,6 +62,7 @@ namespace BruteForceHash.GUI
                                                 $"--exclude_patterns \"{txtExcludePatterns.Text}\" " +
                                                 $"--delimiter \"{txtDelimiter.Text}\" " +
                                                 $"--prefix \"{txtPrefix.Text}\" " +
+                                                $"--suffix \"{txtSuffix.Text}\" " +
                                                 $"--hex_value \"{txtHexValues.Text}\"";
                 process.StartInfo.UseShellExecute = false;
                 process.Start();

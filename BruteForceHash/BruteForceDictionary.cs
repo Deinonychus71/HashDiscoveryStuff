@@ -35,7 +35,8 @@ namespace BruteForceHash
             _stringLength = stringLength;
 
             //Generate combinations
-            _combinationPatterns = GenerateCombinations(_stringLength - options.Prefix.Length, options.Delimiter, options.WordsLimit);
+            var combinationSize = _stringLength - options.Prefix.Length - options.Suffix.Length;
+            _combinationPatterns = GenerateCombinations(combinationSize, options.Delimiter, options.WordsLimit);
 
             //Load dictionary
             _dictionaries = GetDictionaries(options.SkipDigits, options.ForceLowercase);
@@ -68,11 +69,7 @@ namespace BruteForceHash
             {
                 var task = factory.StartNew(() =>
                 {
-                    var strBuilder = new ByteString(_stringLength);
-                    if (!string.IsNullOrEmpty(_options.Prefix))
-                    {
-                        strBuilder.Append(_options.Prefix, 0);
-                    }
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
                     _logger.Log($"Running Pattern: {combinationPattern}", false);
                     RunDictionaries(strBuilder, combinationPattern);
                 });
@@ -227,8 +224,7 @@ namespace BruteForceHash
 
         private void TestCandidate(ByteString candidate)
         {
-            var testValue = Crc32Algorithm.Compute(candidate.Value);
-            if (testValue == _hexValue)
+            if (candidate.CRC32Check())
                 _logger.Log(candidate.ToString());
         }
 
