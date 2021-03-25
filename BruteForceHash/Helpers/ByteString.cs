@@ -7,8 +7,8 @@ namespace BruteForceHash.Helpers
     {
         private readonly int _leadPrefixOffset;
         private readonly int _leadSuffixOffset;
-        private string _prefix;
-        private string _suffix;
+        private readonly string _prefix;
+        private readonly string _suffix;
         private bool _canBeOptimized;
         private bool _wasOptimized;
         private uint _hexToFind;

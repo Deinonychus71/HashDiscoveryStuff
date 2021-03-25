@@ -21,6 +21,7 @@ namespace BruteForceHash
         private readonly int _stringLength;
         private readonly char _delimiter;
         private readonly byte _delimiterByte;
+        private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9]*$", RegexOptions.Compiled);
 
         public BruteForceDictionary(Logger logger, Options options, int stringLength, uint hexValue)
         {
@@ -39,7 +40,7 @@ namespace BruteForceHash
             _combinationPatterns = GenerateCombinations(combinationSize, options.Delimiter, options.WordsLimit);
 
             //Load dictionary
-            _dictionaries = GetDictionaries(options.SkipDigits, options.ForceLowercase);
+            _dictionaries = GetDictionaries(options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
         }
 
         public void Run()
@@ -242,7 +243,7 @@ namespace BruteForceHash
             return obj;
         }
 
-        private Dictionary<string, byte[][]> GetDictionaries(bool skipDigits, bool forceLowerCase)
+        private Dictionary<string, byte[][]> GetDictionaries(bool skipDigits, bool skipSpecials, bool forceLowerCase)
         {
             Dictionary<string, HashSet<string>> dictionary = new Dictionary<string, HashSet<string>>();
             var output = new Dictionary<string, byte[][]>();
@@ -265,6 +266,8 @@ namespace BruteForceHash
                     if (word.Length == 0)
                         continue;
                     if (skipDigits && word.Any(char.IsDigit))
+                        continue;
+                    if(skipSpecials && !_specialCharactersRegex.IsMatch(word))
                         continue;
 
                     var lengthStr = $"{{{word.Length}}}";
