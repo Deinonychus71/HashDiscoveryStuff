@@ -2,7 +2,7 @@
   "profiles": {
     "BruteForceHash": {
       "commandName": "Project",
-      "commandLineArgs": "--nbr_threads 16 --method Dictionary --words_limit 3 --skip_digits False --force_lowercase True --use_dictionaries \"*\" --include_word \"\" --include_patterns \"\" --exclude_patterns \"\" --delimiter \"_\" --prefix \"sound_condition_\" --suffix \"\" --hex_value \"0x1d7feb1956\""
+      "commandLineArgs": "--nbr_threads 1 --method Letter --words_limit 3 --skip_digits False --force_lowercase True --use_dictionaries \"*\" --include_word \"\" --include_patterns \"\" --exclude_patterns \"\" --delimiter \"_\" --prefix \"vr_camera_distance_\" --suffix \"61\" --hex_value \"0x1b8ca12bf5\""
     }
   }
 }

@@ -15,7 +15,8 @@ namespace BruteForceHash
         private readonly Options _options;
         private readonly uint _hexValue;
         private readonly int _stringLength;
-        private static readonly string _validChars = "etainoshrdlucmfwygpbvkqjxz0123456789_./:-";
+        private readonly int _searchLength;
+        private static readonly string _validChars = "etainoshrdlucmfwygpbvkqjxz0123456789_";
         private static readonly string _validStartChars = "etainoshrdlucmfwygpbvkqjxz";
         private static byte[] _validBytes = null;
         private readonly string _prefix;
@@ -27,6 +28,7 @@ namespace BruteForceHash
             _hexValue = hexValue;
             _stringLength = stringLength;
             _prefix = options.Prefix;
+            _searchLength = _stringLength - options.Prefix.Length - options.Suffix.Length - 1;
         }
 
         public void Run()
@@ -48,7 +50,7 @@ namespace BruteForceHash
             _validBytes = Encoding.ASCII.GetBytes(inputValidChars);
 
             //Valid bytes
-            Console.WriteLine($"Enter valid first characters (Default: {_validStartChars}");
+            Console.WriteLine($"Enter valid first characters (Default: {_validStartChars})");
             string inputValidStartChars = Console.ReadLine();
             if (string.IsNullOrEmpty(inputValidStartChars))
                 inputValidStartChars = _validStartChars;
@@ -60,23 +62,24 @@ namespace BruteForceHash
 
             for (var t = 0; t < validStartBytes.Length; t++)
             {
-                var buffer = new byte[_stringLength];
+                /*var buffer = new byte[_stringLength];
                 for (var p = 0; p < _prefix.Length; p++)
                 {
                     buffer[p] = (byte)_prefix[p];
                 }
-                buffer[_prefix.Length] = validStartBytes[t];
-
+                buffer[_prefix.Length] = validStartBytes[t];*/
+                var startingCharacter = Encoding.ASCII.GetString(new byte[1] { validStartBytes[t] });
                 var task = factory.StartNew(() =>
                 {
-                    _logger.Log($"Starting new thread for {Encoding.ASCII.GetString(new byte[1] { buffer[_prefix.Length] })}", false);
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + startingCharacter, _options.Suffix);
+                    _logger.Log($"Starting new thread for {startingCharacter}", false);
                     try
                     {
-                        DiveByte(buffer, _prefix.Length + 1);
+                        DiveByte(strBuilder, 0);
                     }
                     catch (Exception e)
                     {
-                        _logger.Log($"ERROR on thread {Encoding.ASCII.GetString(new byte[1] { buffer[_prefix.Length] })}: {e.Message}");
+                        _logger.Log($"ERROR on thread {startingCharacter}: {e.Message}");
                     }
                 });
                 tasks.Add(task);
@@ -87,24 +90,21 @@ namespace BruteForceHash
             cts.Dispose();
         }
 
-        private void DiveByte(byte[] buffer, int level)
+        private void DiveByte(ByteString candidate, int level)
         {
             int levelp = level + 1;
             foreach (byte b in _validBytes)
             {
-                if (levelp < _stringLength)
+                if (levelp < _searchLength)
                 {
-                    buffer[level] = b;
-                    DiveByte(buffer, levelp);
+                    candidate.Append(b);
+                    DiveByte(candidate, levelp);
+                    candidate.Cursor -= 1;
                     continue;
                 }
-                buffer[level] = b;
-                var testValue = Crc32Algorithm.Compute(buffer);
-                if (_hexValue == testValue)
-                {
-                    string value = Encoding.ASCII.GetString(buffer);
-                    _logger.Log(value);
-                }
+                candidate.Replace(b);
+                if (candidate.CRC32Check())
+                    _logger.Log(candidate.ToString());
             }
         }
 

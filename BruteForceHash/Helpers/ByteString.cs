@@ -74,6 +74,16 @@ namespace BruteForceHash.Helpers
             _value[Cursor] = value;
             Cursor++;
         }
+
+        public void Replace(byte value)
+        {
+            _value[Cursor] = value;
+        }
+
+        public void Replace(byte value, int position)
+        {
+            _value[position] = value;
+        }
         #endregion
 
         #region Crc
@@ -94,7 +104,7 @@ namespace BruteForceHash.Helpers
                         j++;
                     }
                     _hexToFind = Crc32Algorithm.Compute(_value);
-                    Cursor = newLength;
+                    Cursor = newLength - (temp.Length - Cursor) + _leadSuffixOffset;
                     _canBeOptimized = false;
                     _wasOptimized = true;
                 }
