@@ -16,9 +16,9 @@ namespace BruteForceHash
         public char Delimiter { get; set; }
         [Option('S', "skip_digits", Required = false, Default = false, HelpText = "To skip all digits in the search.")]
         public bool SkipDigits { get; set; }
-        [Option('l', "skip_specials", Required = false, Default = true, HelpText = "To skip all special characters (non alphanumerical) in the search.")]
+        [Option('l', "skip_specials", Required = false, Default = false, HelpText = "To skip all special characters (non alphanumerical) in the search.")]
         public bool SkipSpecials { get; set; }
-        [Option('e', "confirm_end", Required = false, Default = true, HelpText = "Confirm before exiting the window.")]
+        [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]
         public bool ConfirmEnd { get; set; }
         [Option('r', "exclude_patterns", Required = false, Default = "", HelpText = "Remove some patterns (typically: '{1}_{1}' will remove any pattern with two consecutive one-letter words, separated by comma) (for dictionary hash)")]
         public string ExcludePatterns { get; set; }
@@ -30,7 +30,9 @@ namespace BruteForceHash
         public string UseDictionaries { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary hash).")]
         public int WordsLimit { get; set; }
-        [Option('f', "force_lowercase", Required = false, Default = true, HelpText = "Force all words to be lowercase (for dictionary hash).")]
+        [Option('o', "order_descending", Required = false, Default = false, HelpText = "The list of combinations will be run in a descending order (for dictionary hash).")]
+        public bool OrderLongerWordsFirst { get; set; }
+        [Option('f', "force_lowercase", Required = false, Default = false, HelpText = "Force all words to be lowercase (for dictionary hash).")]
         public bool ForceLowercase { get; set; }
         [Option('t', "nbr_threads", Required = false, Default = 16, HelpText = "Nbr of threads to run.")]
         public int NbrThreads { get; set; }

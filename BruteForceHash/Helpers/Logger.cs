@@ -14,6 +14,7 @@ namespace BruteForceHash.Helpers
 
         public Logger(string file)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(file));
             _file = file;
             _queue = new Queue<string>(10000);
             _queueCts = new CancellationTokenSource();

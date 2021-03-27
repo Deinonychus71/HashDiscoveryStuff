@@ -56,6 +56,8 @@ namespace BruteForceHash.GUI
                                                 $"{(chkSkipDigits.Checked ? "--skip_digits" : "")} " +
                                                 $"{(chkSpecials.Checked ? "--skip_specials" : "")} " +
                                                 $"{(chkLowerCase.Checked ? "--force_lowercase" : "")} " +
+                                                $"{(chkCombinationOrder.Checked ? "--order_descending" : "")} " +
+                                                $"--confirm_end " +
                                                 $"--use_dictionaries \"{dictionaries}\" " +
                                                 $"--include_word \"{txtIncludeWord.Text}\" " +
                                                 $"--include_patterns \"{txtIncludePatterns.Text}\" " +

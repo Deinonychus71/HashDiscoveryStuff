@@ -62,6 +62,7 @@ namespace BruteForceHash
             if (!string.IsNullOrEmpty(_options.IncludeWord))
                 _logger.Log($"Include Word: {_options.IncludeWord}");
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
+            _logger.Log($"Combination Order: {(_options.OrderLongerWordsFirst ? "Longer words first" : "Shorter words first")}");
             _logger.Log($"Dictionaries: {_options.UseDictionaries}");
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             _logger.Log("-----------------------------------------");
@@ -90,15 +91,22 @@ namespace BruteForceHash
                 alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, delimiter);
             }
 
+            //Sorting
+            var inputList = alreadyFoundMap[stringLength];
+            if (_options.OrderLongerWordsFirst)
+                inputList = inputList.OrderByDescending(p => p).OrderBy(p => p.Length).ThenByDescending(p => p).ToList();
+            else
+                inputList = inputList.OrderBy(p => p).OrderBy(p => p.Length).ThenBy(p => p).ToList();
+
             var output = new List<string>();
             var excludePatterns = _options.ExcludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            foreach (var combination in alreadyFoundMap[stringLength])
+            foreach (var combination in inputList)
             {
                 var nbrChar = combination.Split(delimiter);
-                if (nbrChar.Length <= wordsLimit && 
-                    !excludePatterns.Any(p => combination.Contains(p)) && 
-                    (includePatterns.Length == 0 || includePatterns.Any(p => combination.Contains(p))))
+                if (nbrChar.Length <= wordsLimit &&
+                    !excludePatterns.Any(p => combination.Contains(p)) &&
+                    (includePatterns.Length == 0 || includePatterns.All(p => combination.Contains(p))))
                 {
                     if (!string.IsNullOrEmpty(_options.IncludeWord))
                     {
@@ -117,7 +125,7 @@ namespace BruteForceHash
                     
             }
 
-            return output.OrderBy(p => p.Length);
+            return output;
         }
 
         private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, char delimiter)

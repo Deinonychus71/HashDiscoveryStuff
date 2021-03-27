@@ -58,6 +58,8 @@ namespace BruteForceHash.GUI
             this.chkSpecials = new System.Windows.Forms.CheckBox();
             this.lblSuffix = new System.Windows.Forms.Label();
             this.txtSuffix = new System.Windows.Forms.TextBox();
+            this.lblCombinationOrder = new System.Windows.Forms.Label();
+            this.chkCombinationOrder = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lblHexValues
@@ -339,7 +341,7 @@ namespace BruteForceHash.GUI
             // lblDictionaries
             // 
             this.lblDictionaries.AutoSize = true;
-            this.lblDictionaries.Location = new System.Drawing.Point(16, 302);
+            this.lblDictionaries.Location = new System.Drawing.Point(16, 345);
             this.lblDictionaries.Name = "lblDictionaries";
             this.lblDictionaries.Size = new System.Drawing.Size(72, 15);
             this.lblDictionaries.TabIndex = 22;
@@ -348,14 +350,14 @@ namespace BruteForceHash.GUI
             // chklDictionaries
             // 
             this.chklDictionaries.FormattingEnabled = true;
-            this.chklDictionaries.Location = new System.Drawing.Point(123, 302);
+            this.chklDictionaries.Location = new System.Drawing.Point(123, 345);
             this.chklDictionaries.Name = "chklDictionaries";
-            this.chklDictionaries.Size = new System.Drawing.Size(296, 166);
+            this.chklDictionaries.Size = new System.Drawing.Size(296, 184);
             this.chklDictionaries.TabIndex = 23;
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(123, 488);
+            this.btnStart.Location = new System.Drawing.Point(123, 554);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(213, 23);
             this.btnStart.TabIndex = 24;
@@ -400,11 +402,33 @@ namespace BruteForceHash.GUI
             this.txtSuffix.Size = new System.Drawing.Size(114, 23);
             this.txtSuffix.TabIndex = 28;
             // 
+            // lblCombinationOrder
+            // 
+            this.lblCombinationOrder.AutoSize = true;
+            this.lblCombinationOrder.Location = new System.Drawing.Point(16, 304);
+            this.lblCombinationOrder.Name = "lblCombinationOrder";
+            this.lblCombinationOrder.Size = new System.Drawing.Size(40, 15);
+            this.lblCombinationOrder.TabIndex = 29;
+            this.lblCombinationOrder.Text = "Order:";
+            // 
+            // chkCombinationOrder
+            // 
+            this.chkCombinationOrder.AutoSize = true;
+            this.chkCombinationOrder.Location = new System.Drawing.Point(123, 305);
+            this.chkCombinationOrder.Name = "chkCombinationOrder";
+            this.chkCombinationOrder.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.chkCombinationOrder.Size = new System.Drawing.Size(121, 19);
+            this.chkCombinationOrder.TabIndex = 30;
+            this.chkCombinationOrder.Text = "Longer words first";
+            this.chkCombinationOrder.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(447, 533);
+            this.ClientSize = new System.Drawing.Size(447, 597);
+            this.Controls.Add(this.chkCombinationOrder);
+            this.Controls.Add(this.lblCombinationOrder);
             this.Controls.Add(this.txtSuffix);
             this.Controls.Add(this.lblSuffix);
             this.Controls.Add(this.chkSpecials);
@@ -476,6 +500,8 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.CheckBox chkSpecials;
         private System.Windows.Forms.Label lblSuffix;
         private System.Windows.Forms.TextBox txtSuffix;
+        private System.Windows.Forms.Label lblCombinationOrder;
+        private System.Windows.Forms.CheckBox chkCombinationOrder;
     }
 }
 
