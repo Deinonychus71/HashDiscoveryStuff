@@ -65,6 +65,7 @@ namespace BruteForceHash
             _logger.Log($"Combination Order: {(_options.OrderLongerWordsFirst ? "Longer words first" : "Shorter words first")}");
             _logger.Log($"Dictionaries: {_options.UseDictionaries}");
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
+            _logger.Log($"Search on: {_stringLength - _options.Prefix.Length - _options.Suffix.Length} characters");
             _logger.Log("-----------------------------------------");
 
             foreach (var combinationPattern in _combinationPatterns)
@@ -72,7 +73,8 @@ namespace BruteForceHash
                 var task = factory.StartNew(() =>
                 {
                     var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
-                    _logger.Log($"Running Pattern: {combinationPattern}", false);
+                    if(_options.Verbose)
+                        _logger.Log($"Running Pattern: {combinationPattern}", false);
                     RunDictionaries(strBuilder, combinationPattern);
                 });
                 tasks.Add(task);

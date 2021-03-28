@@ -28,6 +28,9 @@ namespace BruteForceHash.GUI
             {
                 Directory.CreateDirectory("Dictionaries");
             }
+
+            pnlDictionary.Visible = true;
+            pnlCharacter.Visible = false;
         }
 
         private void OnBtnStartClick(object sender, EventArgs e)
@@ -53,6 +56,7 @@ namespace BruteForceHash.GUI
                                                     $"{(chkSpecials.Checked ? "--skip_specials" : "")} " +
                                                     $"{(chkLowerCase.Checked ? "--force_lowercase" : "")} " +
                                                     $"{(chkCombinationOrder.Checked ? "--order_descending" : "")} " +
+                                                    $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--use_dictionaries \"{dictionaries}\" " +
                                                     $"--include_word \"{txtIncludeWord.Text}\" " +
@@ -67,10 +71,11 @@ namespace BruteForceHash.GUI
                 {
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
                                                     $"--method {cbMethod.SelectedItem} " +
+                                                    $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--valid_chars \"{txtValidChars.Text}\" " +
                                                     $"--valid_starting_chars \"{txtStartingValidChars.Text}\" " +
-                                                    $"--include_word \"{txtIncludeWordsLetter.Text}\" " +
+                                                    $"--include_word \"{txtIncludeWordsCharacter.Text}\" " +
                                                     $"--prefix \"{txtPrefix.Text}\" " +
                                                     $"--suffix \"{txtSuffix.Text}\" " +
                                                     $"--hex_value \"{txtHexValues.Text}\"";
@@ -86,7 +91,7 @@ namespace BruteForceHash.GUI
         private void OnCbMethodChanged(object sender, EventArgs e)
         {
             pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
-            pnlLetter.Visible = !pnlDictionary.Visible;
+            pnlCharacter.Visible = !pnlDictionary.Visible;
         }
     }
 }

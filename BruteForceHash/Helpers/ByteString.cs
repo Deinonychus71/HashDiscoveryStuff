@@ -81,9 +81,20 @@ namespace BruteForceHash.Helpers
             bytes.CopyTo(_value, Cursor);
         }
 
+        public void Replace(string value, int position)
+        {
+            var bytes = Encoding.ASCII.GetBytes(value);
+            bytes.CopyTo(_value, position);
+        }
+
         public void Replace(byte[] bytes)
         {
             bytes.CopyTo(_value, Cursor);
+        }
+
+        public void Replace(byte[] bytes, int position)
+        {
+            bytes.CopyTo(_value, position);
         }
 
         public void Replace(byte value)

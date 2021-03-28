@@ -6,7 +6,7 @@ namespace BruteForceHash
     {
         [Option('h', "hex_value", Required = false, HelpText = "Hex Value to search. Can be a list (separated by comma)")]
         public string HexValue { get; set; }
-        [Option('m', "method", Required = false, Default = "dictionary", HelpText = "Method to use (dictionary or letter)")]
+        [Option('m', "method", Required = false, Default = "dictionary", HelpText = "Method to use (dictionary or character)")]
         public string Method { get; set; }
         [Option('p', "prefix", Required = false, Default = "", HelpText = "Prefix to apply before the search (optional).")]
         public string Prefix { get; set; }
@@ -20,9 +20,9 @@ namespace BruteForceHash
         public bool SkipSpecials { get; set; }
         [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]
         public bool ConfirmEnd { get; set; }
-        [Option('r', "exclude_patterns", Required = false, Default = "", HelpText = "Remove some patterns (typically: '{1}_{1}' will remove any pattern with two consecutive one-letter words, separated by comma) (for dictionary attack)")]
+        [Option('r', "exclude_patterns", Required = false, Default = "", HelpText = "Remove some patterns (typically: '{1}_{1}' will remove any pattern with two consecutive one-character words, separated by comma) (for dictionary attack)")]
         public string ExcludePatterns { get; set; }
-        [Option('i', "include_patterns", Required = false, Default = "", HelpText = "Only run patterns that include are specific here (typically: '{3}' would run any pattern containing a 3 letter word, separated by comma) (for dictionary attack)")]
+        [Option('i', "include_patterns", Required = false, Default = "", HelpText = "Only run patterns that include are specific here (typically: '{3}' would run any pattern containing a 3 characters word, separated by comma) (for dictionary attack)")]
         public string IncludePatterns { get; set; }
         [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear.")]
         public string IncludeWord { get; set; }
@@ -36,9 +36,11 @@ namespace BruteForceHash
         public bool ForceLowercase { get; set; }
         [Option('t', "nbr_threads", Required = false, Default = 16, HelpText = "Nbr of threads to run.")]
         public int NbrThreads { get; set; }
-        [Option('v', "valid_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz0123456789_", HelpText = "All the letters to bruteforce (for letter attack).")]
+        [Option('c', "valid_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz0123456789_", HelpText = "All the characters to bruteforce (for character attack).")]
         public string ValidChars { get; set; }
-        [Option('V', "valid_starting_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz", HelpText = "All the letters to start with for bruteforce (for letter attack).")]
+        [Option('C', "valid_starting_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz", HelpText = "All the characters to start with for bruteforce (for character attack).")]
         public string ValidStartingChars { get; set; }
+        [Option('v', "verbose", Required = false, Default = false, HelpText = "Display more search and thread information.")]
+        public bool Verbose { get; set; }
     }
 }

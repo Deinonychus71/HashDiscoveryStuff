@@ -61,15 +61,16 @@ namespace BruteForceHash.GUI
             this.lblCombinationOrder = new System.Windows.Forms.Label();
             this.chkCombinationOrder = new System.Windows.Forms.CheckBox();
             this.pnlDictionary = new System.Windows.Forms.Panel();
-            this.txtIncludeWordsLetter = new System.Windows.Forms.TextBox();
-            this.pnlLetter = new System.Windows.Forms.Panel();
-            this.lblIncludeWordLetters = new System.Windows.Forms.Label();
+            this.txtIncludeWordsCharacter = new System.Windows.Forms.TextBox();
+            this.pnlCharacter = new System.Windows.Forms.Panel();
+            this.lblIncludeWordCharacters = new System.Windows.Forms.Label();
             this.txtStartingValidChars = new System.Windows.Forms.TextBox();
             this.lblStartingValidChars = new System.Windows.Forms.Label();
             this.txtValidChars = new System.Windows.Forms.TextBox();
             this.lblValidChars = new System.Windows.Forms.Label();
+            this.chkVerbose = new System.Windows.Forms.CheckBox();
             this.pnlDictionary.SuspendLayout();
-            this.pnlLetter.SuspendLayout();
+            this.pnlCharacter.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblHexValues
@@ -104,7 +105,7 @@ namespace BruteForceHash.GUI
             this.cbMethod.FormattingEnabled = true;
             this.cbMethod.Items.AddRange(new object[] {
             "Dictionary",
-            "Letter"});
+            "Character"});
             this.cbMethod.Location = new System.Drawing.Point(123, 18);
             this.cbMethod.Name = "cbMethod";
             this.cbMethod.Size = new System.Drawing.Size(114, 23);
@@ -189,7 +190,7 @@ namespace BruteForceHash.GUI
             // lblNbThreads
             // 
             this.lblNbThreads.AutoSize = true;
-            this.lblNbThreads.Location = new System.Drawing.Point(250, 21);
+            this.lblNbThreads.Location = new System.Drawing.Point(243, 21);
             this.lblNbThreads.Name = "lblNbThreads";
             this.lblNbThreads.Size = new System.Drawing.Size(51, 15);
             this.lblNbThreads.TabIndex = 12;
@@ -264,9 +265,9 @@ namespace BruteForceHash.GUI
             "62",
             "63",
             "64"});
-            this.cbNbThreads.Location = new System.Drawing.Point(307, 18);
+            this.cbNbThreads.Location = new System.Drawing.Point(300, 18);
             this.cbNbThreads.Name = "cbNbThreads";
-            this.cbNbThreads.Size = new System.Drawing.Size(112, 23);
+            this.cbNbThreads.Size = new System.Drawing.Size(42, 23);
             this.cbNbThreads.TabIndex = 13;
             // 
             // lblExcludePatterns
@@ -458,35 +459,35 @@ namespace BruteForceHash.GUI
             this.pnlDictionary.Size = new System.Drawing.Size(423, 421);
             this.pnlDictionary.TabIndex = 31;
             // 
-            // txtIncludeWordsLetter
+            // txtIncludeWordsCharacter
             // 
-            this.txtIncludeWordsLetter.Location = new System.Drawing.Point(112, 92);
-            this.txtIncludeWordsLetter.Name = "txtIncludeWordsLetter";
-            this.txtIncludeWordsLetter.PlaceholderText = "mario";
-            this.txtIncludeWordsLetter.Size = new System.Drawing.Size(295, 23);
-            this.txtIncludeWordsLetter.TabIndex = 31;
+            this.txtIncludeWordsCharacter.Location = new System.Drawing.Point(112, 92);
+            this.txtIncludeWordsCharacter.Name = "txtIncludeWordsCharacter";
+            this.txtIncludeWordsCharacter.PlaceholderText = "mario";
+            this.txtIncludeWordsCharacter.Size = new System.Drawing.Size(295, 23);
+            this.txtIncludeWordsCharacter.TabIndex = 31;
             // 
-            // pnlLetter
+            // pnlCharacter
             // 
-            this.pnlLetter.Controls.Add(this.txtIncludeWordsLetter);
-            this.pnlLetter.Controls.Add(this.lblIncludeWordLetters);
-            this.pnlLetter.Controls.Add(this.txtStartingValidChars);
-            this.pnlLetter.Controls.Add(this.lblStartingValidChars);
-            this.pnlLetter.Controls.Add(this.txtValidChars);
-            this.pnlLetter.Controls.Add(this.lblValidChars);
-            this.pnlLetter.Location = new System.Drawing.Point(12, 127);
-            this.pnlLetter.Name = "pnlLetter";
-            this.pnlLetter.Size = new System.Drawing.Size(423, 421);
-            this.pnlLetter.TabIndex = 32;
+            this.pnlCharacter.Controls.Add(this.txtIncludeWordsCharacter);
+            this.pnlCharacter.Controls.Add(this.lblIncludeWordCharacters);
+            this.pnlCharacter.Controls.Add(this.txtStartingValidChars);
+            this.pnlCharacter.Controls.Add(this.lblStartingValidChars);
+            this.pnlCharacter.Controls.Add(this.txtValidChars);
+            this.pnlCharacter.Controls.Add(this.lblValidChars);
+            this.pnlCharacter.Location = new System.Drawing.Point(12, 127);
+            this.pnlCharacter.Name = "pnlCharacter";
+            this.pnlCharacter.Size = new System.Drawing.Size(423, 421);
+            this.pnlCharacter.TabIndex = 32;
             // 
-            // lblIncludeWordLetters
+            // lblIncludeWordCharacters
             // 
-            this.lblIncludeWordLetters.AutoSize = true;
-            this.lblIncludeWordLetters.Location = new System.Drawing.Point(4, 95);
-            this.lblIncludeWordLetters.Name = "lblIncludeWordLetters";
-            this.lblIncludeWordLetters.Size = new System.Drawing.Size(81, 15);
-            this.lblIncludeWordLetters.TabIndex = 33;
-            this.lblIncludeWordLetters.Text = "Include Word:";
+            this.lblIncludeWordCharacters.AutoSize = true;
+            this.lblIncludeWordCharacters.Location = new System.Drawing.Point(4, 95);
+            this.lblIncludeWordCharacters.Name = "lblIncludeWordCharacters";
+            this.lblIncludeWordCharacters.Size = new System.Drawing.Size(81, 15);
+            this.lblIncludeWordCharacters.TabIndex = 33;
+            this.lblIncludeWordCharacters.Text = "Include Word:";
             // 
             // txtStartingValidChars
             // 
@@ -522,12 +523,26 @@ namespace BruteForceHash.GUI
             this.lblValidChars.TabIndex = 31;
             this.lblValidChars.Text = "Valid Chars:";
             // 
+            // chkVerbose
+            // 
+            this.chkVerbose.AutoSize = true;
+            this.chkVerbose.Checked = true;
+            this.chkVerbose.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkVerbose.Location = new System.Drawing.Point(352, 20);
+            this.chkVerbose.Name = "chkVerbose";
+            this.chkVerbose.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.chkVerbose.Size = new System.Drawing.Size(67, 19);
+            this.chkVerbose.TabIndex = 33;
+            this.chkVerbose.Text = "Verbose";
+            this.chkVerbose.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(446, 597);
-            this.Controls.Add(this.pnlLetter);
+            this.Controls.Add(this.chkVerbose);
+            this.Controls.Add(this.pnlCharacter);
             this.Controls.Add(this.txtDelimiter);
             this.Controls.Add(this.lblDelimiter);
             this.Controls.Add(this.txtSuffix);
@@ -548,8 +563,8 @@ namespace BruteForceHash.GUI
             this.Text = "BruteForceHash";
             this.pnlDictionary.ResumeLayout(false);
             this.pnlDictionary.PerformLayout();
-            this.pnlLetter.ResumeLayout(false);
-            this.pnlLetter.PerformLayout();
+            this.pnlCharacter.ResumeLayout(false);
+            this.pnlCharacter.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -591,13 +606,14 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblCombinationOrder;
         private System.Windows.Forms.CheckBox chkCombinationOrder;
         private System.Windows.Forms.Panel pnlDictionary;
-        private System.Windows.Forms.Panel pnlLetter;
-        private System.Windows.Forms.TextBox txtIncludeWordsLetter;
+        private System.Windows.Forms.Panel pnlCharacter;
+        private System.Windows.Forms.TextBox txtIncludeWordsCharacter;
         private System.Windows.Forms.Label lblValidChars;
         private System.Windows.Forms.TextBox txtValidChars;
         private System.Windows.Forms.TextBox txtStartingValidChars;
         private System.Windows.Forms.Label lblStartingValidChars;
-        private System.Windows.Forms.Label lblIncludeWordLetters;
+        private System.Windows.Forms.Label lblIncludeWordCharacters;
+        private System.Windows.Forms.CheckBox chkVerbose;
     }
 }
 
