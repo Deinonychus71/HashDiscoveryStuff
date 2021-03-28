@@ -12,7 +12,7 @@ namespace BruteForceHash
         public string Prefix { get; set; }
         [Option('s', "suffix", Required = false, Default = "", HelpText = "Suffix to apply after the search (optional).")]
         public string Suffix { get; set; }
-        [Option('d', "delimiter", Required = false, Default = '_', HelpText = "Delimiter (for dictionary hash).")]
+        [Option('d', "delimiter", Required = false, Default = '_', HelpText = "Delimiter (for dictionary attack).")]
         public char Delimiter { get; set; }
         [Option('S', "skip_digits", Required = false, Default = false, HelpText = "To skip all digits in the search.")]
         public bool SkipDigits { get; set; }
@@ -20,21 +20,25 @@ namespace BruteForceHash
         public bool SkipSpecials { get; set; }
         [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]
         public bool ConfirmEnd { get; set; }
-        [Option('r', "exclude_patterns", Required = false, Default = "", HelpText = "Remove some patterns (typically: '{1}_{1}' will remove any pattern with two consecutive one-letter words, separated by comma) (for dictionary hash)")]
+        [Option('r', "exclude_patterns", Required = false, Default = "", HelpText = "Remove some patterns (typically: '{1}_{1}' will remove any pattern with two consecutive one-letter words, separated by comma) (for dictionary attack)")]
         public string ExcludePatterns { get; set; }
-        [Option('i', "include_patterns", Required = false, Default = "", HelpText = "Only run patterns that include are specific here (typically: '{3}' would run any pattern containing a 3 letter word, separated by comma) (for dictionary hash)")]
+        [Option('i', "include_patterns", Required = false, Default = "", HelpText = "Only run patterns that include are specific here (typically: '{3}' would run any pattern containing a 3 letter word, separated by comma) (for dictionary attack)")]
         public string IncludePatterns { get; set; }
-        [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear (for dictionary hash).")]
+        [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear.")]
         public string IncludeWord { get; set; }
-        [Option('D', "use_dictionaries", Required = false, Default = "*", HelpText = "List all the dictionaries to use (separated by semi-colon) (for dictionary hash).")]
+        [Option('D', "use_dictionaries", Required = false, Default = "*", HelpText = "List all the dictionaries to use (separated by semi-colon) (for dictionary attack).")]
         public string UseDictionaries { get; set; }
-        [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary hash).")]
+        [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary attack).")]
         public int WordsLimit { get; set; }
-        [Option('o', "order_descending", Required = false, Default = false, HelpText = "The list of combinations will be run in a descending order (for dictionary hash).")]
+        [Option('o', "order_descending", Required = false, Default = false, HelpText = "The list of combinations will be run in a descending order (for dictionary attack).")]
         public bool OrderLongerWordsFirst { get; set; }
-        [Option('f', "force_lowercase", Required = false, Default = false, HelpText = "Force all words to be lowercase (for dictionary hash).")]
+        [Option('f', "force_lowercase", Required = false, Default = false, HelpText = "Force all words to be lowercase (for dictionary attack).")]
         public bool ForceLowercase { get; set; }
         [Option('t', "nbr_threads", Required = false, Default = 16, HelpText = "Nbr of threads to run.")]
         public int NbrThreads { get; set; }
+        [Option('v', "valid_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz0123456789_", HelpText = "All the letters to bruteforce (for letter attack).")]
+        public string ValidChars { get; set; }
+        [Option('V', "valid_starting_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz", HelpText = "All the letters to start with for bruteforce (for letter attack).")]
+        public string ValidStartingChars { get; set; }
     }
 }

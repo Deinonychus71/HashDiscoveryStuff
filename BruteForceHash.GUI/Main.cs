@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BruteForceHash.GUI
@@ -50,28 +44,49 @@ namespace BruteForceHash.GUI
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "BruteForceHash.exe";
-                process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                $"--method {cbMethod.SelectedItem} " +
-                                                $"--words_limit {cbWordsLimit.SelectedItem} " +
-                                                $"{(chkSkipDigits.Checked ? "--skip_digits" : "")} " +
-                                                $"{(chkSpecials.Checked ? "--skip_specials" : "")} " +
-                                                $"{(chkLowerCase.Checked ? "--force_lowercase" : "")} " +
-                                                $"{(chkCombinationOrder.Checked ? "--order_descending" : "")} " +
-                                                $"--confirm_end " +
-                                                $"--use_dictionaries \"{dictionaries}\" " +
-                                                $"--include_word \"{txtIncludeWord.Text}\" " +
-                                                $"--include_patterns \"{txtIncludePatterns.Text}\" " +
-                                                $"--exclude_patterns \"{txtExcludePatterns.Text}\" " +
-                                                $"--delimiter \"{txtDelimiter.Text}\" " +
-                                                $"--prefix \"{txtPrefix.Text}\" " +
-                                                $"--suffix \"{txtSuffix.Text}\" " +
-                                                $"--hex_value \"{txtHexValues.Text}\"";
+                if (cbMethod.SelectedItem.ToString() == "Dictionary")
+                {
+                    process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
+                                                    $"--method {cbMethod.SelectedItem} " +
+                                                    $"--words_limit {cbWordsLimit.SelectedItem} " +
+                                                    $"{(chkSkipDigits.Checked ? "--skip_digits" : "")} " +
+                                                    $"{(chkSpecials.Checked ? "--skip_specials" : "")} " +
+                                                    $"{(chkLowerCase.Checked ? "--force_lowercase" : "")} " +
+                                                    $"{(chkCombinationOrder.Checked ? "--order_descending" : "")} " +
+                                                    $"--confirm_end " +
+                                                    $"--use_dictionaries \"{dictionaries}\" " +
+                                                    $"--include_word \"{txtIncludeWord.Text}\" " +
+                                                    $"--include_patterns \"{txtIncludePatterns.Text}\" " +
+                                                    $"--exclude_patterns \"{txtExcludePatterns.Text}\" " +
+                                                    $"--delimiter \"{txtDelimiter.Text}\" " +
+                                                    $"--prefix \"{txtPrefix.Text}\" " +
+                                                    $"--suffix \"{txtSuffix.Text}\" " +
+                                                    $"--hex_value \"{txtHexValues.Text}\"";
+                }
+                else
+                {
+                    process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
+                                                    $"--method {cbMethod.SelectedItem} " +
+                                                    $"--confirm_end " +
+                                                    $"--valid_chars \"{txtValidChars.Text}\" " +
+                                                    $"--valid_starting_chars \"{txtStartingValidChars.Text}\" " +
+                                                    $"--include_word \"{txtIncludeWordsLetter.Text}\" " +
+                                                    $"--prefix \"{txtPrefix.Text}\" " +
+                                                    $"--suffix \"{txtSuffix.Text}\" " +
+                                                    $"--hex_value \"{txtHexValues.Text}\"";
+                }
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
 
                 process.WaitForExit();
                 process.Close();
             }
+        }
+
+        private void OnCbMethodChanged(object sender, EventArgs e)
+        {
+            pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
+            pnlLetter.Visible = !pnlDictionary.Visible;
         }
     }
 }
