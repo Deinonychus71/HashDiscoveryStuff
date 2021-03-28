@@ -205,9 +205,8 @@ namespace BruteForceHash
 
             if (lastWord && !wordSize.StartsWith("{"))
             {
-                candidate.Append(combinationPattern);
+                candidate.Replace(combinationPattern);
                 TestCandidate(candidate);
-                candidate.Cursor -= combinationPattern.Length;
             }
             else
             {
@@ -216,9 +215,8 @@ namespace BruteForceHash
                 {
                     if (lastWord)
                     {
-                        candidate.Append(word);
+                        candidate.Replace(word);
                         TestCandidate(candidate);
-                        candidate.Cursor -= word.Length;
                     }
                     else
                     {
