@@ -426,6 +426,8 @@ namespace BruteForceHash.GUI
             // chkCombinationOrder
             // 
             this.chkCombinationOrder.AutoSize = true;
+            this.chkCombinationOrder.Checked = true;
+            this.chkCombinationOrder.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCombinationOrder.Location = new System.Drawing.Point(112, 178);
             this.chkCombinationOrder.Name = "chkCombinationOrder";
             this.chkCombinationOrder.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -542,7 +544,6 @@ namespace BruteForceHash.GUI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(446, 597);
             this.Controls.Add(this.chkVerbose);
-            this.Controls.Add(this.pnlCharacter);
             this.Controls.Add(this.txtDelimiter);
             this.Controls.Add(this.lblDelimiter);
             this.Controls.Add(this.txtSuffix);
@@ -557,6 +558,7 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
             this.Controls.Add(this.pnlDictionary);
+            this.Controls.Add(this.pnlCharacter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Main";

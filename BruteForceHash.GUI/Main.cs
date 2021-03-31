@@ -59,13 +59,13 @@ namespace BruteForceHash.GUI
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--use_dictionaries \"{dictionaries}\" " +
-                                                    $"--include_word \"{txtIncludeWord.Text}\" " +
-                                                    $"--include_patterns \"{txtIncludePatterns.Text}\" " +
-                                                    $"--exclude_patterns \"{txtExcludePatterns.Text}\" " +
-                                                    $"--delimiter \"{txtDelimiter.Text}\" " +
-                                                    $"--prefix \"{txtPrefix.Text}\" " +
-                                                    $"--suffix \"{txtSuffix.Text}\" " +
-                                                    $"--hex_value \"{txtHexValues.Text}\"";
+                                                    $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
+                                                    $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
+                                                    $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +
+                                                    $"--delimiter \"{txtDelimiter.Text.Trim()}\" " +
+                                                    $"--prefix \"{txtPrefix.Text.Trim()}\" " +
+                                                    $"--suffix \"{txtSuffix.Text.Trim()}\" " +
+                                                    $"--hex_value \"{txtHexValues.Text.Trim()}\"";
                 }
                 else
                 {
@@ -73,12 +73,12 @@ namespace BruteForceHash.GUI
                                                     $"--method {cbMethod.SelectedItem} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
-                                                    $"--valid_chars \"{txtValidChars.Text}\" " +
-                                                    $"--valid_starting_chars \"{txtStartingValidChars.Text}\" " +
-                                                    $"--include_word \"{txtIncludeWordsCharacter.Text}\" " +
-                                                    $"--prefix \"{txtPrefix.Text}\" " +
-                                                    $"--suffix \"{txtSuffix.Text}\" " +
-                                                    $"--hex_value \"{txtHexValues.Text}\"";
+                                                    $"--valid_chars \"{txtValidChars.Text.Trim()}\" " +
+                                                    $"--valid_starting_chars \"{txtStartingValidChars.Text.Trim()}\" " +
+                                                    $"--include_word \"{txtIncludeWordsCharacter.Text.Trim()}\" " +
+                                                    $"--prefix \"{txtPrefix.Text.Trim()}\" " +
+                                                    $"--suffix \"{txtSuffix.Text.Trim()}\" " +
+                                                    $"--hex_value \"{txtHexValues.Text.Trim()}\"";
                 }
                 process.StartInfo.UseShellExecute = false;
                 process.Start();

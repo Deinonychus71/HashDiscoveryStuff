@@ -87,6 +87,7 @@ namespace BruteForceHash
 
         private IEnumerable<string> GenerateCombinations(int stringLength, char delimiter, int wordsLimit)
         {
+            var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
             var alreadyFoundMap = new Dictionary<int, List<string>>();
             for (var i = 1; i <= stringLength; i++)
             {
@@ -96,9 +97,9 @@ namespace BruteForceHash
             //Sorting
             var inputList = alreadyFoundMap[stringLength];
             if (_options.OrderLongerWordsFirst)
-                inputList = inputList.OrderByDescending(p => p).OrderBy(p => p.Length).ThenByDescending(p => p).ToList();
+                inputList = inputList.OrderBy(p => p.Length).ToList();
             else
-                inputList = inputList.OrderBy(p => p).OrderBy(p => p.Length).ThenBy(p => p).ToList();
+                inputList = inputList.OrderByDescending(p => p.Length).ToList();
 
             var output = new List<string>();
             var excludePatterns = _options.ExcludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
@@ -110,16 +111,26 @@ namespace BruteForceHash
                     !excludePatterns.Any(p => combination.Contains(p)) &&
                     (includePatterns.Length == 0 || includePatterns.All(p => combination.Contains(p))))
                 {
-                    if (!string.IsNullOrEmpty(_options.IncludeWord))
+                    if (includeWords.Length > 0)
                     {
-                        var combinationMatch = $"{{{_options.IncludeWord.Length}}}";
-                        if (!combination.Contains(combinationMatch))
-                            continue;
-                        var nbrMatch = Regex.Matches(combination, "\\{" + _options.IncludeWord.Length + "\\}").Count;
-                        for(int i = 0; i < nbrMatch; i++)
+                        var wordCandidates = new List<string>() { combination };
+                        foreach (var includeWord in includeWords)
                         {
-                            output.Add(ReplaceNthOccurrence(combination, combinationMatch, _options.IncludeWord, i + 1));
+                            var combinationMatch = $"{{{includeWord.Length}}}";
+                            var tempWordCandidates = new List<string>();
+                            foreach (var wordCandidate in wordCandidates)
+                            {
+                                if (!wordCandidate.Contains(combinationMatch))
+                                    continue;
+                                var nbrMatch = Regex.Matches(wordCandidate, "\\{" + includeWord.Length + "\\}").Count;
+                                for (int i = 0; i < nbrMatch; i++)
+                                {
+                                    tempWordCandidates.Add(ReplaceNthOccurrence(wordCandidate, combinationMatch, includeWord, i + 1));
+                                }
+                            }
+                            wordCandidates = tempWordCandidates;
                         }
+                        output.AddRange(wordCandidates);
                         continue;
                     }
                     output.Add(combination);
