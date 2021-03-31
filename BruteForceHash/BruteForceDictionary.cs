@@ -19,8 +19,9 @@ namespace BruteForceHash
         private readonly Options _options;
         private readonly uint _hexValue;
         private readonly int _stringLength;
-        private readonly char _delimiter;
+        private readonly string _delimiter;
         private readonly byte _delimiterByte;
+        private readonly int _delimiterLength;
         private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9]*$", RegexOptions.Compiled);
 
         public BruteForceDictionary(Logger logger, Options options, int stringLength, uint hexValue)
@@ -28,8 +29,19 @@ namespace BruteForceHash
             _logger = logger;
             _options = options;
             _hexValue = hexValue;
-            _delimiter = options.Delimiter;
-            _delimiterByte = Encoding.ASCII.GetBytes(options.Delimiter.ToString())[0];
+            if (String.IsNullOrEmpty(options.Delimiter))
+            {
+                _delimiter = "_";
+                _delimiterByte = Encoding.ASCII.GetBytes("_")[0];
+                _delimiterLength = 0;
+            }
+            else
+            {
+                _delimiter = options.Delimiter;
+                _delimiterByte = Encoding.ASCII.GetBytes(options.Delimiter)[0];
+                _delimiterLength = _delimiter.Length;
+            }
+                
             _options.IncludeWord = _options.IncludeWord.ToLower();
 
             //Calculate stringLength after prefix;
@@ -37,7 +49,7 @@ namespace BruteForceHash
 
             //Generate combinations
             var combinationSize = _stringLength - options.Prefix.Length - options.Suffix.Length;
-            _combinationPatterns = GenerateCombinations(combinationSize, options.Delimiter, options.WordsLimit);
+            _combinationPatterns = GenerateCombinations(combinationSize, options.WordsLimit, options.Delimiter);
 
             //Load dictionary
             _dictionaries = GetDictionaries(options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
@@ -85,13 +97,13 @@ namespace BruteForceHash
             cts.Dispose();
         }
 
-        private IEnumerable<string> GenerateCombinations(int stringLength, char delimiter, int wordsLimit)
+        private IEnumerable<string> GenerateCombinations(int stringLength,  int wordsLimit, string delimiter = null)
         {
             var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
             var alreadyFoundMap = new Dictionary<int, List<string>>();
             for (var i = 1; i <= stringLength; i++)
             {
-                alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, delimiter);
+                alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, _delimiterLength);
             }
 
             //Sorting
@@ -106,8 +118,16 @@ namespace BruteForceHash
             var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             foreach (var combination in inputList)
             {
-                var nbrChar = combination.Split(delimiter);
-                if (nbrChar.Length <= wordsLimit &&
+                //Console.WriteLine(combination);
+                List<string> nbrChar = new List<string>();
+                string reducedCombination = combination;
+                while (reducedCombination.IndexOf('}') != -1) 
+                {
+                    nbrChar.Add(reducedCombination.Substring(0, reducedCombination.IndexOf('}') + 1));
+                    reducedCombination = reducedCombination.Substring(reducedCombination.IndexOf('}') + 1);
+                }
+                //var nbrChar = combination.Split(delimiter);
+                if (nbrChar.Count <= wordsLimit &&
                     !excludePatterns.Any(p => combination.Contains(p)) &&
                     (includePatterns.Length == 0 || includePatterns.All(p => combination.Contains(p))))
                 {
@@ -141,7 +161,7 @@ namespace BruteForceHash
             return output;
         }
 
-        private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, char delimiter)
+        private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, int delimiterLength)
         {
             var returnCombinations = new List<string>();
             if (stringLength == 1)
@@ -150,17 +170,29 @@ namespace BruteForceHash
             }
             else if (stringLength == 0)
             {
-                returnCombinations.Add("invalid");
+                if (delimiterLength == 0)
+                {
+                    returnCombinations.Add("ended");
+                }
+                else
+                {
+                    returnCombinations.Add("invalid");
+                }
             }
-            else if (stringLength == -1)
+            else if (delimiterLength == 0 && stringLength == -1 * delimiterLength)
             {
                 returnCombinations.Add("ended");
             }
+            else if (delimiterLength == 0 && stringLength < 0 && stringLength != delimiterLength * -1)
+            {
+                returnCombinations.Add("invalid");
+            }
+
             else
             {
                 for (int i = 1; i <= stringLength; i++)
                 {
-                    var remainingLength = stringLength - i - 1;
+                    var remainingLength = stringLength - i - delimiterLength;
                     var pattern = i.ToString();
                     List<string> subCombinations;
                     if (alreadyFoundMap.ContainsKey(remainingLength))
@@ -169,7 +201,7 @@ namespace BruteForceHash
                     }
                     else
                     {
-                        subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiter);
+                        subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength);
                     }
 
                     foreach (var remainingStringPattern in subCombinations)
@@ -180,7 +212,7 @@ namespace BruteForceHash
                         }
                         else if (remainingStringPattern != "invalid")
                         {
-                            returnCombinations.Add($"{{{pattern}}}{delimiter}{remainingStringPattern}");
+                            returnCombinations.Add($"{{{pattern}}}{_delimiter}{remainingStringPattern}");
                         }
                     }
 
@@ -207,7 +239,8 @@ namespace BruteForceHash
                 {
                     var wordLength = wordSize.Length + 1;
                     candidate.Append(wordSize);
-                    candidate.Append(_delimiterByte);
+                    if (_delimiterLength > 0)
+                        candidate.Append(_delimiterByte);
                     combinationPattern = combinationPattern[(wordLength)..];
                     RunDictionaries(candidate, combinationPattern);
                     candidate.Cursor -= wordLength;
@@ -234,9 +267,10 @@ namespace BruteForceHash
                     else
                     {
                         candidate.Append(word);
-                        candidate.Append(_delimiterByte);
+                        if (_delimiterLength > 0)
+                            candidate.Append(_delimiterByte);
                         RunDictionaries(candidate, combinationPattern);
-                        candidate.Cursor -= word.Length + 1;
+                        candidate.Cursor -= word.Length + _delimiterLength;
                     }
                 }
             }
