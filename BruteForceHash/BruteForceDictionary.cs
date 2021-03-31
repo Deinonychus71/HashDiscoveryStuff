@@ -108,6 +108,11 @@ namespace BruteForceHash
 
             //Sorting
             var inputList = alreadyFoundMap[stringLength];
+            inputList = OrderList(inputList);
+            foreach (var combination in inputList)
+            {
+                Console.WriteLine(combination);
+            }
             if (_options.OrderLongerWordsFirst)
                 inputList = inputList.OrderBy(p => p.Length).ToList();
             else
@@ -220,6 +225,60 @@ namespace BruteForceHash
 
             }
             return returnCombinations;
+        }
+
+        private List<String> OrderList(List<String> patterns)
+        {
+            Dictionary<string, double> PatternToScore = new Dictionary<string, double>();
+
+            foreach (var pattern in patterns)
+            {
+                var tempPattern = pattern;
+                List<int> differences = new List<int>();
+                int lastInteger = 0;
+                while (tempPattern.IndexOf('{') != -1)
+                {
+                    int firstOpenBracket = tempPattern.IndexOf('{');
+                    int firstCloseBracket = tempPattern.IndexOf('}');
+                    var test = tempPattern.Substring(firstOpenBracket + 1, firstCloseBracket - 1);
+                    var currentInteger = Int32.Parse(tempPattern.Substring(firstOpenBracket + 1, firstCloseBracket - firstOpenBracket - 1));
+                    if (lastInteger != 0)
+                        differences.Add(lastInteger - currentInteger);
+                    lastInteger = currentInteger;
+                    tempPattern = tempPattern.Substring(firstCloseBracket + 1); 
+                }
+                if (differences.Count == 0)
+                    PatternToScore.Add(pattern, 1.0);
+
+                else if (differences.Count == 1)
+                {
+                    PatternToScore.Add(pattern, Math.Min(Math.Abs(differences[0] / 5.0), 1.0));
+                }
+                else
+                {
+                    double scoreSum = Math.Min(Math.Abs(differences[0] / 5.0), 1.0);
+                    int scoresCounted = 1;
+                    for (int i = 1; i < differences.Count - 1; i++)
+                    {
+                        var tempScore = 0.0;
+                        if (differences[i] != 0)
+                        {
+                            tempScore = 0.5 * Math.Min(Math.Abs(differences[i] / 5.0), 1.0);
+                            if (((double)differences[i - 1]) / ((double)differences[i]) < 0)
+                                tempScore += 0.5;
+                        }
+                        scoreSum += tempScore;
+                        scoresCounted++;
+                    }
+                    PatternToScore.Add(pattern, scoreSum / scoresCounted);
+                }
+
+
+            }
+
+            var KeyValueList = PatternToScore.ToList();
+            KeyValueList.Sort((Pair1, Pair2) => Pair2.Value.CompareTo(Pair1.Value));
+            return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
         }
 
         private void RunDictionaries(ByteString candidate, string combinationPattern)
