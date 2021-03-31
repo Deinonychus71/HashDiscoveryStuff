@@ -31,8 +31,8 @@ namespace BruteForceHash
             _hexValue = hexValue;
             if (String.IsNullOrEmpty(options.Delimiter))
             {
-                _delimiter = "_";
-                _delimiterByte = Encoding.ASCII.GetBytes("_")[0];
+                _delimiter = "|";
+                _delimiterByte = Encoding.ASCII.GetBytes("|")[0];
                 _delimiterLength = 0;
             }
             else
@@ -116,7 +116,7 @@ namespace BruteForceHash
             var output = new List<string>();
             var excludePatterns = _options.ExcludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            foreach (var combination in inputList)
+            foreach (var combination in inputList.Select(p => $"${p}^"))
             {
                 //Console.WriteLine(combination);
                 List<string> nbrChar = new List<string>();
@@ -150,10 +150,10 @@ namespace BruteForceHash
                             }
                             wordCandidates = tempWordCandidates;
                         }
-                        output.AddRange(wordCandidates);
+                        output.AddRange(wordCandidates.Select(p => p.TrimStart('$').Trim('^')));
                         continue;
                     }
-                    output.Add(combination);
+                    output.Add(combination.TrimStart('$').Trim('^'));
                 }
                     
             }
@@ -237,13 +237,12 @@ namespace BruteForceHash
                 wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
                 if(!wordSize.StartsWith("{"))
                 {
-                    var wordLength = wordSize.Length + 1;
                     candidate.Append(wordSize);
                     if (_delimiterLength > 0)
                         candidate.Append(_delimiterByte);
-                    combinationPattern = combinationPattern[(wordLength)..];
+                    combinationPattern = combinationPattern[(wordSize.Length + 1)..];
                     RunDictionaries(candidate, combinationPattern);
-                    candidate.Cursor -= wordLength;
+                    candidate.Cursor -= wordSize.Length + _delimiterLength;
                     return;
                 }
                 combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + 1)..];

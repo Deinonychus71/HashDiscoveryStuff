@@ -12,7 +12,7 @@ namespace BruteForceHash
         public string Prefix { get; set; }
         [Option('s', "suffix", Required = false, Default = "", HelpText = "Suffix to apply after the search (optional).")]
         public string Suffix { get; set; }
-        [Option('d', "delimiter", Required = false, Default = '_', HelpText = "Delimiter (for dictionary attack).")]
+        [Option('d', "delimiter", Required = false, Default = "_", HelpText = "Delimiter (for dictionary attack).")]
         public string Delimiter { get; set; }
         [Option('S', "skip_digits", Required = false, Default = false, HelpText = "To skip all digits in the search.")]
         public bool SkipDigits { get; set; }
