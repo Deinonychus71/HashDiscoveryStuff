@@ -109,14 +109,11 @@ namespace BruteForceHash
             //Sorting
             var inputList = alreadyFoundMap[stringLength];
             inputList = OrderList(inputList);
-            foreach (var combination in inputList)
-            {
-                Console.WriteLine(combination);
-            }
-            if (_options.OrderLongerWordsFirst)
+            
+            /*if (_options.OrderLongerWordsFirst)
                 inputList = inputList.OrderBy(p => p.Length).ToList();
             else
-                inputList = inputList.OrderByDescending(p => p.Length).ToList();
+                inputList = inputList.OrderByDescending(p => p.Length).ToList();*/
 
             var output = new List<string>();
             var excludePatterns = _options.ExcludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
@@ -227,7 +224,7 @@ namespace BruteForceHash
             return returnCombinations;
         }
 
-        private List<String> OrderList(List<String> patterns)
+        private List<string> OrderList(List<string> patterns)
         {
             Dictionary<string, double> PatternToScore = new Dictionary<string, double>();
 
