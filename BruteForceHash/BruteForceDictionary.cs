@@ -181,7 +181,7 @@ namespace BruteForceHash
                     returnCombinations.Add("invalid");
                 }
             }
-            else if (delimiterLength == 0 && stringLength == -1 * delimiterLength)
+            else if (delimiterLength != 0 && stringLength == -1 * delimiterLength)
             {
                 returnCombinations.Add("ended");
             }
