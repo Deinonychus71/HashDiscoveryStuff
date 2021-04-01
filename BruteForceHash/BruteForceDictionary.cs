@@ -103,7 +103,7 @@ namespace BruteForceHash
             var alreadyFoundMap = new Dictionary<int, List<string>>();
             for (var i = 1; i <= stringLength; i++)
             {
-                alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, _delimiterLength);
+                alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, _delimiterLength, wordsLimit, 0);
             }
 
             //Sorting
@@ -170,10 +170,14 @@ namespace BruteForceHash
             return output;
         }
 
-        private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, int delimiterLength)
+        private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, int delimiterLength, int wordsLimit, int wordsSoFar)
         {
             var returnCombinations = new List<string>();
-            if (stringLength == 1)
+            if (wordsSoFar >= wordsLimit && stringLength > 0)
+            {
+                returnCombinations.Add("invalid");
+            } 
+            else if (stringLength == 1)
             {
                 returnCombinations.Add("{1}");
             }
@@ -210,7 +214,7 @@ namespace BruteForceHash
                     }
                     else
                     {
-                        subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength);
+                        subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength, wordsLimit, wordsSoFar + 1);
                     }
 
                     foreach (var remainingStringPattern in subCombinations)
@@ -219,7 +223,7 @@ namespace BruteForceHash
                         {
                             returnCombinations.Add($"{{{pattern}}}");
                         }
-                        else if (remainingStringPattern != "invalid")
+                        else if (remainingStringPattern != "invalid" && (remainingStringPattern.Length - remainingStringPattern.Replace("{", "").Length) + wordsSoFar + 1 <= wordsLimit)
                         {
                             returnCombinations.Add($"{{{pattern}}}{_delimiter}{remainingStringPattern}");
                         }
