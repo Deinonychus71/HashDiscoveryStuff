@@ -11,6 +11,7 @@ namespace BruteForceHash.Helpers
         private readonly string _file;
         private readonly Queue<string> _queue;
         private readonly CancellationTokenSource _queueCts;
+        private readonly ConsoleColor _defaultConsoleColor; 
 
         public Logger(string file)
         {
@@ -18,6 +19,8 @@ namespace BruteForceHash.Helpers
             _file = file;
             _queue = new Queue<string>(10000);
             _queueCts = new CancellationTokenSource();
+            _defaultConsoleColor = Console.ForegroundColor;
+
         }
 
         public void Init()
@@ -42,6 +45,15 @@ namespace BruteForceHash.Helpers
         {
             Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - {line}");
             if(saveInQueue)
+                _queue.Enqueue(line);
+        }
+
+        public void LogResult(string line, bool saveInQueue = true)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - {line}");
+            Console.ForegroundColor = _defaultConsoleColor;
+            if (saveInQueue)
                 _queue.Enqueue(line);
         }
 

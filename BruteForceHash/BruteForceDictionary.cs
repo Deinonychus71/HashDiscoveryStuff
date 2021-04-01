@@ -22,14 +22,14 @@ namespace BruteForceHash
         private readonly string _delimiter;
         private readonly byte _delimiterByte;
         private readonly int _delimiterLength;
-        private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9]*$", RegexOptions.Compiled);
+        private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
         public BruteForceDictionary(Logger logger, Options options, int stringLength, uint hexValue)
         {
             _logger = logger;
             _options = options;
             _hexValue = hexValue;
-            if (String.IsNullOrEmpty(options.Delimiter))
+            if (string.IsNullOrEmpty(options.Delimiter))
             {
                 _delimiter = "|";
                 _delimiterByte = Encoding.ASCII.GetBytes("|")[0];
@@ -49,7 +49,7 @@ namespace BruteForceHash
 
             //Generate combinations
             var combinationSize = _stringLength - options.Prefix.Length - options.Suffix.Length;
-            _combinationPatterns = GenerateCombinations(combinationSize, options.WordsLimit, options.Delimiter);
+            _combinationPatterns = GenerateCombinations(combinationSize, options.WordsLimit);
 
             //Load dictionary
             _dictionaries = GetDictionaries(options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
@@ -74,7 +74,7 @@ namespace BruteForceHash
             if (!string.IsNullOrEmpty(_options.IncludeWord))
                 _logger.Log($"Include Word: {_options.IncludeWord}");
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
-            _logger.Log($"Combination Order: {(_options.OrderLongerWordsFirst ? "Longer words first" : "Shorter words first")}");
+            _logger.Log($"Combination Order: {_options.Order}");
             _logger.Log($"Dictionaries: {_options.UseDictionaries}");
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             _logger.Log($"Search on: {_stringLength - _options.Prefix.Length - _options.Suffix.Length} characters");
@@ -97,7 +97,7 @@ namespace BruteForceHash
             cts.Dispose();
         }
 
-        private IEnumerable<string> GenerateCombinations(int stringLength,  int wordsLimit, string delimiter = null)
+        private IEnumerable<string> GenerateCombinations(int stringLength,  int wordsLimit)
         {
             var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
             var alreadyFoundMap = new Dictionary<int, List<string>>();
@@ -108,12 +108,19 @@ namespace BruteForceHash
 
             //Sorting
             var inputList = alreadyFoundMap[stringLength];
-            inputList = OrderList(inputList);
-            
-            /*if (_options.OrderLongerWordsFirst)
-                inputList = inputList.OrderBy(p => p.Length).ToList();
-            else
-                inputList = inputList.OrderByDescending(p => p.Length).ToList();*/
+
+            switch (_options.Order.ToLower())
+            {
+                case "optimized":
+                    inputList = OrderList(inputList);
+                    break;
+                case "longer_first":
+                    inputList = inputList.OrderBy(p => p.Length).ToList();
+                    break;
+                case "shorter_first":
+                    inputList = inputList.OrderByDescending(p => p.Length).ToList();
+                    break;
+            }
 
             var output = new List<string>();
             var excludePatterns = _options.ExcludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
@@ -334,7 +341,7 @@ namespace BruteForceHash
         private void TestCandidate(ByteString candidate)
         {
             if (candidate.CRC32Check())
-                _logger.Log(candidate.ToString());
+                _logger.LogResult(candidate.ToString());
         }
 
         private string ReplaceNthOccurrence(string obj, string find, string replace, int nthOccurrence)

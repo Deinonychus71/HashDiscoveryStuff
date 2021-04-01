@@ -59,10 +59,14 @@ namespace BruteForceHash.GUI
             this.lblSuffix = new System.Windows.Forms.Label();
             this.txtSuffix = new System.Windows.Forms.TextBox();
             this.lblCombinationOrder = new System.Windows.Forms.Label();
-            this.chkCombinationOrder = new System.Windows.Forms.CheckBox();
             this.pnlDictionary = new System.Windows.Forms.Panel();
+            this.cbCombinationOrder = new System.Windows.Forms.ComboBox();
             this.txtIncludeWordsCharacter = new System.Windows.Forms.TextBox();
             this.pnlCharacter = new System.Windows.Forms.Panel();
+            this.numEndPosition = new System.Windows.Forms.NumericUpDown();
+            this.lblEndPosition = new System.Windows.Forms.Label();
+            this.numStartPosition = new System.Windows.Forms.NumericUpDown();
+            this.lblStartPosition = new System.Windows.Forms.Label();
             this.lblIncludeWordCharacters = new System.Windows.Forms.Label();
             this.txtStartingValidChars = new System.Windows.Forms.TextBox();
             this.lblStartingValidChars = new System.Windows.Forms.Label();
@@ -71,6 +75,8 @@ namespace BruteForceHash.GUI
             this.chkVerbose = new System.Windows.Forms.CheckBox();
             this.pnlDictionary.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).BeginInit();
             this.SuspendLayout();
             // 
             // lblHexValues
@@ -423,23 +429,10 @@ namespace BruteForceHash.GUI
             this.lblCombinationOrder.TabIndex = 29;
             this.lblCombinationOrder.Text = "Order:";
             // 
-            // chkCombinationOrder
-            // 
-            this.chkCombinationOrder.AutoSize = true;
-            this.chkCombinationOrder.Checked = true;
-            this.chkCombinationOrder.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCombinationOrder.Location = new System.Drawing.Point(112, 178);
-            this.chkCombinationOrder.Name = "chkCombinationOrder";
-            this.chkCombinationOrder.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.chkCombinationOrder.Size = new System.Drawing.Size(121, 19);
-            this.chkCombinationOrder.TabIndex = 30;
-            this.chkCombinationOrder.Text = "Longer words first";
-            this.chkCombinationOrder.UseVisualStyleBackColor = true;
-            // 
             // pnlDictionary
             // 
+            this.pnlDictionary.Controls.Add(this.cbCombinationOrder);
             this.pnlDictionary.Controls.Add(this.lblDictionaries);
-            this.pnlDictionary.Controls.Add(this.chkCombinationOrder);
             this.pnlDictionary.Controls.Add(this.lblCombinationOrder);
             this.pnlDictionary.Controls.Add(this.chkSpecials);
             this.pnlDictionary.Controls.Add(this.lblSkipSpecials);
@@ -461,6 +454,19 @@ namespace BruteForceHash.GUI
             this.pnlDictionary.Size = new System.Drawing.Size(423, 421);
             this.pnlDictionary.TabIndex = 31;
             // 
+            // cbCombinationOrder
+            // 
+            this.cbCombinationOrder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCombinationOrder.FormattingEnabled = true;
+            this.cbCombinationOrder.Items.AddRange(new object[] {
+            "optimized",
+            "longer_first",
+            "shorter_first"});
+            this.cbCombinationOrder.Location = new System.Drawing.Point(112, 174);
+            this.cbCombinationOrder.Name = "cbCombinationOrder";
+            this.cbCombinationOrder.Size = new System.Drawing.Size(295, 23);
+            this.cbCombinationOrder.TabIndex = 30;
+            // 
             // txtIncludeWordsCharacter
             // 
             this.txtIncludeWordsCharacter.Location = new System.Drawing.Point(112, 92);
@@ -471,6 +477,10 @@ namespace BruteForceHash.GUI
             // 
             // pnlCharacter
             // 
+            this.pnlCharacter.Controls.Add(this.numEndPosition);
+            this.pnlCharacter.Controls.Add(this.lblEndPosition);
+            this.pnlCharacter.Controls.Add(this.numStartPosition);
+            this.pnlCharacter.Controls.Add(this.lblStartPosition);
             this.pnlCharacter.Controls.Add(this.txtIncludeWordsCharacter);
             this.pnlCharacter.Controls.Add(this.lblIncludeWordCharacters);
             this.pnlCharacter.Controls.Add(this.txtStartingValidChars);
@@ -481,6 +491,48 @@ namespace BruteForceHash.GUI
             this.pnlCharacter.Name = "pnlCharacter";
             this.pnlCharacter.Size = new System.Drawing.Size(423, 421);
             this.pnlCharacter.TabIndex = 32;
+            // 
+            // numEndPosition
+            // 
+            this.numEndPosition.Location = new System.Drawing.Point(328, 135);
+            this.numEndPosition.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numEndPosition.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numEndPosition.Name = "numEndPosition";
+            this.numEndPosition.Size = new System.Drawing.Size(79, 23);
+            this.numEndPosition.TabIndex = 37;
+            // 
+            // lblEndPosition
+            // 
+            this.lblEndPosition.AutoSize = true;
+            this.lblEndPosition.Location = new System.Drawing.Point(238, 137);
+            this.lblEndPosition.Name = "lblEndPosition";
+            this.lblEndPosition.Size = new System.Drawing.Size(76, 15);
+            this.lblEndPosition.TabIndex = 36;
+            this.lblEndPosition.Text = "End Position:";
+            // 
+            // numStartPosition
+            // 
+            this.numStartPosition.Location = new System.Drawing.Point(111, 135);
+            this.numStartPosition.Name = "numStartPosition";
+            this.numStartPosition.Size = new System.Drawing.Size(79, 23);
+            this.numStartPosition.TabIndex = 35;
+            // 
+            // lblStartPosition
+            // 
+            this.lblStartPosition.AutoSize = true;
+            this.lblStartPosition.Location = new System.Drawing.Point(4, 137);
+            this.lblStartPosition.Name = "lblStartPosition";
+            this.lblStartPosition.Size = new System.Drawing.Size(80, 15);
+            this.lblStartPosition.TabIndex = 34;
+            this.lblStartPosition.Text = "Start Position:";
             // 
             // lblIncludeWordCharacters
             // 
@@ -497,7 +549,7 @@ namespace BruteForceHash.GUI
             this.txtStartingValidChars.Name = "txtStartingValidChars";
             this.txtStartingValidChars.Size = new System.Drawing.Size(295, 23);
             this.txtStartingValidChars.TabIndex = 33;
-            this.txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz";
+            this.txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
             // 
             // lblStartingValidChars
             // 
@@ -557,8 +609,8 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.lblMethod);
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
-            this.Controls.Add(this.pnlDictionary);
             this.Controls.Add(this.pnlCharacter);
+            this.Controls.Add(this.pnlDictionary);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Main";
@@ -567,6 +619,8 @@ namespace BruteForceHash.GUI
             this.pnlDictionary.PerformLayout();
             this.pnlCharacter.ResumeLayout(false);
             this.pnlCharacter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -606,7 +660,6 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblSuffix;
         private System.Windows.Forms.TextBox txtSuffix;
         private System.Windows.Forms.Label lblCombinationOrder;
-        private System.Windows.Forms.CheckBox chkCombinationOrder;
         private System.Windows.Forms.Panel pnlDictionary;
         private System.Windows.Forms.Panel pnlCharacter;
         private System.Windows.Forms.TextBox txtIncludeWordsCharacter;
@@ -616,6 +669,11 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblStartingValidChars;
         private System.Windows.Forms.Label lblIncludeWordCharacters;
         private System.Windows.Forms.CheckBox chkVerbose;
+        private System.Windows.Forms.ComboBox cbCombinationOrder;
+        private System.Windows.Forms.NumericUpDown numStartPosition;
+        private System.Windows.Forms.Label lblStartPosition;
+        private System.Windows.Forms.Label lblEndPosition;
+        private System.Windows.Forms.NumericUpDown numEndPosition;
     }
 }
 

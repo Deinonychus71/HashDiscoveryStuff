@@ -30,16 +30,24 @@ namespace BruteForceHash
         public string UseDictionaries { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary attack).")]
         public int WordsLimit { get; set; }
-        [Option('o', "order_descending", Required = false, Default = false, HelpText = "The list of combinations will be run in a descending order (for dictionary attack).")]
-        public bool OrderLongerWordsFirst { get; set; }
+        [Option('o', "order", Required = false, Default = "Optimized", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are Ascending, Descending or Optimized).")]
+        public string Order { get; set; }
         [Option('f', "force_lowercase", Required = false, Default = false, HelpText = "Force all words to be lowercase (for dictionary attack).")]
         public bool ForceLowercase { get; set; }
         [Option('t', "nbr_threads", Required = false, Default = 16, HelpText = "Nbr of threads to run.")]
         public int NbrThreads { get; set; }
         [Option('c', "valid_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz0123456789_", HelpText = "All the characters to bruteforce (for character attack).")]
         public string ValidChars { get; set; }
-        [Option('C', "valid_starting_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz", HelpText = "All the characters to start with for bruteforce (for character attack).")]
+        [Option('C', "valid_starting_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz_", HelpText = "All the characters to start with for bruteforce (for character attack).")]
         public string ValidStartingChars { get; set; }
+        [Option('0', "start_position", Required = false, Default = 0, HelpText = "Start position when searching for a word (for character attack).")]
+        public int StartPosition { get; set; }
+        [Option('1', "end_position", Required = false, Default = -1, HelpText = "End position when searching for a word (for character attack).")]
+        public int EndPosition { get; set; }
+        /*[Option('2', "skip_delimiter_in_last_position", Required = false, Default = false, HelpText = "If true, the last character check will skip the delimiter value (for character attack).")]
+        public bool SkipDelimiterInLastPosition { get; set; }
+        [Option('3', "skip_delimiter_in_first_position", Required = false, Default = false, HelpText = "If true, the first character check will skip the delimiter value (for character attack).")]
+        public bool SkipDelimiterInFirstPosition { get; set; }*/
         [Option('v', "verbose", Required = false, Default = false, HelpText = "Display more search and thread information.")]
         public bool Verbose { get; set; }
     }

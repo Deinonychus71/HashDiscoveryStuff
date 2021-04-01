@@ -72,7 +72,12 @@ namespace BruteForceHash
             }
 
             if (!string.IsNullOrEmpty(_options.IncludeWord))
+            {
                 _logger.Log($"Include Word: {_options.IncludeWord}");
+                _logger.Log($"Start Position: {_options.StartPosition}");
+                if(_options.EndPosition < 0)
+                _logger.Log($"End Position: {_options.EndPosition}");
+            }
             _logger.Log($"Valid Characters: {inputValidChars}");
             _logger.Log($"Valid Starting Characters: {inputValidStartChars} for first characters");
             _logger.Log($"Search on: {_stringLength - _options.Prefix.Length - _options.Suffix.Length} characters");
@@ -85,7 +90,9 @@ namespace BruteForceHash
             else
             {
                 int searchLength = _stringLength - _options.Prefix.Length - _options.Suffix.Length;
-                for (int i = 0; i <= searchLength - _options.IncludeWord.Length; i++)
+                int firstPosition = _options.StartPosition;
+                int lastPosition = _options.IncludeWord.Length - _options.EndPosition;
+                for (int i = firstPosition; i <= searchLength - lastPosition; i++)
                 {
                     //Calculate pattern
                     var pattern = _options.Prefix;
@@ -188,7 +195,7 @@ namespace BruteForceHash
                 }
                 candidate.Replace(b);
                 if (candidate.CRC32Check())
-                    _logger.Log(candidate.ToString());
+                    _logger.LogResult(candidate.ToString());
             }
         }
 
@@ -207,7 +214,7 @@ namespace BruteForceHash
                 }
                 candidate.Replace(b);
                 if (candidate.CRC32Check())
-                    _logger.Log(candidate.ToString());
+                    _logger.LogResult(candidate.ToString());
             }
         }
     }

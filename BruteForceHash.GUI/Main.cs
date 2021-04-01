@@ -14,6 +14,7 @@ namespace BruteForceHash.GUI
             cbMethod.SelectedIndex = 0;
             cbNbThreads.SelectedIndex = 7;
             cbWordsLimit.SelectedIndex = 2;
+            cbCombinationOrder.SelectedIndex = 0;
 
             if (Directory.Exists("Dictionaries"))
             {
@@ -55,7 +56,7 @@ namespace BruteForceHash.GUI
                                                     $"{(chkSkipDigits.Checked ? "--skip_digits" : "")} " +
                                                     $"{(chkSpecials.Checked ? "--skip_specials" : "")} " +
                                                     $"{(chkLowerCase.Checked ? "--force_lowercase" : "")} " +
-                                                    $"{(chkCombinationOrder.Checked ? "--order_descending" : "")} " +
+                                                    $"--order {cbCombinationOrder.SelectedItem} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--use_dictionaries \"{dictionaries}\" " +
@@ -75,6 +76,8 @@ namespace BruteForceHash.GUI
                                                     $"--confirm_end " +
                                                     $"--valid_chars \"{txtValidChars.Text.Trim()}\" " +
                                                     $"--valid_starting_chars \"{txtStartingValidChars.Text.Trim()}\" " +
+                                                    $"--start_position \"{numStartPosition.Value}\" " +
+                                                    $"--end_position \"{numEndPosition.Value}\" " +
                                                     $"--include_word \"{txtIncludeWordsCharacter.Text.Trim()}\" " +
                                                     $"--prefix \"{txtPrefix.Text.Trim()}\" " +
                                                     $"--suffix \"{txtSuffix.Text.Trim()}\" " +
