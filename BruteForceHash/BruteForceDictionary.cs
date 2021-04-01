@@ -77,6 +77,13 @@ namespace BruteForceHash
             _logger.Log($"Combination Order: {_options.Order}");
             _logger.Log($"Dictionaries: {_options.UseDictionaries}");
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
+            if (_options.Verbose)
+            {
+                for(int i = 1; i <= _stringLength - _options.Prefix.Length - _options.Suffix.Length; i++)
+                {
+                    _logger.Log($"{i}-letter words: {_dictionaries[$"{{{i}}}"].Length}", false);
+                }
+            }
             _logger.Log($"Search on: {_stringLength - _options.Prefix.Length - _options.Suffix.Length} characters");
             _logger.Log("-----------------------------------------");
 
