@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DictTransformation": {
+      "commandName": "Project",
+      "commandLineArgs": "-i param_labels.csv -t -c \",|.|/|\\|_\" -h"
+    }
+  }
+}

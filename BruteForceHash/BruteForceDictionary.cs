@@ -359,10 +359,10 @@ namespace BruteForceHash
         {
             if (nthOccurrence > 0)
             {
-                MatchCollection matchCollection = Regex.Matches(obj, Regex.Escape(find));
+                var matchCollection = Regex.Matches(obj, Regex.Escape(find));
                 if (matchCollection.Count >= nthOccurrence)
                 {
-                    Match match = matchCollection[nthOccurrence - 1];
+                    var match = matchCollection[nthOccurrence - 1];
                     return obj.Remove(match.Index, match.Length).Insert(match.Index, replace);
                 }
             }

@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BruteForceHash", "BruteForceHash\BruteForceHash.csproj", "{715D2785-D5AF-4E01-A32E-1929CC7CBAE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BruteForceHash.GUI", "BruteForceHash.GUI\BruteForceHash.GUI.csproj", "{B29DF098-1DCA-4542-B7E5-F71250AFEC4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BruteForceHash.GUI", "BruteForceHash.GUI\BruteForceHash.GUI.csproj", "{B29DF098-1DCA-4542-B7E5-F71250AFEC4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F11EE245-C3CD-42B4-ADA8-B220982ECEE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictTransformation", "DictAddTypos\DictTransformation.csproj", "{BFD638AF-D601-4E58-8620-460609B719FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +25,16 @@ Global
 		{B29DF098-1DCA-4542-B7E5-F71250AFEC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B29DF098-1DCA-4542-B7E5-F71250AFEC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B29DF098-1DCA-4542-B7E5-F71250AFEC4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD638AF-D601-4E58-8620-460609B719FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD638AF-D601-4E58-8620-460609B719FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD638AF-D601-4E58-8620-460609B719FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD638AF-D601-4E58-8620-460609B719FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFD638AF-D601-4E58-8620-460609B719FA} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C3FFE77-9564-4A8F-969C-773584C00F90}
