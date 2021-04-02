@@ -51,6 +51,9 @@ namespace DictTransformation
                         if (o.RemoveSpecials && !_specialCharactersRegex.IsMatch(word))
                             continue;
 
+                        if (string.IsNullOrEmpty(word))
+                            continue;
+
                         //Special but save
                         if (o.RemoveSpecials && !_specialCharactersRegex.IsMatch(word))
                             word = Regex.Replace(word, @"[^0-9a-zA-Z]+", "", RegexOptions.Compiled);
