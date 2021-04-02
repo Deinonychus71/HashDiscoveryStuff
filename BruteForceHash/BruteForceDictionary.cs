@@ -82,12 +82,13 @@ namespace BruteForceHash
 
             foreach (var combinationPattern in _combinationPatterns)
             {
+                var numberOfDelimiters = combinationPattern.Length - combinationPattern.Replace(_delimiter, "").Length;
                 var task = factory.StartNew(() =>
                 {
                     var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
                     if(_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
-                    RunDictionaries(strBuilder, combinationPattern);
+                    RunDictionaries(strBuilder, combinationPattern, numberOfDelimiters);
                 });
                 tasks.Add(task);
             }
@@ -289,40 +290,87 @@ namespace BruteForceHash
             return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
         }
 
-        private void RunDictionaries(ByteString candidate, string combinationPattern)
+        private void RunDictionaries(ByteString candidate, string combinationPattern, int numberOfDelimiters)
         {
-            string wordSize;
-            bool lastWord = false;
+            string currentWord;
+            bool lastWord = numberOfDelimiters == 0;
+            bool openBracketStart;
+            
 
-            if (!combinationPattern.Contains(_delimiter))
+            if (lastWord)
             {
-                wordSize = combinationPattern;
-                lastWord = true;
+                currentWord = combinationPattern;
+                openBracketStart = currentWord.StartsWith("{");
+
             }
             else
             {
-                wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
-                if(!wordSize.StartsWith("{"))
+                currentWord = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
+                openBracketStart = currentWord.StartsWith("{");
+                /*
+                 * If currentWord does not start with {, then add the current word to candidate
+                 * If there's a delimiter, add that too
+                 * Reduce the combination pattern to the remaining part of the pattern
+                 * Recursively call function on the remaining part of the pattern
+                 * Move the cursor back the length of the word and the delimiter
+                 */
+                if (!openBracketStart)
                 {
-                    candidate.Append(wordSize);
+                    candidate.Append(currentWord);
                     if (_delimiterLength > 0)
                         candidate.Append(_delimiterByte);
-                    combinationPattern = combinationPattern[(wordSize.Length + 1)..];
-                    RunDictionaries(candidate, combinationPattern);
-                    candidate.Cursor -= wordSize.Length + _delimiterLength;
+                    combinationPattern = combinationPattern[(currentWord.Length + 1)..];
+                    RunDictionaries(candidate, combinationPattern, numberOfDelimiters - 1);
+                    candidate.Cursor -= currentWord.Length + _delimiterLength;
                     return;
                 }
+                /*
+                 * If the current word DOES start with {, simply set the combination pattern to the next word, as the current one is in currentWord
+                 */
                 combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + 1)..];
             }
 
-            if (lastWord && !wordSize.StartsWith("{"))
+            
+            if (lastWord)
+            {
+                if (!openBracketStart)
+                {
+                    candidate.Replace(combinationPattern);
+                    TestCandidate(candidate);
+                }
+                else
+                {
+                    var words = _dictionaries[currentWord];
+                    foreach (var word in words)
+                    {
+                        candidate.Replace(word);
+                        TestCandidate(candidate);
+                    }
+                }
+            } 
+            else
+            {
+                var words = _dictionaries[currentWord];
+                foreach (var word in words)
+                {
+                    candidate.Append(word);
+                    if (_delimiterLength > 0)
+                        candidate.Append(_delimiterByte);
+                    RunDictionaries(candidate, combinationPattern, numberOfDelimiters - 1);
+                    candidate.Cursor -= word.Length + _delimiterLength;
+                }
+
+            }
+
+            /*if (lastWord && !openBracketStart)
             {
                 candidate.Replace(combinationPattern);
                 TestCandidate(candidate);
             }
             else
             {
-                var words = _dictionaries[wordSize];
+                //Get the list of words from the dictionary at the current word's length
+                var words = _dictionaries[currentWord];
                 foreach (var word in words)
                 {
                     if (lastWord)
@@ -335,11 +383,11 @@ namespace BruteForceHash
                         candidate.Append(word);
                         if (_delimiterLength > 0)
                             candidate.Append(_delimiterByte);
-                        RunDictionaries(candidate, combinationPattern);
+                        RunDictionaries(candidate, combinationPattern, numberOfDelimiters - 1);
                         candidate.Cursor -= word.Length + _delimiterLength;
                     }
                 }
-            }
+            }*/
         }
 
         private void TestCandidate(ByteString candidate)
