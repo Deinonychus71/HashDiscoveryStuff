@@ -11,4 +11,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ParamLabels.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
