@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,12 @@ namespace BruteForceHash.GUI
             cbNbThreads.SelectedIndex = 7;
             cbWordsLimit.SelectedIndex = 2;
             cbCombinationOrder.SelectedIndex = 0;
+            mnLoad.Click += OnLoadClick;
+            mnSave.Click += OnSaveClick;
+            openFile.InitialDirectory = Directory.GetCurrentDirectory();
+            saveFile.InitialDirectory = Directory.GetCurrentDirectory();
+            openFile.Filter = "HBT files|*.hbt";
+            saveFile.Filter = "HBT files|*.hbt";
 
             if (Directory.Exists("Dictionaries"))
             {
@@ -34,16 +41,74 @@ namespace BruteForceHash.GUI
             pnlCharacter.Visible = false;
         }
 
+        private void OnSaveClick(object sender, EventArgs e)
+        {
+            var dictionaries = GetDictionary(chklDictionaries);
+
+            var result = saveFile.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                var hbtObject = new HbtFile()
+                {
+                    Method = cbMethod.SelectedItem.ToString(),
+                    NbrThreads = Convert.ToInt32(cbNbThreads.SelectedItem),
+                    WordsLimit = Convert.ToInt32(cbWordsLimit.SelectedItem),
+                    SkipDigits = chkSkipDigits.Checked,
+                    SkipSpecials = chkSpecials.Checked,
+                    ForceLowercase = chkLowerCase.Checked,
+                    Order = cbCombinationOrder.SelectedItem.ToString(),
+                    Verbose = chkVerbose.Checked,
+                    Dictionaries = dictionaries,
+                    IncludeWordDict = txtIncludeWord.Text.Trim(),
+                    IncludeWordChar = txtIncludeWordsCharacter.Text.Trim(),
+                    IncludePatterns = txtIncludePatterns.Text.Trim(),
+                    ExcludePatterns = txtExcludePatterns.Text.Trim(),
+                    Delimiter = txtDelimiter.Text.Trim(),
+                    Prefix = txtPrefix.Text.Trim(),
+                    Suffix = txtSuffix.Text.Trim(),
+                    ValidChars = txtValidChars.Text.Trim(),
+                    ValidStartingChars = txtStartingValidChars.Text.Trim(),
+                    StartPosition = Convert.ToInt32(numStartPosition.Value),
+                    EndPosition = Convert.ToInt32(numEndPosition.Value),
+                    HexValue = txtHexValues.Text.Trim()
+                };
+                File.WriteAllText(saveFile.FileName, JsonConvert.SerializeObject(hbtObject));
+            }
+        }
+
+        private void OnLoadClick(object sender, EventArgs e)
+        {
+            var result = openFile.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                var hbtObject = JsonConvert.DeserializeObject<HbtFile>(File.ReadAllText(openFile.FileName));
+                cbMethod.SelectedItem = hbtObject.Method;
+                cbNbThreads.SelectedItem = hbtObject.NbrThreads;
+                cbWordsLimit.SelectedItem = hbtObject.WordsLimit;
+                chkSkipDigits.Checked = hbtObject.SkipDigits;
+                chkSpecials.Checked = hbtObject.SkipSpecials;
+                chkLowerCase.Checked = hbtObject.ForceLowercase;
+                cbCombinationOrder.SelectedItem = hbtObject.Order;
+                chkVerbose.Checked = hbtObject.Verbose;
+                SetDictionary(chklDictionaries, hbtObject.Dictionaries);
+                txtIncludeWord.Text = hbtObject.IncludeWordDict;
+                txtIncludeWordsCharacter.Text = hbtObject.IncludeWordChar;
+                txtIncludePatterns.Text = hbtObject.IncludePatterns;
+                txtExcludePatterns.Text = hbtObject.ExcludePatterns;
+                txtDelimiter.Text = hbtObject.Delimiter;
+                txtPrefix.Text = hbtObject.Prefix;
+                txtSuffix.Text = hbtObject.Suffix;
+                txtValidChars.Text = hbtObject.ValidChars;
+                txtStartingValidChars.Text = hbtObject.ValidStartingChars;
+                numStartPosition.Value = hbtObject.StartPosition;
+                numEndPosition.Value = hbtObject.EndPosition;
+                txtHexValues.Text = hbtObject.HexValue;
+            }
+        }
+
         private void OnBtnStartClick(object sender, EventArgs e)
         {
-            var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
-            var dictionaries = string.Empty;
-            foreach(var dict in chklDictionaries.CheckedItems)
-            {
-                var dictStr = dict.ToString();
-                var dictPath = allDictionaries.FirstOrDefault(p => p.EndsWith(dictStr));
-                dictionaries += $"{dictPath};";
-            }
+            var dictionaries = GetDictionary(chklDictionaries);
 
             using (var process = new Process())
             {
@@ -88,6 +153,39 @@ namespace BruteForceHash.GUI
 
                 process.WaitForExit();
                 process.Close();
+            }
+        }
+
+        private string GetDictionary(CheckedListBox chkList)
+        {
+            var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
+            var dictionaries = string.Empty;
+            foreach (var dict in chkList.CheckedItems)
+            {
+                var dictStr = dict.ToString();
+                var dictPath = allDictionaries.FirstOrDefault(p => p.EndsWith(dictStr));
+                dictionaries += $"{dictPath};";
+            }
+            return dictionaries;
+        }
+
+        private void SetDictionary(CheckedListBox chkList, string dictionaries)
+        {
+            var splitEntries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
+            foreach(var entry in splitEntries)
+            {
+                var dict = Path.GetFileName(entry);
+                for (int i = 0; i < chkList.Items.Count; i++)
+                {
+                    if (chkList.Items[i].ToString().EndsWith(dict))
+                    {
+                        chkList.SetItemChecked(i, true);
+                    }
+                    else
+                    {
+                        chkList.SetItemChecked(i, false);
+                    }
+                }
             }
         }
 

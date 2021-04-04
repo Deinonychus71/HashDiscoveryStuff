@@ -73,16 +73,23 @@ namespace BruteForceHash.GUI
             this.txtValidChars = new System.Windows.Forms.TextBox();
             this.lblValidChars = new System.Windows.Forms.Label();
             this.chkVerbose = new System.Windows.Forms.CheckBox();
+            this.mnStrip = new System.Windows.Forms.MenuStrip();
+            this.mnFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnLoad = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFile = new System.Windows.Forms.OpenFileDialog();
+            this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.pnlDictionary.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).BeginInit();
+            this.mnStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblHexValues
             // 
             this.lblHexValues.AutoSize = true;
-            this.lblHexValues.Location = new System.Drawing.Point(16, 61);
+            this.lblHexValues.Location = new System.Drawing.Point(16, 76);
             this.lblHexValues.Name = "lblHexValues";
             this.lblHexValues.Size = new System.Drawing.Size(75, 15);
             this.lblHexValues.TabIndex = 0;
@@ -90,7 +97,7 @@ namespace BruteForceHash.GUI
             // 
             // txtHexValues
             // 
-            this.txtHexValues.Location = new System.Drawing.Point(123, 58);
+            this.txtHexValues.Location = new System.Drawing.Point(123, 73);
             this.txtHexValues.Name = "txtHexValues";
             this.txtHexValues.PlaceholderText = "0x105274ba4f";
             this.txtHexValues.Size = new System.Drawing.Size(178, 23);
@@ -99,7 +106,7 @@ namespace BruteForceHash.GUI
             // lblMethod
             // 
             this.lblMethod.AutoSize = true;
-            this.lblMethod.Location = new System.Drawing.Point(16, 21);
+            this.lblMethod.Location = new System.Drawing.Point(16, 36);
             this.lblMethod.Name = "lblMethod";
             this.lblMethod.Size = new System.Drawing.Size(71, 15);
             this.lblMethod.TabIndex = 2;
@@ -112,7 +119,7 @@ namespace BruteForceHash.GUI
             this.cbMethod.Items.AddRange(new object[] {
             "Dictionary",
             "Character"});
-            this.cbMethod.Location = new System.Drawing.Point(123, 18);
+            this.cbMethod.Location = new System.Drawing.Point(123, 33);
             this.cbMethod.Name = "cbMethod";
             this.cbMethod.Size = new System.Drawing.Size(114, 23);
             this.cbMethod.TabIndex = 3;
@@ -121,7 +128,7 @@ namespace BruteForceHash.GUI
             // lblPrefix
             // 
             this.lblPrefix.AutoSize = true;
-            this.lblPrefix.Location = new System.Drawing.Point(16, 101);
+            this.lblPrefix.Location = new System.Drawing.Point(16, 116);
             this.lblPrefix.Name = "lblPrefix";
             this.lblPrefix.Size = new System.Drawing.Size(40, 15);
             this.lblPrefix.TabIndex = 4;
@@ -129,7 +136,7 @@ namespace BruteForceHash.GUI
             // 
             // txtPrefix
             // 
-            this.txtPrefix.Location = new System.Drawing.Point(123, 98);
+            this.txtPrefix.Location = new System.Drawing.Point(123, 113);
             this.txtPrefix.Name = "txtPrefix";
             this.txtPrefix.Size = new System.Drawing.Size(114, 23);
             this.txtPrefix.TabIndex = 5;
@@ -137,7 +144,7 @@ namespace BruteForceHash.GUI
             // lblDelimiter
             // 
             this.lblDelimiter.AutoSize = true;
-            this.lblDelimiter.Location = new System.Drawing.Point(328, 61);
+            this.lblDelimiter.Location = new System.Drawing.Point(328, 76);
             this.lblDelimiter.Name = "lblDelimiter";
             this.lblDelimiter.Size = new System.Drawing.Size(58, 15);
             this.lblDelimiter.TabIndex = 6;
@@ -145,7 +152,7 @@ namespace BruteForceHash.GUI
             // 
             // txtDelimiter
             // 
-            this.txtDelimiter.Location = new System.Drawing.Point(392, 58);
+            this.txtDelimiter.Location = new System.Drawing.Point(392, 73);
             this.txtDelimiter.MaxLength = 1;
             this.txtDelimiter.Name = "txtDelimiter";
             this.txtDelimiter.Size = new System.Drawing.Size(27, 23);
@@ -196,7 +203,7 @@ namespace BruteForceHash.GUI
             // lblNbThreads
             // 
             this.lblNbThreads.AutoSize = true;
-            this.lblNbThreads.Location = new System.Drawing.Point(243, 21);
+            this.lblNbThreads.Location = new System.Drawing.Point(243, 36);
             this.lblNbThreads.Name = "lblNbThreads";
             this.lblNbThreads.Size = new System.Drawing.Size(51, 15);
             this.lblNbThreads.TabIndex = 12;
@@ -271,7 +278,7 @@ namespace BruteForceHash.GUI
             "62",
             "63",
             "64"});
-            this.cbNbThreads.Location = new System.Drawing.Point(300, 18);
+            this.cbNbThreads.Location = new System.Drawing.Point(300, 33);
             this.cbNbThreads.Name = "cbNbThreads";
             this.cbNbThreads.Size = new System.Drawing.Size(42, 23);
             this.cbNbThreads.TabIndex = 13;
@@ -375,7 +382,7 @@ namespace BruteForceHash.GUI
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(123, 554);
+            this.btnStart.Location = new System.Drawing.Point(123, 563);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(213, 23);
             this.btnStart.TabIndex = 24;
@@ -407,7 +414,7 @@ namespace BruteForceHash.GUI
             // lblSuffix
             // 
             this.lblSuffix.AutoSize = true;
-            this.lblSuffix.Location = new System.Drawing.Point(250, 101);
+            this.lblSuffix.Location = new System.Drawing.Point(250, 116);
             this.lblSuffix.Name = "lblSuffix";
             this.lblSuffix.Size = new System.Drawing.Size(40, 15);
             this.lblSuffix.TabIndex = 27;
@@ -415,7 +422,7 @@ namespace BruteForceHash.GUI
             // 
             // txtSuffix
             // 
-            this.txtSuffix.Location = new System.Drawing.Point(305, 98);
+            this.txtSuffix.Location = new System.Drawing.Point(305, 113);
             this.txtSuffix.Name = "txtSuffix";
             this.txtSuffix.Size = new System.Drawing.Size(114, 23);
             this.txtSuffix.TabIndex = 28;
@@ -449,7 +456,7 @@ namespace BruteForceHash.GUI
             this.pnlDictionary.Controls.Add(this.lblLowerCase);
             this.pnlDictionary.Controls.Add(this.lblSkipDigits);
             this.pnlDictionary.Controls.Add(this.chkSkipDigits);
-            this.pnlDictionary.Location = new System.Drawing.Point(12, 127);
+            this.pnlDictionary.Location = new System.Drawing.Point(12, 142);
             this.pnlDictionary.Name = "pnlDictionary";
             this.pnlDictionary.Size = new System.Drawing.Size(423, 421);
             this.pnlDictionary.TabIndex = 31;
@@ -487,7 +494,7 @@ namespace BruteForceHash.GUI
             this.pnlCharacter.Controls.Add(this.lblStartingValidChars);
             this.pnlCharacter.Controls.Add(this.txtValidChars);
             this.pnlCharacter.Controls.Add(this.lblValidChars);
-            this.pnlCharacter.Location = new System.Drawing.Point(12, 127);
+            this.pnlCharacter.Location = new System.Drawing.Point(12, 142);
             this.pnlCharacter.Name = "pnlCharacter";
             this.pnlCharacter.Size = new System.Drawing.Size(423, 421);
             this.pnlCharacter.TabIndex = 32;
@@ -582,13 +589,51 @@ namespace BruteForceHash.GUI
             this.chkVerbose.AutoSize = true;
             this.chkVerbose.Checked = true;
             this.chkVerbose.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkVerbose.Location = new System.Drawing.Point(352, 20);
+            this.chkVerbose.Location = new System.Drawing.Point(352, 35);
             this.chkVerbose.Name = "chkVerbose";
             this.chkVerbose.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.chkVerbose.Size = new System.Drawing.Size(67, 19);
             this.chkVerbose.TabIndex = 33;
             this.chkVerbose.Text = "Verbose";
             this.chkVerbose.UseVisualStyleBackColor = true;
+            // 
+            // mnStrip
+            // 
+            this.mnStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnFile});
+            this.mnStrip.Location = new System.Drawing.Point(0, 0);
+            this.mnStrip.Name = "mnStrip";
+            this.mnStrip.Size = new System.Drawing.Size(446, 24);
+            this.mnStrip.TabIndex = 34;
+            // 
+            // mnFile
+            // 
+            this.mnFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnLoad,
+            this.mnSave});
+            this.mnFile.Name = "mnFile";
+            this.mnFile.Size = new System.Drawing.Size(37, 20);
+            this.mnFile.Text = "File";
+            // 
+            // mnLoad
+            // 
+            this.mnLoad.Name = "mnLoad";
+            this.mnLoad.Size = new System.Drawing.Size(109, 22);
+            this.mnLoad.Text = "Load...";
+            // 
+            // mnSave
+            // 
+            this.mnSave.Name = "mnSave";
+            this.mnSave.Size = new System.Drawing.Size(109, 22);
+            this.mnSave.Text = "Save...";
+            // 
+            // openFile
+            // 
+            this.openFile.FileName = "file.hbt";
+            // 
+            // saveFile
+            // 
+            this.saveFile.FileName = "file.hbt";
             // 
             // Main
             // 
@@ -611,7 +656,9 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.lblHexValues);
             this.Controls.Add(this.pnlDictionary);
             this.Controls.Add(this.pnlCharacter);
+            this.Controls.Add(this.mnStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.mnStrip;
             this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "BruteForceHash";
@@ -621,6 +668,8 @@ namespace BruteForceHash.GUI
             this.pnlCharacter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).EndInit();
+            this.mnStrip.ResumeLayout(false);
+            this.mnStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -674,6 +723,12 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblStartPosition;
         private System.Windows.Forms.Label lblEndPosition;
         private System.Windows.Forms.NumericUpDown numEndPosition;
+        private System.Windows.Forms.MenuStrip mnStrip;
+        private System.Windows.Forms.ToolStripMenuItem mnFile;
+        private System.Windows.Forms.ToolStripMenuItem mnLoad;
+        private System.Windows.Forms.ToolStripMenuItem mnSave;
+        private System.Windows.Forms.OpenFileDialog openFile;
+        private System.Windows.Forms.SaveFileDialog saveFile;
     }
 }
 
