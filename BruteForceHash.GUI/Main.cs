@@ -18,8 +18,9 @@ namespace BruteForceHash.GUI
             cbCombinationOrder.SelectedIndex = 0;
             mnLoad.Click += OnLoadClick;
             mnSave.Click += OnSaveClick;
-            openFile.InitialDirectory = Directory.GetCurrentDirectory();
-            saveFile.InitialDirectory = Directory.GetCurrentDirectory();
+            Directory.CreateDirectory("Templates");
+            openFile.InitialDirectory = Directory.GetCurrentDirectory() + "\\Templates\\";
+            saveFile.InitialDirectory = Directory.GetCurrentDirectory() + "\\Templates\\";
             openFile.Filter = "HBT files|*.hbt";
             saveFile.Filter = "HBT files|*.hbt";
 
@@ -89,8 +90,8 @@ namespace BruteForceHash.GUI
             {
                 var hbtObject = JsonConvert.DeserializeObject<HbtFile>(File.ReadAllText(openFile.FileName));
                 cbMethod.SelectedItem = hbtObject.Method;
-                cbNbThreads.SelectedItem = hbtObject.NbrThreads;
-                cbWordsLimit.SelectedItem = hbtObject.WordsLimit;
+                cbNbThreads.SelectedItem = hbtObject.NbrThreads.ToString();
+                cbWordsLimit.SelectedItem = hbtObject.WordsLimit.ToString();
                 chkSkipDigits.Checked = hbtObject.SkipDigits;
                 chkSpecials.Checked = hbtObject.SkipSpecials;
                 chkLowerCase.Checked = hbtObject.ForceLowercase;

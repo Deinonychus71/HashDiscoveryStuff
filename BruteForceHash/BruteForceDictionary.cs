@@ -55,7 +55,7 @@ namespace BruteForceHash
 
             //Load dictionary
             _dictionaries = GetDictionaries(_options.Dictionaries, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
-            if (!string.IsNullOrEmpty(options.DictionariesFirstWord))
+            if (!string.IsNullOrEmpty(options.DictionariesFirstWord) && _options.Dictionaries != _options.DictionariesFirstWord)
             {
                 _dictionariesFirst = GetDictionaries(_options.DictionariesFirstWord, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
             }
@@ -63,7 +63,7 @@ namespace BruteForceHash
             {
                 _dictionariesFirst = _dictionaries;
             }
-            if (!string.IsNullOrEmpty(options.DictionariesLastWord))
+            if (!string.IsNullOrEmpty(options.DictionariesLastWord) && _options.Dictionaries != _options.DictionariesLastWord)
             {
                 _dictionariesLast = GetDictionaries(_options.DictionariesLastWord, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
             }
@@ -94,7 +94,16 @@ namespace BruteForceHash
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
             _logger.Log($"Combination Order: {_options.Order}");
             _logger.Log($"Dictionaries: {_options.Dictionaries}");
+            if (_dictionaries != _dictionariesFirst)
+            {
+                _logger.Log($"Dictionaries (1st word): {_options.DictionariesFirstWord}");
+            }
+            if (_dictionaries != _dictionariesLast)
+            {
+                _logger.Log($"Dictionaries (last word): {_options.DictionariesLastWord}");
+            }
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
+            
             if (_options.Verbose)
             {
                 for(int i = 1; i <= _stringLength - _options.Prefix.Length - _options.Suffix.Length; i++)
