@@ -609,8 +609,8 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.lblMethod);
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
-            this.Controls.Add(this.pnlCharacter);
             this.Controls.Add(this.pnlDictionary);
+            this.Controls.Add(this.pnlCharacter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Main";

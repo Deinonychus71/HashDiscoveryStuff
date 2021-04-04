@@ -59,7 +59,7 @@ namespace BruteForceHash.GUI
                                                     $"--order {cbCombinationOrder.SelectedItem} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
-                                                    $"--use_dictionaries \"{dictionaries}\" " +
+                                                    $"--dictionaries \"{dictionaries}\" " +
                                                     $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
                                                     $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
                                                     $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +

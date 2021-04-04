@@ -26,8 +26,12 @@ namespace BruteForceHash
         public string IncludePatterns { get; set; }
         [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear.")]
         public string IncludeWord { get; set; }
-        [Option('D', "use_dictionaries", Required = false, Default = "*", HelpText = "List all the dictionaries to use (separated by semi-colon) (for dictionary attack).")]
-        public string UseDictionaries { get; set; }
+        [Option('D', "dictionaries", Required = false, Default = "*", HelpText = "List all the dictionaries to use (separated by semi-colon) (for dictionary attack).")]
+        public string Dictionaries { get; set; }
+        [Option('D', "dictionaries_first_word", Required = false, Default = "", HelpText = "List all the dictionaries to use (separated by semi-colon) for first word (for dictionary attack).")]
+        public string DictionariesFirstWord { get; set; }
+        [Option('D', "dictionaries_last_word", Required = false, Default = "", HelpText = "List all the dictionaries to use (separated by semi-colon) for last word (for dictionary attack).")]
+        public string DictionariesLastWord { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary attack).")]
         public int WordsLimit { get; set; }
         [Option('o', "order", Required = false, Default = "Optimized", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are Ascending, Descending or Optimized).")]

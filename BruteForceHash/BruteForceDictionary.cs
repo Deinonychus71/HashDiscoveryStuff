@@ -16,6 +16,8 @@ namespace BruteForceHash
         private readonly Logger _logger;
         private readonly IEnumerable<string> _combinationPatterns;
         private readonly Dictionary<string, byte[][]> _dictionaries;
+        private readonly Dictionary<string, byte[][]> _dictionariesFirst;
+        private readonly Dictionary<string, byte[][]> _dictionariesLast;
         private readonly Options _options;
         private readonly uint _hexValue;
         private readonly int _stringLength;
@@ -52,7 +54,23 @@ namespace BruteForceHash
             _combinationPatterns = GenerateCombinations(combinationSize, options.WordsLimit);
 
             //Load dictionary
-            _dictionaries = GetDictionaries(options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
+            _dictionaries = GetDictionaries(_options.Dictionaries, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
+            if (!string.IsNullOrEmpty(options.DictionariesFirstWord))
+            {
+                _dictionariesFirst = GetDictionaries(_options.DictionariesFirstWord, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
+            }
+            else
+            {
+                _dictionariesFirst = _dictionaries;
+            }
+            if (!string.IsNullOrEmpty(options.DictionariesLastWord))
+            {
+                _dictionariesLast = GetDictionaries(_options.DictionariesLastWord, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
+            }
+            else
+            {
+                _dictionariesLast = _dictionaries;
+            }
         }
 
         public void Run()
@@ -75,7 +93,7 @@ namespace BruteForceHash
                 _logger.Log($"Include Word: {_options.IncludeWord}");
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
             _logger.Log($"Combination Order: {_options.Order}");
-            _logger.Log($"Dictionaries: {_options.UseDictionaries}");
+            _logger.Log($"Dictionaries: {_options.Dictionaries}");
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             if (_options.Verbose)
             {
@@ -94,7 +112,7 @@ namespace BruteForceHash
                     var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
                     if(_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
-                    RunDictionaries(strBuilder, combinationPattern);
+                    RunDictionaries(strBuilder, combinationPattern, true);
                 });
                 tasks.Add(task);
             }
@@ -294,7 +312,7 @@ namespace BruteForceHash
             return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
         }
 
-        private void RunDictionaries(ByteString candidate, string combinationPattern)
+        private void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord)
         {
             string wordSize;
             bool lastWord = false;
@@ -313,7 +331,7 @@ namespace BruteForceHash
                     if (_delimiterLength > 0)
                         candidate.Append(_delimiterByte);
                     combinationPattern = combinationPattern[(wordSize.Length + 1)..];
-                    RunDictionaries(candidate, combinationPattern);
+                    RunDictionaries(candidate, combinationPattern, false);
                     candidate.Cursor -= wordSize.Length + _delimiterLength;
                     return;
                 }
@@ -327,7 +345,13 @@ namespace BruteForceHash
             }
             else
             {
-                var words = _dictionaries[wordSize];
+                byte[][] words;
+                if (lastWord)
+                    words = _dictionariesLast[wordSize];
+                else if(firstWord)
+                    words = _dictionariesFirst[wordSize];
+                else
+                    words = _dictionaries[wordSize];
                 foreach (var word in words)
                 {
                     if (lastWord)
@@ -340,7 +364,7 @@ namespace BruteForceHash
                         candidate.Append(word);
                         if (_delimiterLength > 0)
                             candidate.Append(_delimiterByte);
-                        RunDictionaries(candidate, combinationPattern);
+                        RunDictionaries(candidate, combinationPattern, false);
                         candidate.Cursor -= word.Length + _delimiterLength;
                     }
                 }
@@ -367,7 +391,7 @@ namespace BruteForceHash
             return obj;
         }
 
-        private Dictionary<string, byte[][]> GetDictionaries(bool skipDigits, bool skipSpecials, bool forceLowerCase)
+        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, bool skipDigits, bool skipSpecials, bool forceLowerCase)
         {
             Dictionary<string, HashSet<string>> dictionary = new Dictionary<string, HashSet<string>>();
             var output = new Dictionary<string, byte[][]>();
@@ -377,10 +401,10 @@ namespace BruteForceHash
                 dictionary.Add($"{{{i}}}", new HashSet<string>());
 
             string[] allDictionaries;
-            if (Directory.Exists("Dictionaries") && _options.UseDictionaries == "*")
+            if (Directory.Exists("Dictionaries") && dictionaries == "*")
                 allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
             else
-                allDictionaries = _options.UseDictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
+                allDictionaries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var dictionaryPath in allDictionaries)
             {
