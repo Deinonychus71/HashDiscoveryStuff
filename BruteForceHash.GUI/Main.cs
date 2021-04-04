@@ -28,8 +28,10 @@ namespace BruteForceHash.GUI
                 var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
                 foreach (var dictionaryPath in allDictionaries)
                 {
-                    chklDictionaries.Items.Add(Path.GetFileName(dictionaryPath));
-                    ;
+                    var filename = Path.GetFileName(dictionaryPath);
+                    chklDictionaries.Items.Add(filename);
+                    chklDictionariesFirstWord.Items.Add(filename);
+                    chklDictionariesLastWord.Items.Add(filename);
                 }
             }
             else
@@ -44,6 +46,8 @@ namespace BruteForceHash.GUI
         private void OnSaveClick(object sender, EventArgs e)
         {
             var dictionaries = GetDictionary(chklDictionaries);
+            var dictionariesFirstWord = GetDictionary(chklDictionariesFirstWord);
+            var dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
 
             var result = saveFile.ShowDialog();
             if(result == DialogResult.OK)
@@ -59,6 +63,8 @@ namespace BruteForceHash.GUI
                     Order = cbCombinationOrder.SelectedItem.ToString(),
                     Verbose = chkVerbose.Checked,
                     Dictionaries = dictionaries,
+                    DictionariesFirstWord = dictionariesFirstWord,
+                    DictionariesLastWord = dictionariesLastWord,
                     IncludeWordDict = txtIncludeWord.Text.Trim(),
                     IncludeWordChar = txtIncludeWordsCharacter.Text.Trim(),
                     IncludePatterns = txtIncludePatterns.Text.Trim(),
@@ -91,6 +97,8 @@ namespace BruteForceHash.GUI
                 cbCombinationOrder.SelectedItem = hbtObject.Order;
                 chkVerbose.Checked = hbtObject.Verbose;
                 SetDictionary(chklDictionaries, hbtObject.Dictionaries);
+                SetDictionary(chklDictionariesFirstWord, hbtObject.DictionariesFirstWord);
+                SetDictionary(chklDictionariesLastWord, hbtObject.DictionariesLastWord);
                 txtIncludeWord.Text = hbtObject.IncludeWordDict;
                 txtIncludeWordsCharacter.Text = hbtObject.IncludeWordChar;
                 txtIncludePatterns.Text = hbtObject.IncludePatterns;
@@ -109,6 +117,8 @@ namespace BruteForceHash.GUI
         private void OnBtnStartClick(object sender, EventArgs e)
         {
             var dictionaries = GetDictionary(chklDictionaries);
+            var dictionariesFirstWord = GetDictionary(chklDictionariesFirstWord);
+            var dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
 
             using (var process = new Process())
             {
@@ -125,6 +135,8 @@ namespace BruteForceHash.GUI
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--dictionaries \"{dictionaries}\" " +
+                                                    $"--dictionaries_first_word \"{dictionariesFirstWord}\" " +
+                                                    $"--dictionaries_last_word \"{dictionariesLastWord}\" " +
                                                     $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
                                                     $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
                                                     $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +
@@ -171,19 +183,23 @@ namespace BruteForceHash.GUI
 
         private void SetDictionary(CheckedListBox chkList, string dictionaries)
         {
-            var splitEntries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
-            foreach(var entry in splitEntries)
+            if (!string.IsNullOrEmpty(dictionaries))
             {
-                var dict = Path.GetFileName(entry);
+                var splitEntries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < chkList.Items.Count; i++)
                 {
-                    if (chkList.Items[i].ToString().EndsWith(dict))
+                    chkList.SetItemChecked(i, false);
+                }
+                foreach (var entry in splitEntries)
+                {
+                    var dict = Path.GetFileName(entry);
+                    for (int i = 0; i < chkList.Items.Count; i++)
                     {
-                        chkList.SetItemChecked(i, true);
-                    }
-                    else
-                    {
-                        chkList.SetItemChecked(i, false);
+                        if (chkList.Items[i].ToString().EndsWith(dict))
+                        {
+                            chkList.SetItemChecked(i, true);
+                            break;
+                        }
                     }
                 }
             }
@@ -193,6 +209,18 @@ namespace BruteForceHash.GUI
         {
             pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
             pnlCharacter.Visible = !pnlDictionary.Visible;
+        }
+
+        private void OnCopyFirstClick(object sender, EventArgs e)
+        {
+            var dictionaries = GetDictionary(chklDictionaries);
+            SetDictionary(chklDictionariesFirstWord, dictionaries);
+        }
+
+        private void OnCopyLastClick(object sender, EventArgs e)
+        {
+            var dictionaries = GetDictionary(chklDictionaries);
+            SetDictionary(chklDictionariesLastWord, dictionaries);
         }
     }
 }
