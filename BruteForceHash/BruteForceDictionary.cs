@@ -134,7 +134,6 @@ namespace BruteForceHash
             var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             foreach (var combination in inputList.Select(p => $"${p}^"))
             {
-                //Console.WriteLine(combination);
                 List<string> nbrChar = new List<string>();
                 string reducedCombination = combination;
                 while (reducedCombination.IndexOf('}') != -1) 
@@ -142,7 +141,6 @@ namespace BruteForceHash
                     nbrChar.Add(reducedCombination.Substring(0, reducedCombination.IndexOf('}') + 1));
                     reducedCombination = reducedCombination.Substring(reducedCombination.IndexOf('}') + 1);
                 }
-                //var nbrChar = combination.Split(delimiter);
                 if (nbrChar.Count <= wordsLimit &&
                     !excludePatterns.Any(p => combination.Contains(p)) &&
                     (includePatterns.Length == 0 || includePatterns.All(p => combination.Contains(p))))

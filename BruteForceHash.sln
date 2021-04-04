@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BruteForceHash.GUI", "Brute
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F11EE245-C3CD-42B4-ADA8-B220982ECEE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictTransformation", "DictAddTypos\DictTransformation.csproj", "{BFD638AF-D601-4E58-8620-460609B719FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictTransformation", "Tools\DictAddTypos\DictTransformation.csproj", "{BFD638AF-D601-4E58-8620-460609B719FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashReOrder", "HashReOrder\HashReOrder.csproj", "{0FE0DADB-A24F-49A1-A13C-59CDCBCFF4E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashReOrder", "Tools\HashReOrder\HashReOrder.csproj", "{0FE0DADB-A24F-49A1-A13C-59CDCBCFF4E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashSkipUnderscore", "HashSkipUnderscore\HashSkipUnderscore.csproj", "{6D861219-69EC-4104-8892-220C137A3030}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashSkipUnderscore", "Tools\HashSkipUnderscore\HashSkipUnderscore.csproj", "{6D861219-69EC-4104-8892-220C137A3030}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashParser", "HashParser\HashParser.csproj", "{2A69DC36-DECF-44E9-8E22-7A8415C65289}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashParser", "Tools\HashParser\HashParser.csproj", "{2A69DC36-DECF-44E9-8E22-7A8415C65289}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

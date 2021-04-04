@@ -11,7 +11,7 @@ namespace HashSkipUnderscore
             if (args.Length == 1)
             {
                 var words = File.ReadAllLines(args[0]);
-                File.WriteAllLines($"{Path.GetFileNameWithoutExtension(args[0])}_skip.txt", words.Where(p => p.Contains('_')));
+                File.WriteAllLines($"{Path.GetFileNameWithoutExtension(args[0])}_skip.txt", words.Where(p => p.Contains('_') && !p.Contains("__")));
             }
         }
     }
