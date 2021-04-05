@@ -22,6 +22,9 @@ namespace DictTransformation
         [Option('t', "insert_typos_lr", Required = false, HelpText = "Insert swap L-R (for smash)")]
         public bool InsertTypoLR { get; set; }
 
+        [Option('r', "remove_nbr_char_words", Required = false, Default = "", HelpText = "Remove words with x number of characters (separated by comma)")]
+        public string RemoveNbrCharWords { get; set; }
+
         [Option('c', "split_characters", Required = false, Default = "", HelpText = "List of characters to split, separated by |")]
         public string SplitChars { get; set; }
 

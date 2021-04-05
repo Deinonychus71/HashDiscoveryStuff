@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace DictTransformation
 
                 var words = File.ReadAllLines(o.InputFile);
                 var splitChars = o.SplitChars.Split('|');
+                var forbiddenNumbers = o.RemoveNbrCharWords.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => Convert.ToInt32(p));
 
                 var output = new HashSet<string>();
 
@@ -52,6 +54,18 @@ namespace DictTransformation
                             continue;
 
                         if (string.IsNullOrEmpty(word))
+                            continue;
+
+                        var badNbrChars = false;
+                        foreach(var forbiddenNumber in forbiddenNumbers)
+                        {
+                            if (word.Length == forbiddenNumber)
+                            {
+                                badNbrChars = true;
+                                break;
+                            }
+                        }
+                        if (badNbrChars)
                             continue;
 
                         //Special but save

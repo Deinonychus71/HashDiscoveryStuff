@@ -57,6 +57,7 @@ namespace HashCleanup
                     .Where(p => !checkDictionary || CheckForDictionary(p, charactersNumber, dict))
                     .Select(p => $"{prefix}{p}{suffix}")
                     .Where(p => !p.StartsWith('_') && !p.EndsWith('_'))
+                    .Distinct()
                     .OrderBy(p => p)
                     .ToList();
 

@@ -54,18 +54,18 @@ namespace BruteForceHash
             _combinationPatterns = GenerateCombinations(combinationSize, options.WordsLimit);
 
             //Load dictionary
-            _dictionaries = GetDictionaries(_options.Dictionaries, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
-            if (!string.IsNullOrEmpty(options.DictionariesFirstWord) && _options.Dictionaries != _options.DictionariesFirstWord)
+            _dictionaries = GetDictionaries(_options.Dictionaries, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos, options.DictionariesReverseOrder);
+            if (!string.IsNullOrEmpty(options.DictionariesFirstWord))
             {
-                _dictionariesFirst = GetDictionaries(_options.DictionariesFirstWord, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
+                _dictionariesFirst = GetDictionaries(_options.DictionariesFirstWord, options.DictionariesFirstSkipDigits, options.DictionariesFirstSkipSpecials, options.DictionariesFirstForceLowercase, options.DictionariesFirstAddTypos, options.DictionariesFirstReverseOrder);
             }
             else
             {
                 _dictionariesFirst = _dictionaries;
             }
-            if (!string.IsNullOrEmpty(options.DictionariesLastWord) && _options.Dictionaries != _options.DictionariesLastWord)
+            if (!string.IsNullOrEmpty(options.DictionariesLastWord))
             {
-                _dictionariesLast = GetDictionaries(_options.DictionariesLastWord, options.SkipDigits, options.SkipSpecials, options.ForceLowercase);
+                _dictionariesLast = GetDictionaries(_options.DictionariesLastWord, options.DictionariesLastSkipDigits, options.DictionariesLastSkipSpecials, options.DictionariesLastForceLowercase, options.DictionariesLastAddTypos, options.DictionariesLastReverseOrder);
             }
             else
             {
@@ -90,17 +90,35 @@ namespace BruteForceHash
             if (!string.IsNullOrEmpty(_options.IncludePatterns))
                 _logger.Log($"Include Patterns: {_options.IncludePatterns}");
             if (!string.IsNullOrEmpty(_options.IncludeWord))
+            {
                 _logger.Log($"Include Word: {_options.IncludeWord}");
+                _logger.Log($"Include Word - Skip first word: {_options.IncludeWordNotFirst}");
+            }
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
             _logger.Log($"Combination Order: {_options.Order}");
             _logger.Log($"Dictionaries: {_options.Dictionaries}");
+            _logger.Log($"Dictionaries Skip Digits: {_options.DictionariesSkipDigits}");
+            _logger.Log($"Dictionaries Skip Specials: {_options.DictionariesSkipSpecials}");
+            _logger.Log($"Dictionaries Force LowerCase: {_options.DictionariesForceLowercase}");
+            _logger.Log($"Dictionaries Add Typo: {_options.DictionariesAddTypos}");
+            _logger.Log($"Dictionaries Reverse Order: {_options.DictionariesReverseOrder}");
             if (_dictionaries != _dictionariesFirst)
             {
                 _logger.Log($"Dictionaries (1st word): {_options.DictionariesFirstWord}");
+                _logger.Log($"Dictionaries (1st word) Skip Digits: {_options.DictionariesFirstSkipDigits}");
+                _logger.Log($"Dictionaries (1st word) Skip Specials: {_options.DictionariesFirstSkipSpecials}");
+                _logger.Log($"Dictionaries (1st word) Force LowerCase: {_options.DictionariesFirstForceLowercase}");
+                _logger.Log($"Dictionaries (1st word) Add Typo: {_options.DictionariesFirstAddTypos}");
+                _logger.Log($"Dictionaries (1st word) Reverse Order: {_options.DictionariesFirstReverseOrder}");
             }
             if (_dictionaries != _dictionariesLast)
             {
                 _logger.Log($"Dictionaries (last word): {_options.DictionariesLastWord}");
+                _logger.Log($"Dictionaries (last word) Skip Digits: {_options.DictionariesLastSkipDigits}");
+                _logger.Log($"Dictionaries (last word) Skip Specials: {_options.DictionariesLastSkipSpecials}");
+                _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
+                _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
+                _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
             }
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             
@@ -177,13 +195,24 @@ namespace BruteForceHash
                         var wordCandidates = new List<string>() { combination };
                         foreach (var includeWord in includeWords)
                         {
-                            var combinationMatch = $"{{{includeWord.Length}}}";
+                            string combinationMatch;
+                            string combinationRegexp;
+                            if (!_options.IncludeWordNotFirst)
+                            {
+                                combinationMatch = $"{{{includeWord.Length}}}";
+                                combinationRegexp = "\\{" + includeWord.Length + "\\}";
+                            }
+                            else
+                            {
+                                combinationMatch = $"{_delimiter}{{{includeWord.Length}}}";
+                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWord.Length}}}");// "\\" + _delimiter + "\\{" + includeWord.Length + "\\}";
+                            }
                             var tempWordCandidates = new List<string>();
                             foreach (var wordCandidate in wordCandidates)
                             {
                                 if (!wordCandidate.Contains(combinationMatch))
                                     continue;
-                                var nbrMatch = Regex.Matches(wordCandidate, "\\{" + includeWord.Length + "\\}").Count;
+                                var nbrMatch = Regex.Matches(wordCandidate, combinationRegexp).Count;
                                 for (int i = 0; i < nbrMatch; i++)
                                 {
                                     tempWordCandidates.Add(ReplaceNthOccurrence(wordCandidate, combinationMatch, includeWord, i + 1));
@@ -394,13 +423,15 @@ namespace BruteForceHash
                 if (matchCollection.Count >= nthOccurrence)
                 {
                     var match = matchCollection[nthOccurrence - 1];
+                    if(_options.IncludeWordNotFirst)
+                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length).Insert(match.Index + _delimiter.Length, replace);
                     return obj.Remove(match.Index, match.Length).Insert(match.Index, replace);
                 }
             }
             return obj;
         }
 
-        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, bool skipDigits, bool skipSpecials, bool forceLowerCase)
+        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos, bool reverseOrder)
         {
             Dictionary<string, HashSet<string>> dictionary = new Dictionary<string, HashSet<string>>();
             var output = new Dictionary<string, byte[][]>();
@@ -432,18 +463,49 @@ namespace BruteForceHash
                     if (forceLowerCase)
                         wordToAdd = word.ToLower();
 
-                    if (!dictionary[lengthStr].Contains(wordToAdd))
-                        dictionary[lengthStr].Add(wordToAdd);
+                    if (addTypos)
+                    {
+                        var allNewWords = Combinations(word, 'l', 'r');
+                        foreach (var newWord in allNewWords)
+                        {
+                            if (!dictionary[lengthStr].Contains(wordToAdd))
+                                dictionary[lengthStr].Add(wordToAdd);
+                        }
+                    }
+                    else
+                    {
+                        if (!dictionary[lengthStr].Contains(wordToAdd))
+                            dictionary[lengthStr].Add(wordToAdd);
+                    }
                 }
             }
 
             foreach(var entry in dictionary)
             {
                 output.Add(entry.Key, new byte[entry.Value.Count][]);
-                output[entry.Key] = entry.Value.Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
+                if(reverseOrder)
+                    output[entry.Key] = entry.Value.OrderByDescending(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
+                else
+                    output[entry.Key] = entry.Value.OrderBy(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
             }
 
             return output;
+        }
+
+        private static IEnumerable<string> Combinations(string input, char char1, char char2)
+        {
+            var head = input[0] == char1 || input[0] == char2
+                ? new[] { char1.ToString(), char2.ToString() }
+                : new[] { input[0].ToString() };
+
+            var tails = input.Length > 1
+                ? Combinations(input.Substring(1), char1, char2)
+                : new[] { "" };
+
+            return
+                from h in head
+                from t in tails
+                select h + t;
         }
     }
 }
