@@ -102,6 +102,7 @@ namespace BruteForceHash
             _logger.Log($"Dictionaries Force LowerCase: {_options.DictionariesForceLowercase}");
             _logger.Log($"Dictionaries Add Typo: {_options.DictionariesAddTypos}");
             _logger.Log($"Dictionaries Reverse Order: {_options.DictionariesReverseOrder}");
+            _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             if (_dictionaries != _dictionariesFirst)
             {
                 _logger.Log($"Dictionaries (1st word): {_options.DictionariesFirstWord}");
@@ -110,6 +111,7 @@ namespace BruteForceHash
                 _logger.Log($"Dictionaries (1st word) Force LowerCase: {_options.DictionariesFirstForceLowercase}");
                 _logger.Log($"Dictionaries (1st word) Add Typo: {_options.DictionariesFirstAddTypos}");
                 _logger.Log($"Dictionaries (1st word) Reverse Order: {_options.DictionariesFirstReverseOrder}");
+                _logger.Log($"Dictionaries (1st word) words: {_dictionariesFirst.Values.Sum(p => p.Length)}");
             }
             if (_dictionaries != _dictionariesLast)
             {
@@ -119,8 +121,10 @@ namespace BruteForceHash
                 _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
                 _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
                 _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
+                _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
+                _logger.Log($"Dictionaries (last word) words: {_dictionariesLast.Values.Sum(p => p.Length)}");
             }
-            _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
+            
             
             if (_options.Verbose)
             {
