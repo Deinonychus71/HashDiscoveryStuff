@@ -153,7 +153,7 @@ namespace BruteForceHash
             {
                 process.StartInfo.FileName = _options.PathHashCat;
                 process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
-                process.StartInfo.Arguments = $"--hash-type 11500 -a 3 {_hexExtract:x}:00000000 -1 {_validStartChars} -2 {_validChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
+                process.StartInfo.Arguments = $"--hash-type 11500 -a 3 {_hexExtract:x}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
                 process.StartInfo.CreateNoWindow = false;
                 process.Start();
                 process.WaitForExit();
