@@ -279,7 +279,8 @@ namespace BruteForceHash
                         scoreSum += tempScore;
                         scoresCounted++;
                     }
-                    PatternToScore.Add(pattern, scoreSum / scoresCounted);
+                    
+                    PatternToScore.Add(pattern, scoreSum / scoresCounted + (differences.Sum() < 0 ? 0.1 : 0));
                 }
 
 
