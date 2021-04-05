@@ -297,7 +297,7 @@ namespace BruteForceHash
             return returnCombinations;
         }
 
-        private List<string> OrderList(List<string> patterns)
+        private List<string> OrderList(List<string> patterns, bool longestWordFirst = false)
         {
             Dictionary<string, double> PatternToScore = new Dictionary<string, double>();
 
@@ -341,7 +341,7 @@ namespace BruteForceHash
                         scoresCounted++;
                     }
                     
-                    PatternToScore.Add(pattern, scoreSum / scoresCounted + (differences.Sum() < 0 ? 0.1 : 0));
+                    PatternToScore.Add(pattern, scoreSum / scoresCounted + (longestWordFirst && differences.Sum() < 0 ? 0.1 : 0));
                 }
 
 
