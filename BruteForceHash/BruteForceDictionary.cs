@@ -465,7 +465,7 @@ namespace BruteForceHash
 
                     if (addTypos)
                     {
-                        var allNewWords = Combinations(word, 'l', 'r');
+                        var allNewWords = Combinations(wordToAdd, 'l', 'r');
                         foreach (var newWord in allNewWords)
                         {
                             if (!dictionary[lengthStr].Contains(newWord))
