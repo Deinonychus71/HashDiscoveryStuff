@@ -44,8 +44,6 @@ namespace BruteForceHash
                     if (!string.IsNullOrEmpty(o.Suffix))
                         logger.Log($"Suffix: {o.Suffix}");
                     logger.Log($"Number of Threads: {o.NbrThreads}");
-                    logger.Log($"Skip Digits: {o.SkipDigits}");
-                    logger.Log($"Skip Specials: {o.SkipSpecials}");
 
                     if (o.Prefix.Length + o.Suffix.Length > length)
                     {
