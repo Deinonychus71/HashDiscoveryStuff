@@ -468,8 +468,8 @@ namespace BruteForceHash
                         var allNewWords = Combinations(word, 'l', 'r');
                         foreach (var newWord in allNewWords)
                         {
-                            if (!dictionary[lengthStr].Contains(wordToAdd))
-                                dictionary[lengthStr].Add(wordToAdd);
+                            if (!dictionary[lengthStr].Contains(newWord))
+                                dictionary[lengthStr].Add(newWord);
                         }
                     }
                     else

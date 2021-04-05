@@ -68,7 +68,7 @@ namespace HashCleanup
         private static string FormatForHashcat(string input)
         {
             if (input.Contains(':'))
-                return input.Substring(input.LastIndexOf(':') + 1);
+                return input[(input.LastIndexOf(':') + 1)..];
             else
                 return input;
 
@@ -107,7 +107,7 @@ namespace HashCleanup
             {
                 for (var j = 0; j < length - i; j++)
                 {
-                    var word = input.Substring(i, input.Length - j - i);
+                    var word = input[i..^j];
                     if (dictionary.Contains(word))
                         return true;
                 }

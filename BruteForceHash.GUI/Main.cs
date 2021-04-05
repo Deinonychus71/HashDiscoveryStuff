@@ -32,9 +32,14 @@ namespace BruteForceHash.GUI
                 foreach (var dictionaryPath in allDictionaries)
                 {
                     var filename = Path.GetFileName(dictionaryPath);
-                    chklDictionaries.Items.Add(filename);
-                    chklDictionariesFirstWord.Items.Add(filename);
-                    chklDictionariesLastWord.Items.Add(filename);
+                    var isFirstDic = filename.Contains("[1st]");
+                    var isLastDic = filename.Contains("[Last]");
+                    if(!isFirstDic && !isLastDic)
+                        chklDictionaries.Items.Add(filename);
+                    if (!isLastDic)
+                        chklDictionariesFirstWord.Items.Add(filename);
+                    if (!isFirstDic)
+                        chklDictionariesLastWord.Items.Add(filename);
                 }
             }
             else
