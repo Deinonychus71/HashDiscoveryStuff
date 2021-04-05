@@ -121,7 +121,6 @@ namespace BruteForceHash
                 _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
                 _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
                 _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
-                _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
                 _logger.Log($"Dictionaries (last word) words: {_dictionariesLast.Values.Sum(p => p.Length)}");
             }
             

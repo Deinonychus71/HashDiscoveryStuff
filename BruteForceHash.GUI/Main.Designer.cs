@@ -79,6 +79,8 @@ namespace BruteForceHash.GUI
             this.chklDictionaries = new System.Windows.Forms.CheckedListBox();
             this.txtIncludeWordsCharacter = new System.Windows.Forms.TextBox();
             this.pnlCharacter = new System.Windows.Forms.Panel();
+            this.txtHashCatPath = new System.Windows.Forms.TextBox();
+            this.lblHashCat = new System.Windows.Forms.Label();
             this.numEndPosition = new System.Windows.Forms.NumericUpDown();
             this.lblEndPosition = new System.Windows.Forms.Label();
             this.numStartPosition = new System.Windows.Forms.NumericUpDown();
@@ -91,11 +93,14 @@ namespace BruteForceHash.GUI
             this.chkVerbose = new System.Windows.Forms.CheckBox();
             this.mnStrip = new System.Windows.Forms.MenuStrip();
             this.mnFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mnLoad = new System.Windows.Forms.ToolStripMenuItem();
             this.mnSave = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.lblVerbose = new System.Windows.Forms.Label();
+            this.btnStartHashCat = new System.Windows.Forms.Button();
             this.pnlDictionary.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).BeginInit();
@@ -351,7 +356,7 @@ namespace BruteForceHash.GUI
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(290, 531);
+            this.btnStart.Location = new System.Drawing.Point(186, 530);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(213, 23);
             this.btnStart.TabIndex = 24;
@@ -674,9 +679,12 @@ namespace BruteForceHash.GUI
             this.txtIncludeWordsCharacter.PlaceholderText = "mario";
             this.txtIncludeWordsCharacter.Size = new System.Drawing.Size(379, 23);
             this.txtIncludeWordsCharacter.TabIndex = 31;
+            this.txtIncludeWordsCharacter.TextChanged += new System.EventHandler(this.OnTxtIncludeWordsCharacterTextChanged);
             // 
             // pnlCharacter
             // 
+            this.pnlCharacter.Controls.Add(this.txtHashCatPath);
+            this.pnlCharacter.Controls.Add(this.lblHashCat);
             this.pnlCharacter.Controls.Add(this.numEndPosition);
             this.pnlCharacter.Controls.Add(this.lblEndPosition);
             this.pnlCharacter.Controls.Add(this.numStartPosition);
@@ -691,6 +699,22 @@ namespace BruteForceHash.GUI
             this.pnlCharacter.Name = "pnlCharacter";
             this.pnlCharacter.Size = new System.Drawing.Size(751, 421);
             this.pnlCharacter.TabIndex = 32;
+            // 
+            // txtHashCatPath
+            // 
+            this.txtHashCatPath.Location = new System.Drawing.Point(111, 392);
+            this.txtHashCatPath.Name = "txtHashCatPath";
+            this.txtHashCatPath.Size = new System.Drawing.Size(379, 23);
+            this.txtHashCatPath.TabIndex = 39;
+            // 
+            // lblHashCat
+            // 
+            this.lblHashCat.AutoSize = true;
+            this.lblHashCat.Location = new System.Drawing.Point(4, 395);
+            this.lblHashCat.Name = "lblHashCat";
+            this.lblHashCat.Size = new System.Drawing.Size(80, 15);
+            this.lblHashCat.TabIndex = 38;
+            this.lblHashCat.Text = "Hashcat Path:";
             // 
             // numEndPosition
             // 
@@ -800,11 +824,24 @@ namespace BruteForceHash.GUI
             // mnFile
             // 
             this.mnFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnNew,
+            this.mnSeparator,
             this.mnLoad,
             this.mnSave});
             this.mnFile.Name = "mnFile";
             this.mnFile.Size = new System.Drawing.Size(37, 20);
             this.mnFile.Text = "File";
+            // 
+            // mnNew
+            // 
+            this.mnNew.Name = "mnNew";
+            this.mnNew.Size = new System.Drawing.Size(109, 22);
+            this.mnNew.Text = "New";
+            // 
+            // mnSeparator
+            // 
+            this.mnSeparator.Name = "mnSeparator";
+            this.mnSeparator.Size = new System.Drawing.Size(106, 6);
             // 
             // mnLoad
             // 
@@ -835,11 +872,22 @@ namespace BruteForceHash.GUI
             this.lblVerbose.TabIndex = 35;
             this.lblVerbose.Text = "Verbose:";
             // 
+            // btnStartHashCat
+            // 
+            this.btnStartHashCat.Location = new System.Drawing.Point(420, 530);
+            this.btnStartHashCat.Name = "btnStartHashCat";
+            this.btnStartHashCat.Size = new System.Drawing.Size(213, 23);
+            this.btnStartHashCat.TabIndex = 36;
+            this.btnStartHashCat.Text = "START (HashCat)";
+            this.btnStartHashCat.UseVisualStyleBackColor = true;
+            this.btnStartHashCat.Click += new System.EventHandler(this.OnStartHashCatClick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(775, 565);
+            this.Controls.Add(this.btnStartHashCat);
             this.Controls.Add(this.lblVerbose);
             this.Controls.Add(this.chkVerbose);
             this.Controls.Add(this.txtDelimiter);
@@ -856,8 +904,8 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
             this.Controls.Add(this.mnStrip);
-            this.Controls.Add(this.pnlDictionary);
             this.Controls.Add(this.pnlCharacter);
+            this.Controls.Add(this.pnlDictionary);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.mnStrip;
             this.MaximizeBox = false;
@@ -945,6 +993,12 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.CheckBox chkDictForceLowercase;
         private System.Windows.Forms.CheckBox chkDictAddTypos;
         private System.Windows.Forms.CheckBox chkDictReverseOrder;
+        private System.Windows.Forms.ToolStripMenuItem mnNew;
+        private System.Windows.Forms.ToolStripSeparator mnSeparator;
+        private System.Windows.Forms.Button btnStartHashCat;
+        private System.Windows.Forms.Label lblHashCat;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtHashCatPath;
     }
 }
 

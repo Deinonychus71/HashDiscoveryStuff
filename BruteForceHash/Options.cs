@@ -91,12 +91,14 @@ namespace BruteForceHash
         public int StartPosition { get; set; }
         [Option('1', "end_position", Required = false, Default = -1, HelpText = "End position when searching for a word (for character attack).")]
         public int EndPosition { get; set; }
+        [Option('h', "path_hashcat", Required = false, Default = "Tools\\Hashcat\\hashcat.exe", HelpText = "Path for HashCat (for character attack).")]
+        public string PathHashCat { get; set; }
         /*[Option('2', "skip_delimiter_in_last_position", Required = false, Default = false, HelpText = "If true, the last character check will skip the delimiter value (for character attack).")]
         public bool SkipDelimiterInLastPosition { get; set; }
         [Option('3', "skip_delimiter_in_first_position", Required = false, Default = false, HelpText = "If true, the first character check will skip the delimiter value (for character attack).")]
         public bool SkipDelimiterInFirstPosition { get; set; }*/
 
 
-        
+
     }
 }

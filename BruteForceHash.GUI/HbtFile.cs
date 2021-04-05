@@ -46,5 +46,6 @@ namespace BruteForceHash.GUI
         public int StartPosition { get; set; }
         public int EndPosition { get; set; }
         public bool Verbose { get; set; }
+        public string PathHashCat { get; set; }
     }
 }

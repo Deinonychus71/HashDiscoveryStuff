@@ -56,6 +56,8 @@ namespace BruteForceHash
                             new BruteForceDictionary(logger, o, length, hexToFind).Run();
                         else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
                             new BruteForceCharacter(logger, o, length, hexToFind).Run();
+                        else if (o.Method.Equals("character_hashcat", StringComparison.OrdinalIgnoreCase))
+                            new BruteForceCharacterHashCat(logger, o, length, hexToFind).Run();
                         else
                             logger.Log("Method invalid");
                         await Task.Delay(2000);
