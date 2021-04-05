@@ -361,13 +361,13 @@ namespace BruteForceHash
             if (lastWord)
             {
                 currentWord = combinationPattern;
-                openBracketStart = currentWord.StartsWith("{");
+                openBracketStart = currentWord.StartsWith('{');
 
             }
             else
             {
                 currentWord = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
-                openBracketStart = currentWord.StartsWith("{");
+                openBracketStart = currentWord.StartsWith('{');
                 /*
                  * If currentWord does not start with {, then add the current word to candidate
                  * If there's a delimiter, add that too
@@ -401,7 +401,7 @@ namespace BruteForceHash
                 }
                 else
                 {
-                    var words = _dictionaries[currentWord];
+                    var words = _dictionariesLast[currentWord];
                     foreach (var word in words)
                     {
                         candidate.Replace(word);
@@ -411,7 +411,11 @@ namespace BruteForceHash
             } 
             else
             {
-                var words = _dictionaries[currentWord];
+                byte[][] words;
+                 if (firstWord)
+                    words = _dictionariesFirst[currentWord];
+                else
+                    words = _dictionaries[currentWord];
                 foreach (var word in words)
                 {
                     candidate.Append(word);
