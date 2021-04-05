@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Reference Include="Crc32.NET">
-      <HintPath>..\Crc32-NET\Crc32.NET.dll</HintPath>
+      <HintPath>..\Tools\Crc32-NET\Crc32.NET.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -2,7 +2,7 @@
   "profiles": {
     "BruteForceHash": {
       "commandName": "Project",
-      "commandLineArgs": "--nbr_threads 1 --method Dictionary --words_limit 3 --skip_digits False --force_lowercase True --verbose --use_dictionaries \"*\" --include_word \"\" --include_patterns \"{7}|{1}|{2}\" --exclude_patterns \"\" --delimiter \"\" --prefix \"ui_chara_murabito_\" --suffix \"\" --hex_value \"0x1c2d9aa545\""
+      "commandLineArgs": "--nbr_threads 1 --method Dictionary --words_limit 3 --dictionaries_skip_digits False --dictionaries_force_lowercase True --verbose --dictionaries \"*\" --include_word \"paint\" --include_word_not_first --include_patterns \"\" --exclude_patterns \"\" --delimiter \"\" --prefix \"\" --suffix \"\" --hex_value \"0x12111561a7\" --dictionaries_add_typos"
     }
   }
 }

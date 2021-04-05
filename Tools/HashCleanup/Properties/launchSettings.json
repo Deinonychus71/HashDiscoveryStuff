@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HashSkipUnderscore": {
+      "commandName": "Project",
+      "commandLineArgs": "ink.txt"
+    }
+  }
+}
