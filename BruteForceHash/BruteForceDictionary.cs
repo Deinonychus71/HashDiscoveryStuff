@@ -152,6 +152,154 @@ namespace BruteForceHash
             cts.Dispose();
         }
 
+        #region Run Attack
+        private void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord)
+        {
+            string wordSize;
+            bool lastWord = false;
+
+            if (!combinationPattern.Contains(_delimiter))
+            {
+                wordSize = combinationPattern;
+                lastWord = true;
+            }
+            else
+            {
+                wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
+                if (!wordSize.StartsWith("{"))
+                {
+                    candidate.Append(wordSize);
+                    if (_delimiterLength > 0)
+                        candidate.Append(_delimiterByte);
+                    combinationPattern = combinationPattern[(wordSize.Length + 1)..];
+                    RunDictionaries(candidate, combinationPattern, false);
+                    candidate.Cursor -= wordSize.Length + _delimiterLength;
+                    return;
+                }
+                combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + 1)..];
+            }
+
+            if (lastWord && !wordSize.StartsWith("{"))
+            {
+                candidate.Replace(combinationPattern);
+                TestCandidate(candidate);
+            }
+            else
+            {
+                byte[][] words;
+                if (lastWord)
+                    words = _dictionariesLast[wordSize];
+                else if (firstWord)
+                    words = _dictionariesFirst[wordSize];
+                else
+                    words = _dictionaries[wordSize];
+                foreach (var word in words)
+                {
+                    if (lastWord)
+                    {
+                        candidate.Replace(word);
+                        TestCandidate(candidate);
+                    }
+                    else
+                    {
+                        candidate.Append(word);
+                        if (_delimiterLength > 0)
+                            candidate.Append(_delimiterByte);
+                        RunDictionaries(candidate, combinationPattern, false);
+                        candidate.Cursor -= word.Length + _delimiterLength;
+                    }
+                }
+            }
+        }
+
+        private void TestCandidate(ByteString candidate)
+        {
+            _logger.LogResult(candidate.ToString());
+            if (candidate.CRC32Check())
+                _logger.LogResult(candidate.ToString());
+        }
+        #endregion
+
+        #region Generate Dictionaries
+        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos, bool reverseOrder)
+        {
+            Dictionary<string, HashSet<string>> dictionary = new Dictionary<string, HashSet<string>>();
+            var output = new Dictionary<string, byte[][]>();
+
+            //Fill if no data present
+            for (int i = 1; i <= 100; i++)
+                dictionary.Add($"{{{i}}}", new HashSet<string>());
+
+            string[] allDictionaries;
+            if (Directory.Exists("Dictionaries") && dictionaries == "*")
+                allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
+            else
+                allDictionaries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var dictionaryPath in allDictionaries)
+            {
+                var allWords = File.ReadAllLines(dictionaryPath);
+                foreach (var word in allWords)
+                {
+                    if (word.Length == 0)
+                        continue;
+                    if (skipDigits && word.Any(char.IsDigit))
+                        continue;
+                    if (skipSpecials && !_specialCharactersRegex.IsMatch(word))
+                        continue;
+
+                    var lengthStr = $"{{{word.Length}}}";
+                    var wordToAdd = word;
+                    if (forceLowerCase)
+                        wordToAdd = word.ToLower();
+
+                    if (addTypos)
+                    {
+                        var allNewWords = Combinations(wordToAdd, 'l', 'r');
+                        foreach (var newWord in allNewWords)
+                        {
+                            if (!dictionary[lengthStr].Contains(newWord))
+                                dictionary[lengthStr].Add(newWord);
+                        }
+                    }
+                    else
+                    {
+                        if (!dictionary[lengthStr].Contains(wordToAdd))
+                            dictionary[lengthStr].Add(wordToAdd);
+                    }
+                }
+            }
+
+            foreach (var entry in dictionary)
+            {
+                output.Add(entry.Key, new byte[entry.Value.Count][]);
+                if (reverseOrder)
+                    output[entry.Key] = entry.Value.OrderByDescending(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
+                else
+                    output[entry.Key] = entry.Value.OrderBy(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
+            }
+
+            return output;
+        }
+
+        private static IEnumerable<string> Combinations(string input, char char1, char char2)
+        {
+            var head = input[0] == char1 || input[0] == char2
+                ? new[] { char1.ToString(), char2.ToString() }
+                : new[] { input[0].ToString() };
+
+            var tails = input.Length > 1
+                ? Combinations(input.Substring(1), char1, char2)
+                : new[] { "" };
+
+            return
+                from h in head
+                from t in tails
+                select h + t;
+        }
+        #endregion
+
+        #region Generate Combinations
         private IEnumerable<string> GenerateCombinations(int stringLength, int wordsLimit)
         {
             var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
@@ -314,6 +462,26 @@ namespace BruteForceHash
             return returnCombinations;
         }
 
+        private string ReplaceNthOccurrence(string obj, string find, string replace, int nthOccurrence)
+        {
+            if (nthOccurrence > 0)
+            {
+                var matchCollection = Regex.Matches(obj, Regex.Escape(find));
+                if (matchCollection.Count >= nthOccurrence)
+                {
+                    var match = matchCollection[nthOccurrence - 1];
+                    if (_options.IncludeWordNotLast && _options.IncludeWordNotFirst)
+                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length * 2).Insert(match.Index + _delimiter.Length, replace);
+                    else if (_options.IncludeWordNotLast)
+                        return obj.Remove(match.Index, match.Length - _delimiter.Length).Insert(match.Index, replace);
+                    if (_options.IncludeWordNotFirst)
+                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length).Insert(match.Index + _delimiter.Length, replace);
+                    return obj.Remove(match.Index, match.Length).Insert(match.Index, replace);
+                }
+            }
+            return obj;
+        }
+
         private List<string> OrderList(List<string> patterns, bool longestWordFirst = false)
         {
             Dictionary<string, double> PatternToScore = new Dictionary<string, double>();
@@ -368,169 +536,6 @@ namespace BruteForceHash
             KeyValueList.Sort((Pair1, Pair2) => Pair2.Value.CompareTo(Pair1.Value));
             return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
         }
-
-        private void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord)
-        {
-            string wordSize;
-            bool lastWord = false;
-
-            if (!combinationPattern.Contains(_delimiter))
-            {
-                wordSize = combinationPattern;
-                lastWord = true;
-            }
-            else
-            {
-                wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
-                if (!wordSize.StartsWith("{"))
-                {
-                    candidate.Append(wordSize);
-                    if (_delimiterLength > 0)
-                        candidate.Append(_delimiterByte);
-                    combinationPattern = combinationPattern[(wordSize.Length + 1)..];
-                    RunDictionaries(candidate, combinationPattern, false);
-                    candidate.Cursor -= wordSize.Length + _delimiterLength;
-                    return;
-                }
-                combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + 1)..];
-            }
-
-            if (lastWord && !wordSize.StartsWith("{"))
-            {
-                candidate.Replace(combinationPattern);
-                TestCandidate(candidate);
-            }
-            else
-            {
-                byte[][] words;
-                if (lastWord)
-                    words = _dictionariesLast[wordSize];
-                else if (firstWord)
-                    words = _dictionariesFirst[wordSize];
-                else
-                    words = _dictionaries[wordSize];
-                foreach (var word in words)
-                {
-                    if (lastWord)
-                    {
-                        candidate.Replace(word);
-                        TestCandidate(candidate);
-                    }
-                    else
-                    {
-                        candidate.Append(word);
-                        if (_delimiterLength > 0)
-                            candidate.Append(_delimiterByte);
-                        RunDictionaries(candidate, combinationPattern, false);
-                        candidate.Cursor -= word.Length + _delimiterLength;
-                    }
-                }
-            }
-        }
-
-        private List<string> allwords = new List<string>();
-        private void TestCandidate(ByteString candidate)
-        {
-            _logger.LogResult(candidate.ToString());
-            if (candidate.CRC32Check())
-                _logger.LogResult(candidate.ToString());
-        }
-
-        private string ReplaceNthOccurrence(string obj, string find, string replace, int nthOccurrence)
-        {
-            if (nthOccurrence > 0)
-            {
-                var matchCollection = Regex.Matches(obj, Regex.Escape(find));
-                if (matchCollection.Count >= nthOccurrence)
-                {
-                    var match = matchCollection[nthOccurrence - 1];
-                    if(_options.IncludeWordNotLast && _options.IncludeWordNotFirst)
-                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length * 2).Insert(match.Index + _delimiter.Length, replace);
-                    else if (_options.IncludeWordNotLast)
-                        return obj.Remove(match.Index, match.Length - _delimiter.Length).Insert(match.Index, replace);
-                    if (_options.IncludeWordNotFirst)
-                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length).Insert(match.Index + _delimiter.Length, replace);
-                    return obj.Remove(match.Index, match.Length).Insert(match.Index, replace);
-                }
-            }
-            return obj;
-        }
-
-        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos, bool reverseOrder)
-        {
-            Dictionary<string, HashSet<string>> dictionary = new Dictionary<string, HashSet<string>>();
-            var output = new Dictionary<string, byte[][]>();
-
-            //Fill if no data present
-            for (int i = 1; i <= 100; i++)
-                dictionary.Add($"{{{i}}}", new HashSet<string>());
-
-            string[] allDictionaries;
-            if (Directory.Exists("Dictionaries") && dictionaries == "*")
-                allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
-            else
-                allDictionaries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var dictionaryPath in allDictionaries)
-            {
-                var allWords = File.ReadAllLines(dictionaryPath);
-                foreach (var word in allWords)
-                {
-                    if (word.Length == 0)
-                        continue;
-                    if (skipDigits && word.Any(char.IsDigit))
-                        continue;
-                    if (skipSpecials && !_specialCharactersRegex.IsMatch(word))
-                        continue;
-
-                    var lengthStr = $"{{{word.Length}}}";
-                    var wordToAdd = word;
-                    if (forceLowerCase)
-                        wordToAdd = word.ToLower();
-
-                    if (addTypos)
-                    {
-                        var allNewWords = Combinations(wordToAdd, 'l', 'r');
-                        foreach (var newWord in allNewWords)
-                        {
-                            if (!dictionary[lengthStr].Contains(newWord))
-                                dictionary[lengthStr].Add(newWord);
-                        }
-                    }
-                    else
-                    {
-                        if (!dictionary[lengthStr].Contains(wordToAdd))
-                            dictionary[lengthStr].Add(wordToAdd);
-                    }
-                }
-            }
-
-            foreach (var entry in dictionary)
-            {
-                output.Add(entry.Key, new byte[entry.Value.Count][]);
-                if (reverseOrder)
-                    output[entry.Key] = entry.Value.OrderByDescending(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
-                else
-                    output[entry.Key] = entry.Value.OrderBy(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
-            }
-
-            return output;
-        }
-
-        private static IEnumerable<string> Combinations(string input, char char1, char char2)
-        {
-            var head = input[0] == char1 || input[0] == char2
-                ? new[] { char1.ToString(), char2.ToString() }
-                : new[] { input[0].ToString() };
-
-            var tails = input.Length > 1
-                ? Combinations(input.Substring(1), char1, char2)
-                : new[] { "" };
-
-            return
-                from h in head
-                from t in tails
-                select h + t;
-        }
+        #endregion
     }
 }

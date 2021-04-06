@@ -20,8 +20,6 @@ namespace BruteForceHash
         private byte[] _validBytes = null;
         private uint _hexExtract;
         private bool _interruptThreads = false;
-        private bool _hashCatProcessDone = false;
-
 
         public BruteForceCharacterHashCat(Logger logger, Options options, int stringLength, uint hexValue)
         {
@@ -94,73 +92,8 @@ namespace BruteForceHash
             for (int i = 1; i < maskSize; i++)
                 mask += "?2";
 
-            Task.Run(async () =>
-            {
-                
-                while (!_hashCatProcessDone)
-                {
-                    if (File.Exists(output))
-                    {
-                        var initialFileSize = new FileInfo(output).Length;
-                        var lastReadLength = initialFileSize - 1024;
-                        if (lastReadLength < 0) lastReadLength = 0;
-                        while (!_hashCatProcessDone)
-                        {
-                            try
-                            {
-                                var fileSize = new FileInfo(output).Length;
-                                if (fileSize > lastReadLength)
-                                {
-                                    using (var fs = new FileStream(output, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                                    {
-                                        fs.Seek(lastReadLength, SeekOrigin.Begin);
-                                        var buffer = new byte[1024];
-
-                                        while (true)
-                                        {
-                                            var bytesRead = fs.Read(buffer, 0, buffer.Length);
-                                            lastReadLength += bytesRead;
-
-                                            if (bytesRead == 0)
-                                                break;
-
-                                            var text = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
-                                            if (!string.IsNullOrEmpty(text))
-                                            {
-                                                var textLines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-                                                foreach (var line in textLines)
-                                                {
-                                                    _logger.LogResult($"{_options.Prefix}{line[(line.LastIndexOf(':') + 1)..].Trim()}{_options.Suffix}");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                _logger.Log(e.Message);
-                            }
-                            await Task.Delay(2000);
-                        }
-                    }
-                    await Task.Delay(2000);
-                }
-            });
-
-            using (var process = new Process())
-            {
-                process.StartInfo.FileName = _options.PathHashCat;
-                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
-                process.StartInfo.Arguments = $"--hash-type 11500 -a 3 {_hexExtract:x}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
-                process.StartInfo.CreateNoWindow = false;
-                process.Start();
-                process.WaitForExit();
-                process.Close();
-            }
-
-            _hashCatProcessDone = true;
+            string args = $"--hash-type 11500 -a 3 {_hexExtract:x}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
+            new HashcatTask(_logger, _options).Run(args);
         }
 
         private void RunCharacterBruteForce(List<Task> tasks, TaskFactory factory, byte[] validStartBytes, string prefix, string pattern = null, int patternPosition = 0, int[] levelTable = null)
@@ -185,7 +118,6 @@ namespace BruteForceHash
                 tasks.Add(task);
             }
         }
-
 
         private void DiveByteSimple(ByteString candidate, int level, int searchLength)
         {
