@@ -101,6 +101,7 @@ namespace BruteForceHash.GUI
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.lblVerbose = new System.Windows.Forms.Label();
             this.btnStartHashCat = new System.Windows.Forms.Button();
+            this.chkIncludeWordNotLast = new System.Windows.Forms.CheckBox();
             this.pnlDictionary.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).BeginInit();
@@ -319,7 +320,7 @@ namespace BruteForceHash.GUI
             // lblWordsLimit
             // 
             this.lblWordsLimit.AutoSize = true;
-            this.lblWordsLimit.Location = new System.Drawing.Point(234, 140);
+            this.lblWordsLimit.Location = new System.Drawing.Point(234, 156);
             this.lblWordsLimit.Name = "lblWordsLimit";
             this.lblWordsLimit.Size = new System.Drawing.Size(74, 15);
             this.lblWordsLimit.TabIndex = 20;
@@ -340,7 +341,7 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbWordsLimit.Location = new System.Drawing.Point(311, 137);
+            this.cbWordsLimit.Location = new System.Drawing.Point(311, 153);
             this.cbWordsLimit.Name = "cbWordsLimit";
             this.cbWordsLimit.Size = new System.Drawing.Size(38, 23);
             this.cbWordsLimit.TabIndex = 21;
@@ -348,7 +349,7 @@ namespace BruteForceHash.GUI
             // lblDictionaries
             // 
             this.lblDictionaries.AutoSize = true;
-            this.lblDictionaries.Location = new System.Drawing.Point(5, 178);
+            this.lblDictionaries.Location = new System.Drawing.Point(5, 198);
             this.lblDictionaries.Name = "lblDictionaries";
             this.lblDictionaries.Size = new System.Drawing.Size(72, 15);
             this.lblDictionaries.TabIndex = 22;
@@ -383,7 +384,7 @@ namespace BruteForceHash.GUI
             // lblCombinationOrder
             // 
             this.lblCombinationOrder.AutoSize = true;
-            this.lblCombinationOrder.Location = new System.Drawing.Point(5, 140);
+            this.lblCombinationOrder.Location = new System.Drawing.Point(5, 156);
             this.lblCombinationOrder.Name = "lblCombinationOrder";
             this.lblCombinationOrder.Size = new System.Drawing.Size(40, 15);
             this.lblCombinationOrder.TabIndex = 29;
@@ -391,6 +392,7 @@ namespace BruteForceHash.GUI
             // 
             // pnlDictionary
             // 
+            this.pnlDictionary.Controls.Add(this.chkIncludeWordNotLast);
             this.pnlDictionary.Controls.Add(this.chkDictReverseOrder);
             this.pnlDictionary.Controls.Add(this.chkDictAddTypos);
             this.pnlDictionary.Controls.Add(this.chkDictForceLowercase);
@@ -433,7 +435,7 @@ namespace BruteForceHash.GUI
             // chkDictReverseOrder
             // 
             this.chkDictReverseOrder.AutoSize = true;
-            this.chkDictReverseOrder.Location = new System.Drawing.Point(7, 287);
+            this.chkDictReverseOrder.Location = new System.Drawing.Point(7, 307);
             this.chkDictReverseOrder.Name = "chkDictReverseOrder";
             this.chkDictReverseOrder.Size = new System.Drawing.Size(99, 19);
             this.chkDictReverseOrder.TabIndex = 54;
@@ -443,7 +445,7 @@ namespace BruteForceHash.GUI
             // chkDictAddTypos
             // 
             this.chkDictAddTypos.AutoSize = true;
-            this.chkDictAddTypos.Location = new System.Drawing.Point(7, 265);
+            this.chkDictAddTypos.Location = new System.Drawing.Point(7, 285);
             this.chkDictAddTypos.Name = "chkDictAddTypos";
             this.chkDictAddTypos.Size = new System.Drawing.Size(81, 19);
             this.chkDictAddTypos.TabIndex = 53;
@@ -455,7 +457,7 @@ namespace BruteForceHash.GUI
             this.chkDictForceLowercase.AutoSize = true;
             this.chkDictForceLowercase.Checked = true;
             this.chkDictForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictForceLowercase.Location = new System.Drawing.Point(7, 243);
+            this.chkDictForceLowercase.Location = new System.Drawing.Point(7, 263);
             this.chkDictForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.chkDictForceLowercase.Name = "chkDictForceLowercase";
             this.chkDictForceLowercase.Size = new System.Drawing.Size(81, 19);
@@ -468,7 +470,7 @@ namespace BruteForceHash.GUI
             this.chkDictSkipSpecials.AutoSize = true;
             this.chkDictSkipSpecials.Checked = true;
             this.chkDictSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictSkipSpecials.Location = new System.Drawing.Point(7, 221);
+            this.chkDictSkipSpecials.Location = new System.Drawing.Point(7, 241);
             this.chkDictSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.chkDictSkipSpecials.Name = "chkDictSkipSpecials";
             this.chkDictSkipSpecials.Size = new System.Drawing.Size(93, 19);
@@ -479,7 +481,7 @@ namespace BruteForceHash.GUI
             // chkDictSkipDigits
             // 
             this.chkDictSkipDigits.AutoSize = true;
-            this.chkDictSkipDigits.Location = new System.Drawing.Point(7, 199);
+            this.chkDictSkipDigits.Location = new System.Drawing.Point(7, 219);
             this.chkDictSkipDigits.Name = "chkDictSkipDigits";
             this.chkDictSkipDigits.Size = new System.Drawing.Size(81, 19);
             this.chkDictSkipDigits.TabIndex = 50;
@@ -664,7 +666,7 @@ namespace BruteForceHash.GUI
             "Fewer/longer words first",
             "Greater/shorter words first",
             "Greater/longer words first"});
-            this.cbCombinationOrder.Location = new System.Drawing.Point(112, 137);
+            this.cbCombinationOrder.Location = new System.Drawing.Point(112, 153);
             this.cbCombinationOrder.Name = "cbCombinationOrder";
             this.cbCombinationOrder.Size = new System.Drawing.Size(114, 23);
             this.cbCombinationOrder.TabIndex = 30;
@@ -672,9 +674,9 @@ namespace BruteForceHash.GUI
             // chklDictionaries
             // 
             this.chklDictionaries.FormattingEnabled = true;
-            this.chklDictionaries.Location = new System.Drawing.Point(112, 179);
+            this.chklDictionaries.Location = new System.Drawing.Point(112, 197);
             this.chklDictionaries.Name = "chklDictionaries";
-            this.chklDictionaries.Size = new System.Drawing.Size(238, 220);
+            this.chklDictionaries.Size = new System.Drawing.Size(238, 202);
             this.chklDictionaries.TabIndex = 23;
             // 
             // txtIncludeWordsCharacter
@@ -887,6 +889,17 @@ namespace BruteForceHash.GUI
             this.btnStartHashCat.UseVisualStyleBackColor = true;
             this.btnStartHashCat.Click += new System.EventHandler(this.OnStartHashCatClick);
             // 
+            // chkIncludeWordNotLast
+            // 
+            this.chkIncludeWordNotLast.AutoSize = true;
+            this.chkIncludeWordNotLast.Location = new System.Drawing.Point(252, 121);
+            this.chkIncludeWordNotLast.Name = "chkIncludeWordNotLast";
+            this.chkIncludeWordNotLast.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.chkIncludeWordNotLast.Size = new System.Drawing.Size(97, 19);
+            this.chkIncludeWordNotLast.TabIndex = 55;
+            this.chkIncludeWordNotLast.Text = "Not last word";
+            this.chkIncludeWordNotLast.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1004,6 +1017,7 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblHashCat;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox txtHashCatPath;
+        private System.Windows.Forms.CheckBox chkIncludeWordNotLast;
     }
 }
 

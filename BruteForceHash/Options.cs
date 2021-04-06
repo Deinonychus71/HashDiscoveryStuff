@@ -33,6 +33,8 @@ namespace BruteForceHash
         public string IncludePatterns { get; set; }
         [Option('I', "include_word_not_first", Required = false, Default = false, HelpText = "Do not include the word in the first position (for dictionary attack).")]
         public bool IncludeWordNotFirst { get; set; }
+        [Option('I', "include_word_not_last", Required = false, Default = false, HelpText = "Do not include the word in the last position (for dictionary attack).")]
+        public bool IncludeWordNotLast { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary attack).")]
         public int WordsLimit { get; set; }
         [Option('o', "order_algorithm", Required = false, Default = "interval", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are interval, fewer_words_first or more_words_first).")]

@@ -16,6 +16,7 @@ namespace BruteForceHash.GUI
         public string IncludePatterns { get; set; }
         public string IncludeWordDict { get; set; }
         public bool IncludeWordNotFirst { get; set; }
+        public bool IncludeWordNotLast { get; set; }
         public string IncludeWordChar { get; set; }
         public string Dictionaries { get; set; }
         public bool DictionariesSkipDigits { get; set; }

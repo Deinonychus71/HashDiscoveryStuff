@@ -59,6 +59,7 @@ namespace BruteForceHash.GUI
 
             txtIncludeWord.Text = string.Empty;
             chkIncludeWordNotFirst.Checked = false;
+            chkIncludeWordNotLast.Checked = false;
             txtIncludeWordsCharacter.Text = string.Empty;
             txtIncludePatterns.Text = string.Empty;
             txtExcludePatterns.Text = string.Empty;
@@ -143,6 +144,7 @@ namespace BruteForceHash.GUI
                     DictionariesLastWordReverseTypos = chkDictLastReverseOrder.Checked,
                     IncludeWordDict = txtIncludeWord.Text.Trim(),
                     IncludeWordNotFirst = chkIncludeWordNotFirst.Checked,
+                    IncludeWordNotLast = chkIncludeWordNotLast.Checked,
                     IncludeWordChar = txtIncludeWordsCharacter.Text.Trim(),
                     IncludePatterns = txtIncludePatterns.Text.Trim(),
                     ExcludePatterns = txtExcludePatterns.Text.Trim(),
@@ -197,6 +199,7 @@ namespace BruteForceHash.GUI
 
                 txtIncludeWord.Text = hbtObject.IncludeWordDict;
                 chkIncludeWordNotFirst.Checked = hbtObject.IncludeWordNotFirst;
+                chkIncludeWordNotLast.Checked = hbtObject.IncludeWordNotLast;
                 txtIncludeWordsCharacter.Text = hbtObject.IncludeWordChar;
                 txtIncludePatterns.Text = hbtObject.IncludePatterns;
                 txtExcludePatterns.Text = hbtObject.ExcludePatterns;
@@ -278,6 +281,7 @@ namespace BruteForceHash.GUI
                                                     $"--dictionaries_last_word \"{dictionariesLastWord}\" " +
                                                     $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
                                                     $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
+                                                    $"{(chkIncludeWordNotLast.Checked ? "--include_word_not_last" : "")} " +
                                                     $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
                                                     $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +
                                                     $"--delimiter \"{txtDelimiter.Text.Trim()}\" " +

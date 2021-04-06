@@ -1,5 +1,4 @@
 ﻿using BruteForceHash.Helpers;
-using Force.Crc32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -201,15 +200,25 @@ namespace BruteForceHash
                         {
                             string combinationMatch;
                             string combinationRegexp;
-                            if (!_options.IncludeWordNotFirst)
+                            if (_options.IncludeWordNotFirst && _options.IncludeWordNotLast)
                             {
-                                combinationMatch = $"{{{includeWord.Length}}}";
-                                combinationRegexp = "\\{" + includeWord.Length + "\\}";
+                                combinationMatch = $"{_delimiter}{{{includeWord.Length}}}{_delimiter}";
+                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWord.Length}}}{_delimiter}");
+                            }
+                            else if (_options.IncludeWordNotLast)
+                            {
+                                combinationMatch = $"{{{includeWord.Length}}}{_delimiter}";
+                                combinationRegexp = Regex.Escape($"{{{includeWord.Length}}}{_delimiter}");
+                            }
+                            else if (_options.IncludeWordNotFirst)
+                            {
+                                combinationMatch = $"{_delimiter}{{{includeWord.Length}}}";
+                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWord.Length}}}");
                             }
                             else
                             {
-                                combinationMatch = $"{_delimiter}{{{includeWord.Length}}}";
-                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWord.Length}}}");// "\\" + _delimiter + "\\{" + includeWord.Length + "\\}";
+                                combinationMatch = $"{{{includeWord.Length}}}";
+                                combinationRegexp = "\\{" + includeWord.Length + "\\}";
                             }
                             var tempWordCandidates = new List<string>();
                             foreach (var wordCandidate in wordCandidates)
@@ -419,8 +428,10 @@ namespace BruteForceHash
             }
         }
 
+        private List<string> allwords = new List<string>();
         private void TestCandidate(ByteString candidate)
         {
+            _logger.LogResult(candidate.ToString());
             if (candidate.CRC32Check())
                 _logger.LogResult(candidate.ToString());
         }
@@ -433,6 +444,10 @@ namespace BruteForceHash
                 if (matchCollection.Count >= nthOccurrence)
                 {
                     var match = matchCollection[nthOccurrence - 1];
+                    if(_options.IncludeWordNotLast && _options.IncludeWordNotFirst)
+                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length * 2).Insert(match.Index + _delimiter.Length, replace);
+                    else if (_options.IncludeWordNotLast)
+                        return obj.Remove(match.Index, match.Length - _delimiter.Length).Insert(match.Index, replace);
                     if (_options.IncludeWordNotFirst)
                         return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length).Insert(match.Index + _delimiter.Length, replace);
                     return obj.Remove(match.Index, match.Length).Insert(match.Index, replace);
