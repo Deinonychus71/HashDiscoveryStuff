@@ -9,7 +9,7 @@ namespace HashParser
     {
         static void Main(string[] args)
         {
-            var input = @"C:\Users\deihn\Desktop\bruteforcepublish\params11";
+            var input = @"C:\Users\xxx\params11";
 
             var filesPrc = Directory.GetFiles(input, "*.prc", SearchOption.AllDirectories);
             var filesStPrm = Directory.GetFiles(input, "*.stprm", SearchOption.AllDirectories);

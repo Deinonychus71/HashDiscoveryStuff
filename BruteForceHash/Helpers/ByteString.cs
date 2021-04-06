@@ -16,6 +16,8 @@ namespace BruteForceHash.Helpers
 
         public byte[] Value { get { return _value; } }
 
+        public uint HexSearchValue { get { return _hexToFind; } }
+
         public int Cursor { get; set; }
 
         public ByteString(int length, uint hexToFind, string prefix, string suffix)

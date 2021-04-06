@@ -13,6 +13,8 @@ namespace BruteForceHash.Helpers
         private readonly CancellationTokenSource _queueCts;
         private readonly ConsoleColor _defaultConsoleColor; 
 
+        public string PathFile { get { return _file; } }
+
         public Logger(string file)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(file));

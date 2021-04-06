@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashCleanup", "Tools\HashCl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashParser", "Tools\HashParser\HashParser.csproj", "{2A69DC36-DECF-44E9-8E22-7A8415C65289}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParamLabelsParser", "Tools\ParamLabelsParser\ParamLabelsParser.csproj", "{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{2A69DC36-DECF-44E9-8E22-7A8415C65289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A69DC36-DECF-44E9-8E22-7A8415C65289}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A69DC36-DECF-44E9-8E22-7A8415C65289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{BFD638AF-D601-4E58-8620-460609B719FA} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{6D861219-69EC-4104-8892-220C137A3030} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{2A69DC36-DECF-44E9-8E22-7A8415C65289} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
+		{E86936D6-488C-41BB-989E-7D4BF8AF8CCB} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C3FFE77-9564-4A8F-969C-773584C00F90}
