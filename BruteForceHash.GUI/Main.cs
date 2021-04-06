@@ -269,7 +269,8 @@ namespace BruteForceHash.GUI
                                                     $"{(dictLastForceLowercase ? "--dictionaries_last_force_lowercase" : "")} " +
                                                     $"{(dictLastAddTypos ? "--dictionaries_last_add_typos" : "")} " +
                                                     $"{(dictLastReverseOrder ? "--dictionaries_last_reverse_order" : "")} " +
-                                                    $"--order {cbCombinationOrder.SelectedItem} " +
+                                                    $"--order_algorithm {GetCombinationOrderName()} " +
+                                                    $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--dictionaries \"{dictionaries}\" " +
@@ -305,6 +306,33 @@ namespace BruteForceHash.GUI
                 process.WaitForExit();
                 process.Close();
             }
+        }
+
+        private string GetCombinationOrderName()
+        {
+            return cbCombinationOrder.SelectedItem.ToString() switch
+            {
+                "Interval short/long" => "interval",
+                "Interval long/short" => "interval",
+                "Fewer/shorter words first" => "fewer_words_first",
+                "Fewer/longer words first" => "fewer_words_first",
+                "Greater/shorter words first" => "more_words_first",
+                "Greater/longer words first" => "more_words_first",
+                _ => throw new NotImplementedException(),
+            };
+        }
+        private bool GetCombinationOrderLongerFirst()
+        {
+            return cbCombinationOrder.SelectedItem.ToString() switch
+            {
+                "Interval short/long" => false,
+                "Interval long/short" => true,
+                "Fewer/shorter words first" => false,
+                "Fewer/longer words first" => true,
+                "Greater/shorter words first" => false,
+                "Greater/longer words first" => true,
+                _ => throw new NotImplementedException(),
+            };
         }
 
         private void OnStartHashCatClick(object sender, EventArgs e)

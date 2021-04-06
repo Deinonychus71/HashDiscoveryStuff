@@ -35,8 +35,10 @@ namespace BruteForceHash
         public bool IncludeWordNotFirst { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary attack).")]
         public int WordsLimit { get; set; }
-        [Option('o', "order", Required = false, Default = "Optimized", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are Ascending, Descending or Optimized).")]
+        [Option('o', "order_algorithm", Required = false, Default = "interval", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are interval, fewer_words_first or more_words_first).")]
         public string Order { get; set; }
+        [Option('o', "order_longer_words_first", Required = false, Default = false, HelpText = "Pick if longer words should appear first (for dictionary attack).")]
+        public bool OrderLongerWordsFirst { get; set; }
 
 
         [Option('D', "dictionaries", Required = false, Default = "*", HelpText = "List all the dictionaries to use (separated by semi-colon) (for dictionary attack).")]
