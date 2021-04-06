@@ -23,6 +23,8 @@ namespace BruteForceHash
         public bool Verbose { get; set; }
         [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]
         public bool ConfirmEnd { get; set; }
+        [Option('n', "max_delimiters", Required = false, Default = -1, HelpText = "Maximum Number of Delimiters that can be in the target string.")]
+        public int MaxDelimiters { get; set; }
 
 
 
