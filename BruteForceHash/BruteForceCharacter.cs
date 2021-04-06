@@ -53,7 +53,7 @@ namespace BruteForceHash
                 _validBytes = Encoding.ASCII.GetBytes(_options.ValidChars);
             }
 
-            //Valid bytes
+            //Valid start bytes
             byte[] validStartBytes;
             string inputValidStartChars;
             if (string.IsNullOrEmpty(_options.ValidStartingChars))

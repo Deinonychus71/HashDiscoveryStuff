@@ -33,10 +33,14 @@ namespace BruteForceHash
         public string IncludePatterns { get; set; }
         [Option('I', "include_word_not_first", Required = false, Default = false, HelpText = "Do not include the word in the first position (for dictionary attack).")]
         public bool IncludeWordNotFirst { get; set; }
+        [Option('I', "include_word_not_last", Required = false, Default = false, HelpText = "Do not include the word in the last position (for dictionary attack).")]
+        public bool IncludeWordNotLast { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary attack).")]
         public int WordsLimit { get; set; }
-        [Option('o', "order", Required = false, Default = "Optimized", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are Ascending, Descending or Optimized).")]
+        [Option('o', "order_algorithm", Required = false, Default = "interval", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are interval, fewer_words_first or more_words_first).")]
         public string Order { get; set; }
+        [Option('o', "order_longer_words_first", Required = false, Default = false, HelpText = "Pick if longer words should appear first (for dictionary attack).")]
+        public bool OrderLongerWordsFirst { get; set; }
 
 
         [Option('D', "dictionaries", Required = false, Default = "*", HelpText = "List all the dictionaries to use (separated by semi-colon) (for dictionary attack).")]
@@ -91,12 +95,14 @@ namespace BruteForceHash
         public int StartPosition { get; set; }
         [Option('1', "end_position", Required = false, Default = -1, HelpText = "End position when searching for a word (for character attack).")]
         public int EndPosition { get; set; }
+        [Option('h', "path_hashcat", Required = false, Default = "Tools\\Hashcat\\hashcat.exe", HelpText = "Path for HashCat (for character attack).")]
+        public string PathHashCat { get; set; }
         /*[Option('2', "skip_delimiter_in_last_position", Required = false, Default = false, HelpText = "If true, the last character check will skip the delimiter value (for character attack).")]
         public bool SkipDelimiterInLastPosition { get; set; }
         [Option('3', "skip_delimiter_in_first_position", Required = false, Default = false, HelpText = "If true, the first character check will skip the delimiter value (for character attack).")]
         public bool SkipDelimiterInFirstPosition { get; set; }*/
 
 
-        
+
     }
 }
