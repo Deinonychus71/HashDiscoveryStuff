@@ -13,6 +13,7 @@ namespace BruteForceHash
     public class BruteForceDictionary
     {
         private readonly Logger _logger;
+        private Logger _hashCatLogger;
         private readonly IEnumerable<string> _combinationPatterns;
         private readonly Dictionary<string, byte[][]> _dictionaries;
         private readonly Dictionary<string, byte[][]> _dictionariesFirst;
@@ -23,10 +24,14 @@ namespace BruteForceHash
         private readonly string _delimiter;
         private readonly byte _delimiterByte;
         private readonly int _delimiterLength;
+        private uint _hexExtract;
+        private bool _runInHashCat;
+        private Action<ByteString> _testCandidate;
         private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
-        public BruteForceDictionary(Logger logger, Options options, int stringLength, uint hexValue)
+        public BruteForceDictionary(Logger logger, Options options, int stringLength, uint hexValue, bool runInHashCat = false)
         {
+            _runInHashCat = runInHashCat;
             _logger = logger;
             _options = options;
             _hexValue = hexValue;
@@ -41,6 +46,22 @@ namespace BruteForceHash
                 _delimiter = options.Delimiter;
                 _delimiterByte = Encoding.ASCII.GetBytes(options.Delimiter)[0];
                 _delimiterLength = _delimiter.Length;
+            }
+
+            if (runInHashCat)
+            {
+                Directory.CreateDirectory("Temp");
+                _hashCatLogger = new Logger(Path.Combine("Temp", $"{Path.GetFileNameWithoutExtension(_logger.PathFile)}.temp.dic"));
+                if (string.IsNullOrEmpty(_options.Prefix) && string.IsNullOrEmpty(_options.Suffix))
+                {
+                    _hexExtract = _hexValue;
+                }
+                _testCandidate = WriteCandidateToDictionary;
+                _hashCatLogger.Init();
+            }
+            else
+            {
+                _testCandidate = TestCandidate;
             }
 
             _options.IncludeWord = _options.IncludeWord.ToLower();
@@ -150,6 +171,41 @@ namespace BruteForceHash
             // Wait for the tasks to complete before displaying a completion message.
             Task.WaitAll(tasks.ToArray());
             cts.Dispose();
+
+            if (_runInHashCat)
+            {
+                Thread.Sleep(2000);
+                _hashCatLogger.Dispose();
+
+                var dictionaryPath = Path.GetFullPath(_hashCatLogger.PathFile);
+
+                if (_hexExtract == 0)
+                {
+                    _logger.Log($"No false positive found. Aborting operation.");
+                    try
+                    {
+                        if(_options.DeleteGeneratedDictionary)
+                            File.Delete(dictionaryPath);
+                    }
+                    catch { }
+                    return;
+                }
+
+                Thread.Sleep(2000);
+
+                // Launch HashCat
+                var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
+
+                string args = $"--hash-type 11500 -a 0 {_hexExtract:x}:00000000 --outfile \"{output}\" \"{dictionaryPath}\"";
+                new HashcatTask(_logger, _options).Run(args);
+
+                try
+                {
+                    if (_options.DeleteGeneratedDictionary)
+                        File.Delete(dictionaryPath);
+                }
+                catch { }
+            }
         }
 
         #region Run Attack
@@ -182,7 +238,7 @@ namespace BruteForceHash
             if (lastWord && !wordSize.StartsWith("{"))
             {
                 candidate.Replace(combinationPattern);
-                TestCandidate(candidate);
+                _testCandidate(candidate);
             }
             else
             {
@@ -198,7 +254,7 @@ namespace BruteForceHash
                     if (lastWord)
                     {
                         candidate.Replace(word);
-                        TestCandidate(candidate);
+                        _testCandidate(candidate);
                     }
                     else
                     {
@@ -214,9 +270,18 @@ namespace BruteForceHash
 
         private void TestCandidate(ByteString candidate)
         {
-            _logger.LogResult(candidate.ToString());
             if (candidate.CRC32Check())
                 _logger.LogResult(candidate.ToString());
+        }
+
+        private void WriteCandidateToDictionary(ByteString candidate)
+        {
+            _hashCatLogger.LogDiscret(candidate.ToString(false));
+            if (candidate.CRC32Check() && _hexExtract == 0)
+            {
+                _logger.LogResult($"False positive found: 0x{candidate.HexSearchValue:x}.");
+                _hexExtract = candidate.HexSearchValue;
+            }
         }
         #endregion
 

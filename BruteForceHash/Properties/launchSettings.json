@@ -2,7 +2,7 @@
   "profiles": {
     "BruteForceHash": {
       "commandName": "Project",
-      "commandLineArgs": "--nbr_threads 1 --method Dictionary --words_limit 3 --dictionaries_skip_digits False --dictionaries_force_lowercase True --verbose --dictionaries \"*\" --include_word \"_\" --include_word_not_last --include_word_not_first --include_patterns \"\" --exclude_patterns \"\" --delimiter \"\" --prefix \"\" --suffix \"\" --hex_value \"0x12111561a7\" --dictionaries_add_typos"
+      "commandLineArgs": "--nbr_threads 1 --method dictionary_hashcat --words_limit 4 False --dictionaries_force_lowercase True --verbose --dictionaries \"Dictionaries\\[Smash][Target]_Splatoon.dic;Dictionaries\\[Smash]_PL_ENG_1-4_Letters.dic;Dictionaries\\[Smash]_PL_ENG_5+_Letters.dic;Dictionaries\\[Smash]_PL_ENG_Common.dic;Dictionaries\\[Smash]_PL_Fighters.dic;Dictionaries\\[Smash]_PL_Games.dic;Dictionaries\\[Smash]_PL_JPN_1-4_Letters.dic;Dictionaries\\[Smash]_PL_JPN_5+_Letters.dic;Dictionaries\\[Smash]_PL_JPN_Common.dic;Dictionaries\\[Smash]_PL_Stages.dic;\" --include_word \"\" --include_word_not_last --include_word_not_first --include_patterns \"\" --exclude_patterns \"\" --delimiter \"_\" --prefix \"spla_\" --suffix \"_theme\" --hex_value \"0x12111561a7\""
     }
   }
 }

@@ -103,7 +103,7 @@ namespace BruteForceHash.GUI
 
             pnlDictionary.Visible = true;
             pnlCharacter.Visible = false;
-            btnStartHashCat.Enabled = pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text);
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text)) || pnlDictionary.Visible;
         }
 
         private void OnSaveClick(object sender, EventArgs e)
@@ -215,7 +215,7 @@ namespace BruteForceHash.GUI
             }
         }
 
-        private void OnBtnStartClick(object sender, EventArgs e)
+        private void StartProcess(bool useHashCat = false)
         {
             var dictionaries = GetDictionary(chklDictionaries);
             var dictionariesFirstWord = string.Empty;
@@ -255,7 +255,7 @@ namespace BruteForceHash.GUI
                 if (cbMethod.SelectedItem.ToString() == "Dictionary")
                 {
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {cbMethod.SelectedItem} " +
+                                                    $"--method {(useHashCat ? "dictionary_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"--words_limit {cbWordsLimit.SelectedItem} " +
                                                     $"{(chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
                                                     $"{(chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
@@ -292,7 +292,7 @@ namespace BruteForceHash.GUI
                 else
                 {
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {cbMethod.SelectedItem} " +
+                                                    $"--method {(useHashCat ? "character_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--valid_chars \"{txtValidChars.Text.Trim()}\" " +
@@ -339,27 +339,14 @@ namespace BruteForceHash.GUI
             };
         }
 
+        private void OnBtnStartClick(object sender, EventArgs e)
+        {
+            StartProcess();
+        }
+
         private void OnStartHashCatClick(object sender, EventArgs e)
         {
-            using (var process = new Process())
-            {
-                process.StartInfo.FileName = "BruteForceHash.exe";
-                process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                $"--method character_hashcat " +
-                                                $"{(chkVerbose.Checked ? "--verbose" : "")} " +
-                                                $"--confirm_end " +
-                                                $"--valid_chars \"{txtValidChars.Text.Trim()}\" " +
-                                                $"--valid_starting_chars \"{txtStartingValidChars.Text.Trim()}\" " +
-                                                $"--prefix \"{txtPrefix.Text.Trim()}\" " +
-                                                $"--suffix \"{txtSuffix.Text.Trim()}\" " +
-                                                $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
-                                                $"--hex_value \"{txtHexValues.Text.Trim()}\"";
-                process.StartInfo.UseShellExecute = false;
-                process.Start();
-
-                process.WaitForExit();
-                process.Close();
-            }
+            StartProcess(true);
         }
         #endregion
 
@@ -405,7 +392,7 @@ namespace BruteForceHash.GUI
         {
             pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
             pnlCharacter.Visible = !pnlDictionary.Visible;
-            btnStartHashCat.Enabled = pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text);
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text)) || pnlDictionary.Visible;
         }
 
         private void OnCustomDictFirstCheckedChanged(object sender, EventArgs e)

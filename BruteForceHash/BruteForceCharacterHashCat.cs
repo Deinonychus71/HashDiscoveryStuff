@@ -79,15 +79,28 @@ namespace BruteForceHash
             _logger.Log($"Search on: {maskSize} characters");
             _logger.Log("-----------------------------------------");
 
-            _logger.Log($"Finding false positive...", false);
-            RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix);
+            if (!string.IsNullOrEmpty(_options.Prefix) || !string.IsNullOrEmpty(_options.Suffix))
+            {
+                _logger.Log($"Finding false positive...", false);
+                RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix);
 
-            // Wait for the tasks to complete before displaying a completion message.
-            Task.WaitAll(tasks.ToArray());
-            cts.Dispose();
+                // Wait for the tasks to complete before displaying a completion message.
+                Task.WaitAll(tasks.ToArray());
+                cts.Dispose();
+
+                if (_hexExtract == 0)
+                {
+                    _logger.Log($"No false positive found. Aborting operation.");
+                    return;
+                }
+            }
+            else
+            {
+                _hexExtract = _hexValue;
+            }
 
             // Launch HashCat
-            var output = Path.Combine(Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt"));
+            var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
             var mask = "?1";
             for (int i = 1; i < maskSize; i++)
                 mask += "?2";

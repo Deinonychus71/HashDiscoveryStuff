@@ -54,6 +54,8 @@ namespace BruteForceHash
                         //Run script
                         if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
                             new BruteForceDictionary(logger, o, length, hexToFind).Run();
+                        else if (o.Method.Equals("dictionary_hashcat", StringComparison.OrdinalIgnoreCase))
+                            new BruteForceDictionary(logger, o, length, hexToFind, true).Run();
                         else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
                             new BruteForceCharacter(logger, o, length, hexToFind).Run();
                         else if (o.Method.Equals("character_hashcat", StringComparison.OrdinalIgnoreCase))

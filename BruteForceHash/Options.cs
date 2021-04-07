@@ -55,7 +55,9 @@ namespace BruteForceHash
         public bool DictionariesAddTypos { get; set; }
         [Option('D', "dictionaries_reverse_order", Required = false, Default = false, HelpText = "Add all sorts of typos to the dictionary (for dictionary attack).")]
         public bool DictionariesReverseOrder { get; set; }
-        
+        [Option('D', "delete_generated_dictionary", Required = false, Default = false, HelpText = "Delete hashcat dictionary after it's done using it (for dictionary attack).")]
+        public bool DeleteGeneratedDictionary { get; set; }
+
 
         [Option('D', "dictionaries_first_word", Required = false, Default = "", HelpText = "List all the dictionaries to use (separated by semi-colon) for first word (for dictionary attack).")]
         public string DictionariesFirstWord { get; set; }
