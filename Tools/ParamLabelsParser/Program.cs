@@ -16,13 +16,15 @@ namespace ParamLabelsParser
         {
             Parser.Default.ParseArguments<Options>(args).WithParsed((o) =>
             {
-                var paramLabelFile = o.ParamLabelsFile;
                 var dictFileEnglish = o.EnglishDictionary;
                 var dictFileJapanese = o.JapaneseDictionary;
 
                 var allEnglishWords = File.Exists(dictFileEnglish) ? File.ReadAllLines(dictFileEnglish).Select(p => p.ToLower()).Distinct().ToHashSet() : new HashSet<string>();
                 var allJapaneseWords = File.Exists(dictFileJapanese) ? File.ReadAllLines(dictFileJapanese).Select(p => p.ToLower()).Distinct().ToHashSet() : new HashSet<string>();
-                var allHashes = File.ReadAllLines(paramLabelFile).Where(p => p.Contains(',')).Select(p => p.Split(',')[1]).Where(p => !string.IsNullOrEmpty(p));
+                var allHashesPM = File.ReadAllLines(o.ParamLabelsFile).Where(p => p.Contains(',')).Select(p => p.Split(',')[1]).Where(p => !string.IsNullOrEmpty(p)).ToList();
+                var allHashesCV = File.ReadAllLines(o.ConstValueTableFile).Where(p => p.Contains(',')).Select(p => p.Split(',')[1]).Where(p => !string.IsNullOrEmpty(p)).Select(p => p.ToLower());
+                allHashesPM.AddRange(allHashesCV);
+                IEnumerable<string> allHashes = allHashesPM.Distinct();
                 var allWords = GetAllWords(allHashes);
 
                 //Export Full Dictionary

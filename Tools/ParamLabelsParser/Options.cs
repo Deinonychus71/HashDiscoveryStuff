@@ -7,6 +7,9 @@ namespace ParamLabelsParser
         [Option('i', "input_file", Required = false, Default ="ParamLabels.csv", HelpText = "Input ParamLabel")]
         public string ParamLabelsFile { get; set; }
 
+        [Option('i', "const_value_table", Required = false, Default = "const_value_table.csv", HelpText = "Input const_value_table")]
+        public string ConstValueTableFile { get; set; }
+
         [Option('d', "dict_eng", Required = false, Default = "dict_english.dic", HelpText = "English Dictionary")]
         public string EnglishDictionary { get; set; }
 

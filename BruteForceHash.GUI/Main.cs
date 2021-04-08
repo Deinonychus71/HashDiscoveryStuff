@@ -287,6 +287,7 @@ namespace BruteForceHash.GUI
                                                     $"--delimiter \"{txtDelimiter.Text.Trim()}\" " +
                                                     $"--prefix \"{txtPrefix.Text.Trim()}\" " +
                                                     $"--suffix \"{txtSuffix.Text.Trim()}\" " +
+                                                    $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
                                                     $"--hex_value \"{txtHexValues.Text.Trim()}\"";
                 }
                 else
@@ -302,6 +303,7 @@ namespace BruteForceHash.GUI
                                                     $"--include_word \"{txtIncludeWordsCharacter.Text.Trim()}\" " +
                                                     $"--prefix \"{txtPrefix.Text.Trim()}\" " +
                                                     $"--suffix \"{txtSuffix.Text.Trim()}\" " +
+                                                    $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
                                                     $"--hex_value \"{txtHexValues.Text.Trim()}\"";
                 }
                 process.StartInfo.UseShellExecute = false;
