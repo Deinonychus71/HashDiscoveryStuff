@@ -19,6 +19,8 @@ namespace BruteForceHash
         public int NbrThreads { get; set; }
         [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear.")]
         public string IncludeWord { get; set; }
+        [Option('d', "description", Required = false, Default = false, HelpText = "Adding a description for the logs.")]
+        public string Description { get; set; }
         [Option('v', "verbose", Required = false, Default = false, HelpText = "Display more search and thread information.")]
         public bool Verbose { get; set; }
         [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]

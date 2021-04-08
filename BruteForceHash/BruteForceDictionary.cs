@@ -26,6 +26,7 @@ namespace BruteForceHash
         private readonly int _delimiterLength;
         private uint _hexExtract;
         private bool _runInHashCat;
+        private int _foundResult = 0;
         private Action<ByteString> _testCandidate;
         private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
@@ -206,6 +207,16 @@ namespace BruteForceHash
                 }
                 catch { }
             }
+
+            _logger.Log("-----------------------------------------");
+            if (_foundResult > 0)
+            {
+                _logger.Log($"Found {_foundResult} results!");
+            }
+            else
+            {
+                _logger.Log($"Nothing :(");
+            }
         }
 
         #region Run Attack
@@ -271,7 +282,10 @@ namespace BruteForceHash
         private void TestCandidate(ByteString candidate)
         {
             if (candidate.CRC32Check())
+            {
                 _logger.LogResult(candidate.ToString());
+                _foundResult++;
+            }
         }
 
         private void WriteCandidateToDictionary(ByteString candidate)
