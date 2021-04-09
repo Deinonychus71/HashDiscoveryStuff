@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WikiScrapper": {
+      "commandName": "Project",
+      "commandLineArgs": "-i \"https://\" -n -s"
+    }
+  }
+}

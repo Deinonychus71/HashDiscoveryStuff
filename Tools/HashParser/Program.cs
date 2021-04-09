@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace HashParser
 {
@@ -13,6 +14,9 @@ namespace HashParser
     {
         static void Main(string[] args)
         {
+            var bytes = new byte[] { 0x61, 0xef, 0xbc, 0x91 };
+            var bylethismahwife = Encoding.UTF8.GetString(bytes);
+
             Parser.Default.ParseArguments<Options>(args).WithParsed((o) =>
             {
                 if (!Directory.Exists(o.InputPath))
