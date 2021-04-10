@@ -11,6 +11,7 @@ namespace WikiScrapper
     class Program
     {
         private static readonly char[] _splitChars = new char[] { '-', '_' };
+        private static string _virtualFolder = "/"; // /wiki/
         private readonly static Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
         static void Main(string[] args)
@@ -36,23 +37,23 @@ namespace WikiScrapper
                     var content = doc.GetElementbyId("mw-content-text");
 
                     var contentElements = content.SelectNodes(
-                        "./div[@class='mw-parser-output']/p | " +
-                        "./div[@class='mw-parser-output']/h1 | " +
-                        "./div[@class='mw-parser-output']/h2 | " +
-                        "./div[@class='mw-parser-output']/h3 | " +
-                        "./div[@class='mw-parser-output']/h4 | " +
-                        "./div[@class='mw-parser-output']/table/*/td | " +
-                        "./div[@class='mw-parser-output']/div[@class='gallerytext'] | " +
-                        "./div[@class='mw-parser-output']/a | " +
-                        "./div[@class='mw-parser-output']/*/p | " +
-                        "./div[@class='mw-parser-output']/*/h1 | " +
-                        "./div[@class='mw-parser-output']/*/h2 | " +
-                        "./div[@class='mw-parser-output']/*/h3 | " +
-                        "./div[@class='mw-parser-output']/*/h4 | " +
-                        "./div[@class='mw-parser-output']/*/table/*/td | " +
-                        "./div[@class='mw-parser-output']/*/div[@class='gallerytext'] | " +
-                        "./div[@class='mw-parser-output']/*/a | " +
-                        "./div[@class='mw-parser-output']/a");
+                        "//*/div[@class='mw-parser-output']/p | " +
+                        "//*/div[@class='mw-parser-output']/h1 | " +
+                        "//*/div[@class='mw-parser-output']/h2 | " +
+                        "//*/div[@class='mw-parser-output']/h3 | " +
+                        "//*/div[@class='mw-parser-output']/h4 | " +
+                        "//*/div[@class='mw-parser-output']/table/*/td | " +
+                        "//*/div[@class='mw-parser-output']/div[@class='gallerytext'] | " +
+                        "//*/div[@class='mw-parser-output']/a | " +
+                        "//*/div[@class='mw-parser-output']/*/p | " +
+                        "//*/div[@class='mw-parser-output']/*/h1 | " +
+                        "//*/div[@class='mw-parser-output']/*/h2 | " +
+                        "//*/div[@class='mw-parser-output']/*/h3 | " +
+                        "//*/div[@class='mw-parser-output']/*/h4 | " +
+                        "//*/div[@class='mw-parser-output']/*/table/*/td | " +
+                        "//*/div[@class='mw-parser-output']/*/div[@class='gallerytext'] | " +
+                        "//*/div[@class='mw-parser-output']/*/a | " +
+                        "//*/div[@class='mw-parser-output']/a");
 
                     if (contentElements != null)
                     {
@@ -87,7 +88,7 @@ namespace WikiScrapper
             var link = aNode.GetAttributeValue("href", "");
             if (link.Contains('#'))
                 link = link.Substring(0, link.IndexOf("#"));
-            if (!string.IsNullOrEmpty(link) && !scrapUrls.Contains(link) && !alreadyScrappedUrls.Contains(link) && link.StartsWith("/wiki") && !link.StartsWith("/wiki/Special:") && !link.StartsWith("/wiki/File:"))
+            if (!string.IsNullOrEmpty(link) && !scrapUrls.Contains(link) && !alreadyScrappedUrls.Contains(link) && link.StartsWith(_virtualFolder) && !link.StartsWith($"{_virtualFolder}Special:") && !link.StartsWith($"{_virtualFolder}File:"))
                 scrapUrls.Add(link);
         }
 
@@ -97,13 +98,14 @@ namespace WikiScrapper
 
             foreach (var word in words)
             {
-                if (currentDictionary.Contains(word) || dictEnglish.Contains(word))
-                    continue;
-
-                if (skipDigits && !word.All(char.IsLetter))
-                    continue;
-
                 string checkWord = Regex.Replace(word, @"\W+$", "", RegexOptions.Compiled);
+
+                if (currentDictionary.Contains(checkWord) || dictEnglish.Contains(checkWord))
+                    continue;
+
+                if (skipDigits && !checkWord.All(char.IsLetter))
+                    continue;
+
                 if (string.IsNullOrEmpty(checkWord))
                 {
                     continue;
@@ -113,6 +115,16 @@ namespace WikiScrapper
                 {
                     //Special detected, try cleaning accents
                     string jpnCleanedWord = checkWord.Replace('ō', 'o').Replace("ā", "a").Replace("é", "e").Replace("ī","i").Replace("ï", "i").Replace("ū", "u").Replace("ð", "o").Replace("ä", "a").Replace("è", "e");
+
+                    bool copyJpn = true;
+                    if (!_specialCharactersRegex.IsMatch(jpnCleanedWord))
+                    {
+                        //Still not good
+                        jpnCleanedWord = Regex.Replace(jpnCleanedWord, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
+                        if (string.IsNullOrEmpty(jpnCleanedWord))
+                            continue;
+                        copyJpn = false;
+                    }
                     if (!_specialCharactersRegex.IsMatch(jpnCleanedWord))
                     {
                         //Still not good, bye bye
@@ -121,7 +133,7 @@ namespace WikiScrapper
                     else
                     {
                         //Good! - We add the original word if requested
-                        if (!skipAccents && !currentDictionary.Contains(checkWord) && !dictEnglish.Contains(checkWord))
+                        if (copyJpn && !skipAccents && !currentDictionary.Contains(checkWord) && !dictEnglish.Contains(checkWord))
                         {
                             currentDictionary.Add(checkWord);
                         }

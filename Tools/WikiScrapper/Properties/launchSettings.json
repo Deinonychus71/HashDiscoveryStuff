@@ -2,7 +2,7 @@
   "profiles": {
     "WikiScrapper": {
       "commandName": "Project",
-      "commandLineArgs": "-i \"https://\" -n -s"
+      "commandLineArgs": "-i \"https://www.ssbwiki.com/Super_Smash_Bros._Ultimate\" -n -s"
     }
   }
 }
