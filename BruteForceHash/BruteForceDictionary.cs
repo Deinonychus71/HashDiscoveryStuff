@@ -327,22 +327,26 @@ namespace BruteForceHash
                     if (skipSpecials && !_specialCharactersRegex.IsMatch(word))
                         continue;
 
-                    var lengthStr = $"{{{word.Length}}}";
                     var wordToAdd = word;
                     if (forceLowerCase)
                         wordToAdd = word.ToLower();
 
                     if (addTypos)
                     {
-                        var allNewWords = Combinations(wordToAdd, 'l', 'r');
+                        var allNewWords = new List<string>();
+                        allNewWords.Add(wordToAdd);
+                        allNewWords.AddRange(GenerateTypos(wordToAdd));
+                        allNewWords.AddRange(Combinations(wordToAdd, 'l', 'r'));
                         foreach (var newWord in allNewWords)
                         {
+                            var lengthStr = $"{{{newWord.Length}}}";
                             if (!dictionary[lengthStr].Contains(newWord))
                                 dictionary[lengthStr].Add(newWord);
                         }
                     }
                     else
                     {
+                        var lengthStr = $"{{{wordToAdd.Length}}}";
                         if (!dictionary[lengthStr].Contains(wordToAdd))
                             dictionary[lengthStr].Add(wordToAdd);
                     }
@@ -375,6 +379,110 @@ namespace BruteForceHash
                 from h in head
                 from t in tails
                 select h + t;
+        }
+
+        private string SwapCharacter(string input, char insertChar, int index)
+        {
+            string f = input.Substring(0, index);
+            string l = input.Substring(index + 1);
+
+            return f + insertChar + l;
+        }
+
+        private char[][] GetKeyboardMapping()
+        {
+            var keyboardMapping = new char[3][];
+            keyboardMapping[0] = new char[] { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' };
+            keyboardMapping[1] = new char[] { 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' };
+            keyboardMapping[2] = new char[] { 'z', 'x', 'c', 'v', 'b', 'n', 'm' };
+            return keyboardMapping;
+        }
+
+        private bool IsArraySizeValid<T>(IEnumerable<T> array, int size)
+        {
+            return size >= 0 && array.Count() > size;
+        }
+
+        private List<char> IsItemInArrayNearest(char[][] keyboard, char character)
+        {
+            var nearKeys = new List<char>();
+            for (var i = 0; i < keyboard.Length; i++)
+            {
+                for (var j = 0; j < keyboard[i].Length; j++)
+                {
+                    if (keyboard[i][j] == character)
+                    {
+                        if (IsArraySizeValid(keyboard, i) && IsArraySizeValid(keyboard[i], j + 1))
+                        {
+                            nearKeys.Add(keyboard[i][j + 1]);
+                        }
+                        if (IsArraySizeValid(keyboard, i + 1) && IsArraySizeValid(keyboard[i + 1], j))
+                        {
+                            nearKeys.Add(keyboard[i + 1][j]);
+                        }
+                        if (IsArraySizeValid(keyboard, i + 1) && IsArraySizeValid(keyboard[i + 1], j + 1))
+                        {
+                            nearKeys.Add(keyboard[i + 1][j + 1]);
+                        }
+                        if (IsArraySizeValid(keyboard, i) && IsArraySizeValid(keyboard[i], j - 1))
+                        {
+                            nearKeys.Add(keyboard[i][j - 1]);
+                        }
+                        if (IsArraySizeValid(keyboard, i - 1) && IsArraySizeValid(keyboard[i - 1], j - 1))
+                        {
+                            nearKeys.Add(keyboard[i - 1][j - 1]);
+                        }
+                        if (IsArraySizeValid(keyboard, i - 1) && IsArraySizeValid(keyboard[i - 1], j))
+                        {
+                            nearKeys.Add(keyboard[i - 1][j]);
+                        }
+                        if (IsArraySizeValid(keyboard, i - 1) && IsArraySizeValid(keyboard[i - 1], j + 1))
+                        {
+                            nearKeys.Add(keyboard[i - 1][j + 1]);
+                        }
+                        if (IsArraySizeValid(keyboard, i + 1) && IsArraySizeValid(keyboard[i + 1], j - 1))
+                        {
+                            nearKeys.Add(keyboard[i + 1][j - 1]);
+                        }
+                    }
+                }
+            }
+            return nearKeys;
+        }
+
+        private IEnumerable<string> GenerateTypos(string word)
+        {
+            var typo = new List<string>();
+
+            if (word.Length < 2)
+                return typo;
+
+            var qwertyKeyboard = GetKeyboardMapping();
+
+            for (var j = word.Length - 1; j >= 0; j--)
+            {
+                typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip letter
+                typo.Add(word.Insert(j, word[j].ToString())); // Double Letter
+
+                var keyboardChars = IsItemInArrayNearest(qwertyKeyboard, word[j]);
+                // Extra Letter & Wrong letter
+                for (var k = 0; k < keyboardChars.Count; k++)
+                {
+                    typo.Add(word.Insert(j, keyboardChars[k].ToString())); // Extra letter
+                    typo.Add(word.Substring(0, j) + keyboardChars[k] + word.Substring(j + 1)); //Wrong letter
+                }
+
+                // Reverse letters
+                if (word.Length > j + 1)
+                {
+                    var tempChar = word[j];
+                    var tempChar2 = word[j + 1];
+                    var reversedWord = SwapCharacter(word, tempChar, j + 1);
+                    reversedWord = SwapCharacter(reversedWord, tempChar2, j);
+                    typo.Add(reversedWord);
+                }
+            }
+            return typo;
         }
         #endregion
 
