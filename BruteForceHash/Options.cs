@@ -19,6 +19,8 @@ namespace BruteForceHash
         public int NbrThreads { get; set; }
         [Option('I', "include_word", Required = false, Default = "", HelpText = "Try a string where a certain word must appear.")]
         public string IncludeWord { get; set; }
+        [Option('d', "description", Required = false, Default = false, HelpText = "Adding a description for the logs.")]
+        public string Description { get; set; }
         [Option('v', "verbose", Required = false, Default = false, HelpText = "Display more search and thread information.")]
         public bool Verbose { get; set; }
         [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]
@@ -57,7 +59,9 @@ namespace BruteForceHash
         public bool DictionariesAddTypos { get; set; }
         [Option('D', "dictionaries_reverse_order", Required = false, Default = false, HelpText = "Add all sorts of typos to the dictionary (for dictionary attack).")]
         public bool DictionariesReverseOrder { get; set; }
-        
+        [Option('D', "delete_generated_dictionary", Required = false, Default = false, HelpText = "Delete hashcat dictionary after it's done using it (for dictionary attack).")]
+        public bool DeleteGeneratedDictionary { get; set; }
+
 
         [Option('D', "dictionaries_first_word", Required = false, Default = "", HelpText = "List all the dictionaries to use (separated by semi-colon) for first word (for dictionary attack).")]
         public string DictionariesFirstWord { get; set; }
