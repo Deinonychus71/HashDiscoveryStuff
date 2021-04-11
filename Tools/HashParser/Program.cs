@@ -14,9 +14,6 @@ namespace HashParser
     {
         static void Main(string[] args)
         {
-            var bytes = new byte[] { 0x61, 0xef, 0xbc, 0x91 };
-            var bylethismahwife = Encoding.UTF8.GetString(bytes);
-
             Parser.Default.ParseArguments<Options>(args).WithParsed((o) =>
             {
                 if (!Directory.Exists(o.InputPath))
@@ -78,7 +75,7 @@ namespace HashParser
                     {
                         FullPath = fullPath,
                         ListPath = listPath,
-                        KeyHexa = $"0x{prm.Key:x0}",
+                        KeyHexa = $"0x{prm.Key:x10}",
                         KeyLabel = GetHexaTitle(dictHashes, prm.Key),
                         Type = prm.Value.TypeKey.ToString(),
                         ValueLabel = list.Nodes.Count.ToString()

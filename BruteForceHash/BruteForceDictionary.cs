@@ -331,12 +331,12 @@ namespace BruteForceHash
                     if (forceLowerCase)
                         wordToAdd = word.ToLower();
 
-                    if (addTypos)
+                    if (addTypos && wordToAdd.Length > 3)
                     {
                         var allNewWords = new List<string>();
                         allNewWords.Add(wordToAdd);
                         allNewWords.AddRange(GenerateTypos(wordToAdd));
-                        allNewWords.AddRange(Combinations(wordToAdd, 'l', 'r'));
+                        allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, 'l', 'r'));
                         foreach (var newWord in allNewWords)
                         {
                             var lengthStr = $"{{{newWord.Length}}}";
@@ -365,14 +365,14 @@ namespace BruteForceHash
             return output;
         }
 
-        private static IEnumerable<string> Combinations(string input, char char1, char char2)
+        private static IEnumerable<string> GenerateLetterSwapTypos(string input, char char1, char char2)
         {
             var head = input[0] == char1 || input[0] == char2
                 ? new[] { char1.ToString(), char2.ToString() }
                 : new[] { input[0].ToString() };
 
             var tails = input.Length > 1
-                ? Combinations(input.Substring(1), char1, char2)
+                ? GenerateLetterSwapTypos(input.Substring(1), char1, char2)
                 : new[] { "" };
 
             return
