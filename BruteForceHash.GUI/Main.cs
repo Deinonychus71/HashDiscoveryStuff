@@ -301,8 +301,8 @@ namespace BruteForceHash.GUI
                                                     $"--method {(useUtf8 ? "character_utf8" : useHashCat ? "character_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
-                                                    $"--valid_chars \"{txtValidChars.Text.Trim().Replace("\"", "\\\"").Replace("\\", "\\\\")}\" " +
-                                                    $"--valid_starting_chars \"{txtStartingValidChars.Text.Trim().Replace("\"", "\\\"").Replace("\\", "\\\\")}\" " +
+                                                    $"--valid_chars \"{txtValidChars.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
+                                                    $"--valid_starting_chars \"{txtStartingValidChars.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
                                                     $"--start_position \"{numStartPosition.Value}\" " +
                                                     $"--end_position \"{numEndPosition.Value}\" " +
                                                     $"--include_word \"{txtIncludeWordsCharacter.Text.Trim()}\" " +
