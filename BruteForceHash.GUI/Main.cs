@@ -12,20 +12,74 @@ namespace BruteForceHash.GUI
         public Main()
         {
             InitializeComponent();
-            cbMethod.SelectedIndex = 0;
-            cbNbThreads.SelectedIndex = 7;
-            cbWordsLimit.SelectedIndex = 2;
-            cbCombinationOrder.SelectedIndex = 0;
+
             mnLoad.Click += OnLoadClick;
             mnSave.Click += OnSaveClick;
+            mnNew.Click += OnNewClick;
             Directory.CreateDirectory("Templates");
             openFile.InitialDirectory = Directory.GetCurrentDirectory() + "\\Templates\\";
             saveFile.InitialDirectory = Directory.GetCurrentDirectory() + "\\Templates\\";
             openFile.Filter = "HBT files|*.hbt";
             saveFile.Filter = "HBT files|*.hbt";
+
+            OnNewClick(this, null);
+        }
+
+        #region Button Clicks
+        private void OnNewClick(object sender, EventArgs e)
+        {
+            cbMethod.SelectedIndex = 0;
+            cbNbThreads.SelectedIndex = 7;
+            cbWordsLimit.SelectedIndex = 2;
+            cbCombinationOrder.SelectedIndex = 0;
+            chkVerbose.Checked = true;
+
+            SetDictionary(chklDictionaries, string.Empty);
+            chkDictSkipDigits.Checked = false;
+            chkDictSkipSpecials.Checked = true;
+            chkDictForceLowercase.Checked = true;
+            chkDictAddTypos.Checked = false;
+            chkDictReverseOrder.Checked = false;
+
+            chkUseCustomDictFirst.Checked = false;
+            SetDictionary(chklDictionariesFirstWord, string.Empty);
+            chkDictFirstSkipDigits.Checked = false;
+            chkDictFirstSkipSpecials.Checked = false;
+            chkDictFirstForceLowercase.Checked = false;
+            chkDictFirstAddTypos.Checked = false;
+            chkDictFirstReverseOrder.Checked = false;
+
+            chkUseCustomDictLast.Checked = false;
+            SetDictionary(chklDictionariesLastWord, string.Empty);
+            chkDictLastSkipDigits.Checked = false;
+            chkDictLastSkipSpecials.Checked = false;
+            chkDictLastForceLowercase.Checked = false;
+            chkDictLastAddTypos.Checked = false;
+            chkDictLastReverseOrder.Checked = false;
+
+            txtIncludeWord.Text = string.Empty;
+            chkIncludeWordNotFirst.Checked = false;
+            chkIncludeWordNotLast.Checked = false;
+            txtIncludeWordsCharacter.Text = string.Empty;
+            txtIncludePatterns.Text = string.Empty;
+            txtExcludePatterns.Text = string.Empty;
+            txtDelimiter.Text = "_";
+            txtPrefix.Text = string.Empty;
+            txtSuffix.Text = string.Empty;
+            txtValidChars.Text = "etainoshrdlucmfwygpbvkqjxz0123456789_";
+            txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
+            numStartPosition.Value = 0;
+            numEndPosition.Value = 0;
+            txtHexValues.Text = string.Empty;
+
+            txtHashCatPath.Text = "Tools\\Hashcat\\hashcat.exe";
+
             OnCustomDictFirstCheckedChanged(this, null);
             OnCustomDictLastCheckedChanged(this, null);
 
+            chklDictionaries.Items.Clear();
+            chklDictionariesFirstWord.Items.Clear();
+            chklDictionariesLastWord.Items.Clear();
             if (Directory.Exists("Dictionaries"))
             {
                 var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
@@ -34,7 +88,7 @@ namespace BruteForceHash.GUI
                     var filename = Path.GetFileName(dictionaryPath);
                     var isFirstDic = filename.Contains("[1st]");
                     var isLastDic = filename.Contains("[Last]");
-                    if(!isFirstDic && !isLastDic)
+                    if (!isFirstDic && !isLastDic)
                         chklDictionaries.Items.Add(filename);
                     if (!isLastDic)
                         chklDictionariesFirstWord.Items.Add(filename);
@@ -49,6 +103,7 @@ namespace BruteForceHash.GUI
 
             pnlDictionary.Visible = true;
             pnlCharacter.Visible = false;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text)) || pnlDictionary.Visible;
         }
 
         private void OnSaveClick(object sender, EventArgs e)
@@ -89,6 +144,7 @@ namespace BruteForceHash.GUI
                     DictionariesLastWordReverseTypos = chkDictLastReverseOrder.Checked,
                     IncludeWordDict = txtIncludeWord.Text.Trim(),
                     IncludeWordNotFirst = chkIncludeWordNotFirst.Checked,
+                    IncludeWordNotLast = chkIncludeWordNotLast.Checked,
                     IncludeWordChar = txtIncludeWordsCharacter.Text.Trim(),
                     IncludePatterns = txtIncludePatterns.Text.Trim(),
                     ExcludePatterns = txtExcludePatterns.Text.Trim(),
@@ -99,7 +155,8 @@ namespace BruteForceHash.GUI
                     ValidStartingChars = txtStartingValidChars.Text.Trim(),
                     StartPosition = Convert.ToInt32(numStartPosition.Value),
                     EndPosition = Convert.ToInt32(numEndPosition.Value),
-                    HexValue = txtHexValues.Text.Trim()
+                    HexValue = txtHexValues.Text.Trim(),
+                    PathHashCat = txtHashCatPath.Text.Trim()
                 };
                 File.WriteAllText(saveFile.FileName, JsonConvert.SerializeObject(hbtObject));
             }
@@ -142,6 +199,7 @@ namespace BruteForceHash.GUI
 
                 txtIncludeWord.Text = hbtObject.IncludeWordDict;
                 chkIncludeWordNotFirst.Checked = hbtObject.IncludeWordNotFirst;
+                chkIncludeWordNotLast.Checked = hbtObject.IncludeWordNotLast;
                 txtIncludeWordsCharacter.Text = hbtObject.IncludeWordChar;
                 txtIncludePatterns.Text = hbtObject.IncludePatterns;
                 txtExcludePatterns.Text = hbtObject.ExcludePatterns;
@@ -153,10 +211,11 @@ namespace BruteForceHash.GUI
                 numStartPosition.Value = hbtObject.StartPosition;
                 numEndPosition.Value = hbtObject.EndPosition;
                 txtHexValues.Text = hbtObject.HexValue;
+                txtHashCatPath.Text = hbtObject.PathHashCat;
             }
         }
 
-        private void OnBtnStartClick(object sender, EventArgs e)
+        private void StartProcess(bool useHashCat = false)
         {
             var dictionaries = GetDictionary(chklDictionaries);
             var dictionariesFirstWord = string.Empty;
@@ -196,7 +255,7 @@ namespace BruteForceHash.GUI
                 if (cbMethod.SelectedItem.ToString() == "Dictionary")
                 {
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {cbMethod.SelectedItem} " +
+                                                    $"--method {(useHashCat ? "dictionary_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"--words_limit {cbWordsLimit.SelectedItem} " +
                                                     $"{(chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
                                                     $"{(chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
@@ -213,7 +272,8 @@ namespace BruteForceHash.GUI
                                                     $"{(dictLastForceLowercase ? "--dictionaries_last_force_lowercase" : "")} " +
                                                     $"{(dictLastAddTypos ? "--dictionaries_last_add_typos" : "")} " +
                                                     $"{(dictLastReverseOrder ? "--dictionaries_last_reverse_order" : "")} " +
-                                                    $"--order {cbCombinationOrder.SelectedItem} " +
+                                                    $"--order_algorithm {GetCombinationOrderName()} " +
+                                                    $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--dictionaries \"{dictionaries}\" " +
@@ -221,17 +281,19 @@ namespace BruteForceHash.GUI
                                                     $"--dictionaries_last_word \"{dictionariesLastWord}\" " +
                                                     $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
                                                     $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
+                                                    $"{(chkIncludeWordNotLast.Checked ? "--include_word_not_last" : "")} " +
                                                     $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
                                                     $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +
                                                     $"--delimiter \"{txtDelimiter.Text.Trim()}\" " +
                                                     $"--prefix \"{txtPrefix.Text.Trim()}\" " +
                                                     $"--suffix \"{txtSuffix.Text.Trim()}\" " +
+                                                    $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
                                                     $"--hex_value \"{txtHexValues.Text.Trim()}\"";
                 }
                 else
                 {
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {cbMethod.SelectedItem} " +
+                                                    $"--method {(useHashCat ? "character_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--valid_chars \"{txtValidChars.Text.Trim()}\" " +
@@ -241,6 +303,7 @@ namespace BruteForceHash.GUI
                                                     $"--include_word \"{txtIncludeWordsCharacter.Text.Trim()}\" " +
                                                     $"--prefix \"{txtPrefix.Text.Trim()}\" " +
                                                     $"--suffix \"{txtSuffix.Text.Trim()}\" " +
+                                                    $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
                                                     $"--hex_value \"{txtHexValues.Text.Trim()}\"";
                 }
                 process.StartInfo.UseShellExecute = false;
@@ -250,6 +313,44 @@ namespace BruteForceHash.GUI
                 process.Close();
             }
         }
+
+        private string GetCombinationOrderName()
+        {
+            return cbCombinationOrder.SelectedItem.ToString() switch
+            {
+                "Interval short/long" => "interval",
+                "Interval long/short" => "interval",
+                "Fewer/shorter words first" => "fewer_words_first",
+                "Fewer/longer words first" => "fewer_words_first",
+                "Greater/shorter words first" => "more_words_first",
+                "Greater/longer words first" => "more_words_first",
+                _ => throw new NotImplementedException(),
+            };
+        }
+        private bool GetCombinationOrderLongerFirst()
+        {
+            return cbCombinationOrder.SelectedItem.ToString() switch
+            {
+                "Interval short/long" => false,
+                "Interval long/short" => true,
+                "Fewer/shorter words first" => false,
+                "Fewer/longer words first" => true,
+                "Greater/shorter words first" => false,
+                "Greater/longer words first" => true,
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        private void OnBtnStartClick(object sender, EventArgs e)
+        {
+            StartProcess();
+        }
+
+        private void OnStartHashCatClick(object sender, EventArgs e)
+        {
+            StartProcess(true);
+        }
+        #endregion
 
         private string GetDictionary(CheckedListBox chkList)
         {
@@ -293,6 +394,7 @@ namespace BruteForceHash.GUI
         {
             pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
             pnlCharacter.Visible = !pnlDictionary.Visible;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text)) || pnlDictionary.Visible;
         }
 
         private void OnCustomDictFirstCheckedChanged(object sender, EventArgs e)
@@ -352,5 +454,12 @@ namespace BruteForceHash.GUI
                 SetDictionary(chklDictionariesLastWord, string.Empty);
             }
         }
+
+        private void OnTxtIncludeWordsCharacterTextChanged(object sender, EventArgs e)
+        {
+            btnStartHashCat.Enabled = pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text);
+        }
+
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -9,15 +10,17 @@ namespace BruteForceHash.Helpers
     public class Logger : IDisposable
     {
         private readonly string _file;
-        private readonly Queue<string> _queue;
+        private readonly ConcurrentQueue<string> _queue;
         private readonly CancellationTokenSource _queueCts;
         private readonly ConsoleColor _defaultConsoleColor; 
+
+        public string PathFile { get { return _file; } }
 
         public Logger(string file)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(file));
             _file = file;
-            _queue = new Queue<string>(10000);
+            _queue = new ConcurrentQueue<string>();
             _queueCts = new CancellationTokenSource();
             _defaultConsoleColor = Console.ForegroundColor;
 
@@ -36,7 +39,7 @@ namespace BruteForceHash.Helpers
                     if (dequeueMessages.Count > 0)
                         File.AppendAllLines(_file, dequeueMessages);
 
-                    await Task.Delay(1000);
+                    await Task.Delay(500);
                 }
             });
         }
@@ -55,6 +58,11 @@ namespace BruteForceHash.Helpers
             Console.ForegroundColor = _defaultConsoleColor;
             if (saveInQueue)
                 _queue.Enqueue(line);
+        }
+
+        public void LogDiscret(string line)
+        {
+            _queue.Enqueue(line);
         }
 
         public void Dispose()

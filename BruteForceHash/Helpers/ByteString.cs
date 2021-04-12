@@ -16,6 +16,8 @@ namespace BruteForceHash.Helpers
 
         public byte[] Value { get { return _value; } }
 
+        public uint HexSearchValue { get { return _hexToFind; } }
+
         public int Cursor { get; set; }
 
         public ByteString(int length, uint hexToFind, string prefix, string suffix)
@@ -141,6 +143,16 @@ namespace BruteForceHash.Helpers
             if (_wasOptimized)
                 return $"{_prefix}{Encoding.ASCII.GetString(_value)}{_suffix}";
             return Encoding.ASCII.GetString(_value);
+        }
+
+        public string ToString(bool usePrefix)
+        {
+            if (usePrefix)
+                return ToString();
+            if (_wasOptimized)
+                return Encoding.ASCII.GetString(_value);
+            else
+                return Encoding.ASCII.GetString(_value, _prefix.Length, _value.Length - _prefix.Length - _suffix.Length);
         }
     }
 }

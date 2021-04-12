@@ -105,7 +105,7 @@ namespace HashCleanup
             var length = input.Length - charactersNumber;
             for (var i = 0; i < length; i++)
             {
-                for (var j = 0; j < length - i; j++)
+                for (var j = 0; j < length - i + 1; j++)
                 {
                     var word = input[i..^j];
                     if (dictionary.Contains(word))
