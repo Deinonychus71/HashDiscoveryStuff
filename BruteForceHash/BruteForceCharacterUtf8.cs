@@ -27,9 +27,6 @@ namespace BruteForceHash
             _options = options;
             _hexValue = hexValue;
             _stringLength = stringLength;
-
-            //options.ValidChars = _validCharsString;
-            //options.ValidStartingChars = _validStartCharsString;
         }
 
         public void Run()
@@ -54,6 +51,7 @@ namespace BruteForceHash
             {
                 _validCharsString = _options.ValidChars;
             }
+            _validCharsString = string.Join(null, _validCharsString.ToCharArray().Distinct());
             var validBytesTuple = GetBytesMappingUtf8(_validCharsString);
             _validBytes = validBytesTuple.Item1;
             _mappingBytes = validBytesTuple.Item2;
@@ -70,6 +68,7 @@ namespace BruteForceHash
             {
                 _validStartCharsString = _options.ValidStartingChars;
             }
+            _validStartCharsString = string.Join(null, _validStartCharsString.ToCharArray().Distinct());
 
             //Include Word
             if (!string.IsNullOrEmpty(_options.IncludeWord))
