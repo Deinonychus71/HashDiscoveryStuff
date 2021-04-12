@@ -2,6 +2,7 @@
 using CommandLine;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ namespace BruteForceHash
         {
             await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (o) =>
             {
+                //Cleaning
+                o.ValidChars = string.Join(null, o.ValidChars.ToCharArray().Distinct());
+                o.ValidStartingChars = string.Join(null, o.ValidStartingChars.ToCharArray().Distinct());
+
                 //Get Hex
                 if (string.IsNullOrEmpty(o.HexValue))
                 {
