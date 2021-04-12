@@ -2,6 +2,7 @@
 using CommandLine;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BruteForceHash
@@ -46,7 +47,7 @@ namespace BruteForceHash
                         logger.Log($"Suffix: {o.Suffix}");
                     logger.Log($"Number of Threads: {o.NbrThreads}");
 
-                    if (o.Prefix.Length + o.Suffix.Length > length)
+                    if (Encoding.UTF8.GetByteCount(o.Prefix) + Encoding.UTF8.GetByteCount(o.Suffix) > length)
                     {
                         logger.Log($"Error: Prefix and/or Suffix is too long!");
                     }
@@ -59,6 +60,8 @@ namespace BruteForceHash
                             new BruteForceDictionary(logger, o, length, hexToFind, true).Run();
                         else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
                             new BruteForceCharacter(logger, o, length, hexToFind).Run();
+                        else if (o.Method.Equals("character_utf8", StringComparison.OrdinalIgnoreCase))
+                            new BruteForceCharacterUtf8(logger, o, length, hexToFind).Run();
                         else if (o.Method.Equals("character_hashcat", StringComparison.OrdinalIgnoreCase))
                             new BruteForceCharacterHashCat(logger, o, length, hexToFind).Run();
                         else

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +19,7 @@ namespace BruteForceHash.Helpers
 
         public Logger(string file)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             Directory.CreateDirectory(Path.GetDirectoryName(file));
             _file = file;
             _queue = new ConcurrentQueue<string>();

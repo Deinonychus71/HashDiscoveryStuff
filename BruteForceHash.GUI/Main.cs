@@ -33,6 +33,7 @@ namespace BruteForceHash.GUI
             cbWordsLimit.SelectedIndex = 2;
             cbCombinationOrder.SelectedIndex = 0;
             chkVerbose.Checked = true;
+            chkUtf8Toggle.Checked = false;
 
             SetDictionary(chklDictionaries, string.Empty);
             chkDictSkipDigits.Checked = false;
@@ -103,7 +104,7 @@ namespace BruteForceHash.GUI
 
             pnlDictionary.Visible = true;
             pnlCharacter.Visible = false;
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text)) || pnlDictionary.Visible;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || pnlDictionary.Visible;
         }
 
         private void OnSaveClick(object sender, EventArgs e)
@@ -122,6 +123,7 @@ namespace BruteForceHash.GUI
                     WordsLimit = Convert.ToInt32(cbWordsLimit.SelectedItem),
                     Order = cbCombinationOrder.SelectedItem.ToString(),
                     Verbose = chkVerbose.Checked,
+                    EnableUtf8 = chkUtf8Toggle.Checked,
                     Dictionaries = dictionaries,
                     DictionariesSkipDigits = chkDictSkipDigits.Checked,
                     DictionariesSkipSpecials = chkDictSkipSpecials.Checked,
@@ -173,6 +175,7 @@ namespace BruteForceHash.GUI
                 cbWordsLimit.SelectedItem = hbtObject.WordsLimit.ToString();
                 cbCombinationOrder.SelectedItem = hbtObject.Order;
                 chkVerbose.Checked = hbtObject.Verbose;
+                chkUtf8Toggle.Checked = hbtObject.EnableUtf8;
 
                 SetDictionary(chklDictionaries, hbtObject.Dictionaries);
                 chkDictSkipDigits.Checked = hbtObject.DictionariesSkipDigits;
@@ -249,6 +252,8 @@ namespace BruteForceHash.GUI
                 dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
             }
 
+            var useUtf8 = !useHashCat && chkUtf8Toggle.Checked;
+
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "BruteForceHash.exe";
@@ -293,7 +298,7 @@ namespace BruteForceHash.GUI
                 else
                 {
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {(useHashCat ? "character_hashcat" : cbMethod.SelectedItem)} " +
+                                                    $"--method {(useUtf8 ? "character_utf8" : useHashCat ? "character_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
                                                     $"--valid_chars \"{txtValidChars.Text.Trim()}\" " +
@@ -394,7 +399,7 @@ namespace BruteForceHash.GUI
         {
             pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
             pnlCharacter.Visible = !pnlDictionary.Visible;
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text)) || pnlDictionary.Visible;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || pnlDictionary.Visible;
         }
 
         private void OnCustomDictFirstCheckedChanged(object sender, EventArgs e)
@@ -457,9 +462,7 @@ namespace BruteForceHash.GUI
 
         private void OnTxtIncludeWordsCharacterTextChanged(object sender, EventArgs e)
         {
-            btnStartHashCat.Enabled = pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text);
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || pnlDictionary.Visible;
         }
-
-        
     }
 }
