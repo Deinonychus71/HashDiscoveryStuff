@@ -25,8 +25,31 @@ namespace BruteForceHash
         public bool Verbose { get; set; }
         [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]
         public bool ConfirmEnd { get; set; }
+
+        //Patterns Generated
         [Option('n', "max_delimiters", Required = false, Default = -1, HelpText = "Maximum Number of Delimiters that can be in the target string.")]
         public int MaxDelimiters { get; set; }
+        [Option('n', "min_delimiters", Required = false, Default = -1, HelpText = "Minimum Number of Delimiters that can be in the target string.")]
+        public int MinDelimiters { get; set; }
+        [Option('P', "only_last_two_concatenated", Required = false, Default = false, HelpText = "Only concatenate the last two words in the pattern, everything else should be delimiter separated.")]
+        public bool ConcatenateLastTwoWords { get; set; }
+        [Option('P', "only_first_two_concatenated", Required = false, Default = false, HelpText = "Only concatenate the first two words in the pattern, everything else should be delimiter separated.")]
+        public bool ConcatenateFirstTwoWords { get; set; }
+        [Option('P', "max_consecutive_concatenation_limit", Required = false, Default = 10, HelpText = "To apply a limit on concatenated words (for dictionary attack).")]
+        public int MaxConsecutiveConcatenation { get; set; }
+        [Option('P', "min_consecutive_concatenation_limit", Required = false, Default = 1, HelpText = "To apply a limit on concatenated words (for dictionary attack).")]
+        public int MinConsecutiveConcatenation { get; set; }
+        [Option('P', "min_word_length", Required = false, Default = 1, HelpText = "To apply a limit on word length (for dictionary attack).")]
+        public int MinWordLength { get; set; }
+        [Option('P', "max_word_length", Required = false, Default = 100, HelpText = "To apply a limit on word length (for dictionary attack).")]
+        public int MaxWordLength { get; set; }
+        [Option('P', "max_ones", Required = false, Default = 10, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MaxOnes { get; set; }
+        [Option('P', "min_ones", Required = false, Default = 0, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MinOnes { get; set; }
+        [Option('P', "max_consecutive_ones", Required = false, Default = 10, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MaxConsecutiveOnes { get; set; }
+
 
 
 
@@ -41,6 +64,8 @@ namespace BruteForceHash
         public bool IncludeWordNotLast { get; set; }
         [Option('w', "words_limit", Required = false, Default = 10, HelpText = "To apply a limit on words search (for dictionary attack).")]
         public int WordsLimit { get; set; }
+        [Option('w', "min_words_limit", Required = false, Default = 1, HelpText = "To apply a limit on words search (for dictionary attack).")]
+        public int MinWordsLimit { get; set; }
         [Option('o', "order_algorithm", Required = false, Default = "interval", HelpText = "Pick the order in which combinations will run (for dictionary attack, values are interval, fewer_words_first or more_words_first).")]
         public string Order { get; set; }
         [Option('o', "order_longer_words_first", Required = false, Default = false, HelpText = "Pick if longer words should appear first (for dictionary attack).")]
