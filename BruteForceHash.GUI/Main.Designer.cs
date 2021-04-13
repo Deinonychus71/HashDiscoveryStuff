@@ -102,6 +102,8 @@ namespace BruteForceHash.GUI
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.lblVerbose = new System.Windows.Forms.Label();
             this.btnStartHashCat = new System.Windows.Forms.Button();
+            this.chkUtf8Toggle = new System.Windows.Forms.CheckBox();
+            this.lblUtf8Toggle = new System.Windows.Forms.Label();
             this.pnlDictionary.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).BeginInit();
@@ -701,6 +703,8 @@ namespace BruteForceHash.GUI
             // 
             // pnlCharacter
             // 
+            this.pnlCharacter.Controls.Add(this.lblUtf8Toggle);
+            this.pnlCharacter.Controls.Add(this.chkUtf8Toggle);
             this.pnlCharacter.Controls.Add(this.txtHashCatPath);
             this.pnlCharacter.Controls.Add(this.lblHashCat);
             this.pnlCharacter.Controls.Add(this.numEndPosition);
@@ -715,7 +719,7 @@ namespace BruteForceHash.GUI
             this.pnlCharacter.Controls.Add(this.lblValidChars);
             this.pnlCharacter.Location = new System.Drawing.Point(12, 103);
             this.pnlCharacter.Name = "pnlCharacter";
-            this.pnlCharacter.Size = new System.Drawing.Size(751, 421);
+            this.pnlCharacter.Size = new System.Drawing.Size(774, 421);
             this.pnlCharacter.TabIndex = 32;
             // 
             // txtHashCatPath
@@ -900,6 +904,24 @@ namespace BruteForceHash.GUI
             this.btnStartHashCat.UseVisualStyleBackColor = true;
             this.btnStartHashCat.Click += new System.EventHandler(this.OnStartHashCatClick);
             // 
+            // chkUtf8Toggle
+            // 
+            this.chkUtf8Toggle.AutoSize = true;
+            this.chkUtf8Toggle.Location = new System.Drawing.Point(112, 177);
+            this.chkUtf8Toggle.Name = "chkUtf8Toggle";
+            this.chkUtf8Toggle.Size = new System.Drawing.Size(15, 14);
+            this.chkUtf8Toggle.TabIndex = 40;
+            this.chkUtf8Toggle.UseVisualStyleBackColor = true;
+            // 
+            // lblUtf8Toggle
+            // 
+            this.lblUtf8Toggle.AutoSize = true;
+            this.lblUtf8Toggle.Location = new System.Drawing.Point(5, 176);
+            this.lblUtf8Toggle.Name = "lblUtf8Toggle";
+            this.lblUtf8Toggle.Size = new System.Drawing.Size(74, 15);
+            this.lblUtf8Toggle.TabIndex = 37;
+            this.lblUtf8Toggle.Text = "Enable UTF8:";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -922,8 +944,8 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
             this.Controls.Add(this.mnStrip);
-            this.Controls.Add(this.pnlDictionary);
             this.Controls.Add(this.pnlCharacter);
+            this.Controls.Add(this.pnlDictionary);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.mnStrip;
             this.MaximizeBox = false;
@@ -1018,6 +1040,8 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox txtHashCatPath;
         private System.Windows.Forms.CheckBox chkIncludeWordNotLast;
+        private System.Windows.Forms.Label lblUtf8Toggle;
+        private System.Windows.Forms.CheckBox chkUtf8Toggle;
     }
 }
 

@@ -2,6 +2,8 @@
 using CommandLine;
 using System;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BruteForceHash
@@ -12,6 +14,10 @@ namespace BruteForceHash
         {
             await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (o) =>
             {
+                //Cleaning
+                o.ValidChars = string.Join(null, o.ValidChars.ToCharArray().Distinct());
+                o.ValidStartingChars = string.Join(null, o.ValidStartingChars.ToCharArray().Distinct());
+
                 //Get Hex
                 if (string.IsNullOrEmpty(o.HexValue))
                 {
@@ -32,6 +38,7 @@ namespace BruteForceHash
                     var input = hexValueEntry.Trim();
                     logger.Log($"Hex Value: {input}");
                     logger.Log($"Description: {o.Description}");
+                    //logger.Log($"Command: {string.Join(' ', args)}");
 
                     var split = input.Split("x".ToCharArray());
                     var lengthStr = split[1].Substring(0, 2);
@@ -46,7 +53,7 @@ namespace BruteForceHash
                         logger.Log($"Suffix: {o.Suffix}");
                     logger.Log($"Number of Threads: {o.NbrThreads}");
 
-                    if (o.Prefix.Length + o.Suffix.Length > length)
+                    if (Encoding.UTF8.GetByteCount(o.Prefix) + Encoding.UTF8.GetByteCount(o.Suffix) > length)
                     {
                         logger.Log($"Error: Prefix and/or Suffix is too long!");
                     }
@@ -59,6 +66,8 @@ namespace BruteForceHash
                             new BruteForceDictionary(logger, o, length, hexToFind, true).Run();
                         else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
                             new BruteForceCharacter(logger, o, length, hexToFind).Run();
+                        else if (o.Method.Equals("character_utf8", StringComparison.OrdinalIgnoreCase))
+                            new BruteForceCharacterUtf8(logger, o, length, hexToFind).Run();
                         else if (o.Method.Equals("character_hashcat", StringComparison.OrdinalIgnoreCase))
                             new BruteForceCharacterHashCat(logger, o, length, hexToFind).Run();
                         else

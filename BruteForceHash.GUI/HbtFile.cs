@@ -7,6 +7,7 @@ namespace BruteForceHash.GUI
     public class HbtFile
     {
         public string HexValue { get; set; }
+        public bool EnableUtf8 { get; set; }
         public string Method { get; set; }
         public string Prefix { get; set; }
         public string Suffix { get; set; }

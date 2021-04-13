@@ -22,8 +22,8 @@ namespace BruteForceHash.Helpers
 
         public ByteString(int length, uint hexToFind, string prefix, string suffix)
         {
-            _leadPrefixOffset = prefix.Length;
-            _leadSuffixOffset = suffix.Length;
+            _leadPrefixOffset = Encoding.UTF8.GetByteCount(prefix);
+            _leadSuffixOffset = Encoding.UTF8.GetByteCount(suffix);
             _prefix = prefix;
             _suffix = suffix;
             _canBeOptimized = _leadPrefixOffset != 0 || _leadSuffixOffset != 0;
@@ -36,7 +36,7 @@ namespace BruteForceHash.Helpers
             }
             if (!string.IsNullOrEmpty(prefix))
             {
-                Append(prefix, 0);
+                Append(Encoding.UTF8.GetBytes(prefix), 0);
             }
         }
 
@@ -141,8 +141,8 @@ namespace BruteForceHash.Helpers
         public override string ToString()
         {
             if (_wasOptimized)
-                return $"{_prefix}{Encoding.ASCII.GetString(_value)}{_suffix}";
-            return Encoding.ASCII.GetString(_value);
+                return $"{_prefix}{Encoding.UTF8.GetString(_value)}{_suffix}";
+            return Encoding.UTF8.GetString(_value);
         }
 
         public string ToString(bool usePrefix)
@@ -150,9 +150,9 @@ namespace BruteForceHash.Helpers
             if (usePrefix)
                 return ToString();
             if (_wasOptimized)
-                return Encoding.ASCII.GetString(_value);
+                return Encoding.UTF8.GetString(_value);
             else
-                return Encoding.ASCII.GetString(_value, _prefix.Length, _value.Length - _prefix.Length - _suffix.Length);
+                return Encoding.UTF8.GetString(_value, _prefix.Length, _value.Length - _prefix.Length - _suffix.Length);
         }
     }
 }

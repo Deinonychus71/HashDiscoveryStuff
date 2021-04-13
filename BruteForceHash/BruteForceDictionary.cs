@@ -624,7 +624,7 @@ namespace BruteForceHash
 
             }
 
-            return output;
+            return output.Distinct();
         }
 
         
