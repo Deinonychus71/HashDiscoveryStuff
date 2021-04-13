@@ -81,7 +81,7 @@ namespace BruteForceHash.GUI
             cbMinDelim.SelectedIndex = 0;
             cbMaxWordLength.SelectedIndex = 49;
             cbMinWordLength.SelectedIndex = 0;
-            cbMaxOnes.SelectedIndex = 9;
+            cbMaxOnes.SelectedIndex = 10;
             cbMinOnes.SelectedIndex = 0;
             cbMaxConsecutiveOnes.SelectedIndex = 9;
             cbMinWordsLimit.SelectedIndex = 0;
@@ -537,6 +537,7 @@ namespace BruteForceHash.GUI
             cbMinWordsLimit.Enabled = chkDictionaryAdvanced.Checked;
             cbMaxConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;
             cbMinConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
     }
 }

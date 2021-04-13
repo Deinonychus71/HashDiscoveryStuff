@@ -617,6 +617,7 @@ namespace BruteForceHash.GUI
             this.cbMaxOnes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbMaxOnes.FormattingEnabled = true;
             this.cbMaxOnes.Items.AddRange(new object[] {
+            "0",
             "1",
             "2",
             "3",
