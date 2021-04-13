@@ -576,7 +576,7 @@ namespace BruteForceHash
 
             }
 
-            return output;
+            return output.Distinct();
         }
 
         private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, int delimiterLength, int wordsLimit, int wordsSoFar, bool longerWordsFirst)
