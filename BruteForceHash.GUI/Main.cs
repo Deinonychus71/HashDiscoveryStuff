@@ -79,7 +79,7 @@ namespace BruteForceHash.GUI
             chkOnlyLastTwoWordsConcat.Checked = false;
             cbMaxDelim.SelectedIndex = 0;
             cbMinDelim.SelectedIndex = 0;
-            cbMaxWordLength.SelectedIndex = 99;
+            cbMaxWordLength.SelectedIndex = 49;
             cbMinWordLength.SelectedIndex = 0;
             cbMaxOnes.SelectedIndex = 9;
             cbMinOnes.SelectedIndex = 0;
