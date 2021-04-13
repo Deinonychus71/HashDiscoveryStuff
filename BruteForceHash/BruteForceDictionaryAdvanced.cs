@@ -134,7 +134,20 @@ namespace BruteForceHash
             CancellationTokenSource cts = new CancellationTokenSource();
 
             _logger.Log($"Delimiter: {_delimiter}");
-            _logger.Log($"Words Limit: {_options.WordsLimit}");
+            _logger.Log($"Max Delimiters: {_options.MaxDelimiters}");
+            _logger.Log($"Min Delimiters: {_options.MinDelimiters}");
+            _logger.Log($"Max Consecutive Concatenation Limit: {_options.MaxConsecutiveConcatenation}");
+            _logger.Log($"Min Consecutive Concatenation Limit: {_options.MinConsecutiveConcatenation}");
+            _logger.Log($"Max Words Length: {_options.MaxWordLength}");
+            _logger.Log($"Min Words Length: {_options.MinWordLength}");
+            _logger.Log($"Max Ones: {_options.MaxOnes}");
+            _logger.Log($"Min Ones: {_options.MinOnes}");
+            _logger.Log($"Max Consecutive Ones: {_options.MaxConsecutiveOnes}");
+            _logger.Log($"Max Words Limit: {_options.WordsLimit}");
+            _logger.Log($"Min Words Limit: {_options.MinWordsLimit}");
+            _logger.Log($"Only First Two Words Concatenated: {_options.ConcatenateFirstTwoWords}");
+            _logger.Log($"Only Last Two Words Concatenated: {_options.ConcatenateLastTwoWords}");
+            
             if (!string.IsNullOrEmpty(_options.ExcludePatterns))
                 _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
             if (!string.IsNullOrEmpty(_options.IncludePatterns))

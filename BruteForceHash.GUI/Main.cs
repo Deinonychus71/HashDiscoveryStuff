@@ -73,10 +73,26 @@ namespace BruteForceHash.GUI
             numEndPosition.Value = 0;
             txtHexValues.Text = string.Empty;
 
+            //Dictionary Advanced
+            chkDictionaryAdvanced.Checked = false;
+            chkOnlyFirstTwoWordsConcat.Checked = false;
+            chkOnlyLastTwoWordsConcat.Checked = false;
+            cbMaxDelim.SelectedIndex = 0;
+            cbMinDelim.SelectedIndex = 0;
+            cbMaxWordLength.SelectedIndex = 99;
+            cbMinWordLength.SelectedIndex = 0;
+            cbMaxOnes.SelectedIndex = 9;
+            cbMinOnes.SelectedIndex = 0;
+            cbMaxConsecutiveOnes.SelectedIndex = 9;
+            cbMinWordsLimit.SelectedIndex = 0;
+            cbMaxConsecutiveConcat.SelectedIndex = 9;
+            cbMinConsecutiveConcat.SelectedIndex = 0;
+
             txtHashCatPath.Text = "Tools\\Hashcat\\hashcat.exe";
 
             OnCustomDictFirstCheckedChanged(this, null);
             OnCustomDictLastCheckedChanged(this, null);
+            OnDictionaryAdvancedCheckedChanged(this, null);
 
             chklDictionaries.Items.Clear();
             chklDictionariesFirstWord.Items.Clear();
@@ -104,7 +120,7 @@ namespace BruteForceHash.GUI
 
             pnlDictionary.Visible = true;
             pnlCharacter.Visible = false;
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || pnlDictionary.Visible;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
 
         private void OnSaveClick(object sender, EventArgs e)
@@ -158,7 +174,21 @@ namespace BruteForceHash.GUI
                     StartPosition = Convert.ToInt32(numStartPosition.Value),
                     EndPosition = Convert.ToInt32(numEndPosition.Value),
                     HexValue = txtHexValues.Text.Trim(),
-                    PathHashCat = txtHashCatPath.Text.Trim()
+                    PathHashCat = txtHashCatPath.Text.Trim(),
+                    //Advanced
+                    DictionaryAdvanced = chkDictionaryAdvanced.Checked,
+                    ConcatenateFirstTwoWords = chkOnlyFirstTwoWordsConcat.Checked,
+                    ConcatenateLastTwoWords = chkOnlyLastTwoWordsConcat.Checked,
+                    MaxDelimiters = Convert.ToInt32(cbMaxDelim.SelectedItem),
+                    MinDelimiters = Convert.ToInt32(cbMinDelim.SelectedItem),
+                    MaxWordLength = Convert.ToInt32(cbMaxWordLength.SelectedItem),
+                    MinWordLength = Convert.ToInt32(cbMinWordLength.SelectedItem),
+                    MaxOnes = Convert.ToInt32(cbMaxOnes.SelectedItem),
+                    MinOnes = Convert.ToInt32(cbMinOnes.SelectedItem),
+                    MaxConsecutiveOnes = Convert.ToInt32(cbMaxConsecutiveOnes.SelectedItem),
+                    MinWordsLimit = Convert.ToInt32(cbMinWordsLimit.SelectedItem),
+                    MaxConsecutiveConcatenation = Convert.ToInt32(cbMaxConsecutiveConcat.SelectedItem),
+                    MinConsecutiveConcatenation = Convert.ToInt32(cbMinConsecutiveConcat.SelectedItem),
                 };
                 File.WriteAllText(saveFile.FileName, JsonConvert.SerializeObject(hbtObject));
             }
@@ -215,6 +245,21 @@ namespace BruteForceHash.GUI
                 numEndPosition.Value = hbtObject.EndPosition;
                 txtHexValues.Text = hbtObject.HexValue;
                 txtHashCatPath.Text = hbtObject.PathHashCat;
+
+                //Advanced
+                chkDictionaryAdvanced.Checked = hbtObject.DictionaryAdvanced;
+                chkOnlyFirstTwoWordsConcat.Checked = hbtObject.ConcatenateFirstTwoWords;
+                chkOnlyLastTwoWordsConcat.Checked = hbtObject.ConcatenateLastTwoWords;
+                cbMaxDelim.SelectedItem = hbtObject.MaxDelimiters.ToString();
+                cbMinDelim.SelectedItem = hbtObject.MinDelimiters.ToString();
+                cbMaxWordLength.SelectedItem = hbtObject.MaxWordLength.ToString();
+                cbMinWordLength.SelectedItem = hbtObject.MinWordLength.ToString();
+                cbMaxOnes.SelectedItem = hbtObject.MaxOnes.ToString();
+                cbMinOnes.SelectedItem = hbtObject.MinOnes.ToString();
+                cbMaxConsecutiveOnes.SelectedItem = hbtObject.MaxConsecutiveOnes.ToString();
+                cbMinWordsLimit.SelectedItem = hbtObject.MinWordsLimit.ToString();
+                cbMaxConsecutiveConcat.SelectedItem = hbtObject.MaxConsecutiveConcatenation.ToString();
+                cbMinConsecutiveConcat.SelectedItem = hbtObject.MinConsecutiveConcatenation.ToString();
             }
         }
 
@@ -253,6 +298,7 @@ namespace BruteForceHash.GUI
             }
 
             var useUtf8 = !useHashCat && chkUtf8Toggle.Checked;
+            var useDictAdvanced = chkDictionaryAdvanced.Checked;
 
             using (var process = new Process())
             {
@@ -260,8 +306,20 @@ namespace BruteForceHash.GUI
                 if (cbMethod.SelectedItem.ToString() == "Dictionary")
                 {
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {(useHashCat ? "dictionary_hashcat" : cbMethod.SelectedItem)} " +
+                                                    $"--method {(useDictAdvanced ? "dictionary_advanced" : useHashCat ? "dictionary_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"--words_limit {cbWordsLimit.SelectedItem} " +
+                                                    $"--min_words_limit {cbMinWordsLimit.SelectedItem} " +
+                                                    $"--max_delimiters {cbMaxDelim.SelectedItem} " +
+                                                    $"--min_delimiters {cbMinDelim.SelectedItem} " +
+                                                    $"{(chkOnlyLastTwoWordsConcat.Checked ? "--only_last_two_concatenated" : "")} " +
+                                                    $"{(chkOnlyFirstTwoWordsConcat.Checked ? "--only_first_two_concatenated" : "")} " +
+                                                    $"--max_consecutive_concatenation_limit {cbMaxConsecutiveConcat.SelectedItem} " +
+                                                    $"--min_consecutive_concatenation_limit {cbMinConsecutiveConcat.SelectedItem} " +
+                                                    $"--max_word_length {cbMaxWordLength.SelectedItem} " +
+                                                    $"--min_word_length {cbMinWordLength.SelectedItem} " +
+                                                    $"--max_ones {cbMaxOnes.SelectedItem} " +
+                                                    $"--min_ones {cbMinOnes.SelectedItem} " +
+                                                    $"--max_consecutive_ones {cbMaxConsecutiveOnes.SelectedItem} " +
                                                     $"{(chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
                                                     $"{(chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
                                                     $"{(chkDictForceLowercase.Checked ? "--dictionaries_force_lowercase" : "")} " +
@@ -399,7 +457,7 @@ namespace BruteForceHash.GUI
         {
             pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
             pnlCharacter.Visible = !pnlDictionary.Visible;
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || pnlDictionary.Visible;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
 
         private void OnCustomDictFirstCheckedChanged(object sender, EventArgs e)
@@ -462,7 +520,23 @@ namespace BruteForceHash.GUI
 
         private void OnTxtIncludeWordsCharacterTextChanged(object sender, EventArgs e)
         {
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || pnlDictionary.Visible;
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
+        }
+
+        private void OnDictionaryAdvancedCheckedChanged(object sender, EventArgs e)
+        {
+            chkOnlyFirstTwoWordsConcat.Enabled = chkDictionaryAdvanced.Checked;
+            chkOnlyLastTwoWordsConcat.Enabled = chkDictionaryAdvanced.Checked;
+            cbMaxDelim.Enabled = chkDictionaryAdvanced.Checked;
+            cbMinDelim.Enabled = chkDictionaryAdvanced.Checked;
+            cbMaxWordLength.Enabled = chkDictionaryAdvanced.Checked;
+            cbMinWordLength.Enabled = chkDictionaryAdvanced.Checked;
+            cbMaxOnes.Enabled = chkDictionaryAdvanced.Checked;
+            cbMinOnes.Enabled = chkDictionaryAdvanced.Checked;
+            cbMaxConsecutiveOnes.Enabled = chkDictionaryAdvanced.Checked;
+            cbMinWordsLimit.Enabled = chkDictionaryAdvanced.Checked;
+            cbMaxConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;
+            cbMinConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;
         }
     }
 }

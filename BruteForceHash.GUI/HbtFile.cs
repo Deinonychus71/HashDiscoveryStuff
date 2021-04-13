@@ -49,5 +49,20 @@ namespace BruteForceHash.GUI
         public int EndPosition { get; set; }
         public bool Verbose { get; set; }
         public string PathHashCat { get; set; }
+
+        /* Advanced */
+        public bool DictionaryAdvanced { get; set; }
+        public int MaxDelimiters { get; set; }
+        public int MinDelimiters { get; set; }
+        public bool ConcatenateLastTwoWords { get; set; }
+        public bool ConcatenateFirstTwoWords { get; set; }
+        public int MaxConsecutiveConcatenation { get; set; }
+        public int MinConsecutiveConcatenation { get; set; }
+        public int MinWordLength { get; set; }
+        public int MaxWordLength { get; set; }
+        public int MaxOnes { get; set; }
+        public int MinOnes { get; set; }
+        public int MaxConsecutiveOnes { get; set; }
+        public int MinWordsLimit { get; set; }
     }
 }
