@@ -396,7 +396,8 @@ namespace BruteForceHash
                         var allNewWords = new List<string>();
                         allNewWords.Add(wordToAdd);
                         allNewWords.AddRange(GenerateTypos(wordToAdd));
-                        allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, 'l', 'r'));
+                        if (_options.TyposEnableLetterSwap)
+                            allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, 'l', 'r'));
                         foreach (var newWord in allNewWords)
                         {
                             var lengthStr = $"{{{newWord.Length}}}";
@@ -521,25 +522,32 @@ namespace BruteForceHash
 
             for (var j = word.Length - 1; j >= 0; j--)
             {
-                typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip letter
-                typo.Add(word.Insert(j, word[j].ToString())); // Double Letter
+                if (_options.TyposEnableSkipLetter)
+                    typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip letter
+                if (_options.TyposEnableDoubleLetter)
+                    typo.Add(word.Insert(j, word[j].ToString())); // Double Letter
 
                 var keyboardChars = IsItemInArrayNearest(qwertyKeyboard, word[j]);
                 // Extra Letter & Wrong letter
                 for (var k = 0; k < keyboardChars.Count; k++)
                 {
-                    typo.Add(word.Insert(j, keyboardChars[k].ToString())); // Extra letter
-                    typo.Add(word.Substring(0, j) + keyboardChars[k] + word.Substring(j + 1)); //Wrong letter
+                    if (_options.TyposEnableExtraLetter)
+                        typo.Add(word.Insert(j, keyboardChars[k].ToString())); // Extra letter
+                    if (_options.TyposEnableWrongLetter)
+                        typo.Add(word.Substring(0, j) + keyboardChars[k] + word.Substring(j + 1)); //Wrong letter
                 }
 
-                // Reverse letters
-                if (word.Length > j + 1)
+                if (_options.TyposEnableReverseLetter)
                 {
-                    var tempChar = word[j];
-                    var tempChar2 = word[j + 1];
-                    var reversedWord = SwapCharacter(word, tempChar, j + 1);
-                    reversedWord = SwapCharacter(reversedWord, tempChar2, j);
-                    typo.Add(reversedWord);
+                    // Reverse letters
+                    if (word.Length > j + 1)
+                    {
+                        var tempChar = word[j];
+                        var tempChar2 = word[j + 1];
+                        var reversedWord = SwapCharacter(word, tempChar, j + 1);
+                        reversedWord = SwapCharacter(reversedWord, tempChar2, j);
+                        typo.Add(reversedWord);
+                    }
                 }
             }
             return typo;

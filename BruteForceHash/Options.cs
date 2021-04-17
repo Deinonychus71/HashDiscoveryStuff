@@ -114,8 +114,20 @@ namespace BruteForceHash
         public bool DictionariesLastAddTypos { get; set; }
         [Option('D', "dictionaries_last_reverse_order", Required = false, Default = false, HelpText = "Add all sorts of typos to the dictionary (for dictionary attack).")]
         public bool DictionariesLastReverseOrder { get; set; }
+        [Option('T', "typos_enable_letter_swap", Required = false, Default = false, HelpText = "Typos - Enable l-r swapping. (for dictionary attack).")]
+        public bool TyposEnableLetterSwap { get; set; }
+        [Option('T', "typos_enable_skip_letter", Required = false, Default = false, HelpText = "Typos - Enable letter skipping. (for dictionary attack).")]
+        public bool TyposEnableSkipLetter { get; set; }
+        [Option('T', "typos_enable_double_letter", Required = false, Default = false, HelpText = "Typos - Enable letter doubling. (for dictionary attack).")]
+        public bool TyposEnableDoubleLetter { get; set; }
+        [Option('T', "typos_enable_extra_letter", Required = false, Default = false, HelpText = "Typos - Enable extra letter. (for dictionary attack).")]
+        public bool TyposEnableExtraLetter { get; set; }
+        [Option('T', "typos_enable_wrong_letter", Required = false, Default = false, HelpText = "Typos - Enable wrong letter. (for dictionary attack).")]
+        public bool TyposEnableWrongLetter { get; set; }
+        [Option('T', "typos_enable_reverse_letter", Required = false, Default = false, HelpText = "Typos - Enable reverse letter. (for dictionary attack).")]
+        public bool TyposEnableReverseLetter { get; set; }
 
-       
+
 
         //Character attack
         [Option('c', "valid_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz0123456789_", HelpText = "All the characters to bruteforce (for character attack).")]

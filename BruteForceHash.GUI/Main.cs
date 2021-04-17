@@ -58,6 +58,13 @@ namespace BruteForceHash.GUI
             chkDictLastAddTypos.Checked = false;
             chkDictLastReverseOrder.Checked = false;
 
+            chkTyposDoubleLetter.Checked = true;
+            chkTyposExtraLetter.Checked = true;
+            chkTyposLetterSwap.Checked = true;
+            chkTyposReverseLetter.Checked = true;
+            chkTyposSkipLetter.Checked = true;
+            chkTyposWrongLetter.Checked = true;
+
             txtIncludeWord.Text = string.Empty;
             chkIncludeWordNotFirst.Checked = false;
             chkIncludeWordNotLast.Checked = false;
@@ -130,7 +137,7 @@ namespace BruteForceHash.GUI
             var dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
 
             var result = saveFile.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 var hbtObject = new HbtFile()
                 {
@@ -160,6 +167,12 @@ namespace BruteForceHash.GUI
                     DictionariesLastWordForceLowercase = chkDictLastForceLowercase.Checked,
                     DictionariesLastWordAddTypos = chkDictLastAddTypos.Checked,
                     DictionariesLastWordReverseTypos = chkDictLastReverseOrder.Checked,
+                    TyposEnableDoubleLetter = chkTyposDoubleLetter.Checked,
+                    TyposEnableExtraLetter = chkTyposExtraLetter.Checked,
+                    TyposEnableLetterSwap = chkTyposLetterSwap.Checked,
+                    TyposEnableReverseLetter = chkTyposReverseLetter.Checked,
+                    TyposEnableSkipLetter = chkTyposSkipLetter.Checked,
+                    TyposEnableWrongLetter = chkTyposWrongLetter.Checked,
                     IncludeWordDict = txtIncludeWord.Text.Trim(),
                     IncludeWordNotFirst = chkIncludeWordNotFirst.Checked,
                     IncludeWordNotLast = chkIncludeWordNotLast.Checked,
@@ -229,6 +242,12 @@ namespace BruteForceHash.GUI
                 chkDictLastForceLowercase.Checked = hbtObject.DictionariesLastWordForceLowercase;
                 chkDictLastAddTypos.Checked = hbtObject.DictionariesLastWordAddTypos;
                 chkDictLastReverseOrder.Checked = hbtObject.DictionariesLastWordReverseTypos;
+                chkTyposDoubleLetter.Checked = hbtObject.TyposEnableDoubleLetter;
+                chkTyposExtraLetter.Checked = hbtObject.TyposEnableExtraLetter;
+                chkTyposLetterSwap.Checked = hbtObject.TyposEnableLetterSwap;
+                chkTyposReverseLetter.Checked = hbtObject.TyposEnableReverseLetter;
+                chkTyposSkipLetter.Checked = hbtObject.TyposEnableSkipLetter;
+                chkTyposWrongLetter.Checked = hbtObject.TyposEnableWrongLetter;
 
                 txtIncludeWord.Text = hbtObject.IncludeWordDict;
                 chkIncludeWordNotFirst.Checked = hbtObject.IncludeWordNotFirst;
@@ -335,6 +354,12 @@ namespace BruteForceHash.GUI
                                                     $"{(dictLastForceLowercase ? "--dictionaries_last_force_lowercase" : "")} " +
                                                     $"{(dictLastAddTypos ? "--dictionaries_last_add_typos" : "")} " +
                                                     $"{(dictLastReverseOrder ? "--dictionaries_last_reverse_order" : "")} " +
+                                                    $"{(chkTyposLetterSwap.Checked ? "--typos_enable_letter_swap" : "")} " +
+                                                    $"{(chkTyposSkipLetter.Checked ? "--typos_enable_skip_letter" : "")} " +
+                                                    $"{(chkTyposDoubleLetter.Checked ? "--typos_enable_double_letter" : "")} " +
+                                                    $"{(chkTyposExtraLetter.Checked ? "--typos_enable_extra_letter" : "")} " +
+                                                    $"{(chkTyposWrongLetter.Checked ? "--typos_enable_wrong_letter" : "")} " +
+                                                    $"{(chkTyposReverseLetter.Checked ? "--typos_enable_reverse_letter" : "")} " +
                                                     $"--order_algorithm {GetCombinationOrderName()} " +
                                                     $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
@@ -437,7 +462,7 @@ namespace BruteForceHash.GUI
             if (!string.IsNullOrEmpty(dictionaries))
             {
                 var splitEntries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
-                
+
                 foreach (var entry in splitEntries)
                 {
                     var dict = Path.GetFileName(entry);

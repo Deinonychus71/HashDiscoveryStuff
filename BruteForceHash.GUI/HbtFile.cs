@@ -41,7 +41,13 @@ namespace BruteForceHash.GUI
         public bool DictionariesLastWordReverseTypos { get; set; }
         public int WordsLimit { get; set; }
         public string Order { get; set; }
-        
+        public bool TyposEnableLetterSwap { get; set; }
+        public bool TyposEnableSkipLetter { get; set; }
+        public bool TyposEnableDoubleLetter { get; set; }
+        public bool TyposEnableExtraLetter { get; set; }
+        public bool TyposEnableWrongLetter { get; set; }
+        public bool TyposEnableReverseLetter { get; set; }
+
         public int NbrThreads { get; set; }
         public string ValidChars { get; set; }
         public string ValidStartingChars { get; set; }
