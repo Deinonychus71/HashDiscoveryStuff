@@ -22,6 +22,11 @@ namespace BruteForceHash
 
         public void Run(string arguments)
         {
+            Run(new List<string>() { arguments });
+        }
+
+        public void Run(List<string> argumentsList)
+        {
             // Launch HashCat
             var output = Path.Combine(Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt"));
 
@@ -80,15 +85,20 @@ namespace BruteForceHash
                 }
             });
 
-            using (var process = new Process())
+            foreach (var arguments in argumentsList)
             {
-                process.StartInfo.FileName = _options.PathHashCat;
-                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.CreateNoWindow = false;
-                process.Start();
-                process.WaitForExit();
-                process.Close();
+                _logger.Log($"Running hashcat with arguments {arguments}.", false);
+
+                using (var process = new Process())
+                {
+                    process.StartInfo.FileName = _options.PathHashCat;
+                    process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
+                    process.StartInfo.Arguments = arguments;
+                    process.StartInfo.CreateNoWindow = false;
+                    process.Start();
+                    process.WaitForExit();
+                    process.Close();
+                }
             }
 
             _hashCatProcessDone = true;

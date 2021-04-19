@@ -101,12 +101,58 @@ namespace BruteForceHash
 
             // Launch HashCat
             var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
-            var mask = "?1";
-            for (int i = 1; i < maskSize; i++)
-                mask += "?2";
 
-            string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
-            new HashcatTask(_logger, _options).Run(args);
+            if (string.IsNullOrEmpty(_options.IncludeWord))
+            {
+                var mask = "?1";
+                for (int i = 1; i < maskSize; i++)
+                    mask += "?2";
+
+                string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
+                new HashcatTask(_logger, _options).Run(args);
+            }
+            else
+            {
+                var words = _options.IncludeWord.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                var masks = new List<string>();
+                foreach (var word in words)
+                {
+                    var trimmedWord = word.Trim();
+                    var wordLength = trimmedWord.Length;
+
+                    //Create all available masks
+                    for (var i = 0; i <= maskSize - wordLength; i++)
+                    {
+                        var mask = string.Empty;
+                        for (var s = 0; s < i; s++)
+                        {
+                            if (s == 0)
+                                mask += "?1";
+                            else
+                                mask += "?2";
+                        }
+                        mask += trimmedWord;
+                        for (var s = i + wordLength; s < maskSize; s++)
+                        {
+                            mask += "?2";
+                        }
+
+                        masks.Add(mask);
+                    }
+                }
+
+                //Running HashCat
+                var quiet = string.Empty;
+                if (!_options.Verbose)
+                    quiet = " --quiet";
+                var argumentLists = new List<string>();
+                foreach (var mask in masks)
+                {
+                    argumentLists.Add($"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3{quiet}");
+                }
+                new HashcatTask(_logger, _options).Run(argumentLists);
+            }
+
         }
 
         private void RunCharacterBruteForce(List<Task> tasks, TaskFactory factory, byte[] validStartBytes, string prefix, string pattern = null, int patternPosition = 0, int[] levelTable = null)

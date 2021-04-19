@@ -127,7 +127,7 @@ namespace BruteForceHash.GUI
 
             pnlDictionary.Visible = true;
             pnlCharacter.Visible = false;
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
 
         private void OnSaveClick(object sender, EventArgs e)
@@ -482,7 +482,7 @@ namespace BruteForceHash.GUI
         {
             pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
             pnlCharacter.Visible = !pnlDictionary.Visible;
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
 
         private void OnCustomDictFirstCheckedChanged(object sender, EventArgs e)
@@ -545,7 +545,7 @@ namespace BruteForceHash.GUI
 
         private void OnTxtIncludeWordsCharacterTextChanged(object sender, EventArgs e)
         {
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
 
         private void OnDictionaryAdvancedCheckedChanged(object sender, EventArgs e)
@@ -562,7 +562,7 @@ namespace BruteForceHash.GUI
             cbMinWordsLimit.Enabled = chkDictionaryAdvanced.Checked;
             cbMaxConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;
             cbMinConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;
-            btnStartHashCat.Enabled = (pnlCharacter.Visible && string.IsNullOrEmpty(txtIncludeWordsCharacter.Text) && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
     }
 }

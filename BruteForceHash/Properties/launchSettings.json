@@ -2,7 +2,7 @@
   "profiles": {
     "BruteForceHash": {
       "commandName": "Project",
-      "commandLineArgs": "--nbr_threads 1 --method character_utf8 --words_limit 4 False --dictionaries_force_lowercase True --verbose --dictionaries \"*\" --include_word \"\" --include_word_not_last --include_word_not_first --include_patterns \"\" --exclude_patterns \"\" --delimiter \"_\" --prefix \"\" --suffix \"\" --hex_value \"0x07579dd56e\" --valid_chars \"etainoshrdlucmfwygpbvkqjxz 0_-０１２３４５６７８９（）－〓「」　［］　。　．、，；：？！／・々〈〉《》!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~\""
+      "commandLineArgs": "--nbr_threads 1 --method character_hashcat --words_limit 4 False --dictionaries_force_lowercase True --verbose --dictionaries \"*\" --include_word \"test\" --include_word_not_last --include_word_not_first --include_patterns \"\" --exclude_patterns \"\" --delimiter \"_\" --prefix \"\" --suffix \"\" --hex_value \"0x07579dd56e\" --valid_chars \"etainoshrdlucmfwygpbvkqjxz 0_-０１２３４５６７８９（）－〓「」　［］　。　．、，；：？！／・々〈〉《》!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~\""
     }
   }
 }
