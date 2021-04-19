@@ -20,12 +20,12 @@ namespace BruteForceHash
             _options = options;
         }
 
-        public void Run(string arguments)
+        public void Run(string arguments, bool verbose = false)
         {
-            Run(new List<string>() { arguments });
+            Run(new List<string>() { arguments }, verbose);
         }
 
-        public void Run(List<string> argumentsList)
+        public void Run(List<string> argumentsList, bool verbose = false)
         {
             // Launch HashCat
             var output = Path.Combine(Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt"));
@@ -87,7 +87,8 @@ namespace BruteForceHash
 
             foreach (var arguments in argumentsList)
             {
-                _logger.Log($"Running hashcat with arguments {arguments}.", false);
+                if(verbose)
+                    _logger.Log($"Running hashcat with arguments {arguments}.", false);
 
                 using (var process = new Process())
                 {

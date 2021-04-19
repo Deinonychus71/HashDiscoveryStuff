@@ -33,11 +33,7 @@ namespace BruteForceHash
         {
             //Run
             var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads);
-            var tasks = new List<Task>();
-
-            // Create a TaskFactory and pass it our custom scheduler.
-            TaskFactory factory = new TaskFactory(taskScheduler);
-            CancellationTokenSource cts = new CancellationTokenSource();
+            var factory = new TaskFactory(taskScheduler);
 
             //Valid bytes
             string inputValidChars;
@@ -74,6 +70,13 @@ namespace BruteForceHash
             }
 
             var maskSize = _stringLength - _options.Prefix.Length - _options.Suffix.Length;
+            if (!string.IsNullOrEmpty(_options.IncludeWord))
+            {
+                _logger.Log($"Include Word: {_options.IncludeWord}");
+                _logger.Log($"Start Position: {_options.StartPosition}");
+                if (_options.EndPosition < 0)
+                    _logger.Log($"End Position: {_options.EndPosition}");
+            }
             _logger.Log($"Valid Characters: {inputValidChars}");
             _logger.Log($"Valid Starting Characters: {inputValidStartChars} for first characters");
             _logger.Log($"Search on: {maskSize} characters");
@@ -82,8 +85,10 @@ namespace BruteForceHash
             if (!string.IsNullOrEmpty(_options.Prefix) || !string.IsNullOrEmpty(_options.Suffix))
             {
                 _logger.Log($"Finding false positive...", false);
-                RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix);
 
+                var tasks = new List<Task>();
+                var cts = new CancellationTokenSource();
+                RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix, true);
                 // Wait for the tasks to complete before displaying a completion message.
                 Task.WaitAll(tasks.ToArray());
                 cts.Dispose();
@@ -109,10 +114,14 @@ namespace BruteForceHash
                     mask += "?2";
 
                 string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
-                new HashcatTask(_logger, _options).Run(args);
+                new HashcatTask(_logger, _options).Run(args, _options.Verbose);
             }
             else
             {
+                _interruptThreads = false;
+                var tasks = new List<Task>();
+                var cts = new CancellationTokenSource();
+
                 var words = _options.IncludeWord.Split(',', StringSplitOptions.RemoveEmptyEntries);
                 var masks = new List<string>();
                 foreach (var word in words)
@@ -121,8 +130,14 @@ namespace BruteForceHash
                     var wordLength = trimmedWord.Length;
 
                     //Create all available masks
-                    for (var i = 0; i <= maskSize - wordLength; i++)
+                    for (var i = _options.StartPosition; i <= maskSize - wordLength + _options.EndPosition; i++)
                     {
+                        if (i == 0)
+                        {
+                            RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix + trimmedWord, false);
+                            continue;
+                        }
+
                         var mask = string.Empty;
                         for (var s = 0; s < i; s++)
                         {
@@ -150,12 +165,15 @@ namespace BruteForceHash
                 {
                     argumentLists.Add($"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3{quiet}");
                 }
-                new HashcatTask(_logger, _options).Run(argumentLists);
+                new HashcatTask(_logger, _options).Run(argumentLists, _options.Verbose);
+
+                Task.WaitAll(tasks.ToArray());
+                cts.Dispose();
             }
 
         }
 
-        private void RunCharacterBruteForce(List<Task> tasks, TaskFactory factory, byte[] validStartBytes, string prefix, string pattern = null, int patternPosition = 0, int[] levelTable = null)
+        private void RunCharacterBruteForce(List<Task> tasks, TaskFactory factory, byte[] validStartBytes, string prefix, bool shouldInterruptAtFirstResult = false)
         {
             int searchLength = _stringLength - prefix.Length - _options.Suffix.Length - 1;
             for (var t = 0; t < validStartBytes.Length; t++)
@@ -167,7 +185,7 @@ namespace BruteForceHash
                     {
                         ByteString strBuilder = new ByteString(_stringLength, _hexValue, prefix, _options.Suffix);
                         strBuilder.Append(startingCharacter);
-                        DiveByteSimple(strBuilder, 0, searchLength);
+                        DiveByteSimple(strBuilder, 0, searchLength, shouldInterruptAtFirstResult);
                     }
                     catch (Exception e)
                     {
@@ -178,7 +196,7 @@ namespace BruteForceHash
             }
         }
 
-        private void DiveByteSimple(ByteString candidate, int level, int searchLength)
+        private void DiveByteSimple(ByteString candidate, int level, int searchLength, bool shouldInterruptAtFirstResult = false)
         {
             int levelp = level + 1;
             foreach (byte b in _validBytes)
@@ -189,16 +207,23 @@ namespace BruteForceHash
                 if (levelp < searchLength)
                 {
                     candidate.Append(b);
-                    DiveByteSimple(candidate, levelp, searchLength);
+                    DiveByteSimple(candidate, levelp, searchLength, shouldInterruptAtFirstResult);
                     candidate.Cursor -= 1;
                     continue;
                 }
                 candidate.Replace(b);
                 if (candidate.CRC32Check())
                 {
-                    _logger.LogResult($"False positive found: 0x{candidate.HexSearchValue:x}.");
-                    _hexExtract = candidate.HexSearchValue;
-                    _interruptThreads = true;
+                    if (shouldInterruptAtFirstResult)
+                    {
+                        _logger.LogResult($"False positive found: 0x{candidate.HexSearchValue:x}.");
+                        _hexExtract = candidate.HexSearchValue;
+                        _interruptThreads = true;
+                    }
+                    else
+                    {
+                        _logger.LogResult(candidate.ToString());
+                    }
                 }
 
             }

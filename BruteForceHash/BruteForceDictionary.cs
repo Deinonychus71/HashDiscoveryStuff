@@ -198,7 +198,7 @@ namespace BruteForceHash
                 var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
 
                 string args = $"--hash-type 11500 -a 0 {_hexExtract:x}:00000000 --outfile \"{output}\" \"{dictionaryPath}\"";
-                new HashcatTask(_logger, _options).Run(args);
+                new HashcatTask(_logger, _options).Run(args, _options.Verbose);
 
                 try
                 {
