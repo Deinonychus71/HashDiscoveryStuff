@@ -113,7 +113,10 @@ namespace BruteForceHash
                 for (int i = 1; i < maskSize; i++)
                     mask += "?2";
 
-                string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3";
+                var quiet = string.Empty;
+                if (!_options.Verbose)
+                    quiet = " --quiet";
+                string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3{quiet}";
                 new HashcatTask(_logger, _options).Run(args, _options.Verbose);
             }
             else
