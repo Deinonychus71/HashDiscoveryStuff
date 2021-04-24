@@ -53,31 +53,39 @@ namespace BruteForceHash.GUI
             this.txtSuffix = new System.Windows.Forms.TextBox();
             this.lblCombinationOrder = new System.Windows.Forms.Label();
             this.pnlDictionary = new System.Windows.Forms.Panel();
-            this.lblOnlyLastTwoWordsConcat = new System.Windows.Forms.Label();
-            this.chkOnlyLastTwoWordsConcat = new System.Windows.Forms.CheckBox();
-            this.lblOnlyFirstTwoWordsConcat = new System.Windows.Forms.Label();
-            this.chkOnlyFirstTwoWordsConcat = new System.Windows.Forms.CheckBox();
-            this.cbMinWordsLimit = new System.Windows.Forms.ComboBox();
-            this.lblMinWordsLimit = new System.Windows.Forms.Label();
-            this.cbMaxConsecutiveOnes = new System.Windows.Forms.ComboBox();
-            this.lblMaxConsecutiveOnes = new System.Windows.Forms.Label();
-            this.cbMinOnes = new System.Windows.Forms.ComboBox();
-            this.lblMinOnes = new System.Windows.Forms.Label();
-            this.cbMaxOnes = new System.Windows.Forms.ComboBox();
-            this.lblMaxOnes = new System.Windows.Forms.Label();
-            this.cbMinWordLength = new System.Windows.Forms.ComboBox();
-            this.lblMinWordLength = new System.Windows.Forms.Label();
-            this.cbMaxWordLength = new System.Windows.Forms.ComboBox();
-            this.lblMaxWordLength = new System.Windows.Forms.Label();
-            this.cbMinConsecutiveConcat = new System.Windows.Forms.ComboBox();
-            this.lblMinConsecutiveConcat = new System.Windows.Forms.Label();
-            this.cbMaxConsecutiveConcat = new System.Windows.Forms.ComboBox();
-            this.lblMaxConsecutiveConcat = new System.Windows.Forms.Label();
-            this.cbMinDelim = new System.Windows.Forms.ComboBox();
-            this.lblMinDelim = new System.Windows.Forms.Label();
-            this.cbMaxDelim = new System.Windows.Forms.ComboBox();
-            this.lblMaxDelim = new System.Windows.Forms.Label();
+            this.grpAdvanced = new System.Windows.Forms.GroupBox();
             this.chkDictionaryAdvanced = new System.Windows.Forms.CheckBox();
+            this.lblMaxDelim = new System.Windows.Forms.Label();
+            this.lblOnlyLastTwoWordsConcat = new System.Windows.Forms.Label();
+            this.cbMaxDelim = new System.Windows.Forms.ComboBox();
+            this.chkOnlyLastTwoWordsConcat = new System.Windows.Forms.CheckBox();
+            this.lblMinDelim = new System.Windows.Forms.Label();
+            this.lblOnlyFirstTwoWordsConcat = new System.Windows.Forms.Label();
+            this.cbMinDelim = new System.Windows.Forms.ComboBox();
+            this.chkOnlyFirstTwoWordsConcat = new System.Windows.Forms.CheckBox();
+            this.lblMaxConsecutiveConcat = new System.Windows.Forms.Label();
+            this.cbMinWordsLimit = new System.Windows.Forms.ComboBox();
+            this.cbMaxConsecutiveConcat = new System.Windows.Forms.ComboBox();
+            this.lblMinWordsLimit = new System.Windows.Forms.Label();
+            this.lblMinConsecutiveConcat = new System.Windows.Forms.Label();
+            this.cbMaxConsecutiveOnes = new System.Windows.Forms.ComboBox();
+            this.cbMinConsecutiveConcat = new System.Windows.Forms.ComboBox();
+            this.lblMaxConsecutiveOnes = new System.Windows.Forms.Label();
+            this.lblMaxWordLength = new System.Windows.Forms.Label();
+            this.cbMinOnes = new System.Windows.Forms.ComboBox();
+            this.cbMaxWordLength = new System.Windows.Forms.ComboBox();
+            this.lblMinOnes = new System.Windows.Forms.Label();
+            this.lblMinWordLength = new System.Windows.Forms.Label();
+            this.cbMaxOnes = new System.Windows.Forms.ComboBox();
+            this.cbMinWordLength = new System.Windows.Forms.ComboBox();
+            this.lblMaxOnes = new System.Windows.Forms.Label();
+            this.grpTypos = new System.Windows.Forms.GroupBox();
+            this.chkTyposReverseLetter = new System.Windows.Forms.CheckBox();
+            this.chkTyposWrongLetter = new System.Windows.Forms.CheckBox();
+            this.chkTyposExtraLetter = new System.Windows.Forms.CheckBox();
+            this.chkTyposDoubleLetter = new System.Windows.Forms.CheckBox();
+            this.chkTyposSkipLetter = new System.Windows.Forms.CheckBox();
+            this.chkTyposLetterSwap = new System.Windows.Forms.CheckBox();
             this.chkIncludeWordNotLast = new System.Windows.Forms.CheckBox();
             this.chkDictReverseOrder = new System.Windows.Forms.CheckBox();
             this.chkDictAddTypos = new System.Windows.Forms.CheckBox();
@@ -129,21 +137,13 @@ namespace BruteForceHash.GUI
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.lblVerbose = new System.Windows.Forms.Label();
             this.btnStartHashCat = new System.Windows.Forms.Button();
-            this.chkTyposLetterSwap = new System.Windows.Forms.CheckBox();
-            this.grpTypos = new System.Windows.Forms.GroupBox();
-            this.chkTyposSkipLetter = new System.Windows.Forms.CheckBox();
-            this.chkTyposDoubleLetter = new System.Windows.Forms.CheckBox();
-            this.chkTyposExtraLetter = new System.Windows.Forms.CheckBox();
-            this.chkTyposWrongLetter = new System.Windows.Forms.CheckBox();
-            this.chkTyposReverseLetter = new System.Windows.Forms.CheckBox();
-            this.grpAdvanced = new System.Windows.Forms.GroupBox();
             this.pnlDictionary.SuspendLayout();
+            this.grpAdvanced.SuspendLayout();
+            this.grpTypos.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).BeginInit();
             this.mnStrip.SuspendLayout();
-            this.grpTypos.SuspendLayout();
-            this.grpAdvanced.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblHexValues
@@ -471,6 +471,60 @@ namespace BruteForceHash.GUI
             this.pnlDictionary.Size = new System.Drawing.Size(774, 586);
             this.pnlDictionary.TabIndex = 31;
             // 
+            // grpAdvanced
+            // 
+            this.grpAdvanced.Controls.Add(this.chkDictionaryAdvanced);
+            this.grpAdvanced.Controls.Add(this.lblMaxDelim);
+            this.grpAdvanced.Controls.Add(this.lblOnlyLastTwoWordsConcat);
+            this.grpAdvanced.Controls.Add(this.cbMaxDelim);
+            this.grpAdvanced.Controls.Add(this.chkOnlyLastTwoWordsConcat);
+            this.grpAdvanced.Controls.Add(this.lblMinDelim);
+            this.grpAdvanced.Controls.Add(this.lblOnlyFirstTwoWordsConcat);
+            this.grpAdvanced.Controls.Add(this.cbMinDelim);
+            this.grpAdvanced.Controls.Add(this.chkOnlyFirstTwoWordsConcat);
+            this.grpAdvanced.Controls.Add(this.lblMaxConsecutiveConcat);
+            this.grpAdvanced.Controls.Add(this.cbMinWordsLimit);
+            this.grpAdvanced.Controls.Add(this.cbMaxConsecutiveConcat);
+            this.grpAdvanced.Controls.Add(this.lblMinWordsLimit);
+            this.grpAdvanced.Controls.Add(this.lblMinConsecutiveConcat);
+            this.grpAdvanced.Controls.Add(this.cbMaxConsecutiveOnes);
+            this.grpAdvanced.Controls.Add(this.cbMinConsecutiveConcat);
+            this.grpAdvanced.Controls.Add(this.lblMaxConsecutiveOnes);
+            this.grpAdvanced.Controls.Add(this.lblMaxWordLength);
+            this.grpAdvanced.Controls.Add(this.cbMinOnes);
+            this.grpAdvanced.Controls.Add(this.cbMaxWordLength);
+            this.grpAdvanced.Controls.Add(this.lblMinOnes);
+            this.grpAdvanced.Controls.Add(this.lblMinWordLength);
+            this.grpAdvanced.Controls.Add(this.cbMaxOnes);
+            this.grpAdvanced.Controls.Add(this.cbMinWordLength);
+            this.grpAdvanced.Controls.Add(this.lblMaxOnes);
+            this.grpAdvanced.Location = new System.Drawing.Point(7, 292);
+            this.grpAdvanced.Name = "grpAdvanced";
+            this.grpAdvanced.Size = new System.Drawing.Size(364, 290);
+            this.grpAdvanced.TabIndex = 81;
+            this.grpAdvanced.TabStop = false;
+            this.grpAdvanced.Text = "Advanced Attack";
+            // 
+            // chkDictionaryAdvanced
+            // 
+            this.chkDictionaryAdvanced.AutoSize = true;
+            this.chkDictionaryAdvanced.Location = new System.Drawing.Point(8, 22);
+            this.chkDictionaryAdvanced.Name = "chkDictionaryAdvanced";
+            this.chkDictionaryAdvanced.Size = new System.Drawing.Size(154, 19);
+            this.chkDictionaryAdvanced.TabIndex = 56;
+            this.chkDictionaryAdvanced.Text = "Enable Advanced Attack";
+            this.chkDictionaryAdvanced.UseVisualStyleBackColor = true;
+            this.chkDictionaryAdvanced.CheckedChanged += new System.EventHandler(this.OnDictionaryAdvancedCheckedChanged);
+            // 
+            // lblMaxDelim
+            // 
+            this.lblMaxDelim.AutoSize = true;
+            this.lblMaxDelim.Location = new System.Drawing.Point(8, 57);
+            this.lblMaxDelim.Name = "lblMaxDelim";
+            this.lblMaxDelim.Size = new System.Drawing.Size(89, 15);
+            this.lblMaxDelim.TabIndex = 57;
+            this.lblMaxDelim.Text = "Max Delimiters:";
+            // 
             // lblOnlyLastTwoWordsConcat
             // 
             this.lblOnlyLastTwoWordsConcat.AutoSize = true;
@@ -479,6 +533,28 @@ namespace BruteForceHash.GUI
             this.lblOnlyLastTwoWordsConcat.Size = new System.Drawing.Size(124, 15);
             this.lblOnlyLastTwoWordsConcat.TabIndex = 78;
             this.lblOnlyLastTwoWordsConcat.Text = "Last 2 Words Concat. :";
+            // 
+            // cbMaxDelim
+            // 
+            this.cbMaxDelim.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMaxDelim.FormattingEnabled = true;
+            this.cbMaxDelim.Items.AddRange(new object[] {
+            "-1",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.cbMaxDelim.Location = new System.Drawing.Point(130, 54);
+            this.cbMaxDelim.Name = "cbMaxDelim";
+            this.cbMaxDelim.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxDelim.TabIndex = 58;
             // 
             // chkOnlyLastTwoWordsConcat
             // 
@@ -491,6 +567,15 @@ namespace BruteForceHash.GUI
             this.chkOnlyLastTwoWordsConcat.TabIndex = 77;
             this.chkOnlyLastTwoWordsConcat.UseVisualStyleBackColor = true;
             // 
+            // lblMinDelim
+            // 
+            this.lblMinDelim.AutoSize = true;
+            this.lblMinDelim.Location = new System.Drawing.Point(196, 57);
+            this.lblMinDelim.Name = "lblMinDelim";
+            this.lblMinDelim.Size = new System.Drawing.Size(87, 15);
+            this.lblMinDelim.TabIndex = 59;
+            this.lblMinDelim.Text = "Min Delimiters:";
+            // 
             // lblOnlyFirstTwoWordsConcat
             // 
             this.lblOnlyFirstTwoWordsConcat.AutoSize = true;
@@ -499,6 +584,28 @@ namespace BruteForceHash.GUI
             this.lblOnlyFirstTwoWordsConcat.Size = new System.Drawing.Size(125, 15);
             this.lblOnlyFirstTwoWordsConcat.TabIndex = 38;
             this.lblOnlyFirstTwoWordsConcat.Text = "First 2 Words Concat. :";
+            // 
+            // cbMinDelim
+            // 
+            this.cbMinDelim.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMinDelim.FormattingEnabled = true;
+            this.cbMinDelim.Items.AddRange(new object[] {
+            "-1",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.cbMinDelim.Location = new System.Drawing.Point(314, 54);
+            this.cbMinDelim.Name = "cbMinDelim";
+            this.cbMinDelim.Size = new System.Drawing.Size(38, 23);
+            this.cbMinDelim.TabIndex = 60;
             // 
             // chkOnlyFirstTwoWordsConcat
             // 
@@ -510,6 +617,15 @@ namespace BruteForceHash.GUI
             this.chkOnlyFirstTwoWordsConcat.Size = new System.Drawing.Size(15, 14);
             this.chkOnlyFirstTwoWordsConcat.TabIndex = 37;
             this.chkOnlyFirstTwoWordsConcat.UseVisualStyleBackColor = true;
+            // 
+            // lblMaxConsecutiveConcat
+            // 
+            this.lblMaxConsecutiveConcat.AutoSize = true;
+            this.lblMaxConsecutiveConcat.Location = new System.Drawing.Point(8, 96);
+            this.lblMaxConsecutiveConcat.Name = "lblMaxConsecutiveConcat";
+            this.lblMaxConsecutiveConcat.Size = new System.Drawing.Size(113, 15);
+            this.lblMaxConsecutiveConcat.TabIndex = 61;
+            this.lblMaxConsecutiveConcat.Text = "Max Cons. Concat. :";
             // 
             // cbMinWordsLimit
             // 
@@ -531,6 +647,26 @@ namespace BruteForceHash.GUI
             this.cbMinWordsLimit.Size = new System.Drawing.Size(38, 23);
             this.cbMinWordsLimit.TabIndex = 76;
             // 
+            // cbMaxConsecutiveConcat
+            // 
+            this.cbMaxConsecutiveConcat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMaxConsecutiveConcat.FormattingEnabled = true;
+            this.cbMaxConsecutiveConcat.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.cbMaxConsecutiveConcat.Location = new System.Drawing.Point(130, 93);
+            this.cbMaxConsecutiveConcat.Name = "cbMaxConsecutiveConcat";
+            this.cbMaxConsecutiveConcat.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxConsecutiveConcat.TabIndex = 62;
+            // 
             // lblMinWordsLimit
             // 
             this.lblMinWordsLimit.AutoSize = true;
@@ -539,6 +675,15 @@ namespace BruteForceHash.GUI
             this.lblMinWordsLimit.Size = new System.Drawing.Size(98, 15);
             this.lblMinWordsLimit.TabIndex = 75;
             this.lblMinWordsLimit.Text = "Min Words Limit:";
+            // 
+            // lblMinConsecutiveConcat
+            // 
+            this.lblMinConsecutiveConcat.AutoSize = true;
+            this.lblMinConsecutiveConcat.Location = new System.Drawing.Point(196, 96);
+            this.lblMinConsecutiveConcat.Name = "lblMinConsecutiveConcat";
+            this.lblMinConsecutiveConcat.Size = new System.Drawing.Size(111, 15);
+            this.lblMinConsecutiveConcat.TabIndex = 63;
+            this.lblMinConsecutiveConcat.Text = "Min Cons. Concat. :";
             // 
             // cbMaxConsecutiveOnes
             // 
@@ -560,6 +705,26 @@ namespace BruteForceHash.GUI
             this.cbMaxConsecutiveOnes.Size = new System.Drawing.Size(38, 23);
             this.cbMaxConsecutiveOnes.TabIndex = 74;
             // 
+            // cbMinConsecutiveConcat
+            // 
+            this.cbMinConsecutiveConcat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMinConsecutiveConcat.FormattingEnabled = true;
+            this.cbMinConsecutiveConcat.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.cbMinConsecutiveConcat.Location = new System.Drawing.Point(314, 93);
+            this.cbMinConsecutiveConcat.Name = "cbMinConsecutiveConcat";
+            this.cbMinConsecutiveConcat.Size = new System.Drawing.Size(38, 23);
+            this.cbMinConsecutiveConcat.TabIndex = 64;
+            // 
             // lblMaxConsecutiveOnes
             // 
             this.lblMaxConsecutiveOnes.AutoSize = true;
@@ -568,6 +733,15 @@ namespace BruteForceHash.GUI
             this.lblMaxConsecutiveOnes.Size = new System.Drawing.Size(99, 15);
             this.lblMaxConsecutiveOnes.TabIndex = 73;
             this.lblMaxConsecutiveOnes.Text = "Max Cons. Ones :";
+            // 
+            // lblMaxWordLength
+            // 
+            this.lblMaxWordLength.AutoSize = true;
+            this.lblMaxWordLength.Location = new System.Drawing.Point(8, 135);
+            this.lblMaxWordLength.Name = "lblMaxWordLength";
+            this.lblMaxWordLength.Size = new System.Drawing.Size(108, 15);
+            this.lblMaxWordLength.TabIndex = 65;
+            this.lblMaxWordLength.Text = "Max Word Length :";
             // 
             // cbMinOnes
             // 
@@ -589,74 +763,6 @@ namespace BruteForceHash.GUI
             this.cbMinOnes.Name = "cbMinOnes";
             this.cbMinOnes.Size = new System.Drawing.Size(38, 23);
             this.cbMinOnes.TabIndex = 72;
-            // 
-            // lblMinOnes
-            // 
-            this.lblMinOnes.AutoSize = true;
-            this.lblMinOnes.Location = new System.Drawing.Point(196, 174);
-            this.lblMinOnes.Name = "lblMinOnes";
-            this.lblMinOnes.Size = new System.Drawing.Size(64, 15);
-            this.lblMinOnes.TabIndex = 71;
-            this.lblMinOnes.Text = "Min Ones :";
-            // 
-            // cbMaxOnes
-            // 
-            this.cbMaxOnes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMaxOnes.FormattingEnabled = true;
-            this.cbMaxOnes.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbMaxOnes.Location = new System.Drawing.Point(130, 171);
-            this.cbMaxOnes.Name = "cbMaxOnes";
-            this.cbMaxOnes.Size = new System.Drawing.Size(38, 23);
-            this.cbMaxOnes.TabIndex = 70;
-            // 
-            // lblMaxOnes
-            // 
-            this.lblMaxOnes.AutoSize = true;
-            this.lblMaxOnes.Location = new System.Drawing.Point(8, 174);
-            this.lblMaxOnes.Name = "lblMaxOnes";
-            this.lblMaxOnes.Size = new System.Drawing.Size(66, 15);
-            this.lblMaxOnes.TabIndex = 69;
-            this.lblMaxOnes.Text = "Max Ones :";
-            // 
-            // cbMinWordLength
-            // 
-            this.cbMinWordLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMinWordLength.FormattingEnabled = true;
-            this.cbMinWordLength.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbMinWordLength.Location = new System.Drawing.Point(314, 132);
-            this.cbMinWordLength.Name = "cbMinWordLength";
-            this.cbMinWordLength.Size = new System.Drawing.Size(38, 23);
-            this.cbMinWordLength.TabIndex = 68;
-            // 
-            // lblMinWordLength
-            // 
-            this.lblMinWordLength.AutoSize = true;
-            this.lblMinWordLength.Location = new System.Drawing.Point(196, 135);
-            this.lblMinWordLength.Name = "lblMinWordLength";
-            this.lblMinWordLength.Size = new System.Drawing.Size(106, 15);
-            this.lblMinWordLength.TabIndex = 67;
-            this.lblMinWordLength.Text = "Min Word Length :";
             // 
             // cbMaxWordLength
             // 
@@ -718,79 +824,29 @@ namespace BruteForceHash.GUI
             this.cbMaxWordLength.Size = new System.Drawing.Size(38, 23);
             this.cbMaxWordLength.TabIndex = 66;
             // 
-            // lblMaxWordLength
+            // lblMinOnes
             // 
-            this.lblMaxWordLength.AutoSize = true;
-            this.lblMaxWordLength.Location = new System.Drawing.Point(8, 135);
-            this.lblMaxWordLength.Name = "lblMaxWordLength";
-            this.lblMaxWordLength.Size = new System.Drawing.Size(108, 15);
-            this.lblMaxWordLength.TabIndex = 65;
-            this.lblMaxWordLength.Text = "Max Word Length :";
+            this.lblMinOnes.AutoSize = true;
+            this.lblMinOnes.Location = new System.Drawing.Point(196, 174);
+            this.lblMinOnes.Name = "lblMinOnes";
+            this.lblMinOnes.Size = new System.Drawing.Size(64, 15);
+            this.lblMinOnes.TabIndex = 71;
+            this.lblMinOnes.Text = "Min Ones :";
             // 
-            // cbMinConsecutiveConcat
+            // lblMinWordLength
             // 
-            this.cbMinConsecutiveConcat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMinConsecutiveConcat.FormattingEnabled = true;
-            this.cbMinConsecutiveConcat.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbMinConsecutiveConcat.Location = new System.Drawing.Point(314, 93);
-            this.cbMinConsecutiveConcat.Name = "cbMinConsecutiveConcat";
-            this.cbMinConsecutiveConcat.Size = new System.Drawing.Size(38, 23);
-            this.cbMinConsecutiveConcat.TabIndex = 64;
+            this.lblMinWordLength.AutoSize = true;
+            this.lblMinWordLength.Location = new System.Drawing.Point(196, 135);
+            this.lblMinWordLength.Name = "lblMinWordLength";
+            this.lblMinWordLength.Size = new System.Drawing.Size(106, 15);
+            this.lblMinWordLength.TabIndex = 67;
+            this.lblMinWordLength.Text = "Min Word Length :";
             // 
-            // lblMinConsecutiveConcat
+            // cbMaxOnes
             // 
-            this.lblMinConsecutiveConcat.AutoSize = true;
-            this.lblMinConsecutiveConcat.Location = new System.Drawing.Point(196, 96);
-            this.lblMinConsecutiveConcat.Name = "lblMinConsecutiveConcat";
-            this.lblMinConsecutiveConcat.Size = new System.Drawing.Size(111, 15);
-            this.lblMinConsecutiveConcat.TabIndex = 63;
-            this.lblMinConsecutiveConcat.Text = "Min Cons. Concat. :";
-            // 
-            // cbMaxConsecutiveConcat
-            // 
-            this.cbMaxConsecutiveConcat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMaxConsecutiveConcat.FormattingEnabled = true;
-            this.cbMaxConsecutiveConcat.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbMaxConsecutiveConcat.Location = new System.Drawing.Point(130, 93);
-            this.cbMaxConsecutiveConcat.Name = "cbMaxConsecutiveConcat";
-            this.cbMaxConsecutiveConcat.Size = new System.Drawing.Size(38, 23);
-            this.cbMaxConsecutiveConcat.TabIndex = 62;
-            // 
-            // lblMaxConsecutiveConcat
-            // 
-            this.lblMaxConsecutiveConcat.AutoSize = true;
-            this.lblMaxConsecutiveConcat.Location = new System.Drawing.Point(8, 96);
-            this.lblMaxConsecutiveConcat.Name = "lblMaxConsecutiveConcat";
-            this.lblMaxConsecutiveConcat.Size = new System.Drawing.Size(113, 15);
-            this.lblMaxConsecutiveConcat.TabIndex = 61;
-            this.lblMaxConsecutiveConcat.Text = "Max Cons. Concat. :";
-            // 
-            // cbMinDelim
-            // 
-            this.cbMinDelim.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMinDelim.FormattingEnabled = true;
-            this.cbMinDelim.Items.AddRange(new object[] {
-            "-1",
+            this.cbMaxOnes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMaxOnes.FormattingEnabled = true;
+            this.cbMaxOnes.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
@@ -802,27 +858,16 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinDelim.Location = new System.Drawing.Point(314, 54);
-            this.cbMinDelim.Name = "cbMinDelim";
-            this.cbMinDelim.Size = new System.Drawing.Size(38, 23);
-            this.cbMinDelim.TabIndex = 60;
+            this.cbMaxOnes.Location = new System.Drawing.Point(130, 171);
+            this.cbMaxOnes.Name = "cbMaxOnes";
+            this.cbMaxOnes.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxOnes.TabIndex = 70;
             // 
-            // lblMinDelim
+            // cbMinWordLength
             // 
-            this.lblMinDelim.AutoSize = true;
-            this.lblMinDelim.Location = new System.Drawing.Point(196, 57);
-            this.lblMinDelim.Name = "lblMinDelim";
-            this.lblMinDelim.Size = new System.Drawing.Size(87, 15);
-            this.lblMinDelim.TabIndex = 59;
-            this.lblMinDelim.Text = "Min Delimiters:";
-            // 
-            // cbMaxDelim
-            // 
-            this.cbMaxDelim.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMaxDelim.FormattingEnabled = true;
-            this.cbMaxDelim.Items.AddRange(new object[] {
-            "-1",
-            "0",
+            this.cbMinWordLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMinWordLength.FormattingEnabled = true;
+            this.cbMinWordLength.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
@@ -833,30 +878,106 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxDelim.Location = new System.Drawing.Point(130, 54);
-            this.cbMaxDelim.Name = "cbMaxDelim";
-            this.cbMaxDelim.Size = new System.Drawing.Size(38, 23);
-            this.cbMaxDelim.TabIndex = 58;
+            this.cbMinWordLength.Location = new System.Drawing.Point(314, 132);
+            this.cbMinWordLength.Name = "cbMinWordLength";
+            this.cbMinWordLength.Size = new System.Drawing.Size(38, 23);
+            this.cbMinWordLength.TabIndex = 68;
             // 
-            // lblMaxDelim
+            // lblMaxOnes
             // 
-            this.lblMaxDelim.AutoSize = true;
-            this.lblMaxDelim.Location = new System.Drawing.Point(8, 57);
-            this.lblMaxDelim.Name = "lblMaxDelim";
-            this.lblMaxDelim.Size = new System.Drawing.Size(89, 15);
-            this.lblMaxDelim.TabIndex = 57;
-            this.lblMaxDelim.Text = "Max Delimiters:";
+            this.lblMaxOnes.AutoSize = true;
+            this.lblMaxOnes.Location = new System.Drawing.Point(8, 174);
+            this.lblMaxOnes.Name = "lblMaxOnes";
+            this.lblMaxOnes.Size = new System.Drawing.Size(66, 15);
+            this.lblMaxOnes.TabIndex = 69;
+            this.lblMaxOnes.Text = "Max Ones :";
             // 
-            // chkDictionaryAdvanced
+            // grpTypos
             // 
-            this.chkDictionaryAdvanced.AutoSize = true;
-            this.chkDictionaryAdvanced.Location = new System.Drawing.Point(8, 22);
-            this.chkDictionaryAdvanced.Name = "chkDictionaryAdvanced";
-            this.chkDictionaryAdvanced.Size = new System.Drawing.Size(154, 19);
-            this.chkDictionaryAdvanced.TabIndex = 56;
-            this.chkDictionaryAdvanced.Text = "Enable Advanced Attack";
-            this.chkDictionaryAdvanced.UseVisualStyleBackColor = true;
-            this.chkDictionaryAdvanced.CheckedChanged += new System.EventHandler(this.OnDictionaryAdvancedCheckedChanged);
+            this.grpTypos.Controls.Add(this.chkTyposReverseLetter);
+            this.grpTypos.Controls.Add(this.chkTyposWrongLetter);
+            this.grpTypos.Controls.Add(this.chkTyposExtraLetter);
+            this.grpTypos.Controls.Add(this.chkTyposDoubleLetter);
+            this.grpTypos.Controls.Add(this.chkTyposSkipLetter);
+            this.grpTypos.Controls.Add(this.chkTyposLetterSwap);
+            this.grpTypos.Location = new System.Drawing.Point(377, 482);
+            this.grpTypos.Name = "grpTypos";
+            this.grpTypos.Size = new System.Drawing.Size(384, 100);
+            this.grpTypos.TabIndex = 80;
+            this.grpTypos.TabStop = false;
+            this.grpTypos.Text = "Typos";
+            // 
+            // chkTyposReverseLetter
+            // 
+            this.chkTyposReverseLetter.AutoSize = true;
+            this.chkTyposReverseLetter.Checked = true;
+            this.chkTyposReverseLetter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTyposReverseLetter.Location = new System.Drawing.Point(279, 65);
+            this.chkTyposReverseLetter.Name = "chkTyposReverseLetter";
+            this.chkTyposReverseLetter.Size = new System.Drawing.Size(99, 19);
+            this.chkTyposReverseLetter.TabIndex = 84;
+            this.chkTyposReverseLetter.Text = "Reverse Letter";
+            this.chkTyposReverseLetter.UseVisualStyleBackColor = true;
+            // 
+            // chkTyposWrongLetter
+            // 
+            this.chkTyposWrongLetter.AutoSize = true;
+            this.chkTyposWrongLetter.Checked = true;
+            this.chkTyposWrongLetter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTyposWrongLetter.Location = new System.Drawing.Point(154, 65);
+            this.chkTyposWrongLetter.Name = "chkTyposWrongLetter";
+            this.chkTyposWrongLetter.Size = new System.Drawing.Size(95, 19);
+            this.chkTyposWrongLetter.TabIndex = 83;
+            this.chkTyposWrongLetter.Text = "Wrong Letter";
+            this.chkTyposWrongLetter.UseVisualStyleBackColor = true;
+            // 
+            // chkTyposExtraLetter
+            // 
+            this.chkTyposExtraLetter.AutoSize = true;
+            this.chkTyposExtraLetter.Checked = true;
+            this.chkTyposExtraLetter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTyposExtraLetter.Location = new System.Drawing.Point(12, 65);
+            this.chkTyposExtraLetter.Name = "chkTyposExtraLetter";
+            this.chkTyposExtraLetter.Size = new System.Drawing.Size(85, 19);
+            this.chkTyposExtraLetter.TabIndex = 82;
+            this.chkTyposExtraLetter.Text = "Extra Letter";
+            this.chkTyposExtraLetter.UseVisualStyleBackColor = true;
+            // 
+            // chkTyposDoubleLetter
+            // 
+            this.chkTyposDoubleLetter.AutoSize = true;
+            this.chkTyposDoubleLetter.Checked = true;
+            this.chkTyposDoubleLetter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTyposDoubleLetter.Location = new System.Drawing.Point(279, 31);
+            this.chkTyposDoubleLetter.Name = "chkTyposDoubleLetter";
+            this.chkTyposDoubleLetter.Size = new System.Drawing.Size(97, 19);
+            this.chkTyposDoubleLetter.TabIndex = 81;
+            this.chkTyposDoubleLetter.Text = "Double Letter";
+            this.chkTyposDoubleLetter.UseVisualStyleBackColor = true;
+            // 
+            // chkTyposSkipLetter
+            // 
+            this.chkTyposSkipLetter.AutoSize = true;
+            this.chkTyposSkipLetter.Checked = true;
+            this.chkTyposSkipLetter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTyposSkipLetter.Location = new System.Drawing.Point(154, 31);
+            this.chkTyposSkipLetter.Name = "chkTyposSkipLetter";
+            this.chkTyposSkipLetter.Size = new System.Drawing.Size(81, 19);
+            this.chkTyposSkipLetter.TabIndex = 80;
+            this.chkTyposSkipLetter.Text = "Skip Letter";
+            this.chkTyposSkipLetter.UseVisualStyleBackColor = true;
+            // 
+            // chkTyposLetterSwap
+            // 
+            this.chkTyposLetterSwap.AutoSize = true;
+            this.chkTyposLetterSwap.Checked = true;
+            this.chkTyposLetterSwap.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTyposLetterSwap.Location = new System.Drawing.Point(12, 31);
+            this.chkTyposLetterSwap.Name = "chkTyposLetterSwap";
+            this.chkTyposLetterSwap.Size = new System.Drawing.Size(99, 19);
+            this.chkTyposLetterSwap.TabIndex = 79;
+            this.chkTyposLetterSwap.Text = "L-R Swapping";
+            this.chkTyposLetterSwap.UseVisualStyleBackColor = true;
             // 
             // chkIncludeWordNotLast
             // 
@@ -1163,6 +1284,7 @@ namespace BruteForceHash.GUI
             this.chkUtf8Toggle.Size = new System.Drawing.Size(15, 14);
             this.chkUtf8Toggle.TabIndex = 40;
             this.chkUtf8Toggle.UseVisualStyleBackColor = true;
+            this.chkUtf8Toggle.CheckedChanged += new System.EventHandler(this.Utf8ToggleCheckedChanged);
             // 
             // txtHashCatPath
             // 
@@ -1346,127 +1468,6 @@ namespace BruteForceHash.GUI
             this.btnStartHashCat.UseVisualStyleBackColor = true;
             this.btnStartHashCat.Click += new System.EventHandler(this.OnStartHashCatClick);
             // 
-            // chkTyposLetterSwap
-            // 
-            this.chkTyposLetterSwap.AutoSize = true;
-            this.chkTyposLetterSwap.Checked = true;
-            this.chkTyposLetterSwap.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposLetterSwap.Location = new System.Drawing.Point(12, 31);
-            this.chkTyposLetterSwap.Name = "chkTyposLetterSwap";
-            this.chkTyposLetterSwap.Size = new System.Drawing.Size(99, 19);
-            this.chkTyposLetterSwap.TabIndex = 79;
-            this.chkTyposLetterSwap.Text = "L-R Swapping";
-            this.chkTyposLetterSwap.UseVisualStyleBackColor = true;
-            // 
-            // grpTypos
-            // 
-            this.grpTypos.Controls.Add(this.chkTyposReverseLetter);
-            this.grpTypos.Controls.Add(this.chkTyposWrongLetter);
-            this.grpTypos.Controls.Add(this.chkTyposExtraLetter);
-            this.grpTypos.Controls.Add(this.chkTyposDoubleLetter);
-            this.grpTypos.Controls.Add(this.chkTyposSkipLetter);
-            this.grpTypos.Controls.Add(this.chkTyposLetterSwap);
-            this.grpTypos.Location = new System.Drawing.Point(377, 482);
-            this.grpTypos.Name = "grpTypos";
-            this.grpTypos.Size = new System.Drawing.Size(384, 100);
-            this.grpTypos.TabIndex = 80;
-            this.grpTypos.TabStop = false;
-            this.grpTypos.Text = "Typos";
-            // 
-            // chkTyposSkipLetter
-            // 
-            this.chkTyposSkipLetter.AutoSize = true;
-            this.chkTyposSkipLetter.Checked = true;
-            this.chkTyposSkipLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposSkipLetter.Location = new System.Drawing.Point(154, 31);
-            this.chkTyposSkipLetter.Name = "chkTyposSkipLetter";
-            this.chkTyposSkipLetter.Size = new System.Drawing.Size(81, 19);
-            this.chkTyposSkipLetter.TabIndex = 80;
-            this.chkTyposSkipLetter.Text = "Skip Letter";
-            this.chkTyposSkipLetter.UseVisualStyleBackColor = true;
-            // 
-            // chkTyposDoubleLetter
-            // 
-            this.chkTyposDoubleLetter.AutoSize = true;
-            this.chkTyposDoubleLetter.Checked = true;
-            this.chkTyposDoubleLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposDoubleLetter.Location = new System.Drawing.Point(279, 31);
-            this.chkTyposDoubleLetter.Name = "chkTyposDoubleLetter";
-            this.chkTyposDoubleLetter.Size = new System.Drawing.Size(97, 19);
-            this.chkTyposDoubleLetter.TabIndex = 81;
-            this.chkTyposDoubleLetter.Text = "Double Letter";
-            this.chkTyposDoubleLetter.UseVisualStyleBackColor = true;
-            // 
-            // chkTyposExtraLetter
-            // 
-            this.chkTyposExtraLetter.AutoSize = true;
-            this.chkTyposExtraLetter.Checked = true;
-            this.chkTyposExtraLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposExtraLetter.Location = new System.Drawing.Point(12, 65);
-            this.chkTyposExtraLetter.Name = "chkTyposExtraLetter";
-            this.chkTyposExtraLetter.Size = new System.Drawing.Size(85, 19);
-            this.chkTyposExtraLetter.TabIndex = 82;
-            this.chkTyposExtraLetter.Text = "Extra Letter";
-            this.chkTyposExtraLetter.UseVisualStyleBackColor = true;
-            // 
-            // chkTyposWrongLetter
-            // 
-            this.chkTyposWrongLetter.AutoSize = true;
-            this.chkTyposWrongLetter.Checked = true;
-            this.chkTyposWrongLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposWrongLetter.Location = new System.Drawing.Point(154, 65);
-            this.chkTyposWrongLetter.Name = "chkTyposWrongLetter";
-            this.chkTyposWrongLetter.Size = new System.Drawing.Size(95, 19);
-            this.chkTyposWrongLetter.TabIndex = 83;
-            this.chkTyposWrongLetter.Text = "Wrong Letter";
-            this.chkTyposWrongLetter.UseVisualStyleBackColor = true;
-            // 
-            // chkTyposReverseLetter
-            // 
-            this.chkTyposReverseLetter.AutoSize = true;
-            this.chkTyposReverseLetter.Checked = true;
-            this.chkTyposReverseLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposReverseLetter.Location = new System.Drawing.Point(279, 65);
-            this.chkTyposReverseLetter.Name = "chkTyposReverseLetter";
-            this.chkTyposReverseLetter.Size = new System.Drawing.Size(99, 19);
-            this.chkTyposReverseLetter.TabIndex = 84;
-            this.chkTyposReverseLetter.Text = "Reverse Letter";
-            this.chkTyposReverseLetter.UseVisualStyleBackColor = true;
-            // 
-            // grpAdvanced
-            // 
-            this.grpAdvanced.Controls.Add(this.chkDictionaryAdvanced);
-            this.grpAdvanced.Controls.Add(this.lblMaxDelim);
-            this.grpAdvanced.Controls.Add(this.lblOnlyLastTwoWordsConcat);
-            this.grpAdvanced.Controls.Add(this.cbMaxDelim);
-            this.grpAdvanced.Controls.Add(this.chkOnlyLastTwoWordsConcat);
-            this.grpAdvanced.Controls.Add(this.lblMinDelim);
-            this.grpAdvanced.Controls.Add(this.lblOnlyFirstTwoWordsConcat);
-            this.grpAdvanced.Controls.Add(this.cbMinDelim);
-            this.grpAdvanced.Controls.Add(this.chkOnlyFirstTwoWordsConcat);
-            this.grpAdvanced.Controls.Add(this.lblMaxConsecutiveConcat);
-            this.grpAdvanced.Controls.Add(this.cbMinWordsLimit);
-            this.grpAdvanced.Controls.Add(this.cbMaxConsecutiveConcat);
-            this.grpAdvanced.Controls.Add(this.lblMinWordsLimit);
-            this.grpAdvanced.Controls.Add(this.lblMinConsecutiveConcat);
-            this.grpAdvanced.Controls.Add(this.cbMaxConsecutiveOnes);
-            this.grpAdvanced.Controls.Add(this.cbMinConsecutiveConcat);
-            this.grpAdvanced.Controls.Add(this.lblMaxConsecutiveOnes);
-            this.grpAdvanced.Controls.Add(this.lblMaxWordLength);
-            this.grpAdvanced.Controls.Add(this.cbMinOnes);
-            this.grpAdvanced.Controls.Add(this.cbMaxWordLength);
-            this.grpAdvanced.Controls.Add(this.lblMinOnes);
-            this.grpAdvanced.Controls.Add(this.lblMinWordLength);
-            this.grpAdvanced.Controls.Add(this.cbMaxOnes);
-            this.grpAdvanced.Controls.Add(this.cbMinWordLength);
-            this.grpAdvanced.Controls.Add(this.lblMaxOnes);
-            this.grpAdvanced.Location = new System.Drawing.Point(7, 292);
-            this.grpAdvanced.Name = "grpAdvanced";
-            this.grpAdvanced.Size = new System.Drawing.Size(364, 290);
-            this.grpAdvanced.TabIndex = 81;
-            this.grpAdvanced.TabStop = false;
-            this.grpAdvanced.Text = "Advanced Attack";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1489,8 +1490,8 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
             this.Controls.Add(this.mnStrip);
-            this.Controls.Add(this.pnlDictionary);
             this.Controls.Add(this.pnlCharacter);
+            this.Controls.Add(this.pnlDictionary);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.mnStrip;
             this.MaximizeBox = false;
@@ -1498,16 +1499,16 @@ namespace BruteForceHash.GUI
             this.Text = "BruteForceHash";
             this.pnlDictionary.ResumeLayout(false);
             this.pnlDictionary.PerformLayout();
+            this.grpAdvanced.ResumeLayout(false);
+            this.grpAdvanced.PerformLayout();
+            this.grpTypos.ResumeLayout(false);
+            this.grpTypos.PerformLayout();
             this.pnlCharacter.ResumeLayout(false);
             this.pnlCharacter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).EndInit();
             this.mnStrip.ResumeLayout(false);
             this.mnStrip.PerformLayout();
-            this.grpTypos.ResumeLayout(false);
-            this.grpTypos.PerformLayout();
-            this.grpAdvanced.ResumeLayout(false);
-            this.grpAdvanced.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

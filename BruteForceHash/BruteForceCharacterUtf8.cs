@@ -89,42 +89,49 @@ namespace BruteForceHash
             }
             else
             {
-                throw new Exception("Not implemented");
-                /*int searchLength = _stringLength - _options.Prefix.Length - _options.Suffix.Length;
+                int searchLength = _stringLength - Encoding.UTF8.GetByteCount(_options.Prefix) - Encoding.UTF8.GetByteCount(_options.Suffix);
                 int firstPosition = _options.StartPosition;
-                int lastPosition = _options.IncludeWord.Length - _options.EndPosition;
-                for (int i = firstPosition; i <= searchLength - lastPosition; i++)
-                {
-                    //Calculate pattern
-                    var pattern = _options.Prefix;
-                    for (int p = 0; p < i; p++)
-                        pattern += "*";
-                    pattern += _options.IncludeWord;
-                    for (int p = 0; p < searchLength - _options.IncludeWord.Length - i; p++)
-                        pattern += "*";
-                    pattern += _options.Suffix;
 
-                    if (i == 0)
+                var words = _options.IncludeWord.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var word in words)
+                {
+                    var trimmedWord = word.Trim();
+                    var trimmedWordLength = Encoding.UTF8.GetByteCount(trimmedWord);
+
+                    int lastPosition = trimmedWordLength - _options.EndPosition;
+                    for (int i = firstPosition; i <= searchLength - lastPosition; i++)
                     {
-                        RunCharacterBruteForce(tasks, factory, _validStartBytes, _options.Prefix + _options.IncludeWord, pattern, i);
-                    }
-                    else if (i <= 1)
-                    {
-                        RunCharacterBruteForce(tasks, factory, _validStartBytes, _options.Prefix, pattern, i);
-                    }
-                    else
-                    {
-                        int[] levelTable = new int[searchLength];
-                        for (int l = 0; l < searchLength; l++)
+                        //Calculate pattern
+                        var pattern = _options.Prefix;
+                        for (int p = 0; p < i; p++)
+                            pattern += "*";
+                        pattern += trimmedWord;
+                        for (int p = 0; p < searchLength - trimmedWordLength - i; p++)
+                            pattern += "*";
+                        pattern += _options.Suffix;
+
+                        if (i == 0)
                         {
-                            if (l == i - 2)
-                                levelTable[l] = _options.IncludeWord.Length + 1;
-                            else
-                                levelTable[l] = 1;
+                            RunCharacterBruteForce(tasks, factory, _validStartCharsString, _options.Prefix + trimmedWord, trimmedWord, pattern, i);
                         }
-                        RunCharacterBruteForce(tasks, factory, _validStartBytes, _options.Prefix, pattern, i, levelTable);
+                        else if (i <= 1)
+                        {
+                            RunCharacterBruteForce(tasks, factory, _validStartCharsString, _options.Prefix, trimmedWord, pattern, i);
+                        }
+                        else
+                        {
+                            int[] levelTable = new int[searchLength];
+                            for (int l = 0; l < searchLength; l++)
+                            {
+                                if (l == i - 2)
+                                    levelTable[l] = trimmedWordLength + 1;
+                                else
+                                    levelTable[l] = 1;
+                            }
+                            RunCharacterBruteForce(tasks, factory, _validStartCharsString, _options.Prefix, trimmedWord, pattern, i, levelTable);
+                        }
                     }
-                }*/
+                }   
             }
 
             // Wait for the tasks to complete before displaying a completion message.
@@ -132,12 +139,15 @@ namespace BruteForceHash
             cts.Dispose();
         }
 
-        private void RunCharacterBruteForce(List<Task> tasks, TaskFactory factory, string validStartCharsString, string prefix, string pattern = null, int patternPosition = 0, int[] levelTable = null)
+        private void RunCharacterBruteForce(List<Task> tasks, TaskFactory factory, string validStartCharsString, string prefix, string includeWord = null, string pattern = null, int patternPosition = 0, int[] levelTable = null)
         {
             int searchLength = _stringLength - Encoding.UTF8.GetByteCount(prefix) - Encoding.UTF8.GetByteCount(_options.Suffix);
             for (var t = 0; t < validStartCharsString.Length; t++)
             {
                 var startingCharacter = _validStartCharsString[t];
+                var characterLength = Encoding.UTF8.GetBytes(startingCharacter.ToString()).Length;
+                if (patternPosition > 0 && patternPosition - characterLength < 0)
+                    continue;
                 var task = factory.StartNew(() =>
                 {
                     ByteString strBuilder;
@@ -158,20 +168,19 @@ namespace BruteForceHash
                         if (patternPosition == 0)
                         {
                             strBuilder = new ByteString(_stringLength, _hexValue, prefix + startingCharacter, _options.Suffix);
-                            DiveByteSimple(strBuilder, 0, searchLength - Encoding.UTF8.GetBytes(startingCharacter.ToString()).Length);
+                            DiveByteSimple(strBuilder, 0, searchLength - characterLength);
                         }
-                        //Not implemented
-                        /*else if (patternPosition == 1)
+                        else if (patternPosition == 1)
                         {
-                            strBuilder = new ByteString(_stringLength, _hexValue, prefix + startingCharacter + _options.IncludeWord, _options.Suffix);
-                            DiveByteSimple(strBuilder, 0, searchLength - _options.IncludeWord.Length);
+                            strBuilder = new ByteString(_stringLength, _hexValue, prefix + startingCharacter + includeWord, _options.Suffix);
+                            DiveByteSimple(strBuilder, 0, searchLength - Encoding.UTF8.GetByteCount(includeWord) - characterLength);
                         }
                         else
                         {
                             strBuilder = new ByteString(_stringLength, _hexValue, prefix + startingCharacter, _options.Suffix);
-                            strBuilder.Replace(_options.IncludeWord, patternPosition + prefix.Length);
-                            DiveByte(strBuilder, 0, searchLength, levelTable, patternPosition);
-                        }*/
+                            strBuilder.Replace(includeWord, patternPosition + Encoding.UTF8.GetByteCount(prefix));
+                            DiveByte(strBuilder, 0, searchLength - characterLength, levelTable, patternPosition);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -182,16 +191,26 @@ namespace BruteForceHash
             }
         }
 
-        private void DiveByte(ByteString candidate, int level, int searchLength, int[] levelTable, int patternPosition)
+        private void DiveByte(ByteString candidate, int level, int searchLength, int[] levelTable, int patternPosition, int currentUtf8Value = 0)
         {
             int levelp = level + levelTable[level];
-            foreach (byte b in _validBytes)
+
+            byte[] charsetBytes;
+            if (currentUtf8Value > 127 && _mappingBytes.ContainsKey(currentUtf8Value))
+                charsetBytes = _mappingBytes[currentUtf8Value];
+            else
+            {
+                charsetBytes = _validBytes;
+                currentUtf8Value = 0;
+            }
+
+            foreach (byte b in charsetBytes)
             {
                 if (levelp < searchLength)
                 {
                     candidate.Replace(b);
                     candidate.Cursor += levelTable[level];
-                    DiveByte(candidate, levelp, searchLength, levelTable, patternPosition);
+                    DiveByte(candidate, levelp, searchLength, levelTable, patternPosition, (currentUtf8Value << 8) + b);
                     candidate.Cursor -= levelTable[level];
                     continue;
                 }

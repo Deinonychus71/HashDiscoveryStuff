@@ -564,5 +564,10 @@ namespace BruteForceHash.GUI
             cbMinConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;
             btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
         }
+
+        private void Utf8ToggleCheckedChanged(object sender, EventArgs e)
+        {
+            btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
+        }
     }
 }
