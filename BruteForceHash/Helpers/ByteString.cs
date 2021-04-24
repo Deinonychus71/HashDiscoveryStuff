@@ -43,13 +43,13 @@ namespace BruteForceHash.Helpers
         #region Append
         public void Append(string value, int position)
         {
-            var bytes = Encoding.ASCII.GetBytes(value);
+            var bytes = Encoding.UTF8.GetBytes(value);
             Append(bytes, position);
         }
 
         public void Append(string value)
         {
-            var bytes = Encoding.ASCII.GetBytes(value);
+            var bytes = Encoding.UTF8.GetBytes(value);
             Append(bytes);
         }
 
@@ -79,13 +79,13 @@ namespace BruteForceHash.Helpers
 
         public void Replace(string value)
         {
-            var bytes = Encoding.ASCII.GetBytes(value);
+            var bytes = Encoding.UTF8.GetBytes(value);
             bytes.CopyTo(_value, Cursor);
         }
 
         public void Replace(string value, int position)
         {
-            var bytes = Encoding.ASCII.GetBytes(value);
+            var bytes = Encoding.UTF8.GetBytes(value);
             bytes.CopyTo(_value, position);
         }
 
@@ -152,7 +152,7 @@ namespace BruteForceHash.Helpers
             if (_wasOptimized)
                 return Encoding.UTF8.GetString(_value);
             else
-                return Encoding.UTF8.GetString(_value, _prefix.Length, _value.Length - _prefix.Length - _suffix.Length);
+                return Encoding.UTF8.GetString(_value, Encoding.UTF8.GetByteCount(_prefix), _value.Length - Encoding.UTF8.GetByteCount(_prefix) - Encoding.UTF8.GetByteCount(_suffix));
         }
     }
 }

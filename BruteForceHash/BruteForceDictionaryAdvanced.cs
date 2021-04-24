@@ -53,14 +53,14 @@ namespace BruteForceHash
             if (string.IsNullOrEmpty(options.Delimiter))
             {
                 _delimiter = "|";
-                _delimiterByte = Encoding.ASCII.GetBytes("|")[0];
+                _delimiterByte = Encoding.UTF8.GetBytes("|")[0];
                 _delimiterLength = 0;
             }
             else
             {
                 _delimiter = options.Delimiter;
-                _delimiterByte = Encoding.ASCII.GetBytes(options.Delimiter)[0];
-                _delimiterLength = _delimiter.Length;
+                _delimiterByte = Encoding.UTF8.GetBytes(options.Delimiter)[0];
+                _delimiterLength = Encoding.UTF8.GetByteCount(_delimiter);
             }
 
             _maxDelimiters = options.MaxDelimiters;
@@ -99,7 +99,7 @@ namespace BruteForceHash
             _stringLength = stringLength;
 
             //Generate combinations
-            var combinationSize = _stringLength - options.Prefix.Length - options.Suffix.Length;
+            var combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
             _maxWordLength = Math.Min(options.MaxWordLength, _stringLength);
             _combinationPatterns = GenerateCombinations(combinationSize);
 
@@ -191,12 +191,12 @@ namespace BruteForceHash
 
             if (_options.Verbose)
             {
-                for (int i = 1; i <= _stringLength - _options.Prefix.Length - _options.Suffix.Length; i++)
+                for (int i = 1; i <= _stringLength - Encoding.UTF8.GetByteCount(_options.Prefix) - Encoding.UTF8.GetByteCount(_options.Suffix); i++)
                 {
                     _logger.Log($"{i}-letter words: {_dictionaries[$"{{{i}}}"].Length}", false);
                 }
             }
-            _logger.Log($"Search on: {_stringLength - _options.Prefix.Length - _options.Suffix.Length} characters");
+            _logger.Log($"Search on: {_stringLength - Encoding.UTF8.GetByteCount(_options.Prefix) - Encoding.UTF8.GetByteCount(_options.Suffix)} characters");
             _logger.Log("-----------------------------------------");
 
             foreach (var combinationPattern in _combinationPatterns)
@@ -300,7 +300,7 @@ namespace BruteForceHash
                         candidate.Append(_delimiterByte);
                     combinationPattern = combinationPattern[(currentWord.Length + 1)..];
                     RunDictionaries(candidate, combinationPattern, false);
-                    candidate.Cursor -= currentWord.Length + (appendDelimiterByte ? _delimiterLength : 0);
+                    candidate.Cursor -= Encoding.UTF8.GetByteCount(currentWord) + (appendDelimiterByte ? _delimiterLength : 0);
                     return;
                 }
                 combinationPattern = combinationPattern[(nextDelimiter + 1)..];
@@ -391,7 +391,7 @@ namespace BruteForceHash
                     if (forceLowerCase)
                         wordToAdd = word.ToLower();
 
-                    if (addTypos && wordToAdd.Length > 3)
+                    if (addTypos && Encoding.UTF8.GetByteCount(wordToAdd) > 3)
                     {
                         var allNewWords = new List<string>();
                         allNewWords.Add(wordToAdd);
@@ -400,14 +400,14 @@ namespace BruteForceHash
                             allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, 'l', 'r'));
                         foreach (var newWord in allNewWords)
                         {
-                            var lengthStr = $"{{{newWord.Length}}}";
+                            var lengthStr = $"{{{Encoding.UTF8.GetByteCount(newWord)}}}";
                             if (!dictionary[lengthStr].Contains(newWord))
                                 dictionary[lengthStr].Add(newWord);
                         }
                     }
                     else
                     {
-                        var lengthStr = $"{{{wordToAdd.Length}}}";
+                        var lengthStr = $"{{{Encoding.UTF8.GetByteCount(wordToAdd)}}}";
                         if (!dictionary[lengthStr].Contains(wordToAdd))
                             dictionary[lengthStr].Add(wordToAdd);
                     }
@@ -418,9 +418,9 @@ namespace BruteForceHash
             {
                 output.Add(entry.Key, new byte[entry.Value.Count][]);
                 if (reverseOrder)
-                    output[entry.Key] = entry.Value.OrderByDescending(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
+                    output[entry.Key] = entry.Value.OrderByDescending(p => p).Select(p => Encoding.UTF8.GetBytes(p)).ToArray();
                 else
-                    output[entry.Key] = entry.Value.OrderBy(p => p).Select(p => Encoding.ASCII.GetBytes(p)).ToArray();
+                    output[entry.Key] = entry.Value.OrderBy(p => p).Select(p => Encoding.UTF8.GetBytes(p)).ToArray();
             }
 
             return output;
@@ -432,7 +432,7 @@ namespace BruteForceHash
                 ? new[] { char1.ToString(), char2.ToString() }
                 : new[] { input[0].ToString() };
 
-            var tails = input.Length > 1
+            var tails = Encoding.UTF8.GetByteCount(input) > 1
                 ? GenerateLetterSwapTypos(input.Substring(1), char1, char2)
                 : new[] { "" };
 
@@ -514,13 +514,14 @@ namespace BruteForceHash
         private IEnumerable<string> GenerateTypos(string word)
         {
             var typo = new List<string>();
+            var wordLength = Encoding.UTF8.GetByteCount(word);
 
-            if (word.Length < 2)
+            if (wordLength < 2)
                 return typo;
 
             var qwertyKeyboard = GetKeyboardMapping();
 
-            for (var j = word.Length - 1; j >= 0; j--)
+            for (var j = wordLength - 1; j >= 0; j--)
             {
                 if (_options.TyposEnableSkipLetter)
                     typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip letter
@@ -540,7 +541,7 @@ namespace BruteForceHash
                 if (_options.TyposEnableReverseLetter)
                 {
                     // Reverse letters
-                    if (word.Length > j + 1)
+                    if (wordLength > j + 1)
                     {
                         var tempChar = word[j];
                         var tempChar2 = word[j + 1];
@@ -602,27 +603,28 @@ namespace BruteForceHash
                         var wordCandidates = new List<string>() { combination };
                         foreach (var includeWord in includeWords)
                         {
+                            var includeWordSize = Encoding.UTF8.GetByteCount(includeWord);
                             string combinationMatch;
                             string combinationRegexp;
                             if (_options.IncludeWordNotFirst && _options.IncludeWordNotLast)
                             {
-                                combinationMatch = $"{_delimiter}{{{includeWord.Length}}}{_delimiter}";
-                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWord.Length}}}{_delimiter}");
+                                combinationMatch = $"{_delimiter}{{{includeWordSize}}}{_delimiter}";
+                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWordSize}}}{_delimiter}");
                             }
                             else if (_options.IncludeWordNotLast)
                             {
-                                combinationMatch = $"{{{includeWord.Length}}}{_delimiter}";
-                                combinationRegexp = Regex.Escape($"{{{includeWord.Length}}}{_delimiter}");
+                                combinationMatch = $"{{{includeWordSize}}}{_delimiter}";
+                                combinationRegexp = Regex.Escape($"{{{includeWordSize}}}{_delimiter}");
                             }
                             else if (_options.IncludeWordNotFirst)
                             {
-                                combinationMatch = $"{_delimiter}{{{includeWord.Length}}}";
-                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWord.Length}}}");
+                                combinationMatch = $"{_delimiter}{{{includeWordSize}}}";
+                                combinationRegexp = Regex.Escape($"{_delimiter}{{{includeWordSize}}}");
                             }
                             else
                             {
-                                combinationMatch = $"{{{includeWord.Length}}}";
-                                combinationRegexp = "\\{" + includeWord.Length + "\\}";
+                                combinationMatch = $"{{{includeWordSize}}}";
+                                combinationRegexp = "\\{" + includeWordSize + "\\}";
                             }
                             var tempWordCandidates = new List<string>();
                             foreach (var wordCandidate in wordCandidates)
@@ -723,7 +725,7 @@ namespace BruteForceHash
                                 {
                                     returnCombinations.Add($"{{{pattern}}}");
                                 }
-                                else if (remainingStringPattern != "invalid" && (remainingStringPattern.Length - remainingStringPattern.Replace("{", "").Length) + wordsSoFar + 1 <= _maxWords && (_maxDelimiters == -1 || (remainingStringPattern.Length - remainingStringPattern.Replace(_delimiter, "").Length) + soFar <= _maxDelimiters))
+                                else if (remainingStringPattern != "invalid" && (Encoding.UTF8.GetByteCount(remainingStringPattern) - Encoding.UTF8.GetByteCount(remainingStringPattern.Replace("{", ""))) + wordsSoFar + 1 <= _maxWords && (_maxDelimiters == -1 || (remainingStringPattern.Length - remainingStringPattern.Replace(_delimiter, "").Length) + soFar <= _maxDelimiters))
                                 {
                                     if (j == 1)
                                         returnCombinations.Add($"{{{pattern}}}{_delimiter}{remainingStringPattern}");
@@ -821,16 +823,18 @@ namespace BruteForceHash
             if (nthOccurrence > 0)
             {
                 var matchCollection = Regex.Matches(obj, Regex.Escape(find));
+                var delimiterLength = Encoding.UTF8.GetByteCount(_delimiter);
                 if (matchCollection.Count >= nthOccurrence)
                 {
                     var match = matchCollection[nthOccurrence - 1];
+                    var matchLength = Encoding.UTF8.GetByteCount(match.Value);
                     if (_options.IncludeWordNotLast && _options.IncludeWordNotFirst)
-                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length * 2).Insert(match.Index + _delimiter.Length, replace);
+                        return obj.Remove(match.Index + delimiterLength, matchLength - delimiterLength * 2).Insert(match.Index + delimiterLength, replace);
                     else if (_options.IncludeWordNotLast)
-                        return obj.Remove(match.Index, match.Length - _delimiter.Length).Insert(match.Index, replace);
+                        return obj.Remove(match.Index, matchLength - delimiterLength).Insert(match.Index, replace);
                     if (_options.IncludeWordNotFirst)
-                        return obj.Remove(match.Index + _delimiter.Length, match.Length - _delimiter.Length).Insert(match.Index + _delimiter.Length, replace);
-                    return obj.Remove(match.Index, match.Length).Insert(match.Index, replace);
+                        return obj.Remove(match.Index + delimiterLength, matchLength - delimiterLength).Insert(match.Index + delimiterLength, replace);
+                    return obj.Remove(match.Index, matchLength).Insert(match.Index, replace);
                 }
             }
             return obj;
