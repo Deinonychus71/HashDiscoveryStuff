@@ -325,12 +325,13 @@ namespace BruteForceHash
                 {
                     if (word.Length == 0)
                         continue;
-                    if (skipDigits && word.Any(char.IsDigit))
+
+                    var wordToAdd = word.Length > 1 ? word.Trim() : word;
+                    if (skipDigits && wordToAdd.Any(char.IsDigit))
                         continue;
-                    if (skipSpecials && !_specialCharactersRegex.IsMatch(word))
+                    if (skipSpecials && !_specialCharactersRegex.IsMatch(wordToAdd))
                         continue;
 
-                    var wordToAdd = word;
                     if (forceLowerCase)
                         wordToAdd = word.ToLower();
 
