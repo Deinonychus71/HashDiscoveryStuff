@@ -75,13 +75,13 @@ namespace HashParser
                     {
                         Hex = p.Key,
                         KeyOrValue = "Key",
-                        FilePaths = string.Join(", ", p.Select(p2 => p2.FilePath).Distinct())
+                        FilePaths = string.Join(" | ", p.Select(p2 => p2.FilePath).Distinct().Take(10))
                     });
                     var groupedValues = outputUncracked.Where(p => p.ValueHexa != null && p.ValueLabel.StartsWith("0x")).GroupBy(p => p.ValueLabel).Select(p => new CsvEntryUncracked()
                     {
                         Hex = p.Key,
                         KeyOrValue = "Value",
-                        FilePaths = string.Join(", ", p.Select(p2 => p2.FilePath).Distinct())
+                        FilePaths = string.Join(" | ", p.Select(p2 => p2.FilePath).Distinct().Take(10))
                     });
                     var grouped = new List<CsvEntryUncracked>();
                     grouped.AddRange(groupedKeys);
