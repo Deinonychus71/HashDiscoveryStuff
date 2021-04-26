@@ -12,5 +12,8 @@ namespace HashParser
 
         [Option('p', "input_param_labels", Required = false, Default = "ParamLabels.csv", HelpText = "Input ParamLabel")]
         public string InputParamLabelsFile { get; set; }
+
+        [Option('u', "track_uncracked", Required = false, Default = false, HelpText = "Track uncracked hashes in one file")]
+        public bool TrackUncracked { get; set; }
     }
 }

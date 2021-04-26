@@ -2,7 +2,7 @@
   "profiles": {
     "HashParser": {
       "commandName": "Project",
-      "commandLineArgs": "-i C:\\Users\\deihn\\Desktop\\bruteforcepublish\\params11"
+      "commandLineArgs": "-i C:\\Users\\deihn\\Desktop\\bruteforcepublish\\params11 --track_uncracked"
     }
   }
 }

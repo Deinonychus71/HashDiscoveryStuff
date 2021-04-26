@@ -34,6 +34,7 @@ namespace HashParser
                 filesPrc.AddRange(Directory.GetFiles(o.InputPath, "*.stprm", SearchOption.AllDirectories));
                 filesPrc.AddRange(Directory.GetFiles(o.InputPath, "*.stdat", SearchOption.AllDirectories));
                 var dictHashes = GetParamLabels(o.InputParamLabelsFile);
+                var outputUncracked = new List<CsvEntry>();
 
                 foreach (var file in filesPrc)
                 {
@@ -45,15 +46,78 @@ namespace HashParser
                     var t = new ParamFile();
                     t.Open(file);
 
-                    ParseStruct(output, t.Root.Nodes, dictHashes, string.Empty, string.Empty);
+                    if(o.TrackUncracked)
+                        ParseStruct(outputUncracked, t.Root.Nodes, dictHashes, inputFileRelative, string.Empty, string.Empty, o.TrackUncracked);
+                    else
+                        ParseStruct(output, t.Root.Nodes, dictHashes, inputFileRelative, string.Empty, string.Empty, o.TrackUncracked);
 
-                    using (var writer = new StreamWriter(outputFile))
+                    if (!o.TrackUncracked)
+                    {
+                        using (var writer = new StreamWriter(outputFile))
+                        {
+                            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                            {
+                                csv.WriteHeader<CsvEntry>();
+                                csv.NextRecord();
+                                foreach (var record in output)
+                                {
+                                    csv.WriteRecord(record);
+                                    csv.NextRecord();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (o.TrackUncracked)
+                {
+                    var groupedKeys = outputUncracked.Where(p => p.KeyHexa != null && p.KeyLabel.StartsWith("0x")).GroupBy(p => p.KeyLabel).Select(p => new CsvEntryUncracked()
+                    {
+                        Hex = p.Key,
+                        KeyOrValue = "Key",
+                        FilePaths = string.Join(", ", p.Select(p2 => p2.FilePath).Distinct())
+                    });
+                    var groupedValues = outputUncracked.Where(p => p.ValueHexa != null && p.ValueLabel.StartsWith("0x")).GroupBy(p => p.ValueLabel).Select(p => new CsvEntryUncracked()
+                    {
+                        Hex = p.Key,
+                        KeyOrValue = "Value",
+                        FilePaths = string.Join(", ", p.Select(p2 => p2.FilePath).Distinct())
+                    });
+                    var grouped = new List<CsvEntryUncracked>();
+                    grouped.AddRange(groupedKeys);
+                    grouped.AddRange(groupedValues);
+
+                    //Double check
+                    foreach(var group in grouped)
+                    {
+                        var test = GetHexaLabel(dictHashes, Convert.ToUInt64(group.Hex, 16));
+                        if (!test.StartsWith("0x"))
+                            Console.WriteLine("uncracked_hashes_grouped.csv");
+                    }
+
+                    //Generate uncracked_hashes_grouped.csv
+                    using (var writer = new StreamWriter("uncracked_hashes_grouped.csv"))
+                    {
+                        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                        {
+                            csv.WriteHeader<CsvEntryUncracked>();
+                            csv.NextRecord();
+                            foreach (var record in grouped)
+                            {
+                                csv.WriteRecord(record);
+                                csv.NextRecord();
+                            }
+                        }
+                    }
+
+                    //Generate uncracked_hashes.csv
+                    using (var writer = new StreamWriter("uncracked_hashes.csv"))
                     {
                         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                         {
                             csv.WriteHeader<CsvEntry>();
                             csv.NextRecord();
-                            foreach (var record in output)
+                            foreach (var record in outputUncracked)
                             {
                                 csv.WriteRecord(record);
                                 csv.NextRecord();
@@ -64,58 +128,74 @@ namespace HashParser
             });
         }
 
-        private static void ParseStruct(List<CsvEntry> csvEntries, Hash40Pairs<IParam> nodes, Dictionary<ulong, string> dictHashes, string fullPath, string listPath)
+        private static void ParseStruct(List<CsvEntry> csvEntries, Hash40Pairs<IParam> nodes, Dictionary<ulong, string> dictHashes, string filePath, string fullPath, string listPath, bool uncrackedOnly)
         {
             foreach (var prm in nodes)
             {
                 if (prm.Value.TypeKey == ParamType.list)
                 {
                     var list = (ParamList)prm.Value;
-                    csvEntries.Add(new CsvEntry()
+                    string keyLabel = GetHexaLabel(dictHashes, prm.Key);
+                    if (!uncrackedOnly || keyLabel.StartsWith("0x"))
                     {
-                        FullPath = fullPath,
-                        ListPath = listPath,
-                        KeyHexa = $"0x{prm.Key:x10}",
-                        KeyLabel = GetHexaTitle(dictHashes, prm.Key),
-                        Type = prm.Value.TypeKey.ToString(),
-                        ValueLabel = list.Nodes.Count.ToString()
-                    });
-                    ParseList(csvEntries, list.Nodes, dictHashes, $"{fullPath}/{GetHexaTitle(dictHashes, prm.Key)}", $"{fullPath}/{GetHexaTitle(dictHashes, prm.Key)}");
+                        csvEntries.Add(new CsvEntry()
+                        {
+                            FilePath = filePath,
+                            FullPath = fullPath,
+                            ListPath = listPath,
+                            KeyHexa = $"0x{prm.Key:x10}",
+                            KeyLabel = keyLabel,
+                            Type = prm.Value.TypeKey.ToString(),
+                            ValueLabel = list.Nodes.Count.ToString()
+                        });
+                    }
+                    ParseList(csvEntries, list.Nodes, dictHashes, filePath, $"{fullPath}/{GetHexaLabel(dictHashes, prm.Key)}", $"{fullPath}/{GetHexaLabel(dictHashes, prm.Key)}", uncrackedOnly);
                 }
                 else if (prm.Value.TypeKey == ParamType.hash40)
                 {
                     var valueHex = (ulong)(prm.Value as ParamValue).Value;
-                    csvEntries.Add(new CsvEntry()
+                    string keyLabel = GetHexaLabel(dictHashes, prm.Key);
+                    string valueLabel = GetHexaLabel(dictHashes, valueHex);
+                    if (!uncrackedOnly || keyLabel.StartsWith("0x") || valueLabel.StartsWith("0x"))
                     {
-                        FullPath = fullPath,
-                        ListPath = listPath,
-                        KeyHexa = $"0x{prm.Key:x10}",
-                        KeyLabel = GetHexaTitle(dictHashes, prm.Key),
-                        Type = prm.Value.TypeKey.ToString(),
-                        ValueHexa = $"0x{valueHex:x10}",
-                        ValueLabel = GetHexaTitle(dictHashes, valueHex)
-                    });
+                        csvEntries.Add(new CsvEntry()
+                        {
+                            FilePath = filePath,
+                            FullPath = fullPath,
+                            ListPath = listPath,
+                            KeyHexa = $"0x{prm.Key:x10}",
+                            KeyLabel = keyLabel,
+                            Type = prm.Value.TypeKey.ToString(),
+                            ValueHexa = $"0x{valueHex:x10}",
+                            ValueLabel = valueLabel
+                        });
+                    }
                 }
                 else if (prm.Value.TypeKey == ParamType.@struct)
                 {
-                    ParseStruct(csvEntries, ((ParamStruct)prm.Value).Nodes, dictHashes, $"{fullPath}/{GetHexaTitle(dictHashes, prm.Key)}", $"{fullPath}/{GetHexaTitle(dictHashes, prm.Key)}");
+                    ParseStruct(csvEntries, ((ParamStruct)prm.Value).Nodes, dictHashes, filePath, $"{fullPath}/{GetHexaLabel(dictHashes, prm.Key)}", $"{fullPath}/{GetHexaLabel(dictHashes, prm.Key)}", uncrackedOnly);
                 }
                 else
                 {
-                    csvEntries.Add(new CsvEntry()
+                    string keyLabel = GetHexaLabel(dictHashes, prm.Key);
+                    if (!uncrackedOnly || keyLabel.StartsWith("0x"))
                     {
-                        FullPath = fullPath,
-                        ListPath = listPath,
-                        KeyHexa = $"0x{prm.Key:x10}",
-                        KeyLabel = GetHexaTitle(dictHashes, prm.Key),
-                        Type = prm.Value.TypeKey.ToString(),
-                        ValueLabel = ((ParamValue)prm.Value).Value.ToString()
-                    });
+                        csvEntries.Add(new CsvEntry()
+                        {
+                            FilePath = filePath,
+                            FullPath = fullPath,
+                            ListPath = listPath,
+                            KeyHexa = $"0x{prm.Key:x10}",
+                            KeyLabel = keyLabel,
+                            Type = prm.Value.TypeKey.ToString(),
+                            ValueLabel = ((ParamValue)prm.Value).Value.ToString()
+                        });
+                    }
                 }
             }
         }
 
-        private static void ParseList(List<CsvEntry> csvEntries, List<IParam> nodes, Dictionary<ulong, string> dictHashes, string fullPath, string listPath)
+        private static void ParseList(List<CsvEntry> csvEntries, List<IParam> nodes, Dictionary<ulong, string> dictHashes, string filePath, string fullPath, string listPath, bool uncrackedOnly)
         {
             int i = 0;
             foreach (var prm in nodes)
@@ -123,47 +203,60 @@ namespace HashParser
                 if (prm.TypeKey == ParamType.list)
                 {
                     var list = (ParamList)prm;
-                    csvEntries.Add(new CsvEntry()
+                    if (!uncrackedOnly)
                     {
-                        FullPath = fullPath,
-                        ListPath = listPath,
-                        KeyHexa = i.ToString(),
-                        Type = prm.TypeKey.ToString(),
-                        ValueLabel = list.Nodes.Count.ToString()
-                    });
-                    ParseList(csvEntries, list.Nodes, dictHashes, $"{fullPath}/{i}", fullPath);
+                        csvEntries.Add(new CsvEntry()
+                        {
+                            FilePath = filePath,
+                            FullPath = fullPath,
+                            ListPath = listPath,
+                            KeyHexa = i.ToString(),
+                            Type = prm.TypeKey.ToString(),
+                            ValueLabel = list.Nodes.Count.ToString()
+                        });
+                    }
+                    ParseList(csvEntries, list.Nodes, dictHashes, filePath, $"{fullPath}/{i}", fullPath, uncrackedOnly);
                 }
                 else if (prm.TypeKey == ParamType.hash40)
                 {
                     var valueHex = (ulong)(prm as ParamValue).Value;
-                    csvEntries.Add(new CsvEntry()
+                    string valueLabel = GetHexaLabel(dictHashes, valueHex);
+                    if (!uncrackedOnly || valueLabel.StartsWith("0x"))
                     {
-                        FullPath = fullPath,
-                        ListPath = listPath,
-                        KeyLabel = i.ToString(),
-                        Type = prm.TypeKey.ToString(),
-                        ValueHexa = $"0x{valueHex:x10}",
-                        ValueLabel = GetHexaTitle(dictHashes, valueHex)
-                    });
+                        csvEntries.Add(new CsvEntry()
+                        {
+                            FilePath = filePath,
+                            FullPath = fullPath,
+                            ListPath = listPath,
+                            KeyLabel = i.ToString(),
+                            Type = prm.TypeKey.ToString(),
+                            ValueHexa = $"0x{valueHex:x10}",
+                            ValueLabel = valueLabel
+                        });
+                    }
                 }
                 else if (prm.TypeKey == ParamType.@struct)
                 {
-                    ParseStruct(csvEntries, ((ParamStruct)prm).Nodes, dictHashes, $"{fullPath}/{i}", fullPath);
+                    ParseStruct(csvEntries, ((ParamStruct)prm).Nodes, dictHashes, filePath, $"{fullPath}/{i}", fullPath, uncrackedOnly);
                 }
                 else
                 {
-                    csvEntries.Add(new CsvEntry()
+                    if (!uncrackedOnly)
                     {
-                        KeyHexa = i.ToString(),
-                        Type = prm.TypeKey.ToString(),
-                        ValueLabel = ((ParamValue)prm).Value.ToString()
-                    });
+                        csvEntries.Add(new CsvEntry()
+                        {
+                            FilePath = filePath,
+                            KeyHexa = i.ToString(),
+                            Type = prm.TypeKey.ToString(),
+                            ValueLabel = ((ParamValue)prm).Value.ToString()
+                        });
+                    }
                 }
                 i++;
             }
         }
 
-        private static string GetHexaTitle(Dictionary<ulong, string> dict, ulong hexValue)
+        private static string GetHexaLabel(Dictionary<ulong, string> dict, ulong hexValue)
         {
             if (hexValue == 0)
                 return string.Empty;
