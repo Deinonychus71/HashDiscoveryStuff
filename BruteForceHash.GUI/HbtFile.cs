@@ -51,6 +51,7 @@ namespace BruteForceHash.GUI
         public int NbrThreads { get; set; }
         public string ValidChars { get; set; }
         public string ValidStartingChars { get; set; }
+        public List<string> Charsets { get; set; }
         public int StartPosition { get; set; }
         public int EndPosition { get; set; }
         public bool Verbose { get; set; }

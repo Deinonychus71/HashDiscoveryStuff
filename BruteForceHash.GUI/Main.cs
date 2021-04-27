@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -101,6 +102,7 @@ namespace BruteForceHash.GUI
             OnCustomDictLastCheckedChanged(this, null);
             OnDictionaryAdvancedCheckedChanged(this, null);
 
+            chklCharsets.Items.Clear();
             chklDictionaries.Items.Clear();
             chklDictionariesFirstWord.Items.Clear();
             chklDictionariesLastWord.Items.Clear();
@@ -125,6 +127,13 @@ namespace BruteForceHash.GUI
                 Directory.CreateDirectory("Dictionaries");
             }
 
+            var charsets = Charsets.GetCharsetList().Keys;
+            foreach (var charset in charsets)
+            {
+                chklCharsets.Items.Add(charset);
+            }
+            PreviewCharsets();
+
             pnlDictionary.Visible = true;
             pnlCharacter.Visible = false;
             btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
@@ -135,6 +144,9 @@ namespace BruteForceHash.GUI
             var dictionaries = GetDictionary(chklDictionaries);
             var dictionariesFirstWord = GetDictionary(chklDictionariesFirstWord);
             var dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
+            var charsets = new List<string>();
+            foreach (var charset in chklCharsets.CheckedItems)
+                charsets.Add(charset.ToString());
 
             var result = saveFile.ShowDialog();
             if (result == DialogResult.OK)
@@ -184,6 +196,7 @@ namespace BruteForceHash.GUI
                     Suffix = txtSuffix.Text.Trim(),
                     ValidChars = txtValidChars.Text.Trim(),
                     ValidStartingChars = txtStartingValidChars.Text.Trim(),
+                    Charsets = charsets,
                     StartPosition = Convert.ToInt32(numStartPosition.Value),
                     EndPosition = Convert.ToInt32(numEndPosition.Value),
                     HexValue = txtHexValues.Text.Trim(),
@@ -264,6 +277,26 @@ namespace BruteForceHash.GUI
                 numEndPosition.Value = hbtObject.EndPosition;
                 txtHexValues.Text = hbtObject.HexValue;
                 txtHashCatPath.Text = hbtObject.PathHashCat;
+
+                for (int i = 0; i < chklCharsets.Items.Count; i++)
+                {
+                    chklCharsets.SetItemChecked(i, false);
+                }
+                if (hbtObject.Charsets != null)
+                {
+                    foreach(var charset in hbtObject.Charsets)
+                    {
+                        for (int i = 0; i < chklCharsets.Items.Count; i++)
+                        {
+                            if (chklCharsets.Items[i].ToString() == charset)
+                            {
+                                chklCharsets.SetItemChecked(i, true);
+                                break;
+                            }
+                        }
+                    }
+                }
+                PreviewCharsets();
 
                 //Advanced
                 chkDictionaryAdvanced.Checked = hbtObject.DictionaryAdvanced;
@@ -380,12 +413,13 @@ namespace BruteForceHash.GUI
                 }
                 else
                 {
+                    PreviewCharsets();
                     process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
                                                     $"--method {(useUtf8 ? "character_utf8" : useHashCat ? "character_hashcat" : cbMethod.SelectedItem)} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
-                                                    $"--valid_chars \"{txtValidChars.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                                    $"--valid_starting_chars \"{txtStartingValidChars.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
+                                                    $"--valid_chars \"{txtValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
+                                                    $"--valid_starting_chars \"{txtStartingValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
                                                     $"--start_position \"{numStartPosition.Value}\" " +
                                                     $"--end_position \"{numEndPosition.Value}\" " +
                                                     $"--include_word \"{txtIncludeWordsCharacter.Text.Trim()}\" " +
@@ -568,6 +602,47 @@ namespace BruteForceHash.GUI
         private void Utf8ToggleCheckedChanged(object sender, EventArgs e)
         {
             btnStartHashCat.Enabled = (pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked);
+        }
+
+        private void TxtValidCharsChanged(object sender, EventArgs e)
+        {
+            PreviewCharsets();
+        }
+
+        private void TxtStartingValidCharsChanged(object sender, EventArgs e)
+        {
+            PreviewCharsets();
+        }
+
+        private void ChklCharsetsSelectedIndexChanged(object sender, EventArgs e)
+        {
+            PreviewCharsets();
+        }
+
+        private void ChklCharsetsSelectedValueChanged(object sender, EventArgs e)
+        {
+            PreviewCharsets();
+        }
+
+        private void PreviewCharsets()
+        {
+            var charsets = Charsets.GetCharsetList();
+
+            var validCharsPreview = txtValidChars.Text.Trim();
+            var validCharsStartingPreview = txtStartingValidChars.Text.Trim();
+
+            foreach (var charset in chklCharsets.CheckedItems)
+            {
+                if (charsets.ContainsKey(charset.ToString()))
+                {
+                    var charsetValue = charsets[charset.ToString()];
+                    validCharsPreview += charsetValue;
+                    validCharsStartingPreview += charsetValue;
+                }
+            }
+
+            txtStartingValidCharsPreview.Text = string.Join("", validCharsStartingPreview.Distinct());
+            txtValidCharsPreview.Text = string.Join("", validCharsPreview.Distinct());
         }
     }
 }

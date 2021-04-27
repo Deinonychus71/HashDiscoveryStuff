@@ -458,7 +458,7 @@ namespace BruteForceHash
         private IEnumerable<string> GenerateTypos(string word)
         {
             var typo = new List<string>();
-            var wordLength = Encoding.UTF8.GetByteCount(word);
+            var wordLength = word.Length;
 
             if (wordLength < 2)
                 return typo;

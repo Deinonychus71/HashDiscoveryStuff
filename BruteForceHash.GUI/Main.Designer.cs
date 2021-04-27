@@ -113,19 +113,27 @@ namespace BruteForceHash.GUI
             this.chklDictionaries = new System.Windows.Forms.CheckedListBox();
             this.txtIncludeWordsCharacter = new System.Windows.Forms.TextBox();
             this.pnlCharacter = new System.Windows.Forms.Panel();
-            this.lblUtf8Toggle = new System.Windows.Forms.Label();
-            this.chkUtf8Toggle = new System.Windows.Forms.CheckBox();
-            this.txtHashCatPath = new System.Windows.Forms.TextBox();
-            this.lblHashCat = new System.Windows.Forms.Label();
-            this.numEndPosition = new System.Windows.Forms.NumericUpDown();
-            this.lblEndPosition = new System.Windows.Forms.Label();
-            this.numStartPosition = new System.Windows.Forms.NumericUpDown();
-            this.lblStartPosition = new System.Windows.Forms.Label();
-            this.lblIncludeWordCharacters = new System.Windows.Forms.Label();
-            this.txtStartingValidChars = new System.Windows.Forms.TextBox();
-            this.lblStartingValidChars = new System.Windows.Forms.Label();
+            this.grpCharsetPreview = new System.Windows.Forms.GroupBox();
+            this.lblStartingValidCharsPreview = new System.Windows.Forms.Label();
+            this.txtStartingValidCharsPreview = new System.Windows.Forms.TextBox();
+            this.lblValidCharsPreview = new System.Windows.Forms.Label();
+            this.txtValidCharsPreview = new System.Windows.Forms.TextBox();
+            this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.txtValidChars = new System.Windows.Forms.TextBox();
             this.lblValidChars = new System.Windows.Forms.Label();
+            this.lblUtf8Toggle = new System.Windows.Forms.Label();
+            this.lblStartingValidChars = new System.Windows.Forms.Label();
+            this.lblEndPosition = new System.Windows.Forms.Label();
+            this.chkUtf8Toggle = new System.Windows.Forms.CheckBox();
+            this.txtStartingValidChars = new System.Windows.Forms.TextBox();
+            this.lblIncludeWordCharacters = new System.Windows.Forms.Label();
+            this.numEndPosition = new System.Windows.Forms.NumericUpDown();
+            this.lblStartPosition = new System.Windows.Forms.Label();
+            this.numStartPosition = new System.Windows.Forms.NumericUpDown();
+            this.grpSpecials = new System.Windows.Forms.GroupBox();
+            this.chklCharsets = new System.Windows.Forms.CheckedListBox();
+            this.txtHashCatPath = new System.Windows.Forms.TextBox();
+            this.lblHashCat = new System.Windows.Forms.Label();
             this.chkVerbose = new System.Windows.Forms.CheckBox();
             this.mnStrip = new System.Windows.Forms.MenuStrip();
             this.mnFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -141,8 +149,11 @@ namespace BruteForceHash.GUI
             this.grpAdvanced.SuspendLayout();
             this.grpTypos.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
+            this.grpCharsetPreview.SuspendLayout();
+            this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).BeginInit();
+            this.grpSpecials.SuspendLayout();
             this.mnStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1239,72 +1250,171 @@ namespace BruteForceHash.GUI
             // 
             // txtIncludeWordsCharacter
             // 
-            this.txtIncludeWordsCharacter.Location = new System.Drawing.Point(112, 92);
+            this.txtIncludeWordsCharacter.Location = new System.Drawing.Point(120, 106);
             this.txtIncludeWordsCharacter.Name = "txtIncludeWordsCharacter";
             this.txtIncludeWordsCharacter.PlaceholderText = "mario";
-            this.txtIncludeWordsCharacter.Size = new System.Drawing.Size(379, 23);
+            this.txtIncludeWordsCharacter.Size = new System.Drawing.Size(611, 23);
             this.txtIncludeWordsCharacter.TabIndex = 31;
             this.txtIncludeWordsCharacter.TextChanged += new System.EventHandler(this.OnTxtIncludeWordsCharacterTextChanged);
             // 
             // pnlCharacter
             // 
-            this.pnlCharacter.Controls.Add(this.lblUtf8Toggle);
-            this.pnlCharacter.Controls.Add(this.chkUtf8Toggle);
+            this.pnlCharacter.Controls.Add(this.grpCharsetPreview);
+            this.pnlCharacter.Controls.Add(this.grpGeneral);
+            this.pnlCharacter.Controls.Add(this.grpSpecials);
             this.pnlCharacter.Controls.Add(this.txtHashCatPath);
             this.pnlCharacter.Controls.Add(this.lblHashCat);
-            this.pnlCharacter.Controls.Add(this.numEndPosition);
-            this.pnlCharacter.Controls.Add(this.lblEndPosition);
-            this.pnlCharacter.Controls.Add(this.numStartPosition);
-            this.pnlCharacter.Controls.Add(this.lblStartPosition);
-            this.pnlCharacter.Controls.Add(this.txtIncludeWordsCharacter);
-            this.pnlCharacter.Controls.Add(this.lblIncludeWordCharacters);
-            this.pnlCharacter.Controls.Add(this.txtStartingValidChars);
-            this.pnlCharacter.Controls.Add(this.lblStartingValidChars);
-            this.pnlCharacter.Controls.Add(this.txtValidChars);
-            this.pnlCharacter.Controls.Add(this.lblValidChars);
             this.pnlCharacter.Location = new System.Drawing.Point(12, 103);
             this.pnlCharacter.Name = "pnlCharacter";
-            this.pnlCharacter.Size = new System.Drawing.Size(774, 532);
+            this.pnlCharacter.Size = new System.Drawing.Size(774, 586);
             this.pnlCharacter.TabIndex = 32;
+            // 
+            // grpCharsetPreview
+            // 
+            this.grpCharsetPreview.Controls.Add(this.lblStartingValidCharsPreview);
+            this.grpCharsetPreview.Controls.Add(this.txtStartingValidCharsPreview);
+            this.grpCharsetPreview.Controls.Add(this.lblValidCharsPreview);
+            this.grpCharsetPreview.Controls.Add(this.txtValidCharsPreview);
+            this.grpCharsetPreview.Location = new System.Drawing.Point(397, 203);
+            this.grpCharsetPreview.Name = "grpCharsetPreview";
+            this.grpCharsetPreview.Size = new System.Drawing.Size(364, 331);
+            this.grpCharsetPreview.TabIndex = 43;
+            this.grpCharsetPreview.TabStop = false;
+            this.grpCharsetPreview.Text = "Charset Previews";
+            // 
+            // lblStartingValidCharsPreview
+            // 
+            this.lblStartingValidCharsPreview.AutoSize = true;
+            this.lblStartingValidCharsPreview.Location = new System.Drawing.Point(11, 175);
+            this.lblStartingValidCharsPreview.Name = "lblStartingValidCharsPreview";
+            this.lblStartingValidCharsPreview.Size = new System.Drawing.Size(84, 15);
+            this.lblStartingValidCharsPreview.TabIndex = 43;
+            this.lblStartingValidCharsPreview.Text = "Starting Chars:";
+            // 
+            // txtStartingValidCharsPreview
+            // 
+            this.txtStartingValidCharsPreview.Location = new System.Drawing.Point(11, 206);
+            this.txtStartingValidCharsPreview.Multiline = true;
+            this.txtStartingValidCharsPreview.Name = "txtStartingValidCharsPreview";
+            this.txtStartingValidCharsPreview.ReadOnly = true;
+            this.txtStartingValidCharsPreview.Size = new System.Drawing.Size(345, 108);
+            this.txtStartingValidCharsPreview.TabIndex = 42;
+            // 
+            // lblValidCharsPreview
+            // 
+            this.lblValidCharsPreview.AutoSize = true;
+            this.lblValidCharsPreview.Location = new System.Drawing.Point(9, 22);
+            this.lblValidCharsPreview.Name = "lblValidCharsPreview";
+            this.lblValidCharsPreview.Size = new System.Drawing.Size(68, 15);
+            this.lblValidCharsPreview.TabIndex = 41;
+            this.lblValidCharsPreview.Text = "Valid Chars:";
+            // 
+            // txtValidCharsPreview
+            // 
+            this.txtValidCharsPreview.Location = new System.Drawing.Point(9, 53);
+            this.txtValidCharsPreview.Multiline = true;
+            this.txtValidCharsPreview.Name = "txtValidCharsPreview";
+            this.txtValidCharsPreview.ReadOnly = true;
+            this.txtValidCharsPreview.Size = new System.Drawing.Size(347, 108);
+            this.txtValidCharsPreview.TabIndex = 0;
+            // 
+            // grpGeneral
+            // 
+            this.grpGeneral.Controls.Add(this.txtValidChars);
+            this.grpGeneral.Controls.Add(this.lblValidChars);
+            this.grpGeneral.Controls.Add(this.lblUtf8Toggle);
+            this.grpGeneral.Controls.Add(this.lblStartingValidChars);
+            this.grpGeneral.Controls.Add(this.lblEndPosition);
+            this.grpGeneral.Controls.Add(this.chkUtf8Toggle);
+            this.grpGeneral.Controls.Add(this.txtStartingValidChars);
+            this.grpGeneral.Controls.Add(this.lblIncludeWordCharacters);
+            this.grpGeneral.Controls.Add(this.txtIncludeWordsCharacter);
+            this.grpGeneral.Controls.Add(this.numEndPosition);
+            this.grpGeneral.Controls.Add(this.lblStartPosition);
+            this.grpGeneral.Controls.Add(this.numStartPosition);
+            this.grpGeneral.Location = new System.Drawing.Point(8, 4);
+            this.grpGeneral.Name = "grpGeneral";
+            this.grpGeneral.Size = new System.Drawing.Size(753, 192);
+            this.grpGeneral.TabIndex = 42;
+            this.grpGeneral.TabStop = false;
+            this.grpGeneral.Text = "Bruteforce Settings";
+            // 
+            // txtValidChars
+            // 
+            this.txtValidChars.Location = new System.Drawing.Point(120, 23);
+            this.txtValidChars.Name = "txtValidChars";
+            this.txtValidChars.Size = new System.Drawing.Size(611, 23);
+            this.txtValidChars.TabIndex = 31;
+            this.txtValidChars.Text = "etainoshrdlucmfwygpbvkqjxz0123456789_";
+            this.txtValidChars.TextChanged += new System.EventHandler(this.TxtValidCharsChanged);
+            // 
+            // lblValidChars
+            // 
+            this.lblValidChars.AutoSize = true;
+            this.lblValidChars.Location = new System.Drawing.Point(12, 26);
+            this.lblValidChars.Name = "lblValidChars";
+            this.lblValidChars.Size = new System.Drawing.Size(68, 15);
+            this.lblValidChars.TabIndex = 31;
+            this.lblValidChars.Text = "Valid Chars:";
             // 
             // lblUtf8Toggle
             // 
             this.lblUtf8Toggle.AutoSize = true;
-            this.lblUtf8Toggle.Location = new System.Drawing.Point(5, 176);
+            this.lblUtf8Toggle.Location = new System.Drawing.Point(493, 155);
             this.lblUtf8Toggle.Name = "lblUtf8Toggle";
             this.lblUtf8Toggle.Size = new System.Drawing.Size(74, 15);
             this.lblUtf8Toggle.TabIndex = 37;
             this.lblUtf8Toggle.Text = "Enable UTF8:";
             // 
+            // lblStartingValidChars
+            // 
+            this.lblStartingValidChars.AutoSize = true;
+            this.lblStartingValidChars.Location = new System.Drawing.Point(12, 68);
+            this.lblStartingValidChars.Name = "lblStartingValidChars";
+            this.lblStartingValidChars.Size = new System.Drawing.Size(84, 15);
+            this.lblStartingValidChars.TabIndex = 32;
+            this.lblStartingValidChars.Text = "Starting Chars:";
+            // 
+            // lblEndPosition
+            // 
+            this.lblEndPosition.AutoSize = true;
+            this.lblEndPosition.Location = new System.Drawing.Point(236, 151);
+            this.lblEndPosition.Name = "lblEndPosition";
+            this.lblEndPosition.Size = new System.Drawing.Size(76, 15);
+            this.lblEndPosition.TabIndex = 36;
+            this.lblEndPosition.Text = "End Position:";
+            // 
             // chkUtf8Toggle
             // 
             this.chkUtf8Toggle.AutoSize = true;
-            this.chkUtf8Toggle.Location = new System.Drawing.Point(112, 177);
+            this.chkUtf8Toggle.Location = new System.Drawing.Point(601, 156);
             this.chkUtf8Toggle.Name = "chkUtf8Toggle";
             this.chkUtf8Toggle.Size = new System.Drawing.Size(15, 14);
             this.chkUtf8Toggle.TabIndex = 40;
             this.chkUtf8Toggle.UseVisualStyleBackColor = true;
             this.chkUtf8Toggle.CheckedChanged += new System.EventHandler(this.Utf8ToggleCheckedChanged);
             // 
-            // txtHashCatPath
+            // txtStartingValidChars
             // 
-            this.txtHashCatPath.Location = new System.Drawing.Point(113, 457);
-            this.txtHashCatPath.Name = "txtHashCatPath";
-            this.txtHashCatPath.Size = new System.Drawing.Size(379, 23);
-            this.txtHashCatPath.TabIndex = 39;
+            this.txtStartingValidChars.Location = new System.Drawing.Point(120, 65);
+            this.txtStartingValidChars.Name = "txtStartingValidChars";
+            this.txtStartingValidChars.Size = new System.Drawing.Size(611, 23);
+            this.txtStartingValidChars.TabIndex = 33;
+            this.txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
+            this.txtStartingValidChars.TextChanged += new System.EventHandler(this.TxtStartingValidCharsChanged);
             // 
-            // lblHashCat
+            // lblIncludeWordCharacters
             // 
-            this.lblHashCat.AutoSize = true;
-            this.lblHashCat.Location = new System.Drawing.Point(6, 460);
-            this.lblHashCat.Name = "lblHashCat";
-            this.lblHashCat.Size = new System.Drawing.Size(80, 15);
-            this.lblHashCat.TabIndex = 38;
-            this.lblHashCat.Text = "Hashcat Path:";
+            this.lblIncludeWordCharacters.AutoSize = true;
+            this.lblIncludeWordCharacters.Location = new System.Drawing.Point(12, 109);
+            this.lblIncludeWordCharacters.Name = "lblIncludeWordCharacters";
+            this.lblIncludeWordCharacters.Size = new System.Drawing.Size(81, 15);
+            this.lblIncludeWordCharacters.TabIndex = 33;
+            this.lblIncludeWordCharacters.Text = "Include Word:";
             // 
             // numEndPosition
             // 
-            this.numEndPosition.Location = new System.Drawing.Point(328, 135);
+            this.numEndPosition.Location = new System.Drawing.Point(336, 149);
             this.numEndPosition.Maximum = new decimal(new int[] {
             0,
             0,
@@ -1319,73 +1429,57 @@ namespace BruteForceHash.GUI
             this.numEndPosition.Size = new System.Drawing.Size(79, 23);
             this.numEndPosition.TabIndex = 37;
             // 
-            // lblEndPosition
-            // 
-            this.lblEndPosition.AutoSize = true;
-            this.lblEndPosition.Location = new System.Drawing.Point(238, 137);
-            this.lblEndPosition.Name = "lblEndPosition";
-            this.lblEndPosition.Size = new System.Drawing.Size(76, 15);
-            this.lblEndPosition.TabIndex = 36;
-            this.lblEndPosition.Text = "End Position:";
-            // 
-            // numStartPosition
-            // 
-            this.numStartPosition.Location = new System.Drawing.Point(111, 135);
-            this.numStartPosition.Name = "numStartPosition";
-            this.numStartPosition.Size = new System.Drawing.Size(79, 23);
-            this.numStartPosition.TabIndex = 35;
-            // 
             // lblStartPosition
             // 
             this.lblStartPosition.AutoSize = true;
-            this.lblStartPosition.Location = new System.Drawing.Point(4, 137);
+            this.lblStartPosition.Location = new System.Drawing.Point(12, 151);
             this.lblStartPosition.Name = "lblStartPosition";
             this.lblStartPosition.Size = new System.Drawing.Size(80, 15);
             this.lblStartPosition.TabIndex = 34;
             this.lblStartPosition.Text = "Start Position:";
             // 
-            // lblIncludeWordCharacters
+            // numStartPosition
             // 
-            this.lblIncludeWordCharacters.AutoSize = true;
-            this.lblIncludeWordCharacters.Location = new System.Drawing.Point(4, 95);
-            this.lblIncludeWordCharacters.Name = "lblIncludeWordCharacters";
-            this.lblIncludeWordCharacters.Size = new System.Drawing.Size(81, 15);
-            this.lblIncludeWordCharacters.TabIndex = 33;
-            this.lblIncludeWordCharacters.Text = "Include Word:";
+            this.numStartPosition.Location = new System.Drawing.Point(119, 149);
+            this.numStartPosition.Name = "numStartPosition";
+            this.numStartPosition.Size = new System.Drawing.Size(79, 23);
+            this.numStartPosition.TabIndex = 35;
             // 
-            // txtStartingValidChars
+            // grpSpecials
             // 
-            this.txtStartingValidChars.Location = new System.Drawing.Point(112, 51);
-            this.txtStartingValidChars.Name = "txtStartingValidChars";
-            this.txtStartingValidChars.Size = new System.Drawing.Size(379, 23);
-            this.txtStartingValidChars.TabIndex = 33;
-            this.txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
+            this.grpSpecials.Controls.Add(this.chklCharsets);
+            this.grpSpecials.Location = new System.Drawing.Point(8, 202);
+            this.grpSpecials.Name = "grpSpecials";
+            this.grpSpecials.Size = new System.Drawing.Size(375, 332);
+            this.grpSpecials.TabIndex = 41;
+            this.grpSpecials.TabStop = false;
+            this.grpSpecials.Text = "Special charsets";
             // 
-            // lblStartingValidChars
+            // chklCharsets
             // 
-            this.lblStartingValidChars.AutoSize = true;
-            this.lblStartingValidChars.Location = new System.Drawing.Point(4, 54);
-            this.lblStartingValidChars.Name = "lblStartingValidChars";
-            this.lblStartingValidChars.Size = new System.Drawing.Size(84, 15);
-            this.lblStartingValidChars.TabIndex = 32;
-            this.lblStartingValidChars.Text = "Starting Chars:";
+            this.chklCharsets.FormattingEnabled = true;
+            this.chklCharsets.Location = new System.Drawing.Point(7, 23);
+            this.chklCharsets.Name = "chklCharsets";
+            this.chklCharsets.Size = new System.Drawing.Size(356, 292);
+            this.chklCharsets.TabIndex = 0;
+            this.chklCharsets.SelectedIndexChanged += new System.EventHandler(this.ChklCharsetsSelectedIndexChanged);
+            this.chklCharsets.SelectedValueChanged += new System.EventHandler(this.ChklCharsetsSelectedValueChanged);
             // 
-            // txtValidChars
+            // txtHashCatPath
             // 
-            this.txtValidChars.Location = new System.Drawing.Point(112, 9);
-            this.txtValidChars.Name = "txtValidChars";
-            this.txtValidChars.Size = new System.Drawing.Size(379, 23);
-            this.txtValidChars.TabIndex = 31;
-            this.txtValidChars.Text = "etainoshrdlucmfwygpbvkqjxz0123456789_";
+            this.txtHashCatPath.Location = new System.Drawing.Point(115, 552);
+            this.txtHashCatPath.Name = "txtHashCatPath";
+            this.txtHashCatPath.Size = new System.Drawing.Size(379, 23);
+            this.txtHashCatPath.TabIndex = 39;
             // 
-            // lblValidChars
+            // lblHashCat
             // 
-            this.lblValidChars.AutoSize = true;
-            this.lblValidChars.Location = new System.Drawing.Point(4, 12);
-            this.lblValidChars.Name = "lblValidChars";
-            this.lblValidChars.Size = new System.Drawing.Size(68, 15);
-            this.lblValidChars.TabIndex = 31;
-            this.lblValidChars.Text = "Valid Chars:";
+            this.lblHashCat.AutoSize = true;
+            this.lblHashCat.Location = new System.Drawing.Point(8, 555);
+            this.lblHashCat.Name = "lblHashCat";
+            this.lblHashCat.Size = new System.Drawing.Size(80, 15);
+            this.lblHashCat.TabIndex = 38;
+            this.lblHashCat.Text = "Hashcat Path:";
             // 
             // chkVerbose
             // 
@@ -1505,8 +1599,13 @@ namespace BruteForceHash.GUI
             this.grpTypos.PerformLayout();
             this.pnlCharacter.ResumeLayout(false);
             this.pnlCharacter.PerformLayout();
+            this.grpCharsetPreview.ResumeLayout(false);
+            this.grpCharsetPreview.PerformLayout();
+            this.grpGeneral.ResumeLayout(false);
+            this.grpGeneral.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numEndPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStartPosition)).EndInit();
+            this.grpSpecials.ResumeLayout(false);
             this.mnStrip.ResumeLayout(false);
             this.mnStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -1625,6 +1724,15 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.CheckBox chkTyposDoubleLetter;
         private System.Windows.Forms.CheckBox chkTyposSkipLetter;
         private System.Windows.Forms.CheckBox chkTyposLetterSwap;
+        private System.Windows.Forms.GroupBox grpSpecials;
+        private System.Windows.Forms.GroupBox grpGeneral;
+        private System.Windows.Forms.CheckedListBox chklCharsets;
+        private System.Windows.Forms.GroupBox grpCharsetPreview;
+        private System.Windows.Forms.Label lblStartingValidCharsPreview;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label lblValidCharsPreview;
+        private System.Windows.Forms.TextBox txtValidCharsPreview;
+        private System.Windows.Forms.TextBox txtStartingValidCharsPreview;
     }
 }
 
