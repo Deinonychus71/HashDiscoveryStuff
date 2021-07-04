@@ -53,6 +53,8 @@ namespace BruteForceHash.GUI
             this.txtSuffix = new System.Windows.Forms.TextBox();
             this.lblCombinationOrder = new System.Windows.Forms.Label();
             this.pnlDictionary = new System.Windows.Forms.Panel();
+            this.lblDictionaryFilterFirst = new System.Windows.Forms.Label();
+            this.txtDictionaryFilterFirst = new System.Windows.Forms.TextBox();
             this.grpAdvanced = new System.Windows.Forms.GroupBox();
             this.chkDictionaryAdvanced = new System.Windows.Forms.CheckBox();
             this.lblMaxDelim = new System.Windows.Forms.Label();
@@ -440,6 +442,8 @@ namespace BruteForceHash.GUI
             // 
             // pnlDictionary
             // 
+            this.pnlDictionary.Controls.Add(this.lblDictionaryFilterFirst);
+            this.pnlDictionary.Controls.Add(this.txtDictionaryFilterFirst);
             this.pnlDictionary.Controls.Add(this.grpAdvanced);
             this.pnlDictionary.Controls.Add(this.grpTypos);
             this.pnlDictionary.Controls.Add(this.chkIncludeWordNotLast);
@@ -481,6 +485,23 @@ namespace BruteForceHash.GUI
             this.pnlDictionary.Name = "pnlDictionary";
             this.pnlDictionary.Size = new System.Drawing.Size(774, 586);
             this.pnlDictionary.TabIndex = 31;
+            // 
+            // lblDictionaryFilterFirst
+            // 
+            this.lblDictionaryFilterFirst.AutoSize = true;
+            this.lblDictionaryFilterFirst.Location = new System.Drawing.Point(389, 247);
+            this.lblDictionaryFilterFirst.Name = "lblDictionaryFilterFirst";
+            this.lblDictionaryFilterFirst.Size = new System.Drawing.Size(60, 15);
+            this.lblDictionaryFilterFirst.TabIndex = 83;
+            this.lblDictionaryFilterFirst.Text = "Dict. Filter";
+            // 
+            // txtDictionaryFilterFirst
+            // 
+            this.txtDictionaryFilterFirst.Location = new System.Drawing.Point(451, 244);
+            this.txtDictionaryFilterFirst.Name = "txtDictionaryFilterFirst";
+            this.txtDictionaryFilterFirst.PlaceholderText = "a-b";
+            this.txtDictionaryFilterFirst.Size = new System.Drawing.Size(66, 23);
+            this.txtDictionaryFilterFirst.TabIndex = 82;
             // 
             // grpAdvanced
             // 
@@ -1584,8 +1605,8 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.txtHexValues);
             this.Controls.Add(this.lblHexValues);
             this.Controls.Add(this.mnStrip);
-            this.Controls.Add(this.pnlCharacter);
             this.Controls.Add(this.pnlDictionary);
+            this.Controls.Add(this.pnlCharacter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.mnStrip;
             this.MaximizeBox = false;
@@ -1733,6 +1754,8 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblValidCharsPreview;
         private System.Windows.Forms.TextBox txtValidCharsPreview;
         private System.Windows.Forms.TextBox txtStartingValidCharsPreview;
+        private System.Windows.Forms.Label lblDictionaryFilterFirst;
+        private System.Windows.Forms.TextBox txtDictionaryFilterFirst;
     }
 }
 

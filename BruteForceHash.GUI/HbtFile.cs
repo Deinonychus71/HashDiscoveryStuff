@@ -56,6 +56,7 @@ namespace BruteForceHash.GUI
         public int EndPosition { get; set; }
         public bool Verbose { get; set; }
         public string PathHashCat { get; set; }
+        public string DictionaryFilterFirst { get; set; }
 
         /* Advanced */
         public bool DictionaryAdvanced { get; set; }

@@ -80,6 +80,7 @@ namespace BruteForceHash.GUI
             numStartPosition.Value = 0;
             numEndPosition.Value = 0;
             txtHexValues.Text = string.Empty;
+            txtDictionaryFilterFirst.Text = string.Empty;
 
             //Dictionary Advanced
             chkDictionaryAdvanced.Checked = false;
@@ -201,6 +202,7 @@ namespace BruteForceHash.GUI
                     EndPosition = Convert.ToInt32(numEndPosition.Value),
                     HexValue = txtHexValues.Text.Trim(),
                     PathHashCat = txtHashCatPath.Text.Trim(),
+                    DictionaryFilterFirst = txtDictionaryFilterFirst.Text.Trim(),
                     //Advanced
                     DictionaryAdvanced = chkDictionaryAdvanced.Checked,
                     ConcatenateFirstTwoWords = chkOnlyFirstTwoWordsConcat.Checked,
@@ -273,6 +275,7 @@ namespace BruteForceHash.GUI
                 txtSuffix.Text = hbtObject.Suffix;
                 txtValidChars.Text = hbtObject.ValidChars;
                 txtStartingValidChars.Text = hbtObject.ValidStartingChars;
+                txtDictionaryFilterFirst.Text = hbtObject.DictionaryFilterFirst;
                 numStartPosition.Value = hbtObject.StartPosition;
                 numEndPosition.Value = hbtObject.EndPosition;
                 txtHexValues.Text = hbtObject.HexValue;
@@ -401,6 +404,7 @@ namespace BruteForceHash.GUI
                                                     $"--dictionaries_first_word \"{dictionariesFirstWord}\" " +
                                                     $"--dictionaries_last_word \"{dictionariesLastWord}\" " +
                                                     $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
+                                                    $"--dictionary_filter_first \"{txtDictionaryFilterFirst.Text.Trim()}\" " +
                                                     $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
                                                     $"{(chkIncludeWordNotLast.Checked ? "--include_word_not_last" : "")} " +
                                                     $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
