@@ -62,6 +62,8 @@ namespace BruteForceHash.GUI
         public bool DictionaryAdvanced { get; set; }
         public int MaxDelimiters { get; set; }
         public int MinDelimiters { get; set; }
+        public int MaxConcatenatedWords { get; set; }
+        public int MinConcatenatedWords { get; set; }
         public bool ConcatenateLastTwoWords { get; set; }
         public bool ConcatenateFirstTwoWords { get; set; }
         public int MaxConsecutiveConcatenation { get; set; }

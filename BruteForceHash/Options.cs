@@ -47,6 +47,10 @@ namespace BruteForceHash
         public int MaxOnes { get; set; }
         [Option('P', "min_ones", Required = false, Default = 0, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
         public int MinOnes { get; set; }
+        [Option('P', "max_concatenated_words", Required = false, Default = 10, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
+        public int MaxConcatenatedWords { get; set; }
+        [Option('P', "min_concatenated_words", Required = false, Default = 0, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
+        public int MinConcatenatedWords { get; set; }
         [Option('P', "max_consecutive_ones", Required = false, Default = 10, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
         public int MaxConsecutiveOnes { get; set; }
 

@@ -17,6 +17,7 @@ namespace BruteForceHash.GUI
             mnLoad.Click += OnLoadClick;
             mnSave.Click += OnSaveClick;
             mnNew.Click += OnNewClick;
+            mnRefresh.Click += OnRefreshClick;
             Directory.CreateDirectory("Templates");
             openFile.InitialDirectory = Directory.GetCurrentDirectory() + "\\Templates\\";
             saveFile.InitialDirectory = Directory.GetCurrentDirectory() + "\\Templates\\";
@@ -88,6 +89,8 @@ namespace BruteForceHash.GUI
             chkOnlyLastTwoWordsConcat.Checked = false;
             cbMaxDelim.SelectedIndex = 0;
             cbMinDelim.SelectedIndex = 0;
+            cbMaxConsWords.SelectedIndex = 10;
+            cbMinConsWords.SelectedIndex = 0;
             cbMaxWordLength.SelectedIndex = 49;
             cbMinWordLength.SelectedIndex = 0;
             cbMaxOnes.SelectedIndex = 10;
@@ -103,37 +106,14 @@ namespace BruteForceHash.GUI
             OnCustomDictLastCheckedChanged(this, null);
             OnDictionaryAdvancedCheckedChanged(this, null);
 
-            chklCharsets.Items.Clear();
-            chklDictionaries.Items.Clear();
-            chklDictionariesFirstWord.Items.Clear();
-            chklDictionariesLastWord.Items.Clear();
-            if (Directory.Exists("Dictionaries"))
-            {
-                var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
-                foreach (var dictionaryPath in allDictionaries)
-                {
-                    var filename = Path.GetFileName(dictionaryPath);
-                    var isFirstDic = filename.Contains("[1st]");
-                    var isLastDic = filename.Contains("[Last]");
-                    if (!isFirstDic && !isLastDic)
-                        chklDictionaries.Items.Add(filename);
-                    if (!isLastDic)
-                        chklDictionariesFirstWord.Items.Add(filename);
-                    if (!isFirstDic)
-                        chklDictionariesLastWord.Items.Add(filename);
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory("Dictionaries");
-            }
-
             var charsets = Charsets.GetCharsetList().Keys;
             foreach (var charset in charsets)
             {
                 chklCharsets.Items.Add(charset);
             }
             PreviewCharsets();
+            LoadDictionaries();
+            LoadPatternSamples();
 
             pnlDictionary.Visible = true;
             pnlCharacter.Visible = false;
@@ -209,6 +189,8 @@ namespace BruteForceHash.GUI
                     ConcatenateLastTwoWords = chkOnlyLastTwoWordsConcat.Checked,
                     MaxDelimiters = Convert.ToInt32(cbMaxDelim.SelectedItem),
                     MinDelimiters = Convert.ToInt32(cbMinDelim.SelectedItem),
+                    MaxConcatenatedWords = Convert.ToInt32(cbMaxConsWords.SelectedItem),
+                    MinConcatenatedWords = Convert.ToInt32(cbMinConsWords.SelectedItem),
                     MaxWordLength = Convert.ToInt32(cbMaxWordLength.SelectedItem),
                     MinWordLength = Convert.ToInt32(cbMinWordLength.SelectedItem),
                     MaxOnes = Convert.ToInt32(cbMaxOnes.SelectedItem),
@@ -307,6 +289,8 @@ namespace BruteForceHash.GUI
                 chkOnlyLastTwoWordsConcat.Checked = hbtObject.ConcatenateLastTwoWords;
                 cbMaxDelim.SelectedItem = hbtObject.MaxDelimiters.ToString();
                 cbMinDelim.SelectedItem = hbtObject.MinDelimiters.ToString();
+                cbMaxConsWords.SelectedItem = hbtObject.MaxConcatenatedWords.ToString();
+                cbMinConsWords.SelectedItem = hbtObject.MinConcatenatedWords.ToString();
                 cbMaxWordLength.SelectedItem = hbtObject.MaxWordLength.ToString();
                 cbMinWordLength.SelectedItem = hbtObject.MinWordLength.ToString();
                 cbMaxOnes.SelectedItem = hbtObject.MaxOnes.ToString();
@@ -315,6 +299,69 @@ namespace BruteForceHash.GUI
                 cbMinWordsLimit.SelectedItem = hbtObject.MinWordsLimit.ToString();
                 cbMaxConsecutiveConcat.SelectedItem = hbtObject.MaxConsecutiveConcatenation.ToString();
                 cbMinConsecutiveConcat.SelectedItem = hbtObject.MinConsecutiveConcatenation.ToString();
+            }
+        }
+
+        private void OnRefreshClick(object sender, EventArgs e)
+        {
+            var dictionaries = GetDictionary(chklDictionaries);
+            var dictionariesFirstWord = GetDictionary(chklDictionariesFirstWord);
+            var dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
+
+            LoadDictionaries();
+            LoadPatternSamples();
+
+            SetDictionary(chklDictionaries, dictionaries);
+            SetDictionary(chklDictionariesFirstWord, dictionariesFirstWord);
+            SetDictionary(chklDictionariesLastWord, dictionariesLastWord);
+        }
+
+        private void LoadDictionaries()
+        {
+            chklCharsets.Items.Clear();
+            chklDictionaries.Items.Clear();
+            chklDictionariesFirstWord.Items.Clear();
+            chklDictionariesLastWord.Items.Clear();
+            if (Directory.Exists("Dictionaries"))
+            {
+                var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
+                foreach (var dictionaryPath in allDictionaries)
+                {
+                    var filename = Path.GetFileName(dictionaryPath);
+                    var isFirstDic = filename.Contains("[1st]");
+                    var isLastDic = filename.Contains("[Last]");
+                    if (!isFirstDic && !isLastDic)
+                        chklDictionaries.Items.Add(filename);
+                    if (!isLastDic)
+                        chklDictionariesFirstWord.Items.Add(filename);
+                    if (!isFirstDic)
+                        chklDictionariesLastWord.Items.Add(filename);
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory("Dictionaries");
+            }
+        }
+
+        private void LoadPatternSamples()
+        {
+            cbExcludePatternsSamples.Items.Clear();
+            cbIncludePatternsSamples.Items.Clear();
+
+            if (!Directory.Exists("PatternsSamples"))
+            {
+                Directory.CreateDirectory("PatternsSamples");
+            }
+            if (File.Exists("PatternsSamples\\exclude_patterns.txt"))
+            {
+                var excludePatternSample = File.ReadAllLines("PatternsSamples\\exclude_patterns.txt");
+                cbExcludePatternsSamples.Items.AddRange(excludePatternSample);
+            }
+            if (File.Exists("PatternsSamples\\include_patterns.txt"))
+            {
+                var includePatternSample = File.ReadAllLines("PatternsSamples\\include_patterns.txt");
+                cbIncludePatternsSamples.Items.AddRange(includePatternSample);
             }
         }
 
@@ -648,5 +695,49 @@ namespace BruteForceHash.GUI
             txtStartingValidCharsPreview.Text = string.Join("", validCharsStartingPreview.Distinct());
             txtValidCharsPreview.Text = string.Join("", validCharsPreview.Distinct());
         }
+
+        private void btnDictUnselected_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < chklDictionaries.Items.Count; i++)
+            {
+                chklDictionaries.SetItemChecked(i, false);
+            }
+        }
+
+        private void btnDictFirstUnselected_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < chklDictionariesFirstWord.Items.Count; i++)
+            {
+                chklDictionariesFirstWord.SetItemChecked(i, false);
+            }
+        }
+
+        private void btnDictLastUnselected_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < chklDictionariesLastWord.Items.Count; i++)
+            {
+                chklDictionariesLastWord.SetItemChecked(i, false);
+            }
+        }
+
+        private void cbExcludePatternsSamples_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbExcludePatternsSamples.SelectedItem != null)
+            {
+                txtExcludePatterns.Text = cbExcludePatternsSamples.SelectedItem?.ToString();
+                cbExcludePatternsSamples.SelectedItem = null;
+            }
+        }
+
+        private void cbIncludePatternsSamples_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbIncludePatternsSamples.SelectedItem != null)
+            {
+                txtIncludePatterns.Text = cbIncludePatternsSamples.SelectedItem?.ToString();
+                cbIncludePatternsSamples.SelectedItem = null;
+            }
+        }
+
+        
     }
 }

@@ -30,6 +30,8 @@ namespace BruteForceHash
         private Action<ByteString> _testCandidate;
         private int _maxDelimiters;
         private int _minDelimiters;
+        private int _maxConsecutives;
+        private int _minConsecutives;
         private int _maxWords;
         private int _minWords;
         private bool _concatenateOnlyLastTwo;
@@ -65,6 +67,8 @@ namespace BruteForceHash
 
             _maxDelimiters = options.MaxDelimiters;
             _minDelimiters = options.MinDelimiters;
+            _maxConsecutives = options.MaxConcatenatedWords;
+            _minConsecutives = options.MinConcatenatedWords;
             _maxWords = options.WordsLimit;
             _minWords = options.MinWordsLimit;
             _concatenateOnlyLastTwo = options.ConcatenateLastTwoWords;
@@ -74,9 +78,9 @@ namespace BruteForceHash
             _maxConsecutiveOnes = options.MaxConsecutiveOnes;
             _maxConsecutiveConcatenated = options.MaxConsecutiveConcatenation;
             _minConsecutiveConcatenated = options.MinConsecutiveConcatenation;
-            
+
             _minWordLength = options.MinWordLength;
-            
+
             if (runInHashCat)
             {
                 Directory.CreateDirectory("Temp");
@@ -109,6 +113,10 @@ namespace BruteForceHash
             {
                 _dictionariesFirst = GetDictionaries(_options.DictionariesFirstWord, _options.DictionaryFilterFirst, options.DictionariesFirstSkipDigits, options.DictionariesFirstSkipSpecials, options.DictionariesFirstForceLowercase, options.DictionariesFirstAddTypos, options.DictionariesFirstReverseOrder);
             }
+            else if (!string.IsNullOrEmpty(_options.DictionaryFilterFirst))
+            {
+                _dictionariesFirst = GetDictionaries(_options.Dictionaries, _options.DictionaryFilterFirst, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos, options.DictionariesReverseOrder);
+            }
             else
             {
                 _dictionariesFirst = _dictionaries;
@@ -136,6 +144,9 @@ namespace BruteForceHash
             _logger.Log($"Delimiter: {_delimiter}");
             _logger.Log($"Max Delimiters: {_options.MaxDelimiters}");
             _logger.Log($"Min Delimiters: {_options.MinDelimiters}");
+            _logger.Log($"Max Concatenated Words: {_options.MaxConcatenatedWords}");
+            _logger.Log($"Min Concatenated Words: {_options.MinConcatenatedWords}");
+            _logger.Log($"Min Delimiters: {_options.MinDelimiters}");
             _logger.Log($"Max Consecutive Concatenation Limit: {_options.MaxConsecutiveConcatenation}");
             _logger.Log($"Min Consecutive Concatenation Limit: {_options.MinConsecutiveConcatenation}");
             _logger.Log($"Max Words Length: {_options.MaxWordLength}");
@@ -147,7 +158,7 @@ namespace BruteForceHash
             _logger.Log($"Min Words Limit: {_options.MinWordsLimit}");
             _logger.Log($"Only First Two Words Concatenated: {_options.ConcatenateFirstTwoWords}");
             _logger.Log($"Only Last Two Words Concatenated: {_options.ConcatenateLastTwoWords}");
-            
+
             if (!string.IsNullOrEmpty(_options.ExcludePatterns))
                 _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
             if (!string.IsNullOrEmpty(_options.IncludePatterns))
@@ -160,33 +171,42 @@ namespace BruteForceHash
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
             _logger.Log($"Combination Order Algorithm: {_options.Order}");
             _logger.Log($"Combination Order Longer words first: {_options.OrderLongerWordsFirst}");
-            _logger.Log($"Dictionaries: {_options.Dictionaries}");
-            _logger.Log($"Dictionaries Skip Digits: {_options.DictionariesSkipDigits}");
-            _logger.Log($"Dictionaries Skip Specials: {_options.DictionariesSkipSpecials}");
-            _logger.Log($"Dictionaries Force LowerCase: {_options.DictionariesForceLowercase}");
-            _logger.Log($"Dictionaries Add Typo: {_options.DictionariesAddTypos}");
-            _logger.Log($"Dictionaries Reverse Order: {_options.DictionariesReverseOrder}");
+            if (_options.Verbose)
+            {
+                _logger.Log($"Dictionaries: {_options.Dictionaries}");
+                _logger.Log($"Dictionaries Skip Digits: {_options.DictionariesSkipDigits}");
+                _logger.Log($"Dictionaries Skip Specials: {_options.DictionariesSkipSpecials}");
+                _logger.Log($"Dictionaries Force LowerCase: {_options.DictionariesForceLowercase}");
+                _logger.Log($"Dictionaries Add Typo: {_options.DictionariesAddTypos}");
+                _logger.Log($"Dictionaries Reverse Order: {_options.DictionariesReverseOrder}");
+            }
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             if (_dictionaries != _dictionariesFirst)
             {
-                _logger.Log($"Dictionaries (1st word): {_options.DictionariesFirstWord}");
-                _logger.Log($"Dictionaries (1st word) Skip Digits: {_options.DictionariesFirstSkipDigits}");
-                _logger.Log($"Dictionaries (1st word) Skip Specials: {_options.DictionariesFirstSkipSpecials}");
-                _logger.Log($"Dictionaries (1st word) Force LowerCase: {_options.DictionariesFirstForceLowercase}");
-                _logger.Log($"Dictionaries (1st word) Add Typo: {_options.DictionariesFirstAddTypos}");
-                _logger.Log($"Dictionaries (1st word) Reverse Order: {_options.DictionariesFirstReverseOrder}");
+                if (_options.Verbose)
+                {
+                    _logger.Log($"Dictionaries (1st word): {_options.DictionariesFirstWord}");
+                    _logger.Log($"Dictionaries (1st word) Skip Digits: {_options.DictionariesFirstSkipDigits}");
+                    _logger.Log($"Dictionaries (1st word) Skip Specials: {_options.DictionariesFirstSkipSpecials}");
+                    _logger.Log($"Dictionaries (1st word) Force LowerCase: {_options.DictionariesFirstForceLowercase}");
+                    _logger.Log($"Dictionaries (1st word) Add Typo: {_options.DictionariesFirstAddTypos}");
+                    _logger.Log($"Dictionaries (1st word) Reverse Order: {_options.DictionariesFirstReverseOrder}");
+                }
                 _logger.Log($"Dictionaries (1st word) words: {_dictionariesFirst.Values.Sum(p => p.Length)}");
             }
             if (!string.IsNullOrEmpty(_options.DictionaryFilterFirst))
                 _logger.Log($"Dictionaries (1st word) filter: {_options.DictionaryFilterFirst}");
             if (_dictionaries != _dictionariesLast)
             {
-                _logger.Log($"Dictionaries (last word): {_options.DictionariesLastWord}");
-                _logger.Log($"Dictionaries (last word) Skip Digits: {_options.DictionariesLastSkipDigits}");
-                _logger.Log($"Dictionaries (last word) Skip Specials: {_options.DictionariesLastSkipSpecials}");
-                _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
-                _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
-                _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
+                if (_options.Verbose)
+                {
+                    _logger.Log($"Dictionaries (last word): {_options.DictionariesLastWord}");
+                    _logger.Log($"Dictionaries (last word) Skip Digits: {_options.DictionariesLastSkipDigits}");
+                    _logger.Log($"Dictionaries (last word) Skip Specials: {_options.DictionariesLastSkipSpecials}");
+                    _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
+                    _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
+                    _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
+                }
                 _logger.Log($"Dictionaries (last word) words: {_dictionariesLast.Values.Sum(p => p.Length)}");
             }
 
@@ -291,7 +311,7 @@ namespace BruteForceHash
             {
                 currentWord = combinationPattern;
             }
-            
+
             else
             {
                 currentWord = combinationPattern.Substring(0, nextDelimiter);
@@ -584,7 +604,7 @@ namespace BruteForceHash
             var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
             var alreadyFoundMap = new Dictionary<int, List<string>>();
             for (var i = 1; i <= stringLength; i++)
-            { 
+            {
                 alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, _delimiterLength, 0, _options.OrderLongerWordsFirst, 0);
             }
 
@@ -673,7 +693,7 @@ namespace BruteForceHash
             return output.Distinct();
         }
 
-        
+
 
         private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, int delimiterLength, int wordsSoFar, bool longerWordsFirst, int delimitersSoFar)
         {
@@ -701,7 +721,7 @@ namespace BruteForceHash
             {
                 returnCombinations.Add("ended");
             }
-            else if (delimiterLength != 0 && stringLength < 0 && stringLength != delimiterLength * -1 )
+            else if (delimiterLength != 0 && stringLength < 0 && stringLength != delimiterLength * -1)
             {
                 returnCombinations.Add("invalid");
             }
@@ -716,7 +736,7 @@ namespace BruteForceHash
                     //j= 0 means do not include delimiter, j = 1 means include it (if applicable)
                     for (int j = 0; j < 2; j++)
                     {
-                        
+
                         if (j == 0)
                         {
                             remainingLength = stringLength - i;
@@ -759,7 +779,7 @@ namespace BruteForceHash
                             }
                         }
 
-                        
+
                     }
                     if (longerWordsFirst)
                         i--;
@@ -776,18 +796,20 @@ namespace BruteForceHash
             List<string> finalList = new List<string>();
             foreach (string pattern in inputList)
             {
-                bool include = true;
-
                 if (_concatenateOnlyFirstTwo && !(pattern.Length - pattern.Replace("|", "").Length == 1 && (pattern.IndexOf('|') < pattern.IndexOf(_delimiter) || pattern.IndexOf(_delimiter) == -1 || _delimiterLength == 0)))
-                    include = false;
-                if (include && _concatenateOnlyLastTwo && !(pattern.Length - pattern.Replace("|", "").Length == 1 && (pattern.IndexOf('|') > pattern.LastIndexOf(_delimiter) || _delimiterLength == 0)))
-                    include = false;
-                if (include && ((pattern.Length - pattern.Replace("{1}", "").Length) > _maxOnes * 3 || (pattern.Length - pattern.Replace("{1}", "").Length) < _minOnes * 3))
-                    include = false;
-                if (include && _delimiterLength > 0 && (pattern.Length - pattern.Replace(_delimiter, "").Length < _minDelimiters))
-                    include = false;
-                if (include && pattern.Length - pattern.Replace("{", "").Length < _minWords)
-                    include = false;
+                    continue;
+                if (_concatenateOnlyLastTwo && !(pattern.Length - pattern.Replace("|", "").Length == 1 && (pattern.IndexOf('|') > pattern.LastIndexOf(_delimiter) || _delimiterLength == 0)))
+                    continue;
+                if (((pattern.Length - pattern.Replace("{1}", "").Length) > _maxOnes * 3 || (pattern.Length - pattern.Replace("{1}", "").Length) < _minOnes * 3))
+                    continue;
+                if (_delimiterLength > 0 && (pattern.Length - pattern.Replace(_delimiter, "").Length < _minDelimiters))
+                    continue;
+                if (pattern.Length - pattern.Replace("{", "").Length < _minWords)
+                    continue;
+
+                var freqConsecutives = pattern.Split('|').Length - 1;
+                if (freqConsecutives < _minConsecutives || freqConsecutives > _maxConsecutives)
+                    continue;
 
                 string tempPattern = pattern;
                 int numberOfConsecutive = 0;
@@ -833,10 +855,9 @@ namespace BruteForceHash
                     maxOnesInARow = numberOfOnes;
 
                 if (maxOnesInARow > _maxConsecutiveOnes || minNumberOfConsecutiveWords < _minConsecutiveConcatenated || maxNumberOfConsecutiveWords > _maxConsecutiveConcatenated)
-                    include = false;
+                    continue;
 
-                if (include)
-                    finalList.Add(pattern);
+                finalList.Add(pattern);
             }
             return finalList;
         }

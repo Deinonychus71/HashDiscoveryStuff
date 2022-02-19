@@ -80,6 +80,10 @@ namespace BruteForceHash
             {
                 _dictionariesFirst = GetDictionaries(_options.DictionariesFirstWord, _options.DictionaryFilterFirst, options.DictionariesFirstSkipDigits, options.DictionariesFirstSkipSpecials, options.DictionariesFirstForceLowercase, options.DictionariesFirstAddTypos, options.DictionariesFirstReverseOrder);
             }
+            else if (!string.IsNullOrEmpty(_options.DictionaryFilterFirst))
+            {
+                _dictionariesFirst = GetDictionaries(_options.Dictionaries, _options.DictionaryFilterFirst, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos, options.DictionariesReverseOrder);
+            }
             else
             {
                 _dictionariesFirst = _dictionaries;
@@ -118,33 +122,42 @@ namespace BruteForceHash
             _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
             _logger.Log($"Combination Order Algorithm: {_options.Order}");
             _logger.Log($"Combination Order Longer words first: {_options.OrderLongerWordsFirst}");
-            _logger.Log($"Dictionaries: {_options.Dictionaries}");
-            _logger.Log($"Dictionaries Skip Digits: {_options.DictionariesSkipDigits}");
-            _logger.Log($"Dictionaries Skip Specials: {_options.DictionariesSkipSpecials}");
-            _logger.Log($"Dictionaries Force LowerCase: {_options.DictionariesForceLowercase}");
-            _logger.Log($"Dictionaries Add Typo: {_options.DictionariesAddTypos}");
-            _logger.Log($"Dictionaries Reverse Order: {_options.DictionariesReverseOrder}");
+            if (_options.Verbose)
+            {
+                _logger.Log($"Dictionaries: {_options.Dictionaries}");
+                _logger.Log($"Dictionaries Skip Digits: {_options.DictionariesSkipDigits}");
+                _logger.Log($"Dictionaries Skip Specials: {_options.DictionariesSkipSpecials}");
+                _logger.Log($"Dictionaries Force LowerCase: {_options.DictionariesForceLowercase}");
+                _logger.Log($"Dictionaries Add Typo: {_options.DictionariesAddTypos}");
+                _logger.Log($"Dictionaries Reverse Order: {_options.DictionariesReverseOrder}");
+            }
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             if (_dictionaries != _dictionariesFirst)
             {
-                _logger.Log($"Dictionaries (1st word): {_options.DictionariesFirstWord}");
-                _logger.Log($"Dictionaries (1st word) Skip Digits: {_options.DictionariesFirstSkipDigits}");
-                _logger.Log($"Dictionaries (1st word) Skip Specials: {_options.DictionariesFirstSkipSpecials}");
-                _logger.Log($"Dictionaries (1st word) Force LowerCase: {_options.DictionariesFirstForceLowercase}");
-                _logger.Log($"Dictionaries (1st word) Add Typo: {_options.DictionariesFirstAddTypos}");
-                _logger.Log($"Dictionaries (1st word) Reverse Order: {_options.DictionariesFirstReverseOrder}");
+                if (_options.Verbose)
+                {
+                    _logger.Log($"Dictionaries (1st word): {_options.DictionariesFirstWord}");
+                    _logger.Log($"Dictionaries (1st word) Skip Digits: {_options.DictionariesFirstSkipDigits}");
+                    _logger.Log($"Dictionaries (1st word) Skip Specials: {_options.DictionariesFirstSkipSpecials}");
+                    _logger.Log($"Dictionaries (1st word) Force LowerCase: {_options.DictionariesFirstForceLowercase}");
+                    _logger.Log($"Dictionaries (1st word) Add Typo: {_options.DictionariesFirstAddTypos}");
+                    _logger.Log($"Dictionaries (1st word) Reverse Order: {_options.DictionariesFirstReverseOrder}");
+                }
                 _logger.Log($"Dictionaries (1st word) words: {_dictionariesFirst.Values.Sum(p => p.Length)}");
             }
             if(!string.IsNullOrEmpty(_options.DictionaryFilterFirst))
                 _logger.Log($"Dictionaries (1st word) filter: {_options.DictionaryFilterFirst}");
             if (_dictionaries != _dictionariesLast)
             {
-                _logger.Log($"Dictionaries (last word): {_options.DictionariesLastWord}");
-                _logger.Log($"Dictionaries (last word) Skip Digits: {_options.DictionariesLastSkipDigits}");
-                _logger.Log($"Dictionaries (last word) Skip Specials: {_options.DictionariesLastSkipSpecials}");
-                _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
-                _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
-                _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
+                if (_options.Verbose)
+                {
+                    _logger.Log($"Dictionaries (last word): {_options.DictionariesLastWord}");
+                    _logger.Log($"Dictionaries (last word) Skip Digits: {_options.DictionariesLastSkipDigits}");
+                    _logger.Log($"Dictionaries (last word) Skip Specials: {_options.DictionariesLastSkipSpecials}");
+                    _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
+                    _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
+                    _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
+                }
                 _logger.Log($"Dictionaries (last word) words: {_dictionariesLast.Values.Sum(p => p.Length)}");
             }
 
