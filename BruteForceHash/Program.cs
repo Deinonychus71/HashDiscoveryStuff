@@ -28,11 +28,11 @@ namespace BruteForceHash
                 var hexValuesEntries = o.HexValue.Split(",", StringSplitOptions.RemoveEmptyEntries);
 
                 //Run script
-                Directory.CreateDirectory("Results");
+                Directory.CreateDirectory("HexData");
                 foreach (var hexValueEntry in hexValuesEntries)
                 {
                     Console.WriteLine($"-----------------------------------------");
-                    using var logger = new Logger($"Results/{hexValueEntry}/{hexValueEntry}_{o.Method}_{DateTime.Now:yyyy_dd_MM_HH_mm_ss}.txt");
+                    using var logger = new Logger($"HexData/[{hexValueEntry}]/Results/{hexValueEntry}_{o.Method}_{DateTime.Now:yyyy_dd_MM_HH_mm_ss}.txt");
                     logger.Init();
 
                     var input = hexValueEntry.Trim();
