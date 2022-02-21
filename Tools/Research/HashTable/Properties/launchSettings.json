@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HashTable": {
+      "commandName": "Project",
+      "commandLineArgs": "-i \"spirits_campaign_act_param.prc\" -l \"act_tbl\" -o \"output.csv\""
+    }
+  }
+}

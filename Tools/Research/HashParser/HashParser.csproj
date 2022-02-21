@@ -11,8 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\HashCommon\HashCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="paracobNET">
-      <HintPath>paracobNET.dll</HintPath>
+      <HintPath>..\..\Common\HashCommon\paracobNET.dll</HintPath>
     </Reference>
   </ItemGroup>
 
