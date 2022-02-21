@@ -105,8 +105,10 @@ namespace HashTable
         private static OrderedDictionary<string, object> ParseStruct(ParamStruct paramStruct)
         {
             var csvDictEntry = new OrderedDictionary<string, object>();
+            int i = 0;
             foreach (var prm in paramStruct.Nodes)
             {
+                csvDictEntry.Add("ID", i);
                 var key = _hashHelper.GetHexaLabel(prm.Key);
                 switch (prm.Value.TypeKey)
                 {
@@ -124,6 +126,7 @@ namespace HashTable
                         csvDictEntry.Add(key, ((ParamValue)prm.Value).Value.ToString());
                         break;
                 }
+                i++;
             }
             return csvDictEntry;
         }
