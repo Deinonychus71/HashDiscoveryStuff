@@ -82,11 +82,12 @@ namespace HashTable
         {
             var csvDict = new List<OrderedDictionary<string, object>>();
 
+            int i = 0;
             foreach (var prm in paramList.Nodes)
             {
                 if (prm.TypeKey == ParamType.@struct)
                 {
-                    csvDict.Add(ParseStruct(((ParamStruct)prm)));
+                    csvDict.Add(ParseStruct((ParamStruct)prm, i));
                 }
 
                 else if (prm.TypeKey == ParamType.list)
@@ -97,18 +98,19 @@ namespace HashTable
                 {
                     Console.WriteLine("Check ParamHash40");
                 }
+                i++;
             }
 
             ExportCSV(csvDict, outputCSV);
         }
 
-        private static OrderedDictionary<string, object> ParseStruct(ParamStruct paramStruct)
+        private static OrderedDictionary<string, object> ParseStruct(ParamStruct paramStruct, int index)
         {
             var csvDictEntry = new OrderedDictionary<string, object>();
-            int i = 0;
+            csvDictEntry.Add("ID", index);
+            
             foreach (var prm in paramStruct.Nodes)
             {
-                csvDictEntry.Add("ID", i);
                 var key = _hashHelper.GetHexaLabel(prm.Key);
                 switch (prm.Value.TypeKey)
                 {
@@ -126,7 +128,6 @@ namespace HashTable
                         csvDictEntry.Add(key, ((ParamValue)prm.Value).Value.ToString());
                         break;
                 }
-                i++;
             }
             return csvDictEntry;
         }
