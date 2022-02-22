@@ -40,6 +40,12 @@ namespace BruteForceHash
         private int _maxWordLength;
         private int _maxOnes;
         private int _minOnes;
+        private int _maxTwos;
+        private int _minTwos;
+        private int _maxThrees;
+        private int _minThrees;
+        private int _maxFours;
+        private int _minFours;
         private int _maxConsecutiveOnes;
         private int _maxConsecutiveConcatenated;
         private int _minConsecutiveConcatenated;
@@ -75,6 +81,12 @@ namespace BruteForceHash
             _concatenateOnlyFirstTwo = options.ConcatenateFirstTwoWords;
             _maxOnes = options.MaxOnes;
             _minOnes = options.MinOnes;
+            _maxTwos = options.MaxTwos;
+            _minTwos = options.MinTwos;
+            _maxThrees = options.MaxThrees;
+            _minThrees = options.MinThrees;
+            _maxFours = options.MaxFours;
+            _minFours = options.MinFours;
             _maxConsecutiveOnes = options.MaxConsecutiveOnes;
             _maxConsecutiveConcatenated = options.MaxConsecutiveConcatenation;
             _minConsecutiveConcatenated = options.MinConsecutiveConcatenation;
@@ -142,20 +154,16 @@ namespace BruteForceHash
             CancellationTokenSource cts = new CancellationTokenSource();
 
             _logger.Log($"Delimiter: {_delimiter}");
-            _logger.Log($"Max Delimiters: {_options.MaxDelimiters}");
-            _logger.Log($"Min Delimiters: {_options.MinDelimiters}");
-            _logger.Log($"Max Concatenated Words: {_options.MaxConcatenatedWords}");
-            _logger.Log($"Min Concatenated Words: {_options.MinConcatenatedWords}");
-            _logger.Log($"Min Delimiters: {_options.MinDelimiters}");
-            _logger.Log($"Max Consecutive Concatenation Limit: {_options.MaxConsecutiveConcatenation}");
-            _logger.Log($"Min Consecutive Concatenation Limit: {_options.MinConsecutiveConcatenation}");
-            _logger.Log($"Max Words Length: {_options.MaxWordLength}");
-            _logger.Log($"Min Words Length: {_options.MinWordLength}");
-            _logger.Log($"Max Ones: {_options.MaxOnes}");
-            _logger.Log($"Min Ones: {_options.MinOnes}");
+            _logger.Log($"Delimiters: Between {_options.MinDelimiters} and {_options.MaxDelimiters}");
+            _logger.Log($"Words Length: Between {_options.MinWordLength} and {_options.MaxWordLength}");
+            _logger.Log($"Ones Limit: Between {_options.MinOnes} and {_options.MaxOnes}");
+            _logger.Log($"Twos Limit: Between {_options.MinTwos} and {_options.MaxTwos}");
+            _logger.Log($"Threes Limit: Between {_options.MinThrees} and {_options.MaxThrees}");
+            _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
+            _logger.Log($"Concatenated Words: Between {_options.MinConcatenatedWords} and {_options.MaxConcatenatedWords}");
+            _logger.Log($"Consecutive Concatenation Limit: Between  {_options.MinConsecutiveConcatenation} and  {_options.MaxConsecutiveConcatenation}");
             _logger.Log($"Max Consecutive Ones: {_options.MaxConsecutiveOnes}");
-            _logger.Log($"Max Words Limit: {_options.WordsLimit}");
-            _logger.Log($"Min Words Limit: {_options.MinWordsLimit}");
+            _logger.Log($"Words Limit: Between {_options.MinWordsLimit} and {_options.WordsLimit}");
             _logger.Log($"Only First Two Words Concatenated: {_options.ConcatenateFirstTwoWords}");
             _logger.Log($"Only Last Two Words Concatenated: {_options.ConcatenateLastTwoWords}");
 
@@ -809,6 +817,16 @@ namespace BruteForceHash
 
                 var freqConsecutives = pattern.Split('|').Length - 1;
                 if (freqConsecutives < _minConsecutives || freqConsecutives > _maxConsecutives)
+                    continue;
+
+                var nbrTwos = pattern.Split("{2}").Length - 1;
+                var nbrThrees = pattern.Split("{3}").Length - 1;
+                var nbrFours = pattern.Split("{4}").Length - 1;
+                if (nbrTwos < _minTwos || nbrTwos > _maxTwos)
+                    continue;
+                if (nbrThrees < _minThrees || nbrThrees > _maxThrees)
+                    continue;
+                if (nbrFours < _minFours || nbrFours > _maxFours)
                     continue;
 
                 string tempPattern = pattern;

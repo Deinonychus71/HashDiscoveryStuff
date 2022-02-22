@@ -72,6 +72,12 @@ namespace BruteForceHash.GUI
         public int MaxWordLength { get; set; }
         public int MaxOnes { get; set; }
         public int MinOnes { get; set; }
+        public int MaxTwos { get; set; }
+        public int MinTwos { get; set; }
+        public int MaxThrees { get; set; }
+        public int MinThrees { get; set; }
+        public int MaxFours { get; set; }
+        public int MinFours { get; set; }
         public int MaxConsecutiveOnes { get; set; }
         public int MinWordsLimit { get; set; }
     }

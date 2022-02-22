@@ -13,7 +13,7 @@ namespace BruteForceHash
     public class BruteForceDictionary
     {
         private readonly Logger _logger;
-        private Logger _hashCatLogger;
+        private readonly Logger _hashCatLogger;
         private readonly IEnumerable<string> _combinationPatterns;
         private readonly Dictionary<string, byte[][]> _dictionaries;
         private readonly Dictionary<string, byte[][]> _dictionariesFirst;
@@ -25,8 +25,20 @@ namespace BruteForceHash
         private readonly byte _delimiterByte;
         private readonly int _delimiterLength;
         private uint _hexExtract;
-        private bool _runInHashCat;
+        private readonly bool _runInHashCat;
         private int _foundResult = 0;
+        private readonly int _maxDelimiters;
+        private readonly int _minDelimiters;
+        private readonly int _minWordLength;
+        private readonly int _maxWordLength;
+        private readonly int _maxOnes;
+        private readonly int _minOnes;
+        private readonly int _maxTwos;
+        private readonly int _minTwos;
+        private readonly int _maxThrees;
+        private readonly int _minThrees;
+        private readonly int _maxFours;
+        private readonly int _minFours;
         private Action<ByteString> _testCandidate;
         private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
@@ -48,6 +60,19 @@ namespace BruteForceHash
                 _delimiterByte = Encoding.UTF8.GetBytes(options.Delimiter)[0];
                 _delimiterLength = Encoding.UTF8.GetByteCount(_delimiter);
             }
+
+            _maxDelimiters = options.MaxDelimiters;
+            _minDelimiters = options.MinDelimiters;
+            _minWordLength = options.MinWordLength;
+            _maxWordLength = options.MaxWordLength;
+            _maxOnes = options.MaxOnes;
+            _minOnes = options.MinOnes;
+            _maxTwos = options.MaxTwos;
+            _minTwos = options.MinTwos;
+            _maxThrees = options.MaxThrees;
+            _minThrees = options.MinThrees;
+            _maxFours = options.MaxFours;
+            _minFours = options.MinFours;
 
             if (runInHashCat)
             {
@@ -109,6 +134,12 @@ namespace BruteForceHash
             CancellationTokenSource cts = new CancellationTokenSource();
 
             _logger.Log($"Delimiter: {_delimiter}");
+            _logger.Log($"Delimiters: Between {_options.MinDelimiters} and {_options.MaxDelimiters}");
+            _logger.Log($"Words Length: Between {_options.MinWordLength} and {_options.MaxWordLength}");
+            _logger.Log($"Ones Limit: Between {_options.MinOnes} and {_options.MaxOnes}");
+            _logger.Log($"Twos Limit: Between {_options.MinTwos} and {_options.MaxTwos}");
+            _logger.Log($"Threes Limit: Between {_options.MinThrees} and {_options.MaxThrees}");
+            _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
             _logger.Log($"Words Limit: {_options.WordsLimit}");
             if (!string.IsNullOrEmpty(_options.ExcludePatterns))
                 _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
@@ -364,14 +395,22 @@ namespace BruteForceHash
                             allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, 'l', 'r'));
                         foreach (var newWord in allNewWords)
                         {
-                            var lengthStr = $"{{{Encoding.UTF8.GetByteCount(newWord)}}}";
+                            var byteCount = Encoding.UTF8.GetByteCount(newWord);
+                            if (byteCount < _minWordLength || byteCount > _maxWordLength)
+                                continue;
+
+                            var lengthStr = $"{{{byteCount}}}";
                             if (!dictionary[lengthStr].Contains(newWord))
                                 dictionary[lengthStr].Add(newWord);
                         }
                     }
                     else
                     {
-                        var lengthStr = $"{{{Encoding.UTF8.GetByteCount(wordToAdd)}}}";
+                        var byteCount = Encoding.UTF8.GetByteCount(wordToAdd);
+                        if (byteCount < _minWordLength || byteCount > _maxWordLength)
+                            continue;
+
+                        var lengthStr = $"{{{byteCount}}}";
                         if (!dictionary[lengthStr].Contains(wordToAdd))
                             dictionary[lengthStr].Add(wordToAdd);
                     }
@@ -565,6 +604,23 @@ namespace BruteForceHash
             var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             foreach (var combination in inputList.Select(p => $"${p}^"))
             {
+                //Size Filtering
+                var nbrDelimiters = combination.Split(_delimiter).Length - 1;
+                var nbrOnes = combination.Split("{1}").Length - 1;
+                var nbrTwos = combination.Split("{2}").Length - 1;
+                var nbrThrees = combination.Split("{3}").Length - 1;
+                var nbrFours = combination.Split("{4}").Length - 1;
+                if (nbrDelimiters < _minDelimiters || nbrDelimiters > _maxDelimiters)
+                    continue;
+                if (nbrOnes < _minOnes || nbrOnes > _maxOnes)
+                    continue;
+                if (nbrTwos < _minTwos || nbrTwos > _maxTwos)
+                    continue;
+                if (nbrThrees < _minThrees || nbrThrees > _maxThrees)
+                    continue;
+                if (nbrFours < _minFours || nbrFours > _maxFours)
+                    continue;
+
                 List<string> nbrChar = new List<string>();
                 string reducedCombination = combination;
                 while (reducedCombination.IndexOf('}') != -1)

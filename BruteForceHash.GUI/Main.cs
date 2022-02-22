@@ -112,6 +112,12 @@ namespace BruteForceHash.GUI
             cbMinWordLength.SelectedIndex = 0;
             cbMaxOnes.SelectedIndex = 10;
             cbMinOnes.SelectedIndex = 0;
+            cbMaxTwos.SelectedIndex = 10;
+            cbMinTwos.SelectedIndex = 0;
+            cbMaxThrees.SelectedIndex = 10;
+            cbMinThrees.SelectedIndex = 0;
+            cbMaxFours.SelectedIndex = 10;
+            cbMinFours.SelectedIndex = 0;
             cbMaxConsecutiveOnes.SelectedIndex = 9;
             cbMinWordsLimit.SelectedIndex = 0;
             cbMaxConsecutiveConcat.SelectedIndex = 9;
@@ -351,6 +357,12 @@ namespace BruteForceHash.GUI
                                                     $"--min_word_length {cbMinWordLength.SelectedItem} " +
                                                     $"--max_ones {cbMaxOnes.SelectedItem} " +
                                                     $"--min_ones {cbMinOnes.SelectedItem} " +
+                                                    $"--max_twos {cbMaxTwos.SelectedItem} " +
+                                                    $"--min_twos {cbMinTwos.SelectedItem} " +
+                                                    $"--max_threes {cbMaxThrees.SelectedItem} " +
+                                                    $"--min_threes {cbMinThrees.SelectedItem} " +
+                                                    $"--max_fours {cbMaxFours.SelectedItem} " +
+                                                    $"--min_fours {cbMinFours.SelectedItem} " +
                                                     $"--max_consecutive_ones {cbMaxConsecutiveOnes.SelectedItem} " +
                                                     $"{(chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
                                                     $"{(chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
@@ -527,6 +539,12 @@ namespace BruteForceHash.GUI
                 MinWordLength = Convert.ToInt32(cbMinWordLength.SelectedItem),
                 MaxOnes = Convert.ToInt32(cbMaxOnes.SelectedItem),
                 MinOnes = Convert.ToInt32(cbMinOnes.SelectedItem),
+                MaxTwos = Convert.ToInt32(cbMaxTwos.SelectedItem),
+                MinTwos = Convert.ToInt32(cbMinTwos.SelectedItem),
+                MaxThrees = Convert.ToInt32(cbMaxThrees.SelectedItem),
+                MinThrees = Convert.ToInt32(cbMinThrees.SelectedItem),
+                MaxFours = Convert.ToInt32(cbMaxFours.SelectedItem),
+                MinFours = Convert.ToInt32(cbMinFours.SelectedItem),
                 MaxConsecutiveOnes = Convert.ToInt32(cbMaxConsecutiveOnes.SelectedItem),
                 MinWordsLimit = Convert.ToInt32(cbMinWordsLimit.SelectedItem),
                 MaxConsecutiveConcatenation = Convert.ToInt32(cbMaxConsecutiveConcat.SelectedItem),
@@ -612,18 +630,26 @@ namespace BruteForceHash.GUI
             }
             PreviewCharsets();
 
-            //Advanced
-            chkDictionaryAdvanced.Checked = hbtObject.DictionaryAdvanced;
-            chkOnlyFirstTwoWordsConcat.Checked = hbtObject.ConcatenateFirstTwoWords;
-            chkOnlyLastTwoWordsConcat.Checked = hbtObject.ConcatenateLastTwoWords;
+            //Size Filters
             cbMaxDelim.SelectedItem = hbtObject.MaxDelimiters.ToString();
             cbMinDelim.SelectedItem = hbtObject.MinDelimiters.ToString();
-            cbMaxConcatWords.SelectedItem = hbtObject.MaxConcatenatedWords.ToString();
-            cbMinConcatWords.SelectedItem = hbtObject.MinConcatenatedWords.ToString();
             cbMaxWordLength.SelectedItem = hbtObject.MaxWordLength.ToString();
             cbMinWordLength.SelectedItem = hbtObject.MinWordLength.ToString();
             cbMaxOnes.SelectedItem = hbtObject.MaxOnes.ToString();
             cbMinOnes.SelectedItem = hbtObject.MinOnes.ToString();
+            cbMaxTwos.SelectedItem = hbtObject.MaxTwos.ToString();
+            cbMinTwos.SelectedItem = hbtObject.MinTwos.ToString();
+            cbMaxThrees.SelectedItem = hbtObject.MaxThrees.ToString();
+            cbMinThrees.SelectedItem = hbtObject.MinThrees.ToString();
+            cbMaxFours.SelectedItem = hbtObject.MaxFours.ToString();
+            cbMinFours.SelectedItem = hbtObject.MinFours.ToString();
+
+            //Advanced
+            chkDictionaryAdvanced.Checked = hbtObject.DictionaryAdvanced;
+            chkOnlyFirstTwoWordsConcat.Checked = hbtObject.ConcatenateFirstTwoWords;
+            chkOnlyLastTwoWordsConcat.Checked = hbtObject.ConcatenateLastTwoWords;
+            cbMaxConcatWords.SelectedItem = hbtObject.MaxConcatenatedWords.ToString();
+            cbMinConcatWords.SelectedItem = hbtObject.MinConcatenatedWords.ToString();
             cbMaxConsecutiveOnes.SelectedItem = hbtObject.MaxConsecutiveOnes.ToString();
             cbMinWordsLimit.SelectedItem = hbtObject.MinWordsLimit.ToString();
             cbMaxConsecutiveConcat.SelectedItem = hbtObject.MaxConsecutiveConcatenation.ToString();
@@ -825,12 +851,6 @@ namespace BruteForceHash.GUI
             chkOnlyLastTwoWordsConcat.Enabled = chkDictionaryAdvanced.Checked;
             cbMaxConcatWords.Enabled = chkDictionaryAdvanced.Checked;
             cbMinConcatWords.Enabled = chkDictionaryAdvanced.Checked;
-            cbMaxDelim.Enabled = chkDictionaryAdvanced.Checked;
-            cbMinDelim.Enabled = chkDictionaryAdvanced.Checked;
-            cbMaxWordLength.Enabled = chkDictionaryAdvanced.Checked;
-            cbMinWordLength.Enabled = chkDictionaryAdvanced.Checked;
-            cbMaxOnes.Enabled = chkDictionaryAdvanced.Checked;
-            cbMinOnes.Enabled = chkDictionaryAdvanced.Checked;
             cbMaxConsecutiveOnes.Enabled = chkDictionaryAdvanced.Checked;
             cbMinWordsLimit.Enabled = chkDictionaryAdvanced.Checked;
             cbMaxConsecutiveConcat.Enabled = chkDictionaryAdvanced.Checked;

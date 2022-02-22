@@ -47,6 +47,18 @@ namespace BruteForceHash
         public int MaxOnes { get; set; }
         [Option('P', "min_ones", Required = false, Default = 0, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
         public int MinOnes { get; set; }
+        [Option('P', "max_twos", Required = false, Default = 10, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MaxTwos { get; set; }
+        [Option('P', "min_twos", Required = false, Default = 0, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MinTwos { get; set; }
+        [Option('P', "max_threes", Required = false, Default = 10, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MaxThrees { get; set; }
+        [Option('P', "min_threes", Required = false, Default = 0, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MinThrees { get; set; }
+        [Option('P', "max_fours", Required = false, Default = 10, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MaxFours { get; set; }
+        [Option('P', "min_fours", Required = false, Default = 0, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        public int MinFours { get; set; }
         [Option('P', "max_concatenated_words", Required = false, Default = 10, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
         public int MaxConcatenatedWords { get; set; }
         [Option('P', "min_concatenated_words", Required = false, Default = 0, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
