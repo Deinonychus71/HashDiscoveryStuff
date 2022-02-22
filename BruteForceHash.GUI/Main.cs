@@ -5,6 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
+using RikTheVeggie;
+using System.Collections;
 
 namespace BruteForceHash.GUI
 {
@@ -28,6 +31,9 @@ namespace BruteForceHash.GUI
             saveFile.InitialDirectory = Directory.GetCurrentDirectory() + "\\Templates\\";
             openFile.Filter = "HBT files|*.hbt";
             saveFile.Filter = "HBT files|*.hbt";
+            tvDictMain.TreeViewNodeSorter = new TreeViewSorter();
+            tvDictFirstWord.TreeViewNodeSorter = new TreeViewSorter();
+            tvDictLastWord.TreeViewNodeSorter = new TreeViewSorter();
 
             OnNewClick(this, null);
         }
@@ -45,7 +51,7 @@ namespace BruteForceHash.GUI
             chkVerbose.Checked = true;
             chkUtf8Toggle.Checked = false;
 
-            SetDictionary(chklDictionaries, string.Empty);
+            SetDictionary(tvDictMain, string.Empty);
             chkDictSkipDigits.Checked = false;
             chkDictSkipSpecials.Checked = true;
             chkDictForceLowercase.Checked = true;
@@ -53,7 +59,7 @@ namespace BruteForceHash.GUI
             chkDictReverseOrder.Checked = false;
 
             chkUseCustomDictFirst.Checked = false;
-            SetDictionary(chklDictionariesFirstWord, string.Empty);
+            SetDictionary(tvDictFirstWord, string.Empty);
             chkDictFirstSkipDigits.Checked = false;
             chkDictFirstSkipSpecials.Checked = false;
             chkDictFirstForceLowercase.Checked = false;
@@ -61,7 +67,7 @@ namespace BruteForceHash.GUI
             chkDictFirstReverseOrder.Checked = false;
 
             chkUseCustomDictLast.Checked = false;
-            SetDictionary(chklDictionariesLastWord, string.Empty);
+            SetDictionary(tvDictLastWord, string.Empty);
             chkDictLastSkipDigits.Checked = false;
             chkDictLastSkipSpecials.Checked = false;
             chkDictLastForceLowercase.Checked = false;
@@ -175,42 +181,78 @@ namespace BruteForceHash.GUI
 
         private void OnRefreshClick(object sender, EventArgs e)
         {
-            var dictionaries = GetDictionary(chklDictionaries);
-            var dictionariesFirstWord = GetDictionary(chklDictionariesFirstWord);
-            var dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
+            var dictionaries = GetDictionary(tvDictMain);
+            var dictionariesFirstWord = GetDictionary(tvDictFirstWord);
+            var dictionariesLastWord = GetDictionary(tvDictLastWord);
 
             LoadDictionaries();
             LoadPatternSamples();
 
-            SetDictionary(chklDictionaries, dictionaries);
-            SetDictionary(chklDictionariesFirstWord, dictionariesFirstWord);
-            SetDictionary(chklDictionariesLastWord, dictionariesLastWord);
+            SetDictionary(tvDictMain, dictionaries);
+            SetDictionary(tvDictFirstWord, dictionariesFirstWord);
+            SetDictionary(tvDictLastWord, dictionariesLastWord);
         }
 
         private void LoadDictionaries()
         {
-            chklDictionaries.Items.Clear();
-            chklDictionariesFirstWord.Items.Clear();
-            chklDictionariesLastWord.Items.Clear();
+            tvDictMain.BeginUpdate();
+            tvDictFirstWord.BeginUpdate();
+            tvDictLastWord.BeginUpdate();
+            tvDictMain.Nodes.Clear();
+            tvDictFirstWord.Nodes.Clear();
+            tvDictLastWord.Nodes.Clear();
             if (Directory.Exists("Dictionaries"))
             {
                 var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
                 foreach (var dictionaryPath in allDictionaries)
                 {
                     var filename = Path.GetFileName(dictionaryPath);
-                    var isFirstDic = filename.Contains("[1st]");
-                    var isLastDic = filename.Contains("[Last]");
-                    if (!isFirstDic && !isLastDic)
-                        chklDictionaries.Items.Add(filename);
-                    if (!isLastDic)
-                        chklDictionariesFirstWord.Items.Add(filename);
-                    if (!isFirstDic)
-                        chklDictionariesLastWord.Items.Add(filename);
+                    AddDictionaryToTreeView(tvDictMain, filename, dictionaryPath);
+                    AddDictionaryToTreeView(tvDictFirstWord, filename, dictionaryPath);
+                    AddDictionaryToTreeView(tvDictLastWord, filename, dictionaryPath);
                 }
             }
             else
             {
                 Directory.CreateDirectory("Dictionaries");
+            }
+            tvDictMain.Sort();
+            tvDictFirstWord.Sort();
+            tvDictLastWord.Sort();
+            tvDictMain.EndUpdate();
+            tvDictFirstWord.EndUpdate();
+            tvDictLastWord.EndUpdate();
+        }
+
+        private void AddDictionaryToTreeView(TreeView tv, string filename, string dictionaryPath)
+        {
+            var dictionaryFiles = Regex.Split(filename, @"\[(.*?)\]", RegexOptions.Compiled).Where(p => !string.IsNullOrEmpty(p)).ToArray();
+            var lastKey = string.Empty;
+            var currentNodeCollection = tv.Nodes;
+            for (int i = 0; i < dictionaryFiles.Length; i++)
+            {
+                var last = i == dictionaryFiles.Length - 1;
+                var label = dictionaryFiles[i];
+                var key = $"{i}-{label}";
+                if (!last)
+                {
+                    var currentNode = currentNodeCollection.Find(key, false).FirstOrDefault();
+                    if (currentNode == null)
+                    {
+                        currentNode = new TreeNode($" -{label}-");
+                        currentNode.Name = key;
+                        currentNodeCollection.Add(currentNode);
+                    }
+                    currentNodeCollection = currentNode.Nodes;
+                    continue;
+                }
+                else
+                {
+                    var nbrLines = File.ReadAllLines(dictionaryPath).Length;
+                    var lastNode = new TreeNode($" {label.Replace(".dic", "", StringComparison.InvariantCultureIgnoreCase)} ~{nbrLines} words");
+                    lastNode.Name = dictionaryPath;
+                    currentNodeCollection.Add(lastNode);
+                }
             }
         }
 
@@ -241,10 +283,10 @@ namespace BruteForceHash.GUI
             var hexFolder = GetHexFolder();
 
             SaveCustomDictionaries();
-            var dictionaries = GetDictionary(chklDictionaries);
+            var dictionaries = GetDictionary(tvDictMain);
             if (File.Exists($"{hexFolder}\\[{hex}].dic"))
             {
-                dictionaries += $"{hexFolder}\\[{hex}].dic;";
+                dictionaries = $"{hexFolder}\\[{hex}].dic;" + dictionaries;
             }
             var dictionariesFirstWord = string.Empty;
             var dictionariesLastWord = string.Empty;
@@ -265,10 +307,10 @@ namespace BruteForceHash.GUI
                 dictFirstForceLowercase = chkDictFirstForceLowercase.Checked;
                 dictFirstAddTypos = chkDictFirstAddTypos.Checked;
                 dictFirstReverseOrder = chkDictFirstReverseOrder.Checked;
-                dictionariesFirstWord = GetDictionary(chklDictionariesFirstWord);
+                dictionariesFirstWord = GetDictionary(tvDictFirstWord);
                 if (File.Exists($"{hexFolder}\\[{hex}][1st].dic"))
                 {
-                    dictionariesFirstWord += $"{hexFolder}\\[{hex}][1st].dic";
+                    dictionariesFirstWord = $"{hexFolder}\\[{hex}][1st].dic;" + dictionariesFirstWord;
                 }
             }
             if (chkUseCustomDictLast.Checked)
@@ -278,10 +320,10 @@ namespace BruteForceHash.GUI
                 dictLastForceLowercase = chkDictLastForceLowercase.Checked;
                 dictLastAddTypos = chkDictLastAddTypos.Checked;
                 dictLastReverseOrder = chkDictLastReverseOrder.Checked;
-                dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
+                dictionariesLastWord = GetDictionary(tvDictLastWord);
                 if (File.Exists($"{hexFolder}\\[{hex}][Last].dic"))
                 {
-                    dictionariesLastWord += $"{hexFolder}\\[{hex}][Last].dic";
+                    dictionariesLastWord = $"{hexFolder}\\[{hex}][Last].dic;" + dictionariesLastWord;
                 }
             }
 
@@ -415,9 +457,9 @@ namespace BruteForceHash.GUI
 
         private void SaveHBT(string fileName)
         {
-            var dictionaries = GetDictionary(chklDictionaries);
-            var dictionariesFirstWord = GetDictionary(chklDictionariesFirstWord);
-            var dictionariesLastWord = GetDictionary(chklDictionariesLastWord);
+            var dictionaries = GetDictionary(tvDictMain);
+            var dictionariesFirstWord = GetDictionary(tvDictFirstWord);
+            var dictionariesLastWord = GetDictionary(tvDictLastWord);
             var charsets = new List<string>();
             foreach (var charset in chklCharsets.CheckedItems)
                 charsets.Add(charset.ToString());
@@ -504,7 +546,7 @@ namespace BruteForceHash.GUI
             chkVerbose.Checked = hbtObject.Verbose;
             chkUtf8Toggle.Checked = hbtObject.EnableUtf8;
 
-            SetDictionary(chklDictionaries, hbtObject.Dictionaries);
+            SetDictionary(tvDictMain, hbtObject.Dictionaries);
             chkDictSkipDigits.Checked = hbtObject.DictionariesSkipDigits;
             chkDictSkipSpecials.Checked = hbtObject.DictionariesSkipSpecials;
             chkDictForceLowercase.Checked = hbtObject.DictionariesForceLowercase;
@@ -512,7 +554,7 @@ namespace BruteForceHash.GUI
             chkDictReverseOrder.Checked = hbtObject.DictionariesReverseTypos;
 
             chkUseCustomDictFirst.Checked = hbtObject.UseDictionaryFirstWord;
-            SetDictionary(chklDictionariesFirstWord, hbtObject.DictionariesFirstWord);
+            SetDictionary(tvDictFirstWord, hbtObject.DictionariesFirstWord);
             chkDictFirstSkipDigits.Checked = hbtObject.DictionariesFirstWordSkipDigits;
             chkDictFirstSkipSpecials.Checked = hbtObject.DictionariesFirstWordSkipSpecials;
             chkDictFirstForceLowercase.Checked = hbtObject.DictionariesFirstWordForceLowercase;
@@ -520,7 +562,7 @@ namespace BruteForceHash.GUI
             chkDictFirstReverseOrder.Checked = hbtObject.DictionariesFirstWordReverseTypos;
 
             chkUseCustomDictLast.Checked = hbtObject.UseDictionaryLastWord;
-            SetDictionary(chklDictionariesLastWord, hbtObject.DictionariesLastWord);
+            SetDictionary(tvDictLastWord, hbtObject.DictionariesLastWord);
             chkDictLastSkipDigits.Checked = hbtObject.DictionariesLastWordSkipDigits;
             chkDictLastSkipSpecials.Checked = hbtObject.DictionariesLastWordSkipSpecials;
             chkDictLastForceLowercase.Checked = hbtObject.DictionariesLastWordForceLowercase;
@@ -648,24 +690,36 @@ namespace BruteForceHash.GUI
         }
         #endregion
 
-        private string GetDictionary(CheckedListBox chkList)
+        private string GetDictionary(TriStateTreeView tv)
         {
             var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
-            var dictionaries = string.Empty;
-            foreach (var dict in chkList.CheckedItems)
-            {
-                var dictStr = dict.ToString();
-                var dictPath = allDictionaries.FirstOrDefault(p => p.EndsWith(dictStr));
-                dictionaries += $"{dictPath};";
-            }
-            return dictionaries;
+            return GetDictionaryRec(tv.Nodes, string.Empty, allDictionaries);
         }
 
-        private void SetDictionary(CheckedListBox chkList, string dictionaries)
+        private string GetDictionaryRec(TreeNodeCollection trc, string output, string[] allDictionaries)
         {
-            for (int i = 0; i < chkList.Items.Count; i++)
+            if (trc != null)
             {
-                chkList.SetItemChecked(i, false);
+                foreach (TreeNode node in trc)
+                {
+                    var dictStr = node.Name;
+                    if (!string.IsNullOrEmpty(dictStr))
+                    {
+                        var dictPath = allDictionaries.FirstOrDefault(p => p.EndsWith(dictStr));
+                        if (!string.IsNullOrEmpty(dictPath) && node.Checked)
+                            output += $"{dictPath};";
+                    }
+                    output = GetDictionaryRec(node.Nodes, output, allDictionaries);
+                }
+            }
+            return output;
+        }
+
+        private void SetDictionary(TriStateTreeView tv, string dictionaries)
+        {
+            for (int i = 0; i < tv.Nodes.Count; i++)
+            {
+                tv.Nodes[i].Checked = false;
             }
             if (!string.IsNullOrEmpty(dictionaries))
             {
@@ -673,17 +727,32 @@ namespace BruteForceHash.GUI
 
                 foreach (var entry in splitEntries)
                 {
-                    var dict = Path.GetFileName(entry);
-                    for (int i = 0; i < chkList.Items.Count; i++)
+                    var node = tv.Nodes.Find(entry, true).FirstOrDefault();
+                    if (node != null)
                     {
-                        if (chkList.Items[i].ToString().EndsWith(dict))
-                        {
-                            chkList.SetItemChecked(i, true);
-                            break;
-                        }
+                        node.Checked = true;
                     }
                 }
             }
+            SetDictionaryCheckChecked(tv.Nodes, null);
+        }
+
+        private bool SetDictionaryCheckChecked(TreeNodeCollection trc, TreeNode parentNode)
+        {
+            bool shouldCheck = true;
+            foreach (TreeNode node in trc)
+            {
+                if (node.Nodes != null && node.Nodes.Count != 0)
+                    shouldCheck = SetDictionaryCheckChecked(node.Nodes, node);
+
+                if (!node.Checked)
+                    shouldCheck = false;
+            }
+            if (shouldCheck && parentNode != null)
+            {
+                parentNode.Checked = true;
+            }
+            return shouldCheck;
         }
 
         private void OnCbMethodChanged(object sender, EventArgs e)
@@ -700,7 +769,7 @@ namespace BruteForceHash.GUI
             chkDictFirstForceLowercase.Enabled = chkUseCustomDictFirst.Checked;
             chkDictFirstAddTypos.Enabled = chkUseCustomDictFirst.Checked;
             chkDictFirstReverseOrder.Enabled = chkUseCustomDictFirst.Checked;
-            chklDictionariesFirstWord.Enabled = chkUseCustomDictFirst.Checked;
+            tvDictFirstWord.Enabled = chkUseCustomDictFirst.Checked;
             if (chkUseCustomDictFirst.Checked)
             {
                 chkDictFirstSkipDigits.Checked = chkDictSkipDigits.Checked;
@@ -726,7 +795,7 @@ namespace BruteForceHash.GUI
             chkDictLastForceLowercase.Enabled = chkUseCustomDictLast.Checked;
             chkDictLastAddTypos.Enabled = chkUseCustomDictLast.Checked;
             chkDictLastReverseOrder.Enabled = chkUseCustomDictLast.Checked;
-            chklDictionariesLastWord.Enabled = chkUseCustomDictLast.Checked;
+            tvDictLastWord.Enabled = chkUseCustomDictLast.Checked;
             if (chkUseCustomDictLast.Checked)
             {
                 chkDictLastSkipDigits.Checked = chkDictSkipDigits.Checked;
@@ -817,25 +886,25 @@ namespace BruteForceHash.GUI
 
         private void btnDictUnselected_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < chklDictionaries.Items.Count; i++)
+            foreach (TreeNode node in tvDictMain.Nodes)
             {
-                chklDictionaries.SetItemChecked(i, false);
+                node.Checked = false;
             }
         }
 
         private void btnDictFirstUnselected_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < chklDictionariesFirstWord.Items.Count; i++)
+            foreach (TreeNode node in tvDictFirstWord.Nodes)
             {
-                chklDictionariesFirstWord.SetItemChecked(i, false);
+                node.Checked = false;
             }
         }
 
         private void btnDictLastUnselected_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < chklDictionariesLastWord.Items.Count; i++)
+            foreach (TreeNode node in tvDictLastWord.Nodes)
             {
-                chklDictionariesLastWord.SetItemChecked(i, false);
+                node.Checked = false;
             }
         }
 
@@ -859,14 +928,14 @@ namespace BruteForceHash.GUI
 
         private void btnCopyToDictFirst_Click(object sender, EventArgs e)
         {
-            var dictionaries = GetDictionary(chklDictionaries);
-            SetDictionary(chklDictionariesFirstWord, dictionaries);
+            var dictionaries = GetDictionary(tvDictMain);
+            SetDictionary(tvDictFirstWord, dictionaries);
         }
 
         private void btnCopyToDictLast_Click(object sender, EventArgs e)
         {
-            var dictionaries = GetDictionary(chklDictionaries);
-            SetDictionary(chklDictionariesLastWord, dictionaries);
+            var dictionaries = GetDictionary(tvDictMain);
+            SetDictionary(tvDictLastWord, dictionaries);
         }
 
         private string GetHex()
@@ -898,7 +967,7 @@ namespace BruteForceHash.GUI
             var hex = GetHex();
             var hexFolder = GetHexFolder(false);
             var isValidHex = IsValidHex();
-            
+
             btnQuickSave.Enabled = isValidHex;
 
             var fileName = $"{hexFolder}\\[{hex}].hbt";
@@ -906,6 +975,23 @@ namespace BruteForceHash.GUI
 
             btnStartHashCat.Enabled = ShouldEnableHashCat();
             btnStart.Enabled = IsValidHex();
+        }
+    }
+
+    public class TreeViewSorter : IComparer
+    {
+        public int Compare(object x, object y)
+        {
+            var tx = x as TreeNode;
+            var ty = y as TreeNode;
+
+            if (tx.Nodes.Count > 0 && ty.Nodes.Count == 0)
+                return -1;
+
+            if (tx.Nodes.Count == 0 && ty.Nodes.Count > 0)
+                return 1;
+
+            return string.Compare(tx.Text, ty.Text);
         }
     }
 }

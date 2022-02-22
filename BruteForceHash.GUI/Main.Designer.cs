@@ -29,6 +29,7 @@ namespace BruteForceHash.GUI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lblHexValues = new System.Windows.Forms.Label();
             this.txtHexValues = new System.Windows.Forms.TextBox();
             this.lblMethod = new System.Windows.Forms.Label();
@@ -61,19 +62,19 @@ namespace BruteForceHash.GUI
             this.chkIncludeWordNotFirst = new System.Windows.Forms.CheckBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tvDictMain = new RikTheVeggie.TriStateTreeView();
             this.btnDictUnselected = new System.Windows.Forms.Button();
             this.txtDictionaryFilterFirst = new System.Windows.Forms.TextBox();
             this.lblDictionaryFilterFirst = new System.Windows.Forms.Label();
-            this.chklDictionaries = new System.Windows.Forms.CheckedListBox();
             this.chkDictSkipDigits = new System.Windows.Forms.CheckBox();
             this.chkDictSkipSpecials = new System.Windows.Forms.CheckBox();
             this.chkDictForceLowercase = new System.Windows.Forms.CheckBox();
             this.chkDictAddTypos = new System.Windows.Forms.CheckBox();
             this.chkDictReverseOrder = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tvDictFirstWord = new RikTheVeggie.TriStateTreeView();
             this.btnCopyToDictFirst = new System.Windows.Forms.Button();
             this.btnDictFirstUnselected = new System.Windows.Forms.Button();
-            this.chklDictionariesFirstWord = new System.Windows.Forms.CheckedListBox();
             this.lblDictionariesFirstWord = new System.Windows.Forms.Label();
             this.chkUseCustomDictFirst = new System.Windows.Forms.CheckBox();
             this.chkDictFirstSkipDigits = new System.Windows.Forms.CheckBox();
@@ -82,9 +83,9 @@ namespace BruteForceHash.GUI
             this.chkDictFirstAddTypos = new System.Windows.Forms.CheckBox();
             this.chkDictFirstReverseOrder = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tvDictLastWord = new RikTheVeggie.TriStateTreeView();
             this.btnCopyToDictLast = new System.Windows.Forms.Button();
             this.btnDictLastUnselected = new System.Windows.Forms.Button();
-            this.chklDictionariesLastWord = new System.Windows.Forms.CheckedListBox();
             this.lblDictionaryLastWord = new System.Windows.Forms.Label();
             this.chkUseCustomDictLast = new System.Windows.Forms.CheckBox();
             this.chkDictLastReverseOrder = new System.Windows.Forms.CheckBox();
@@ -618,11 +619,11 @@ namespace BruteForceHash.GUI
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.tvDictMain);
             this.tabPage1.Controls.Add(this.btnDictUnselected);
             this.tabPage1.Controls.Add(this.txtDictionaryFilterFirst);
             this.tabPage1.Controls.Add(this.lblDictionaryFilterFirst);
             this.tabPage1.Controls.Add(this.lblDictionaries);
-            this.tabPage1.Controls.Add(this.chklDictionaries);
             this.tabPage1.Controls.Add(this.chkDictSkipDigits);
             this.tabPage1.Controls.Add(this.chkDictSkipSpecials);
             this.tabPage1.Controls.Add(this.chkDictForceLowercase);
@@ -636,6 +637,14 @@ namespace BruteForceHash.GUI
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tvDictMain
+            // 
+            this.tvDictMain.Location = new System.Drawing.Point(195, 13);
+            this.tvDictMain.Name = "tvDictMain";
+            this.tvDictMain.Size = new System.Drawing.Size(425, 888);
+            this.tvDictMain.TabIndex = 84;
+            this.tvDictMain.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
             // 
             // btnDictUnselected
             // 
@@ -665,15 +674,6 @@ namespace BruteForceHash.GUI
             this.lblDictionaryFilterFirst.Size = new System.Drawing.Size(133, 23);
             this.lblDictionaryFilterFirst.TabIndex = 83;
             this.lblDictionaryFilterFirst.Text = "First Word Filter:";
-            // 
-            // chklDictionaries
-            // 
-            this.chklDictionaries.FormattingEnabled = true;
-            this.chklDictionaries.Location = new System.Drawing.Point(195, 13);
-            this.chklDictionaries.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.chklDictionaries.Name = "chklDictionaries";
-            this.chklDictionaries.Size = new System.Drawing.Size(425, 888);
-            this.chklDictionaries.TabIndex = 23;
             // 
             // chkDictSkipDigits
             // 
@@ -736,9 +736,9 @@ namespace BruteForceHash.GUI
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.tvDictFirstWord);
             this.tabPage2.Controls.Add(this.btnCopyToDictFirst);
             this.tabPage2.Controls.Add(this.btnDictFirstUnselected);
-            this.tabPage2.Controls.Add(this.chklDictionariesFirstWord);
             this.tabPage2.Controls.Add(this.lblDictionariesFirstWord);
             this.tabPage2.Controls.Add(this.chkUseCustomDictFirst);
             this.tabPage2.Controls.Add(this.chkDictFirstSkipDigits);
@@ -754,6 +754,14 @@ namespace BruteForceHash.GUI
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "1st Word";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tvDictFirstWord
+            // 
+            this.tvDictFirstWord.Location = new System.Drawing.Point(195, 13);
+            this.tvDictFirstWord.Name = "tvDictFirstWord";
+            this.tvDictFirstWord.Size = new System.Drawing.Size(425, 888);
+            this.tvDictFirstWord.TabIndex = 58;
+            this.tvDictFirstWord.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
             // 
             // btnCopyToDictFirst
             // 
@@ -774,15 +782,6 @@ namespace BruteForceHash.GUI
             this.btnDictFirstUnselected.Text = "Unselect All";
             this.btnDictFirstUnselected.UseVisualStyleBackColor = true;
             this.btnDictFirstUnselected.Click += new System.EventHandler(this.btnDictFirstUnselected_Click);
-            // 
-            // chklDictionariesFirstWord
-            // 
-            this.chklDictionariesFirstWord.FormattingEnabled = true;
-            this.chklDictionariesFirstWord.Location = new System.Drawing.Point(195, 13);
-            this.chklDictionariesFirstWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.chklDictionariesFirstWord.Name = "chklDictionariesFirstWord";
-            this.chklDictionariesFirstWord.Size = new System.Drawing.Size(425, 888);
-            this.chklDictionariesFirstWord.TabIndex = 34;
             // 
             // lblDictionariesFirstWord
             // 
@@ -863,9 +862,9 @@ namespace BruteForceHash.GUI
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.tvDictLastWord);
             this.tabPage3.Controls.Add(this.btnCopyToDictLast);
             this.tabPage3.Controls.Add(this.btnDictLastUnselected);
-            this.tabPage3.Controls.Add(this.chklDictionariesLastWord);
             this.tabPage3.Controls.Add(this.lblDictionaryLastWord);
             this.tabPage3.Controls.Add(this.chkUseCustomDictLast);
             this.tabPage3.Controls.Add(this.chkDictLastReverseOrder);
@@ -880,6 +879,14 @@ namespace BruteForceHash.GUI
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Last Word";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tvDictLastWord
+            // 
+            this.tvDictLastWord.Location = new System.Drawing.Point(195, 13);
+            this.tvDictLastWord.Name = "tvDictLastWord";
+            this.tvDictLastWord.Size = new System.Drawing.Size(425, 888);
+            this.tvDictLastWord.TabIndex = 59;
+            this.tvDictLastWord.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
             // 
             // btnCopyToDictLast
             // 
@@ -900,15 +907,6 @@ namespace BruteForceHash.GUI
             this.btnDictLastUnselected.Text = "Unselect All";
             this.btnDictLastUnselected.UseVisualStyleBackColor = true;
             this.btnDictLastUnselected.Click += new System.EventHandler(this.btnDictLastUnselected_Click);
-            // 
-            // chklDictionariesLastWord
-            // 
-            this.chklDictionariesLastWord.FormattingEnabled = true;
-            this.chklDictionariesLastWord.Location = new System.Drawing.Point(195, 13);
-            this.chklDictionariesLastWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.chklDictionariesLastWord.Name = "chklDictionariesLastWord";
-            this.chklDictionariesLastWord.Size = new System.Drawing.Size(425, 888);
-            this.chklDictionariesLastWord.TabIndex = 32;
             // 
             // lblDictionaryLastWord
             // 
@@ -2178,9 +2176,7 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.SaveFileDialog saveFile;
         private System.Windows.Forms.Label lblVerbose;
         private System.Windows.Forms.Label lblDictionaryLastWord;
-        private System.Windows.Forms.CheckedListBox chklDictionariesLastWord;
         private System.Windows.Forms.Label lblDictionariesFirstWord;
-        private System.Windows.Forms.CheckedListBox chklDictionariesFirstWord;
         private System.Windows.Forms.CheckBox chkIncludeWordNotFirst;
         private System.Windows.Forms.CheckBox chkUseCustomDictLast;
         private System.Windows.Forms.CheckBox chkUseCustomDictFirst;
@@ -2189,7 +2185,6 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.CheckBox chkDictFirstForceLowercase;
         private System.Windows.Forms.CheckBox chkDictFirstReverseOrder;
         private System.Windows.Forms.CheckBox chkDictLastSkipDigits;
-        private System.Windows.Forms.CheckedListBox chklDictionaries;
         private System.Windows.Forms.CheckBox chkDictLastSkipSpecials;
         private System.Windows.Forms.CheckBox chkDictLastForceLowercase;
         private System.Windows.Forms.CheckBox chkDictLastAddTypos;
@@ -2282,6 +2277,9 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.ToolStripMenuItem mnQuickClean;
         private System.Windows.Forms.Button btnQuickSave;
         private System.Windows.Forms.Button btnQuickLoad;
+        private RikTheVeggie.TriStateTreeView tvDictMain;
+        private RikTheVeggie.TriStateTreeView tvDictFirstWord;
+        private RikTheVeggie.TriStateTreeView tvDictLastWord;
     }
 }
 
