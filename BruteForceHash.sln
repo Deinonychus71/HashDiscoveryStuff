@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DictionaryGeneration", "Dic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BruteforceCleanup", "BruteforceCleanup", "{E39E25AD-143B-46F1-9306-4FB8FF88AF2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashKeys", "Tools\Research\HashKeys\HashKeys.csproj", "{C67B3EBD-90C6-497E-8E19-455C5FE25707}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{5AFBA525-D05F-4766-889A-C290024A4F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AFBA525-D05F-4766-889A-C290024A4F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AFBA525-D05F-4766-889A-C290024A4F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C67B3EBD-90C6-497E-8E19-455C5FE25707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C67B3EBD-90C6-497E-8E19-455C5FE25707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C67B3EBD-90C6-497E-8E19-455C5FE25707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C67B3EBD-90C6-497E-8E19-455C5FE25707}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{63E546C6-21E5-4790-89A7-8C510BE14860} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{61E1588A-5C93-4929-B3CC-4DC39BF07B38} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{E39E25AD-143B-46F1-9306-4FB8FF88AF2B} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
+		{C67B3EBD-90C6-497E-8E19-455C5FE25707} = {63E546C6-21E5-4790-89A7-8C510BE14860}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C3FFE77-9564-4A8F-969C-773584C00F90}
