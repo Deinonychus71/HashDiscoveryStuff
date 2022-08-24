@@ -42,8 +42,8 @@ namespace BruteForceHash.GUI
         private void OnNewClick(object sender, EventArgs e)
         {
             cbMethod.SelectedIndex = 0;
-            cbNbThreads.SelectedIndex = 7;
-            cbWordsLimit.SelectedIndex = 2;
+            cbNbThreads.SelectedIndex = 15;
+            cbWordsLimit.SelectedIndex = 3;
             cbCombinationOrder.SelectedIndex = 0;
             btnStart.Enabled = false;
             btnQuickSave.Enabled = false;
@@ -104,23 +104,24 @@ namespace BruteForceHash.GUI
             chkDictionaryAdvanced.Checked = false;
             chkOnlyFirstTwoWordsConcat.Checked = false;
             chkOnlyLastTwoWordsConcat.Checked = false;
+            cbCombinationOrder.SelectedIndex = 3;
             cbMaxDelim.SelectedIndex = 0;
             cbMinDelim.SelectedIndex = 0;
-            cbMaxConcatWords.SelectedIndex = 10;
+            cbMaxConcatWords.SelectedIndex = 2;
             cbMinConcatWords.SelectedIndex = 0;
             cbMaxWordLength.SelectedIndex = 49;
             cbMinWordLength.SelectedIndex = 0;
-            cbMaxOnes.SelectedIndex = 10;
+            cbMaxOnes.SelectedIndex = 2;
             cbMinOnes.SelectedIndex = 0;
-            cbMaxTwos.SelectedIndex = 10;
+            cbMaxTwos.SelectedIndex = 2;
             cbMinTwos.SelectedIndex = 0;
-            cbMaxThrees.SelectedIndex = 10;
+            cbMaxThrees.SelectedIndex = 2;
             cbMinThrees.SelectedIndex = 0;
-            cbMaxFours.SelectedIndex = 10;
+            cbMaxFours.SelectedIndex = 2;
             cbMinFours.SelectedIndex = 0;
-            cbMaxConsecutiveOnes.SelectedIndex = 9;
+            cbMaxConsecutiveOnes.SelectedIndex = 1;
             cbMinWordsLimit.SelectedIndex = 0;
-            cbMaxConsecutiveConcat.SelectedIndex = 9;
+            cbMaxConsecutiveConcat.SelectedIndex = 1;
             cbMinConsecutiveConcat.SelectedIndex = 0;
 
             txtHashCatPath.Text = "Tools\\Hashcat\\hashcat.exe";
@@ -549,9 +550,11 @@ namespace BruteForceHash.GUI
                 MinWordsLimit = Convert.ToInt32(cbMinWordsLimit.SelectedItem),
                 MaxConsecutiveConcatenation = Convert.ToInt32(cbMaxConsecutiveConcat.SelectedItem),
                 MinConsecutiveConcatenation = Convert.ToInt32(cbMinConsecutiveConcat.SelectedItem),
+                CustomMainWords = txtDictCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
+                CustomFirstWords = txtDictFirstCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
+                CustomLastWords = txtDictLastCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList()
             };
             File.WriteAllText(fileName, JsonConvert.SerializeObject(hbtObject));
-            SaveCustomDictionaries();
         }
 
         public void LoadHBT(string fileName)
@@ -655,7 +658,9 @@ namespace BruteForceHash.GUI
             cbMaxConsecutiveConcat.SelectedItem = hbtObject.MaxConsecutiveConcatenation.ToString();
             cbMinConsecutiveConcat.SelectedItem = hbtObject.MinConsecutiveConcatenation.ToString();
 
-            LoadCustomDictionaries();
+            txtDictCustWords.Text = string.Join("\r\n", hbtObject.CustomMainWords);
+            txtDictFirstCustWords.Text = string.Join("\r\n", hbtObject.CustomFirstWords);
+            txtDictLastCustWords.Text = string.Join("\r\n", hbtObject.CustomLastWords);
         }
 
         public void OnCleanQuickAndCustom(object sender, EventArgs e)
@@ -693,25 +698,6 @@ namespace BruteForceHash.GUI
                 File.WriteAllText($"{hexFolder}\\[{hex}].dic", txtDictCustWords.Text);
                 File.WriteAllText($"{hexFolder}\\[{hex}][1st].dic", txtDictFirstCustWords.Text);
                 File.WriteAllText($"{hexFolder}\\[{hex}][Last].dic", txtDictLastCustWords.Text);
-            }
-        }
-
-        private void LoadCustomDictionaries()
-        {
-            var hex = GetHex();
-            var hexFolder = GetHexFolder();
-
-            if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}].dic"))
-            {
-                txtDictCustWords.Text = File.ReadAllText($"{hexFolder}\\[{hex}].dic");
-            }
-            if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}][1st].dic"))
-            {
-                txtDictFirstCustWords.Text = File.ReadAllText($"{hexFolder}\\[{hex}][1st].dic");
-            }
-            if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}][Last].dic"))
-            {
-                txtDictLastCustWords.Text = File.ReadAllText($"{hexFolder}\\[{hex}][Last].dic");
             }
         }
         #endregion

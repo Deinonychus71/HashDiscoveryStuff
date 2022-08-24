@@ -80,5 +80,10 @@ namespace BruteForceHash.GUI
         public int MinFours { get; set; }
         public int MaxConsecutiveOnes { get; set; }
         public int MinWordsLimit { get; set; }
+
+        /* Dictionaries */
+        public List<string> CustomMainWords { get; set; }
+        public List<string> CustomFirstWords { get; set; }
+        public List<string> CustomLastWords { get; set; }
     }
 }

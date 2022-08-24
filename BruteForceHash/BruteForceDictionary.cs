@@ -401,7 +401,12 @@ namespace BruteForceHash
 
                             var lengthStr = $"{{{byteCount}}}";
                             if (!dictionary[lengthStr].Contains(newWord))
+                            {
+                                if (filterStartList != null && !filterStartList.Contains(newWord[0]))
+                                    continue;
+
                                 dictionary[lengthStr].Add(newWord);
+                            }
                         }
                     }
                     else
@@ -610,7 +615,7 @@ namespace BruteForceHash
                 var nbrTwos = combination.Split("{2}").Length - 1;
                 var nbrThrees = combination.Split("{3}").Length - 1;
                 var nbrFours = combination.Split("{4}").Length - 1;
-                if (nbrDelimiters < _minDelimiters || nbrDelimiters > _maxDelimiters)
+                if (nbrDelimiters < _minDelimiters || (nbrDelimiters > _maxDelimiters && _maxDelimiters != -1))
                     continue;
                 if (nbrOnes < _minOnes || nbrOnes > _maxOnes)
                     continue;

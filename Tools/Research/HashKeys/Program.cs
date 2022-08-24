@@ -70,9 +70,22 @@ namespace HashKeys
                     { DICT_STRINGVALUE, new List<string>() },
                 };
 
+                var excludeFilters = o.ExcludeFilterPath?.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+                if (excludeFilters == null)
+                    excludeFilters = new List<string>();
+                var includeFilters = o.IncludeFilterPath?.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+                if (includeFilters == null)
+                    includeFilters = new List<string>();
+
                 //Get all words
                 foreach (var file in filesPrc)
                 {
+                    var inputFileRelative = file.TrimStart(o.InputPath);
+                    if (includeFilters.Count > 0 && !includeFilters.Any(f => inputFileRelative.StartsWith(f)))
+                        continue;
+                    if (excludeFilters.Any(f => inputFileRelative.StartsWith(f)))
+                        continue;
+
                     var t = new ParamFile();
                     t.Open(file);
 
@@ -86,7 +99,7 @@ namespace HashKeys
                 foreach (var dictKey in dictionaries.Keys.ToList())
                 {
                     var allWords = GetAllWords(dictionaries[dictKey]).Distinct().OrderBy(p => p);
-                    File.WriteAllLines(Path.Combine(o.OutputPath, string.Format("[Smash][Ultimate]{0}.dic", dictKey)), allWords.ToArray());
+                    File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, dictKey)), allWords.ToArray());
                 }
             });
         }

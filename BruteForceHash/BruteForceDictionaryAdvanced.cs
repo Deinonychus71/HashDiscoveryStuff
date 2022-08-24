@@ -438,7 +438,11 @@ namespace BruteForceHash
                         {
                             var lengthStr = $"{{{Encoding.UTF8.GetByteCount(newWord)}}}";
                             if (!dictionary[lengthStr].Contains(newWord))
+                            {
+                                if (filterStartList != null && !filterStartList.Contains(newWord[0]))
+                                    continue;
                                 dictionary[lengthStr].Add(newWord);
+                            }
                         }
                     }
                     else
