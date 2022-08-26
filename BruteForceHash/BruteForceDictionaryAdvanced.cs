@@ -160,6 +160,10 @@ namespace BruteForceHash
             _logger.Log($"Twos Limit: Between {_options.MinTwos} and {_options.MaxTwos}");
             _logger.Log($"Threes Limit: Between {_options.MinThrees} and {_options.MaxThrees}");
             _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
+            if (_options.AtLeastAboveChars > 0 && _options.AtLeastAboveWords > 0)
+                _logger.Log($"Size: At least {_options.AtLeastAboveWords} words above {_options.AtLeastAboveChars} characters");
+            if (_options.AtLeastUnderChars > 0 && _options.AtLeastUnderWords > 0)
+                _logger.Log($"Size: At least {_options.AtLeastUnderWords} words under {_options.AtLeastUnderChars} characters");
             _logger.Log($"Concatenated Words: Between {_options.MinConcatenatedWords} and {_options.MaxConcatenatedWords}");
             _logger.Log($"Consecutive Concatenation Limit: Between  {_options.MinConsecutiveConcatenation} and  {_options.MaxConsecutiveConcatenation}");
             _logger.Log($"Max Consecutive Ones: {_options.MaxConsecutiveOnes}");
@@ -832,6 +836,18 @@ namespace BruteForceHash
                     continue;
                 if (nbrFours < _minFours || nbrFours > _maxFours)
                     continue;
+                if (_options.AtLeastAboveWords > 0 || _options.AtLeastUnderWords > 0)
+                {
+                    var dictNbr = new int[11];
+                    for (var i = 0; i < dictNbr.Length; i++)
+                    {
+                        dictNbr[i] = pattern.Split("{" + (i + 1) + "}").Length - 1;
+                    }
+                    if (_options.AtLeastAboveWords > 0 && dictNbr.Where((p, i) => i > _options.AtLeastAboveChars - 1).Sum() < _options.AtLeastAboveWords)
+                        continue;
+                    if (_options.AtLeastUnderWords > 0 && dictNbr.Where((p, i) => i < _options.AtLeastUnderChars - 1).Sum() < _options.AtLeastUnderWords)
+                        continue;
+                }
 
                 string tempPattern = pattern;
                 int numberOfConsecutive = 0;

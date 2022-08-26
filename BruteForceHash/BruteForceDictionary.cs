@@ -140,6 +140,11 @@ namespace BruteForceHash
             _logger.Log($"Twos Limit: Between {_options.MinTwos} and {_options.MaxTwos}");
             _logger.Log($"Threes Limit: Between {_options.MinThrees} and {_options.MaxThrees}");
             _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
+            if(_options.AtLeastAboveChars > 0 && _options.AtLeastAboveWords > 0)
+                _logger.Log($"Size: At least {_options.AtLeastAboveWords} words above {_options.AtLeastAboveChars} characters");
+            if (_options.AtLeastUnderChars > 0 && _options.AtLeastUnderWords > 0)
+                _logger.Log($"Size: At least {_options.AtLeastUnderWords} words under {_options.AtLeastUnderChars} characters");
+            _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
             _logger.Log($"Words Limit: {_options.WordsLimit}");
             if (!string.IsNullOrEmpty(_options.ExcludePatterns))
                 _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
@@ -625,6 +630,18 @@ namespace BruteForceHash
                     continue;
                 if (nbrFours < _minFours || nbrFours > _maxFours)
                     continue;
+                if (_options.AtLeastAboveWords > 0 || _options.AtLeastUnderWords > 0)
+                {
+                    var dictNbr = new int[11];
+                    for(var i = 0; i < dictNbr.Length; i++)
+                    {
+                        dictNbr[i] = combination.Split("{" + (i + 1) + "}").Length - 1;
+                    }
+                    if (_options.AtLeastAboveWords > 0 && dictNbr.Where((p, i) => i > _options.AtLeastAboveChars - 1).Sum() < _options.AtLeastAboveWords)
+                        continue;
+                    if (_options.AtLeastUnderWords > 0 && dictNbr.Where((p, i) => i < _options.AtLeastUnderChars - 1).Sum() < _options.AtLeastUnderWords)
+                        continue;
+                }
 
                 List<string> nbrChar = new List<string>();
                 string reducedCombination = combination;
