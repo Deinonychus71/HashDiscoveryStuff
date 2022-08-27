@@ -1458,9 +1458,9 @@ namespace BruteForceHash.GUI
             this.lblDictionariesCustomWordsFiltering.AutoSize = true;
             this.lblDictionariesCustomWordsFiltering.Location = new System.Drawing.Point(6, 122);
             this.lblDictionariesCustomWordsFiltering.Name = "lblDictionariesCustomWordsFiltering";
-            this.lblDictionariesCustomWordsFiltering.Size = new System.Drawing.Size(53, 13);
+            this.lblDictionariesCustomWordsFiltering.Size = new System.Drawing.Size(86, 13);
             this.lblDictionariesCustomWordsFiltering.TabIndex = 86;
-            this.lblDictionariesCustomWordsFiltering.Text = "Filtering:";
+            this.lblDictionariesCustomWordsFiltering.Text = "Filtering (slow):";
             // 
             // chkDictCustomWordsAddTypos
             // 
