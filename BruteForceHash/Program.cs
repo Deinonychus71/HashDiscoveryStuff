@@ -38,8 +38,6 @@ namespace BruteForceHash
                     var input = hexValueEntry.Trim();
                     logger.Log($"Hex Value: {input}");
                     logger.Log($"Description: {o.Description}");
-                    if(o.Verbose)
-                        logger.Log($"Arguments: {string.Join(' ', args)}");
 
                     var split = input.Split("x".ToCharArray());
                     var lengthStr = split[1].Substring(0, 2);

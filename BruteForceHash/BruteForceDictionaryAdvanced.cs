@@ -119,27 +119,105 @@ namespace BruteForceHash
             _maxWordLength = Math.Min(options.MaxWordLength, _stringLength);
             _combinationPatterns = GenerateCombinations(combinationSize);
 
-            //Load dictionary
-            _dictionaries = GetDictionaries(_options.Dictionaries, null, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos, options.DictionariesReverseOrder);
-            if (!string.IsNullOrEmpty(options.DictionariesFirstWord))
-            {
-                _dictionariesFirst = GetDictionaries(_options.DictionariesFirstWord, _options.DictionaryFilterFirst, options.DictionariesFirstSkipDigits, options.DictionariesFirstSkipSpecials, options.DictionariesFirstForceLowercase, options.DictionariesFirstAddTypos, options.DictionariesFirstReverseOrder);
-            }
-            else if (!string.IsNullOrEmpty(_options.DictionaryFilterFirst))
-            {
-                _dictionariesFirst = GetDictionaries(_options.Dictionaries, _options.DictionaryFilterFirst, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos, options.DictionariesReverseOrder);
-            }
-            else
+            //Load common dictionary
+            _dictionaries = GetDictionaries(_options.Dictionaries, null, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos,
+                _options.DictionariesCustom, _options.DictionariesCustomSkipDigits, _options.DictionariesCustomSkipSpecials, _options.DictionariesCustomForceLowercase, _options.DictionariesCustomAddTypos,
+                options.DictionariesReverseOrder, _options.DictionariesExclude, _options.DictionariesExcludePartialWords);
+
+            //Load first word dictionary
+            var dictionaryFirstWord = _options.Dictionaries;
+            var dictionaryFirstWordSkipDigits = options.DictionariesSkipDigits;
+            var dictionaryFirstWordSkipSpecials = options.DictionariesSkipSpecials;
+            var dictionaryFirstWordForceLowercase = options.DictionariesForceLowercase;
+            var dictionaryFirstWordAddTypos = options.DictionariesAddTypos;
+            var dictionaryFirstWordCustom = options.DictionariesCustom;
+            var dictionaryFirstWordCustomSkipDigits = options.DictionariesCustomSkipDigits;
+            var dictionaryFirstWordCustomSkipSpecials = options.DictionariesCustomSkipSpecials;
+            var dictionaryFirstWordCustomForceLowercase = options.DictionariesCustomForceLowercase;
+            var dictionaryFirstWordCustomAddTypos = options.DictionariesCustomAddTypos;
+            var dictionaryFirstWordReverseOrder = options.DictionariesReverseOrder;
+            var dictionaryFirstWordExclude = _options.DictionariesExclude;
+            var dictionaryFirstWordExcludePartialWords = _options.DictionariesExcludePartialWords;
+            if (options.DictionariesFirstWord == null && options.DictionariesFirstWordCustom == null && options.DictionariesFirstWordExclude == null && string.IsNullOrEmpty(options.DictionaryFilterFirst))
             {
                 _dictionariesFirst = _dictionaries;
             }
-            if (!string.IsNullOrEmpty(options.DictionariesLastWord))
+            else
             {
-                _dictionariesLast = GetDictionaries(_options.DictionariesLastWord, null, options.DictionariesLastSkipDigits, options.DictionariesLastSkipSpecials, options.DictionariesLastForceLowercase, options.DictionariesLastAddTypos, options.DictionariesLastReverseOrder);
+                if (options.DictionariesFirstWord != null)
+                {
+                    dictionaryFirstWord = _options.DictionariesFirstWord;
+                    dictionaryFirstWordSkipDigits = options.DictionariesFirstSkipDigits;
+                    dictionaryFirstWordSkipSpecials = options.DictionariesFirstSkipSpecials;
+                    dictionaryFirstWordForceLowercase = options.DictionariesFirstForceLowercase;
+                    dictionaryFirstWordAddTypos = options.DictionariesFirstAddTypos;
+                    dictionaryFirstWordReverseOrder = options.DictionariesFirstReverseOrder;
+                }
+                if (options.DictionariesFirstWordCustom != null)
+                {
+                    dictionaryFirstWordCustom = _options.DictionariesFirstWordCustom;
+                    dictionaryFirstWordCustomSkipDigits = options.DictionariesFirstCustomSkipDigits;
+                    dictionaryFirstWordCustomSkipSpecials = options.DictionariesFirstCustomSkipSpecials;
+                    dictionaryFirstWordCustomForceLowercase = options.DictionariesFirstCustomForceLowercase;
+                    dictionaryFirstWordCustomAddTypos = options.DictionariesFirstCustomAddTypos;
+                }
+                if (options.DictionariesFirstWordExclude != null)
+                {
+                    dictionaryFirstWordExclude = _options.DictionariesFirstWordExclude;
+                    dictionaryFirstWordExcludePartialWords = options.DictionariesFirstWordExcludePartialWords;
+                }
+
+                _dictionariesFirst = GetDictionaries(dictionaryFirstWord, options.DictionaryFilterFirst, dictionaryFirstWordSkipDigits, dictionaryFirstWordSkipSpecials, dictionaryFirstWordForceLowercase, dictionaryFirstWordAddTypos,
+                    dictionaryFirstWordCustom, dictionaryFirstWordCustomSkipDigits, dictionaryFirstWordCustomSkipSpecials, dictionaryFirstWordCustomForceLowercase, dictionaryFirstWordCustomAddTypos,
+                    dictionaryFirstWordReverseOrder, dictionaryFirstWordExclude, dictionaryFirstWordExcludePartialWords);
+            }
+
+            //Load last word dictionary
+            var dictionaryLastWord = _options.Dictionaries;
+            var dictionaryLastWordSkipDigits = options.DictionariesSkipDigits;
+            var dictionaryLastWordSkipSpecials = options.DictionariesSkipSpecials;
+            var dictionaryLastWordForceLowercase = options.DictionariesForceLowercase;
+            var dictionaryLastWordAddTypos = options.DictionariesAddTypos;
+            var dictionaryLastWordCustom = options.DictionariesCustom;
+            var dictionaryLastWordCustomSkipDigits = options.DictionariesCustomSkipDigits;
+            var dictionaryLastWordCustomSkipSpecials = options.DictionariesCustomSkipSpecials;
+            var dictionaryLastWordCustomForceLowercase = options.DictionariesCustomForceLowercase;
+            var dictionaryLastWordCustomAddTypos = options.DictionariesCustomAddTypos;
+            var dictionaryLastWordReverseOrder = options.DictionariesReverseOrder;
+            var dictionaryLastWordExclude = _options.DictionariesExclude;
+            var dictionaryLastWordExcludePartialWords = _options.DictionariesExcludePartialWords;
+            if (options.DictionariesLastWord == null && options.DictionariesLastWordCustom == null && options.DictionariesLastWordExclude == null)
+            {
+                _dictionariesLast = _dictionaries;
             }
             else
             {
-                _dictionariesLast = _dictionaries;
+                if (options.DictionariesLastWord != null)
+                {
+                    dictionaryLastWord = _options.DictionariesLastWord;
+                    dictionaryLastWordSkipDigits = options.DictionariesLastSkipDigits;
+                    dictionaryLastWordSkipSpecials = options.DictionariesLastSkipSpecials;
+                    dictionaryLastWordForceLowercase = options.DictionariesLastForceLowercase;
+                    dictionaryLastWordAddTypos = options.DictionariesLastAddTypos;
+                    dictionaryLastWordReverseOrder = options.DictionariesLastReverseOrder;
+                }
+                if (options.DictionariesLastWordCustom != null)
+                {
+                    dictionaryLastWordCustom = _options.DictionariesLastWordCustom;
+                    dictionaryLastWordCustomSkipDigits = options.DictionariesLastCustomSkipDigits;
+                    dictionaryLastWordCustomSkipSpecials = options.DictionariesLastCustomSkipSpecials;
+                    dictionaryLastWordCustomForceLowercase = options.DictionariesLastCustomForceLowercase;
+                    dictionaryLastWordCustomAddTypos = options.DictionariesLastCustomAddTypos;
+                }
+                if (options.DictionariesLastWordExclude != null)
+                {
+                    dictionaryLastWordExclude = _options.DictionariesLastWordExclude;
+                    dictionaryLastWordExcludePartialWords = options.DictionariesLastWordExcludePartialWords;
+                }
+
+                _dictionariesLast = GetDictionaries(dictionaryLastWord, null, dictionaryLastWordSkipDigits, dictionaryLastWordSkipSpecials, dictionaryLastWordForceLowercase, dictionaryLastWordAddTypos,
+                    dictionaryLastWordCustom, dictionaryLastWordCustomSkipDigits, dictionaryLastWordCustomSkipSpecials, dictionaryLastWordCustomForceLowercase, dictionaryLastWordCustomAddTypos,
+                    dictionaryLastWordReverseOrder, dictionaryLastWordExclude, dictionaryLastWordExcludePartialWords);
             }
         }
 
@@ -191,6 +269,20 @@ namespace BruteForceHash
                 _logger.Log($"Dictionaries Force LowerCase: {_options.DictionariesForceLowercase}");
                 _logger.Log($"Dictionaries Add Typo: {_options.DictionariesAddTypos}");
                 _logger.Log($"Dictionaries Reverse Order: {_options.DictionariesReverseOrder}");
+                if (!string.IsNullOrEmpty(_options.DictionariesCustom))
+                {
+                    _logger.Log($"Dictionaries (Custom): {_options.DictionariesCustom}");
+                    _logger.Log($"Dictionaries (Custom) Skip Digits: {_options.DictionariesCustomSkipDigits}");
+                    _logger.Log($"Dictionaries (Custom) Skip Specials: {_options.DictionariesCustomSkipSpecials}");
+                    _logger.Log($"Dictionaries (Custom) Force LowerCase: {_options.DictionariesCustomForceLowercase}");
+                    _logger.Log($"Dictionaries (Custom) Add Typo: {_options.DictionariesCustomAddTypos}");
+                    _logger.Log($"Dictionaries (Custom) At least {_options.DictionariesCustomMinWordsHash} words in hash");
+                }
+                if (!string.IsNullOrEmpty(_options.DictionariesExclude))
+                {
+                    _logger.Log($"Dictionaries (Exclude): {_options.DictionariesExclude}");
+                    _logger.Log($"Dictionaries (Exclude) Use Partial Words: {(_options.DictionariesExcludePartialWords ? "Yes": "No")}");
+                }
             }
             _logger.Log($"Dictionary words: {_dictionaries.Values.Sum(p => p.Length)}");
             if (_dictionaries != _dictionariesFirst)
@@ -203,6 +295,19 @@ namespace BruteForceHash
                     _logger.Log($"Dictionaries (1st word) Force LowerCase: {_options.DictionariesFirstForceLowercase}");
                     _logger.Log($"Dictionaries (1st word) Add Typo: {_options.DictionariesFirstAddTypos}");
                     _logger.Log($"Dictionaries (1st word) Reverse Order: {_options.DictionariesFirstReverseOrder}");
+                    if (!string.IsNullOrEmpty(_options.DictionariesFirstWordCustom))
+                    {
+                        _logger.Log($"Dictionaries (1st word) (Custom): {_options.DictionariesFirstWordCustom}");
+                        _logger.Log($"Dictionaries (1st word) (Custom) Skip Digits: {_options.DictionariesFirstCustomSkipDigits}");
+                        _logger.Log($"Dictionaries (1st word) (Custom) Skip Specials: {_options.DictionariesFirstCustomSkipSpecials}");
+                        _logger.Log($"Dictionaries (1st word) (Custom) Force LowerCase: {_options.DictionariesFirstCustomForceLowercase}");
+                        _logger.Log($"Dictionaries (1st word) (Custom) Add Typo: {_options.DictionariesFirstCustomAddTypos}");
+                    }
+                    if (!string.IsNullOrEmpty(_options.DictionariesFirstWordExclude))
+                    {
+                        _logger.Log($"Dictionaries (1st word) (Exclude): {_options.DictionariesFirstWordExclude}");
+                        _logger.Log($"Dictionaries (1st word) (Exclude) Use Partial Words: {(_options.DictionariesFirstWordExcludePartialWords ? "Yes" : "No")}");
+                    }
                 }
                 _logger.Log($"Dictionaries (1st word) words: {_dictionariesFirst.Values.Sum(p => p.Length)}");
             }
@@ -218,6 +323,19 @@ namespace BruteForceHash
                     _logger.Log($"Dictionaries (last word) Force LowerCase: {_options.DictionariesLastForceLowercase}");
                     _logger.Log($"Dictionaries (last word) Add Typo: {_options.DictionariesLastAddTypos}");
                     _logger.Log($"Dictionaries (last word) Reverse Order: {_options.DictionariesLastReverseOrder}");
+                    if (!string.IsNullOrEmpty(_options.DictionariesLastWordCustom))
+                    {
+                        _logger.Log($"Dictionaries (last word) (Custom): {_options.DictionariesLastWordCustom}");
+                        _logger.Log($"Dictionaries (last word) (Custom) Skip Digits: {_options.DictionariesLastCustomSkipDigits}");
+                        _logger.Log($"Dictionaries (last word) (Custom) Skip Specials: {_options.DictionariesLastCustomSkipSpecials}");
+                        _logger.Log($"Dictionaries (last word) (Custom) Force LowerCase: {_options.DictionariesLastCustomForceLowercase}");
+                        _logger.Log($"Dictionaries (last word) (Custom) Add Typo: {_options.DictionariesLastCustomAddTypos}");
+                    }
+                    if (!string.IsNullOrEmpty(_options.DictionariesLastWordExclude))
+                    {
+                        _logger.Log($"Dictionaries (last word) (Exclude): {_options.DictionariesLastWordExclude}");
+                        _logger.Log($"Dictionaries (last word) (Exclude) Use Partial Words: {(_options.DictionariesLastWordExcludePartialWords ? "Yes" : "No")}");
+                    }
                 }
                 _logger.Log($"Dictionaries (last word) words: {_dictionariesLast.Values.Sum(p => p.Length)}");
             }
@@ -394,15 +512,55 @@ namespace BruteForceHash
         #endregion
 
         #region Generate Dictionaries
-        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirst, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos, bool reverseOrder)
+        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirst, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos,
+           string dictionariesCustom, bool customSkipDigits, bool customSkipSpecials, bool customForceLowerCase, bool customAddTypos, bool reverseOrder,
+           string dictionariesExclude, bool excludePartialWords)
         {
-            Dictionary<string, HashSet<string>> dictionary = new Dictionary<string, HashSet<string>>();
+            Dictionary<string, HashSet<string>> dictionaryHashRef = new Dictionary<string, HashSet<string>>();
             var output = new Dictionary<string, byte[][]>();
 
             //Fill if no data present
             for (int i = 1; i <= 100; i++)
-                dictionary.Add($"{{{i}}}", new HashSet<string>());
+                dictionaryHashRef.Add($"{{{i}}}", new HashSet<string>());
 
+            FillDictionaries(dictionaryHashRef, dictionaries, dictionariesFilterFirst, skipDigits, skipSpecials, forceLowerCase, addTypos);
+            FillDictionaries(dictionaryHashRef, dictionariesCustom, null, customSkipDigits, customSkipSpecials, customForceLowerCase, customAddTypos);
+
+            //Exclude
+            if (!string.IsNullOrEmpty(dictionariesExclude) && File.Exists(dictionariesExclude))
+            {
+                var allExcludeWords = File.ReadAllLines(dictionariesExclude);
+
+                foreach (var hashSet in dictionaryHashRef.Values)
+                {
+                    var toFilterOut = new List<string>();
+                    foreach (var value in hashSet)
+                    {
+                        if ((excludePartialWords == true && allExcludeWords.Any(p => value.Contains(p))) || (excludePartialWords == false && allExcludeWords.Any(p => value == p)))
+                            toFilterOut.Add(value);
+                    }
+                    foreach (var toFilterOutEntry in toFilterOut)
+                    {
+                        hashSet.Remove(toFilterOutEntry);
+                    }
+                }
+            }
+
+            foreach (var entry in dictionaryHashRef)
+            {
+                output.Add(entry.Key, new byte[entry.Value.Count][]);
+                if (reverseOrder)
+                    output[entry.Key] = entry.Value.OrderByDescending(p => p).Select(p => Encoding.UTF8.GetBytes(p)).ToArray();
+                else
+                    output[entry.Key] = entry.Value.OrderBy(p => p).Select(p => Encoding.UTF8.GetBytes(p)).ToArray();
+            }
+
+
+            return output;
+        }
+
+        private void FillDictionaries(Dictionary<string, HashSet<string>> dictionaryHashRef, string dictionaries, string dictionariesFilterFirst, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos)
+        {
             string[] allDictionaries;
             if (Directory.Exists("Dictionaries") && dictionaries == "*")
                 allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
@@ -441,33 +599,22 @@ namespace BruteForceHash
                         foreach (var newWord in allNewWords)
                         {
                             var lengthStr = $"{{{Encoding.UTF8.GetByteCount(newWord)}}}";
-                            if (!dictionary[lengthStr].Contains(newWord))
+                            if (!dictionaryHashRef[lengthStr].Contains(newWord))
                             {
                                 if (filterStartList != null && !filterStartList.Contains(newWord[0]))
                                     continue;
-                                dictionary[lengthStr].Add(newWord);
+                                dictionaryHashRef[lengthStr].Add(newWord);
                             }
                         }
                     }
                     else
                     {
                         var lengthStr = $"{{{Encoding.UTF8.GetByteCount(wordToAdd)}}}";
-                        if (!dictionary[lengthStr].Contains(wordToAdd))
-                            dictionary[lengthStr].Add(wordToAdd);
+                        if (!dictionaryHashRef[lengthStr].Contains(wordToAdd))
+                            dictionaryHashRef[lengthStr].Add(wordToAdd);
                     }
                 }
             }
-
-            foreach (var entry in dictionary)
-            {
-                output.Add(entry.Key, new byte[entry.Value.Count][]);
-                if (reverseOrder)
-                    output[entry.Key] = entry.Value.OrderByDescending(p => p).Select(p => Encoding.UTF8.GetBytes(p)).ToArray();
-                else
-                    output[entry.Key] = entry.Value.OrderBy(p => p).Select(p => Encoding.UTF8.GetBytes(p)).ToArray();
-            }
-
-            return output;
         }
 
         public static IEnumerable<char> GetFilterStartList(string dictionariesFilterFirst)

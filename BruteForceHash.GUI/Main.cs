@@ -13,6 +13,8 @@ namespace BruteForceHash.GUI
 {
     public partial class Main : Form
     {
+        private static string _lastCommand = string.Empty;
+
         public Main()
         {
             InitializeComponent();
@@ -51,6 +53,9 @@ namespace BruteForceHash.GUI
             chkVerbose.Checked = true;
             chkUtf8Toggle.Checked = false;
 
+            chkDictionariesUse.Checked = true;
+            chkDictionariesCustomWordsUse.Checked = false;
+            chkDictionariesExcludeWordsUse.Checked = false;
             SetDictionary(tvDictMain, string.Empty);
             chkDictSkipDigits.Checked = false;
             chkDictSkipSpecials.Checked = true;
@@ -58,7 +63,9 @@ namespace BruteForceHash.GUI
             chkDictAddTypos.Checked = false;
             chkDictReverseOrder.Checked = false;
 
-            chkUseCustomDictFirst.Checked = false;
+            chkUseDictFirst.Checked = false;
+            chkDictionariesFirstWordCustomWordsUse.Checked = false;
+            chkDictionariesFirstWordExcludeWordsUse.Checked = false;
             SetDictionary(tvDictFirstWord, string.Empty);
             chkDictFirstSkipDigits.Checked = false;
             chkDictFirstSkipSpecials.Checked = false;
@@ -66,7 +73,9 @@ namespace BruteForceHash.GUI
             chkDictFirstAddTypos.Checked = false;
             chkDictFirstReverseOrder.Checked = false;
 
-            chkUseCustomDictLast.Checked = false;
+            chkUseDictLast.Checked = false;
+            chkDictionariesLastWordCustomWordsUse.Checked = false;
+            chkDictionariesLastWordExcludeWordsUse.Checked = false;
             SetDictionary(tvDictLastWord, string.Empty);
             chkDictLastSkipDigits.Checked = false;
             chkDictLastSkipSpecials.Checked = false;
@@ -105,6 +114,7 @@ namespace BruteForceHash.GUI
             chkOnlyFirstTwoWordsConcat.Checked = false;
             chkOnlyLastTwoWordsConcat.Checked = false;
             cbCombinationOrder.SelectedIndex = 3;
+            cbDictionariesCustomWordsMinimumInHash.SelectedIndex = 0;
             cbMaxDelim.SelectedIndex = 0;
             cbMinDelim.SelectedIndex = 0;
             cbMaxConcatWords.SelectedIndex = 2;
@@ -130,6 +140,13 @@ namespace BruteForceHash.GUI
 
             txtHashCatPath.Text = "Tools\\Hashcat\\hashcat.exe";
 
+            chkDictionariesUse_CheckedChanged(this, null);
+            chkDictionariesCustomWordsUse_CheckedChanged(this, null);
+            chkDictionariesExcludeWordsUse_CheckedChanged(this, null);
+            chkDictionariesFirstWordCustomWordsUse_CheckedChanged(this, null);
+            chkDictionariesLastWordCustomWordsUse_CheckedChanged(this, null);
+            chkDictionariesFirstWordExcludeWordsUse_CheckedChanged(this, null);
+            chkDictionariesLastWordExcludeWordsUse_CheckedChanged(this, null);
             OnCustomDictFirstCheckedChanged(this, null);
             OnCustomDictLastCheckedChanged(this, null);
             OnDictionaryAdvancedCheckedChanged(this, null);
@@ -293,50 +310,37 @@ namespace BruteForceHash.GUI
             var hex = GetHex();
             var hexFolder = GetHexFolder();
 
-            SaveCustomDictionaries();
-            var dictionaries = GetDictionary(tvDictMain);
-            if (File.Exists($"{hexFolder}\\[{hex}].dic"))
-            {
-                dictionaries = $"{hexFolder}\\[{hex}].dic;" + dictionaries;
-            }
+            var dictionaries = string.Empty;
+            var dictionariesCustom = string.Empty;
+            var dictionariesExclude = string.Empty;
+            var dictionariesFirstWordCustom = string.Empty;
+            var dictionariesFirstWordExclude = string.Empty;
+            var dictionariesLastWordCustom = string.Empty;
+            var dictionariesLastWordExclude = string.Empty;
             var dictionariesFirstWord = string.Empty;
             var dictionariesLastWord = string.Empty;
-            var dictFirstSkipDigits = chkDictSkipDigits.Checked;
-            var dictFirstSkipSpecial = chkDictSkipSpecials.Checked;
-            var dictFirstForceLowercase = chkDictForceLowercase.Checked;
-            var dictFirstAddTypos = chkDictAddTypos.Checked;
-            var dictFirstReverseOrder = chkDictReverseOrder.Checked;
-            var dictLastSkipDigits = chkDictSkipDigits.Checked;
-            var dictLastSkipSpecial = chkDictSkipSpecials.Checked;
-            var dictLastForceLowercase = chkDictForceLowercase.Checked;
-            var dictLastAddTypos = chkDictAddTypos.Checked;
-            var dictLastReverseOrder = chkDictReverseOrder.Checked;
-            if (chkUseCustomDictFirst.Checked)
-            {
-                dictFirstSkipDigits = chkDictFirstSkipDigits.Checked;
-                dictFirstSkipSpecial = chkDictFirstSkipSpecials.Checked;
-                dictFirstForceLowercase = chkDictFirstForceLowercase.Checked;
-                dictFirstAddTypos = chkDictFirstAddTypos.Checked;
-                dictFirstReverseOrder = chkDictFirstReverseOrder.Checked;
+
+            SaveCustomDictionaries();
+            if(chkDictionariesUse.Checked)
+                dictionaries = GetDictionary(tvDictMain);
+            if (chkDictionariesCustomWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}].dic"))
+                dictionariesCustom = $"{hexFolder}\\[{hex}].dic";
+            if(chkDictionariesExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Exclude].dic"))
+                dictionariesExclude = $"{hexFolder}\\[{hex}][Exclude].dic";
+
+            if (chkUseDictFirst.Checked)
                 dictionariesFirstWord = GetDictionary(tvDictFirstWord);
-                if (File.Exists($"{hexFolder}\\[{hex}][1st].dic"))
-                {
-                    dictionariesFirstWord = $"{hexFolder}\\[{hex}][1st].dic;" + dictionariesFirstWord;
-                }
-            }
-            if (chkUseCustomDictLast.Checked)
-            {
-                dictLastSkipDigits = chkDictLastSkipDigits.Checked;
-                dictLastSkipSpecial = chkDictLastSkipSpecials.Checked;
-                dictLastForceLowercase = chkDictLastForceLowercase.Checked;
-                dictLastAddTypos = chkDictLastAddTypos.Checked;
-                dictLastReverseOrder = chkDictLastReverseOrder.Checked;
+            if (chkDictionariesFirstWordCustomWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][1st].dic"))
+                dictionariesFirstWordCustom = $"{hexFolder}\\[{hex}][1st].dic";
+            if (chkDictionariesFirstWordExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][1st][Exclude].dic"))
+                dictionariesFirstWordExclude = $"{hexFolder}\\[{hex}][1st][Exclude].dic";
+
+            if (chkUseDictLast.Checked)
                 dictionariesLastWord = GetDictionary(tvDictLastWord);
-                if (File.Exists($"{hexFolder}\\[{hex}][Last].dic"))
-                {
-                    dictionariesLastWord = $"{hexFolder}\\[{hex}][Last].dic;" + dictionariesLastWord;
-                }
-            }
+            if (chkDictionariesLastWordCustomWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Last].dic"))
+                dictionariesLastWordCustom = $"{hexFolder}\\[{hex}][Last].dic";
+            if (chkDictionariesLastWordExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Last][Exclude].dic"))
+                dictionariesLastWordExclude = $"{hexFolder}\\[{hex}][Last][Exclude].dic";
 
             var useUtf8 = !useHashCat && chkUtf8Toggle.Checked;
             var useDictAdvanced = chkDictionaryAdvanced.Checked;
@@ -373,21 +377,34 @@ namespace BruteForceHash.GUI
                                                     $"--at_least_under_chars {cbAtLeastUnderNbrChars.SelectedItem} " +
                                                     $"--at_least_under_words {cbAtLeastUnderNbrWords.SelectedItem} " +
                                                     $"--max_consecutive_ones {cbMaxConsecutiveOnes.SelectedItem} " +
-                                                    $"{(chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
-                                                    $"{(chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
-                                                    $"{(chkDictForceLowercase.Checked ? "--dictionaries_force_lowercase" : "")} " +
-                                                    $"{(chkDictAddTypos.Checked ? "--dictionaries_add_typos" : "")} " +
-                                                    $"{(chkDictReverseOrder.Checked ? "--dictionaries_reverse_order" : "")} " +
-                                                    $"{(dictFirstSkipDigits ? "--dictionaries_first_skip_digits" : "")} " +
-                                                    $"{(dictFirstSkipSpecial ? "--dictionaries_first_skip_specials" : "")} " +
-                                                    $"{(dictFirstForceLowercase ? "--dictionaries_first_force_lowercase" : "")} " +
-                                                    $"{(dictFirstAddTypos ? "--dictionaries_first_add_typos" : "")} " +
-                                                    $"{(dictFirstReverseOrder ? "--dictionaries_first_reverse_order" : "")} " +
-                                                    $"{(dictLastSkipDigits ? "--dictionaries_last_skip_digits" : "")} " +
-                                                    $"{(dictLastSkipSpecial ? "--dictionaries_last_skip_specials" : "")} " +
-                                                    $"{(dictLastForceLowercase ? "--dictionaries_last_force_lowercase" : "")} " +
-                                                    $"{(dictLastAddTypos ? "--dictionaries_last_add_typos" : "")} " +
-                                                    $"{(dictLastReverseOrder ? "--dictionaries_last_reverse_order" : "")} " +
+                                                    $"{(chkDictionariesUse.Checked && chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
+                                                    $"{(chkDictionariesUse.Checked && chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
+                                                    $"{(chkDictionariesUse.Checked && chkDictForceLowercase.Checked ? "--dictionaries_force_lowercase" : "")} " +
+                                                    $"{(chkDictionariesUse.Checked && chkDictAddTypos.Checked ? "--dictionaries_add_typos" : "")} " +
+                                                    $"{(chkDictionariesUse.Checked && chkDictReverseOrder.Checked ? "--dictionaries_reverse_order" : "")} " +
+                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipDigits.Checked ? "--dictionaries_custom_skip_digits" : "")} " +
+                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipSpecials.Checked ? "--dictionaries_custom_skip_specials" : "")} " +
+                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsForceLowercase.Checked ? "--dictionaries_custom_force_lowercase" : "")} " +
+                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsAddTypos.Checked ? "--dictionaries_custom_add_typos" : "")} " +
+                                                    (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom_min_words_hash {cbDictionariesCustomWordsMinimumInHash.SelectedItem} " : string.Empty) +
+                                                    $"{(chkUseDictFirst.Checked && chkDictFirstSkipDigits.Checked ? "--dictionaries_first_skip_digits" : "")} " +
+                                                    $"{(chkUseDictFirst.Checked && chkDictFirstSkipSpecials.Checked ? "--dictionaries_first_skip_specials" : "")} " +
+                                                    $"{(chkUseDictFirst.Checked && chkDictFirstForceLowercase.Checked ? "--dictionaries_first_force_lowercase" : "")} " +
+                                                    $"{(chkUseDictFirst.Checked && chkDictFirstAddTypos.Checked ? "--dictionaries_first_add_typos" : "")} " +
+                                                    $"{(chkUseDictFirst.Checked && chkDictFirstReverseOrder.Checked ? "--dictionaries_first_reverse_order" : "")} " +
+                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipDigits.Checked ? "--dictionaries_first_custom_skip_digits" : "")} " +
+                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipSpecials.Checked ? "--dictionaries_first_custom_skip_specials" : "")} " +
+                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsForceLowercase.Checked ? "--dictionaries_first_custom_force_lowercase" : "")} " +
+                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsAddTypos.Checked ? "--dictionaries_first_custom_add_typos" : "")} " +
+                                                    $"{(chkUseDictLast.Checked && chkDictLastSkipDigits.Checked ? "--dictionaries_last_skip_digits" : "")} " +
+                                                    $"{(chkUseDictLast.Checked && chkDictLastSkipSpecials.Checked ? "--dictionaries_last_skip_specials" : "")} " +
+                                                    $"{(chkUseDictLast.Checked && chkDictLastForceLowercase.Checked ? "--dictionaries_last_force_lowercase" : "")} " +
+                                                    $"{(chkUseDictLast.Checked && chkDictLastAddTypos.Checked ? "--dictionaries_last_add_typos" : "")} " +
+                                                    $"{(chkUseDictLast.Checked && chkDictLastReverseOrder.Checked ? "--dictionaries_last_reverse_order" : "")} " +
+                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipDigits.Checked ? "--dictionaries_last_custom_skip_digits" : "")} " +
+                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipSpecials.Checked ? "--dictionaries_last_custom_skip_specials" : "")} " +
+                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsForceLowercase.Checked ? "--dictionaries_last_custom_force_lowercase" : "")} " +
+                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsAddTypos.Checked ? "--dictionaries_last_add_custom_typos" : "")} " +
                                                     $"{(chkTyposLetterSwap.Checked ? "--typos_enable_letter_swap" : "")} " +
                                                     $"{(chkTyposSkipLetter.Checked ? "--typos_enable_skip_letter" : "")} " +
                                                     $"{(chkTyposDoubleLetter.Checked ? "--typos_enable_double_letter" : "")} " +
@@ -398,9 +415,18 @@ namespace BruteForceHash.GUI
                                                     $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                                     $"--confirm_end " +
-                                                    $"--dictionaries \"{dictionaries}\" " +
-                                                    $"--dictionaries_first_word \"{dictionariesFirstWord}\" " +
-                                                    $"--dictionaries_last_word \"{dictionariesLastWord}\" " +
+                                                    (chkDictionariesUse.Checked ? $"--dictionaries \"{dictionaries}\" " : string.Empty) +
+                                                    (chkUseDictFirst.Checked ? $"--dictionaries_first_word \"{dictionariesFirstWord}\" " : string.Empty) +
+                                                    (chkUseDictLast.Checked ? $"--dictionaries_last_word \"{dictionariesLastWord}\" " : string.Empty) +
+                                                    (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom \"{dictionariesCustom}\" " : string.Empty) +
+                                                    (chkDictionariesFirstWordCustomWordsUse.Checked ? $"--dictionaries_first_word_custom \"{dictionariesFirstWordCustom}\" " : string.Empty) +
+                                                    (chkDictionariesLastWordCustomWordsUse.Checked ? $"--dictionaries_last_word_custom \"{dictionariesLastWordCustom}\" " : string.Empty) +
+                                                    (chkDictionariesExcludeWordsUse.Checked ? $"--dictionaries_exclude \"{dictionariesExclude}\" " : string.Empty) +
+                                                    $"{(chkDictionariesExcludeWordsUse.Checked && chkDictExcludePartialWords.Checked ? "--dictionaries_exclude_partial" : "")} " +
+                                                    (chkDictionariesFirstWordExcludeWordsUse.Checked ? $"--dictionaries_first_word_exclude \"{dictionariesFirstWordExclude}\" " : string.Empty) +
+                                                    $"{(chkDictionariesFirstWordExcludeWordsUse.Checked && chkDictFirstWordExcludePartialWords.Checked ? "--dictionaries_first_word_exclude_partial" : "")} " +
+                                                    (chkDictionariesLastWordExcludeWordsUse.Checked ? $"--dictionaries_last_word_exclude \"{dictionariesLastWordExclude}\" " : string.Empty) +
+                                                    $"{(chkDictionariesLastWordExcludeWordsUse.Checked && chkDictLastWordExcludePartialWords.Checked ? "--dictionaries_last_word_exclude_partial" : "")} " +
                                                     $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
                                                     $"--dictionary_filter_first \"{txtDictionaryFilterFirst.Text.Trim()}\" " +
                                                     $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
@@ -430,6 +456,8 @@ namespace BruteForceHash.GUI
                                                     $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
                                                     $"--hex_value \"{txtHexValues.Text.Trim()}\"";
                 }
+                _lastCommand = process.StartInfo.Arguments;
+
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
 
@@ -493,26 +521,52 @@ namespace BruteForceHash.GUI
                 Order = cbCombinationOrder.SelectedItem.ToString(),
                 Verbose = chkVerbose.Checked,
                 EnableUtf8 = chkUtf8Toggle.Checked,
+                UseMainDictionaries = chkDictionariesUse.Checked,
                 Dictionaries = dictionaries,
                 DictionariesSkipDigits = chkDictSkipDigits.Checked,
                 DictionariesSkipSpecials = chkDictSkipSpecials.Checked,
                 DictionariesForceLowercase = chkDictForceLowercase.Checked,
                 DictionariesAddTypos = chkDictAddTypos.Checked,
-                DictionariesReverseTypos = chkDictReverseOrder.Checked,
-                UseDictionaryFirstWord = chkUseCustomDictFirst.Checked,
+                DictionariesReverseOrder = chkDictReverseOrder.Checked,
+                DictionariesCustomWordsUse = chkDictionariesCustomWordsUse.Checked,
+                DictionariesCustomWordsSkipDigits = chkDictCustomWordsSkipDigits.Checked,
+                DictionariesCustomWordsSkipSpecials = chkDictCustomWordsSkipSpecials.Checked,
+                DictionariesCustomWordsForceLowercase = chkDictCustomWordsForceLowercase.Checked,
+                DictionariesCustomWordsAddTypos = chkDictCustomWordsAddTypos.Checked,
+                DictionariesCustomWordsMinimumInHash = Convert.ToInt32(cbDictionariesCustomWordsMinimumInHash.SelectedItem),
+                DictionariesExcludeWordsUse = chkDictionariesExcludeWordsUse.Checked,
+                DictionariesExcludePartialWords = chkDictExcludePartialWords.Checked,
+                DictionariesExcludeWords = txtDictExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
+                UseDictionaryFirstWord = chkUseDictFirst.Checked,
                 DictionariesFirstWord = dictionariesFirstWord,
                 DictionariesFirstWordSkipDigits = chkDictFirstSkipDigits.Checked,
                 DictionariesFirstWordSkipSpecials = chkDictFirstSkipSpecials.Checked,
                 DictionariesFirstWordForceLowercase = chkDictFirstForceLowercase.Checked,
                 DictionariesFirstWordAddTypos = chkDictFirstAddTypos.Checked,
-                DictionariesFirstWordReverseTypos = chkDictFirstReverseOrder.Checked,
-                UseDictionaryLastWord = chkUseCustomDictLast.Checked,
+                DictionariesFirstWordReverseOrder = chkDictFirstReverseOrder.Checked,
+                DictionariesFirstWordCustomWordsUse = chkDictionariesFirstWordCustomWordsUse.Checked,
+                DictionariesFirstWordCustomWordsSkipDigits = chkDictFirstWordCustomWordsSkipDigits.Checked,
+                DictionariesFirstWordCustomWordsSkipSpecials = chkDictFirstWordCustomWordsSkipSpecials.Checked,
+                DictionariesFirstWordCustomWordsForceLowercase = chkDictFirstWordCustomWordsForceLowercase.Checked,
+                DictionariesFirstWordCustomWordsAddTypos = chkDictFirstWordCustomWordsAddTypos.Checked,
+                DictionariesFirstWordExcludeWordsUse = chkDictionariesFirstWordExcludeWordsUse.Checked,
+                DictionariesFirstWordExcludePartialWords = chkDictFirstWordExcludePartialWords.Checked,
+                DictionariesFirstWordExcludeWords = txtDictFirstWordExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
+                UseDictionaryLastWord = chkUseDictLast.Checked,
                 DictionariesLastWord = dictionariesLastWord,
                 DictionariesLastWordSkipDigits = chkDictLastSkipDigits.Checked,
                 DictionariesLastWordSkipSpecials = chkDictLastSkipSpecials.Checked,
                 DictionariesLastWordForceLowercase = chkDictLastForceLowercase.Checked,
                 DictionariesLastWordAddTypos = chkDictLastAddTypos.Checked,
-                DictionariesLastWordReverseTypos = chkDictLastReverseOrder.Checked,
+                DictionariesLastWordReverseOrder = chkDictLastReverseOrder.Checked,
+                DictionariesLastWordCustomWordsUse = chkDictionariesLastWordCustomWordsUse.Checked,
+                DictionariesLastWordCustomWordsSkipDigits = chkDictLastWordCustomWordsSkipDigits.Checked,
+                DictionariesLastWordCustomWordsSkipSpecials = chkDictLastWordCustomWordsSkipSpecials.Checked,
+                DictionariesLastWordCustomWordsForceLowercase = chkDictLastWordCustomWordsForceLowercase.Checked,
+                DictionariesLastWordCustomWordsAddTypos = chkDictLastWordCustomWordsAddTypos.Checked,
+                DictionariesLastWordExcludeWordsUse = chkDictionariesLastWordExcludeWordsUse.Checked,
+                DictionariesLastWordExcludePartialWords = chkDictLastWordExcludePartialWords.Checked,
+                DictionariesLastWordExcludeWords = txtDictLastWordExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
                 TyposEnableDoubleLetter = chkTyposDoubleLetter.Checked,
                 TyposEnableExtraLetter = chkTyposExtraLetter.Checked,
                 TyposEnableLetterSwap = chkTyposLetterSwap.Checked,
@@ -579,28 +633,55 @@ namespace BruteForceHash.GUI
             chkVerbose.Checked = hbtObject.Verbose;
             chkUtf8Toggle.Checked = hbtObject.EnableUtf8;
 
+            chkDictionariesUse.Checked = hbtObject.UseMainDictionaries;
             SetDictionary(tvDictMain, hbtObject.Dictionaries);
             chkDictSkipDigits.Checked = hbtObject.DictionariesSkipDigits;
             chkDictSkipSpecials.Checked = hbtObject.DictionariesSkipSpecials;
             chkDictForceLowercase.Checked = hbtObject.DictionariesForceLowercase;
             chkDictAddTypos.Checked = hbtObject.DictionariesAddTypos;
-            chkDictReverseOrder.Checked = hbtObject.DictionariesReverseTypos;
+            chkDictReverseOrder.Checked = hbtObject.DictionariesReverseOrder;
+            chkDictionariesCustomWordsUse.Checked = hbtObject.DictionariesCustomWordsUse;
+            chkDictCustomWordsSkipDigits.Checked = hbtObject.DictionariesCustomWordsSkipDigits;
+            chkDictCustomWordsSkipSpecials.Checked = hbtObject.DictionariesCustomWordsSkipSpecials;
+            chkDictCustomWordsForceLowercase.Checked = hbtObject.DictionariesCustomWordsForceLowercase;
+            chkDictCustomWordsAddTypos.Checked = hbtObject.DictionariesCustomWordsAddTypos;
+            cbDictionariesCustomWordsMinimumInHash.SelectedItem = hbtObject.DictionariesCustomWordsMinimumInHash.ToString();
+            chkDictionariesExcludeWordsUse.Checked = hbtObject.DictionariesExcludeWordsUse;
+            chkDictExcludePartialWords.Checked = hbtObject.DictionariesExcludePartialWords;
+            txtDictExcludeWords.Text = string.Join("\r\n", hbtObject.DictionariesExcludeWords ?? new List<string>());
 
-            chkUseCustomDictFirst.Checked = hbtObject.UseDictionaryFirstWord;
+            chkUseDictFirst.Checked = hbtObject.UseDictionaryFirstWord;
             SetDictionary(tvDictFirstWord, hbtObject.DictionariesFirstWord);
             chkDictFirstSkipDigits.Checked = hbtObject.DictionariesFirstWordSkipDigits;
             chkDictFirstSkipSpecials.Checked = hbtObject.DictionariesFirstWordSkipSpecials;
             chkDictFirstForceLowercase.Checked = hbtObject.DictionariesFirstWordForceLowercase;
             chkDictFirstAddTypos.Checked = hbtObject.DictionariesFirstWordAddTypos;
-            chkDictFirstReverseOrder.Checked = hbtObject.DictionariesFirstWordReverseTypos;
+            chkDictFirstReverseOrder.Checked = hbtObject.DictionariesFirstWordReverseOrder;
+            chkDictionariesFirstWordCustomWordsUse.Checked = hbtObject.DictionariesFirstWordCustomWordsUse;
+            chkDictFirstWordCustomWordsSkipDigits.Checked = hbtObject.DictionariesFirstWordCustomWordsSkipDigits;
+            chkDictFirstWordCustomWordsSkipSpecials.Checked = hbtObject.DictionariesFirstWordCustomWordsSkipSpecials;
+            chkDictFirstWordCustomWordsForceLowercase.Checked = hbtObject.DictionariesFirstWordCustomWordsForceLowercase;
+            chkDictFirstWordCustomWordsAddTypos.Checked = hbtObject.DictionariesFirstWordCustomWordsAddTypos;
+            chkDictionariesFirstWordExcludeWordsUse.Checked = hbtObject.DictionariesFirstWordExcludeWordsUse;
+            chkDictFirstWordExcludePartialWords.Checked = hbtObject.DictionariesFirstWordExcludePartialWords;
+            txtDictFirstWordExcludeWords.Text = string.Join("\r\n", hbtObject.DictionariesFirstWordExcludeWords ?? new List<string>());
 
-            chkUseCustomDictLast.Checked = hbtObject.UseDictionaryLastWord;
+            chkUseDictLast.Checked = hbtObject.UseDictionaryLastWord;
             SetDictionary(tvDictLastWord, hbtObject.DictionariesLastWord);
             chkDictLastSkipDigits.Checked = hbtObject.DictionariesLastWordSkipDigits;
             chkDictLastSkipSpecials.Checked = hbtObject.DictionariesLastWordSkipSpecials;
             chkDictLastForceLowercase.Checked = hbtObject.DictionariesLastWordForceLowercase;
             chkDictLastAddTypos.Checked = hbtObject.DictionariesLastWordAddTypos;
-            chkDictLastReverseOrder.Checked = hbtObject.DictionariesLastWordReverseTypos;
+            chkDictLastReverseOrder.Checked = hbtObject.DictionariesLastWordReverseOrder;
+            chkDictionariesLastWordCustomWordsUse.Checked = hbtObject.DictionariesLastWordCustomWordsUse;
+            chkDictLastWordCustomWordsSkipDigits.Checked = hbtObject.DictionariesLastWordCustomWordsSkipDigits;
+            chkDictLastWordCustomWordsSkipSpecials.Checked = hbtObject.DictionariesLastWordCustomWordsSkipSpecials;
+            chkDictLastWordCustomWordsForceLowercase.Checked = hbtObject.DictionariesLastWordCustomWordsForceLowercase;
+            chkDictLastWordCustomWordsAddTypos.Checked = hbtObject.DictionariesLastWordCustomWordsAddTypos;
+            chkDictionariesLastWordExcludeWordsUse.Checked = hbtObject.DictionariesLastWordExcludeWordsUse;
+            chkDictLastWordExcludePartialWords.Checked = hbtObject.DictionariesLastWordExcludePartialWords;
+            txtDictLastWordExcludeWords.Text = string.Join("\r\n", hbtObject.DictionariesLastWordExcludeWords ?? new List<string>());
+
             chkTyposDoubleLetter.Checked = hbtObject.TyposEnableDoubleLetter;
             chkTyposExtraLetter.Checked = hbtObject.TyposEnableExtraLetter;
             chkTyposLetterSwap.Checked = hbtObject.TyposEnableLetterSwap;
@@ -693,13 +774,25 @@ namespace BruteForceHash.GUI
             {
                 File.Delete($"{hexFolder}\\[{hex}].dic");
             }
+            if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}][Exclude].dic"))
+            {
+                File.Delete($"{hexFolder}\\[{hex}][Exclude].dic");
+            }
             if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}][1st].dic"))
             {
                 File.Delete($"{hexFolder}\\[{hex}][1st].dic");
             }
+            if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}][1st][Exclude].dic"))
+            {
+                File.Delete($"{hexFolder}\\[{hex}][1st][Exclude].dic");
+            }
             if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}][Last].dic"))
             {
                 File.Delete($"{hexFolder}\\[{hex}][Last].dic");
+            }
+            if (!string.IsNullOrEmpty(hex) && File.Exists($"{hexFolder}\\[{hex}][Last][Exclude].dic"))
+            {
+                File.Delete($"{hexFolder}\\[{hex}][Last][Exclude].dic");
             }
             Directory.Delete(hexFolder);
         }
@@ -712,8 +805,11 @@ namespace BruteForceHash.GUI
             if (IsValidHex())
             {
                 File.WriteAllText($"{hexFolder}\\[{hex}].dic", txtDictCustWords.Text);
+                File.WriteAllText($"{hexFolder}\\[{hex}][Exclude].dic", txtDictExcludeWords.Text);
                 File.WriteAllText($"{hexFolder}\\[{hex}][1st].dic", txtDictFirstCustWords.Text);
+                File.WriteAllText($"{hexFolder}\\[{hex}][1st][Exclude].dic", txtDictFirstWordExcludeWords.Text);
                 File.WriteAllText($"{hexFolder}\\[{hex}][Last].dic", txtDictLastCustWords.Text);
+                File.WriteAllText($"{hexFolder}\\[{hex}][Last][Exclude].dic", txtDictLastWordExcludeWords.Text);
             }
         }
         #endregion
@@ -792,13 +888,15 @@ namespace BruteForceHash.GUI
 
         private void OnCustomDictFirstCheckedChanged(object sender, EventArgs e)
         {
-            chkDictFirstSkipDigits.Enabled = chkUseCustomDictFirst.Checked;
-            chkDictFirstSkipSpecials.Enabled = chkUseCustomDictFirst.Checked;
-            chkDictFirstForceLowercase.Enabled = chkUseCustomDictFirst.Checked;
-            chkDictFirstAddTypos.Enabled = chkUseCustomDictFirst.Checked;
-            chkDictFirstReverseOrder.Enabled = chkUseCustomDictFirst.Checked;
-            tvDictFirstWord.Enabled = chkUseCustomDictFirst.Checked;
-            if (chkUseCustomDictFirst.Checked)
+            chkDictFirstSkipDigits.Enabled = chkUseDictFirst.Checked;
+            chkDictFirstSkipSpecials.Enabled = chkUseDictFirst.Checked;
+            chkDictFirstForceLowercase.Enabled = chkUseDictFirst.Checked;
+            chkDictFirstAddTypos.Enabled = chkUseDictFirst.Checked;
+            chkDictFirstReverseOrder.Enabled = chkUseDictFirst.Checked;
+            tvDictFirstWord.Enabled = chkUseDictFirst.Checked;
+            btnCopyToDictFirst.Enabled = chkUseDictFirst.Checked;
+            btnDictFirstUnselected.Enabled = chkUseDictFirst.Checked;
+            if (chkUseDictFirst.Checked)
             {
                 chkDictFirstSkipDigits.Checked = chkDictSkipDigits.Checked;
                 chkDictFirstSkipSpecials.Checked = chkDictSkipSpecials.Checked;
@@ -818,13 +916,15 @@ namespace BruteForceHash.GUI
 
         private void OnCustomDictLastCheckedChanged(object sender, EventArgs e)
         {
-            chkDictLastSkipDigits.Enabled = chkUseCustomDictLast.Checked;
-            chkDictLastSkipSpecials.Enabled = chkUseCustomDictLast.Checked;
-            chkDictLastForceLowercase.Enabled = chkUseCustomDictLast.Checked;
-            chkDictLastAddTypos.Enabled = chkUseCustomDictLast.Checked;
-            chkDictLastReverseOrder.Enabled = chkUseCustomDictLast.Checked;
-            tvDictLastWord.Enabled = chkUseCustomDictLast.Checked;
-            if (chkUseCustomDictLast.Checked)
+            chkDictLastSkipDigits.Enabled = chkUseDictLast.Checked;
+            chkDictLastSkipSpecials.Enabled = chkUseDictLast.Checked;
+            chkDictLastForceLowercase.Enabled = chkUseDictLast.Checked;
+            chkDictLastAddTypos.Enabled = chkUseDictLast.Checked;
+            chkDictLastReverseOrder.Enabled = chkUseDictLast.Checked;
+            tvDictLastWord.Enabled = chkUseDictLast.Checked;
+            btnCopyToDictLast.Enabled = chkUseDictLast.Checked;
+            btnDictLastUnselected.Enabled = chkUseDictLast.Checked;
+            if (chkUseDictLast.Checked)
             {
                 chkDictLastSkipDigits.Checked = chkDictSkipDigits.Checked;
                 chkDictLastSkipSpecials.Checked = chkDictSkipSpecials.Checked;
@@ -997,6 +1097,169 @@ namespace BruteForceHash.GUI
 
             btnStartHashCat.Enabled = ShouldEnableHashCat();
             btnStart.Enabled = IsValidHex();
+        }
+
+        private void chkDictionariesUse_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDictSkipDigits.Enabled = chkDictionariesUse.Checked;
+            chkDictSkipSpecials.Enabled = chkDictionariesUse.Checked;
+            chkDictForceLowercase.Enabled = chkDictionariesUse.Checked;
+            chkDictAddTypos.Enabled = chkDictionariesUse.Checked;
+            chkDictReverseOrder.Enabled = chkDictionariesUse.Checked;
+            tvDictMain.Enabled = chkDictionariesUse.Checked;
+            txtDictionaryFilterFirst.Enabled = chkDictionariesUse.Checked;
+            btnDictUnselected.Enabled = chkDictionariesUse.Checked;
+        }
+
+        private void chkDictionariesExcludeWordsUse_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDictExcludePartialWords.Enabled = chkDictionariesExcludeWordsUse.Checked;
+            txtDictExcludeWords.Enabled = chkDictionariesExcludeWordsUse.Checked;
+        }
+
+        private void chkDictionariesCustomWordsUse_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDictCustomWordsSkipDigits.Enabled = chkDictionariesCustomWordsUse.Checked;
+            chkDictCustomWordsSkipSpecials.Enabled = chkDictionariesCustomWordsUse.Checked;
+            chkDictCustomWordsForceLowercase.Enabled = chkDictionariesCustomWordsUse.Checked;
+            chkDictCustomWordsAddTypos.Enabled = chkDictionariesCustomWordsUse.Checked;
+            cbDictionariesCustomWordsMinimumInHash.Enabled = chkDictionariesCustomWordsUse.Checked;
+            txtDictCustWords.Enabled = chkDictionariesCustomWordsUse.Checked;
+            if (chkDictionariesCustomWordsUse.Checked)
+            {
+                chkDictCustomWordsSkipDigits.Checked = chkDictSkipDigits.Checked;
+                chkDictCustomWordsSkipSpecials.Checked = chkDictSkipSpecials.Checked;
+                chkDictCustomWordsForceLowercase.Checked = chkDictForceLowercase.Checked;
+                chkDictCustomWordsAddTypos.Checked = chkDictAddTypos.Checked;
+            }
+            else
+            {
+                chkDictCustomWordsSkipDigits.Checked = false;
+                chkDictCustomWordsSkipSpecials.Checked = false;
+                chkDictCustomWordsForceLowercase.Checked = false;
+                chkDictCustomWordsAddTypos.Checked = false;
+            }
+        }
+
+        private void chkDictionariesFirstWordCustomWordsUse_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDictFirstWordCustomWordsSkipDigits.Enabled = chkDictionariesFirstWordCustomWordsUse.Checked;
+            chkDictFirstWordCustomWordsSkipSpecials.Enabled = chkDictionariesFirstWordCustomWordsUse.Checked;
+            chkDictFirstWordCustomWordsForceLowercase.Enabled = chkDictionariesFirstWordCustomWordsUse.Checked;
+            chkDictFirstWordCustomWordsAddTypos.Enabled = chkDictionariesFirstWordCustomWordsUse.Checked;
+            txtDictFirstCustWords.Enabled = chkDictionariesFirstWordCustomWordsUse.Checked;
+            btnCopyToDictCustomFirst.Enabled = chkDictionariesFirstWordCustomWordsUse.Checked;
+            if (chkDictionariesFirstWordCustomWordsUse.Checked)
+            {
+                if (chkDictionariesCustomWordsUse.Checked)
+                {
+                    chkDictFirstWordCustomWordsSkipDigits.Checked = chkDictCustomWordsSkipDigits.Checked;
+                    chkDictFirstWordCustomWordsSkipSpecials.Checked = chkDictCustomWordsSkipSpecials.Checked;
+                    chkDictFirstWordCustomWordsForceLowercase.Checked = chkDictCustomWordsForceLowercase.Checked;
+                    chkDictFirstWordCustomWordsAddTypos.Checked = chkDictCustomWordsAddTypos.Checked;
+                }
+                else if (chkUseDictFirst.Checked)
+                {
+                    chkDictFirstWordCustomWordsSkipDigits.Checked = chkDictFirstSkipDigits.Checked;
+                    chkDictFirstWordCustomWordsSkipSpecials.Checked = chkDictFirstSkipSpecials.Checked;
+                    chkDictFirstWordCustomWordsForceLowercase.Checked = chkDictFirstForceLowercase.Checked;
+                    chkDictFirstWordCustomWordsAddTypos.Checked = chkDictFirstAddTypos.Checked;
+                }
+                else
+                {
+                    chkDictFirstWordCustomWordsSkipDigits.Checked = chkDictSkipDigits.Checked;
+                    chkDictFirstWordCustomWordsSkipSpecials.Checked = chkDictSkipSpecials.Checked;
+                    chkDictFirstWordCustomWordsForceLowercase.Checked = chkDictForceLowercase.Checked;
+                    chkDictFirstWordCustomWordsAddTypos.Checked = chkDictAddTypos.Checked;
+                }
+            }
+            else
+            {
+                chkDictFirstWordCustomWordsSkipDigits.Checked = false;
+                chkDictFirstWordCustomWordsSkipSpecials.Checked = false;
+                chkDictFirstWordCustomWordsForceLowercase.Checked = false;
+                chkDictFirstWordCustomWordsAddTypos.Checked = false;
+            }
+        }
+
+        private void chkDictionariesFirstWordExcludeWordsUse_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDictFirstWordExcludePartialWords.Enabled = chkDictionariesFirstWordExcludeWordsUse.Checked;
+            txtDictFirstWordExcludeWords.Enabled = chkDictionariesFirstWordExcludeWordsUse.Checked;
+            btnCopyToDictExcludeFirst.Enabled = chkDictionariesFirstWordExcludeWordsUse.Checked;
+        }
+
+        private void chkDictionariesLastWordCustomWordsUse_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDictLastWordCustomWordsSkipDigits.Enabled = chkDictionariesLastWordCustomWordsUse.Checked;
+            chkDictLastWordCustomWordsSkipSpecials.Enabled = chkDictionariesLastWordCustomWordsUse.Checked;
+            chkDictLastWordCustomWordsForceLowercase.Enabled = chkDictionariesLastWordCustomWordsUse.Checked;
+            chkDictLastWordCustomWordsAddTypos.Enabled = chkDictionariesLastWordCustomWordsUse.Checked;
+            txtDictLastCustWords.Enabled = chkDictionariesLastWordCustomWordsUse.Checked;
+            btnCopyToDictCustomLast.Enabled = chkDictionariesLastWordCustomWordsUse.Checked;
+            if (chkDictionariesLastWordCustomWordsUse.Checked)
+            {
+                if (chkDictionariesCustomWordsUse.Checked)
+                {
+                    chkDictLastWordCustomWordsSkipDigits.Checked = chkDictCustomWordsSkipDigits.Checked;
+                    chkDictLastWordCustomWordsSkipSpecials.Checked = chkDictCustomWordsSkipSpecials.Checked;
+                    chkDictLastWordCustomWordsForceLowercase.Checked = chkDictCustomWordsForceLowercase.Checked;
+                    chkDictLastWordCustomWordsAddTypos.Checked = chkDictCustomWordsAddTypos.Checked;
+                }
+                else if (chkUseDictLast.Checked)
+                {
+                    chkDictLastWordCustomWordsSkipDigits.Checked = chkDictLastSkipDigits.Checked;
+                    chkDictLastWordCustomWordsSkipSpecials.Checked = chkDictLastSkipSpecials.Checked;
+                    chkDictLastWordCustomWordsForceLowercase.Checked = chkDictLastForceLowercase.Checked;
+                    chkDictLastWordCustomWordsAddTypos.Checked = chkDictLastAddTypos.Checked;
+                }
+                else
+                {
+                    chkDictLastWordCustomWordsSkipDigits.Checked = chkDictSkipDigits.Checked;
+                    chkDictLastWordCustomWordsSkipSpecials.Checked = chkDictSkipSpecials.Checked;
+                    chkDictLastWordCustomWordsForceLowercase.Checked = chkDictForceLowercase.Checked;
+                    chkDictLastWordCustomWordsAddTypos.Checked = chkDictAddTypos.Checked;
+                }
+            }
+            else
+            {
+                chkDictLastWordCustomWordsSkipDigits.Checked = false;
+                chkDictLastWordCustomWordsSkipSpecials.Checked = false;
+                chkDictLastWordCustomWordsForceLowercase.Checked = false;
+                chkDictLastWordCustomWordsAddTypos.Checked = false;
+            }
+        }
+
+        private void chkDictionariesLastWordExcludeWordsUse_CheckedChanged(object sender, EventArgs e)
+        {
+            chkDictLastWordExcludePartialWords.Enabled = chkDictionariesLastWordExcludeWordsUse.Checked;
+            txtDictLastWordExcludeWords.Enabled = chkDictionariesLastWordExcludeWordsUse.Checked;
+            btnCopyToDictExcludeLast.Enabled = chkDictionariesLastWordExcludeWordsUse.Checked;
+        }
+
+        private void printLatestCommandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(_lastCommand);
+        }
+
+        private void btnCopyToDictCustomFirst_Click(object sender, EventArgs e)
+        {
+            txtDictFirstCustWords.Text = txtDictCustWords.Text;
+        }
+
+        private void btnCopyToDictExcludeFirst_Click(object sender, EventArgs e)
+        {
+            txtDictFirstWordExcludeWords.Text = txtDictExcludeWords.Text;
+        }
+
+        private void btnCopyToDictCustomLast_Click(object sender, EventArgs e)
+        {
+            txtDictLastCustWords.Text = txtDictCustWords.Text;
+        }
+
+        private void btnCopyToDictExcludeLast_Click(object sender, EventArgs e)
+        {
+            txtDictLastWordExcludeWords.Text = txtDictExcludeWords.Text;
         }
     }
 

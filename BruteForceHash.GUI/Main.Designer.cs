@@ -48,7 +48,6 @@ namespace BruteForceHash.GUI
             this.txtIncludeWord = new System.Windows.Forms.TextBox();
             this.lblWordsLimit = new System.Windows.Forms.Label();
             this.cbWordsLimit = new System.Windows.Forms.ComboBox();
-            this.lblDictionaries = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.lblSuffix = new System.Windows.Forms.Label();
             this.txtSuffix = new System.Windows.Forms.TextBox();
@@ -95,43 +94,92 @@ namespace BruteForceHash.GUI
             this.chkIncludeWordNotFirst = new System.Windows.Forms.CheckBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tvDictMain = new RikTheVeggie.TriStateTreeView();
+            this.tabMainDictionaries = new System.Windows.Forms.TabControl();
+            this.tabMainDictionariesCommon = new System.Windows.Forms.TabPage();
+            this.chkDictionariesUse = new System.Windows.Forms.CheckBox();
+            this.lblDictionariesUse = new System.Windows.Forms.Label();
             this.btnDictUnselected = new System.Windows.Forms.Button();
-            this.txtDictionaryFilterFirst = new System.Windows.Forms.TextBox();
-            this.lblDictionaryFilterFirst = new System.Windows.Forms.Label();
-            this.chkDictSkipDigits = new System.Windows.Forms.CheckBox();
-            this.chkDictSkipSpecials = new System.Windows.Forms.CheckBox();
-            this.chkDictForceLowercase = new System.Windows.Forms.CheckBox();
-            this.chkDictAddTypos = new System.Windows.Forms.CheckBox();
+            this.tvDictMain = new RikTheVeggie.TriStateTreeView();
             this.chkDictReverseOrder = new System.Windows.Forms.CheckBox();
+            this.chkDictAddTypos = new System.Windows.Forms.CheckBox();
+            this.txtDictionaryFilterFirst = new System.Windows.Forms.TextBox();
+            this.chkDictForceLowercase = new System.Windows.Forms.CheckBox();
+            this.lblDictionaryFilterFirst = new System.Windows.Forms.Label();
+            this.chkDictSkipSpecials = new System.Windows.Forms.CheckBox();
+            this.chkDictSkipDigits = new System.Windows.Forms.CheckBox();
+            this.tabMainDictionariesCustom = new System.Windows.Forms.TabPage();
+            this.chkDictionariesCustomWordsUse = new System.Windows.Forms.CheckBox();
+            this.lblDictionariesCustomWordsUse = new System.Windows.Forms.Label();
+            this.lblDictionariesCustomWordsAtLeast = new System.Windows.Forms.Label();
+            this.lblDictionariesCustomWordsHash = new System.Windows.Forms.Label();
+            this.cbDictionariesCustomWordsMinimumInHash = new System.Windows.Forms.ComboBox();
+            this.lblDictionariesCustomWordsFiltering = new System.Windows.Forms.Label();
+            this.chkDictCustomWordsAddTypos = new System.Windows.Forms.CheckBox();
+            this.chkDictCustomWordsForceLowercase = new System.Windows.Forms.CheckBox();
+            this.chkDictCustomWordsSkipSpecials = new System.Windows.Forms.CheckBox();
+            this.chkDictCustomWordsSkipDigits = new System.Windows.Forms.CheckBox();
+            this.txtDictCustWords = new System.Windows.Forms.TextBox();
+            this.tabMainDictionariesExcludeWords = new System.Windows.Forms.TabPage();
+            this.chkDictExcludePartialWords = new System.Windows.Forms.CheckBox();
+            this.chkDictionariesExcludeWordsUse = new System.Windows.Forms.CheckBox();
+            this.lblDictionariesExcludeWordsUse = new System.Windows.Forms.Label();
+            this.txtDictExcludeWords = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabFirstWordDictionaries = new System.Windows.Forms.TabControl();
+            this.tabFirstWordDictionariesCommon = new System.Windows.Forms.TabPage();
+            this.lblDictionariesFirstWordUse = new System.Windows.Forms.Label();
             this.tvDictFirstWord = new RikTheVeggie.TriStateTreeView();
+            this.chkDictFirstReverseOrder = new System.Windows.Forms.CheckBox();
             this.btnCopyToDictFirst = new System.Windows.Forms.Button();
             this.btnDictFirstUnselected = new System.Windows.Forms.Button();
-            this.lblDictionariesFirstWord = new System.Windows.Forms.Label();
-            this.chkUseCustomDictFirst = new System.Windows.Forms.CheckBox();
-            this.chkDictFirstSkipDigits = new System.Windows.Forms.CheckBox();
-            this.chkDictFirstSkipSpecials = new System.Windows.Forms.CheckBox();
-            this.chkDictFirstForceLowercase = new System.Windows.Forms.CheckBox();
             this.chkDictFirstAddTypos = new System.Windows.Forms.CheckBox();
-            this.chkDictFirstReverseOrder = new System.Windows.Forms.CheckBox();
+            this.chkDictFirstForceLowercase = new System.Windows.Forms.CheckBox();
+            this.chkDictFirstSkipSpecials = new System.Windows.Forms.CheckBox();
+            this.chkUseDictFirst = new System.Windows.Forms.CheckBox();
+            this.chkDictFirstSkipDigits = new System.Windows.Forms.CheckBox();
+            this.tabFirstWordDictionariesCustom = new System.Windows.Forms.TabPage();
+            this.btnCopyToDictCustomFirst = new System.Windows.Forms.Button();
+            this.chkDictionariesFirstWordCustomWordsUse = new System.Windows.Forms.CheckBox();
+            this.lblDictionariesFirstWordCustomWordsUse = new System.Windows.Forms.Label();
+            this.chkDictFirstWordCustomWordsAddTypos = new System.Windows.Forms.CheckBox();
+            this.chkDictFirstWordCustomWordsForceLowercase = new System.Windows.Forms.CheckBox();
+            this.chkDictFirstWordCustomWordsSkipSpecials = new System.Windows.Forms.CheckBox();
+            this.chkDictFirstWordCustomWordsSkipDigits = new System.Windows.Forms.CheckBox();
+            this.txtDictFirstCustWords = new System.Windows.Forms.TextBox();
+            this.tabFirstWordDictionariesExcludeWords = new System.Windows.Forms.TabPage();
+            this.btnCopyToDictExcludeFirst = new System.Windows.Forms.Button();
+            this.txtDictFirstWordExcludeWords = new System.Windows.Forms.TextBox();
+            this.chkDictFirstWordExcludePartialWords = new System.Windows.Forms.CheckBox();
+            this.chkDictionariesFirstWordExcludeWordsUse = new System.Windows.Forms.CheckBox();
+            this.lblDictionariesFirstWordExcludeWordsUse = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabLastWordDictionaries = new System.Windows.Forms.TabControl();
+            this.tabLastWordDictionariesCommon = new System.Windows.Forms.TabPage();
+            this.lblDictionaryLastWordUse = new System.Windows.Forms.Label();
             this.tvDictLastWord = new RikTheVeggie.TriStateTreeView();
+            this.chkDictLastForceLowercase = new System.Windows.Forms.CheckBox();
             this.btnCopyToDictLast = new System.Windows.Forms.Button();
             this.btnDictLastUnselected = new System.Windows.Forms.Button();
-            this.lblDictionaryLastWord = new System.Windows.Forms.Label();
-            this.chkUseCustomDictLast = new System.Windows.Forms.CheckBox();
-            this.chkDictLastReverseOrder = new System.Windows.Forms.CheckBox();
-            this.chkDictLastSkipDigits = new System.Windows.Forms.CheckBox();
-            this.chkDictLastAddTypos = new System.Windows.Forms.CheckBox();
             this.chkDictLastSkipSpecials = new System.Windows.Forms.CheckBox();
-            this.chkDictLastForceLowercase = new System.Windows.Forms.CheckBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.txtDictCustWords = new System.Windows.Forms.TextBox();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.txtDictFirstCustWords = new System.Windows.Forms.TextBox();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.chkDictLastAddTypos = new System.Windows.Forms.CheckBox();
+            this.chkDictLastSkipDigits = new System.Windows.Forms.CheckBox();
+            this.chkUseDictLast = new System.Windows.Forms.CheckBox();
+            this.chkDictLastReverseOrder = new System.Windows.Forms.CheckBox();
+            this.tabLastWordDictionariesCustom = new System.Windows.Forms.TabPage();
+            this.btnCopyToDictCustomLast = new System.Windows.Forms.Button();
+            this.chkDictionariesLastWordCustomWordsUse = new System.Windows.Forms.CheckBox();
+            this.lblDictionariesLastWordCustomWordsUse = new System.Windows.Forms.Label();
+            this.chkDictLastWordCustomWordsAddTypos = new System.Windows.Forms.CheckBox();
+            this.chkDictLastWordCustomWordsForceLowercase = new System.Windows.Forms.CheckBox();
+            this.chkDictLastWordCustomWordsSkipSpecials = new System.Windows.Forms.CheckBox();
+            this.chkDictLastWordCustomWordsSkipDigits = new System.Windows.Forms.CheckBox();
             this.txtDictLastCustWords = new System.Windows.Forms.TextBox();
+            this.tabLastWordDictionariesExcludeWords = new System.Windows.Forms.TabPage();
+            this.btnCopyToDictExcludeLast = new System.Windows.Forms.Button();
+            this.txtDictLastWordExcludeWords = new System.Windows.Forms.TextBox();
+            this.chkDictLastWordExcludePartialWords = new System.Windows.Forms.CheckBox();
+            this.chkDictionariesLastWordExcludeWordsUse = new System.Windows.Forms.CheckBox();
+            this.lblDictionariesLastWordExcludeWordsUse = new System.Windows.Forms.Label();
             this.grpAdvanced = new System.Windows.Forms.GroupBox();
             this.cbMinConcatWords = new System.Windows.Forms.ComboBox();
             this.cbMaxConcatWords = new System.Windows.Forms.ComboBox();
@@ -193,6 +241,8 @@ namespace BruteForceHash.GUI
             this.mnSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnLoad = new System.Windows.Forms.ToolStripMenuItem();
             this.mnSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printLatestCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.lblVerbose = new System.Windows.Forms.Label();
@@ -204,11 +254,20 @@ namespace BruteForceHash.GUI
             this.groupBoxWordFiltering.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabMainDictionaries.SuspendLayout();
+            this.tabMainDictionariesCommon.SuspendLayout();
+            this.tabMainDictionariesCustom.SuspendLayout();
+            this.tabMainDictionariesExcludeWords.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabFirstWordDictionaries.SuspendLayout();
+            this.tabFirstWordDictionariesCommon.SuspendLayout();
+            this.tabFirstWordDictionariesCustom.SuspendLayout();
+            this.tabFirstWordDictionariesExcludeWords.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.tabPage6.SuspendLayout();
+            this.tabLastWordDictionaries.SuspendLayout();
+            this.tabLastWordDictionariesCommon.SuspendLayout();
+            this.tabLastWordDictionariesCustom.SuspendLayout();
+            this.tabLastWordDictionariesExcludeWords.SuspendLayout();
             this.grpAdvanced.SuspendLayout();
             this.grpTypos.SuspendLayout();
             this.pnlCharacter.SuspendLayout();
@@ -457,15 +516,6 @@ namespace BruteForceHash.GUI
             this.cbWordsLimit.Name = "cbWordsLimit";
             this.cbWordsLimit.Size = new System.Drawing.Size(38, 23);
             this.cbWordsLimit.TabIndex = 21;
-            // 
-            // lblDictionaries
-            // 
-            this.lblDictionaries.AutoSize = true;
-            this.lblDictionaries.Location = new System.Drawing.Point(10, 8);
-            this.lblDictionaries.Name = "lblDictionaries";
-            this.lblDictionaries.Size = new System.Drawing.Size(71, 13);
-            this.lblDictionaries.TabIndex = 22;
-            this.lblDictionaries.Text = "Dictionaries:";
             // 
             // btnStart
             // 
@@ -1167,9 +1217,6 @@ namespace BruteForceHash.GUI
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
-            this.tabControl.Controls.Add(this.tabPage4);
-            this.tabControl.Controls.Add(this.tabPage5);
-            this.tabControl.Controls.Add(this.tabPage6);
             this.tabControl.Location = new System.Drawing.Point(380, 4);
             this.tabControl.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl.Name = "tabControl";
@@ -1179,16 +1226,7 @@ namespace BruteForceHash.GUI
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.tvDictMain);
-            this.tabPage1.Controls.Add(this.btnDictUnselected);
-            this.tabPage1.Controls.Add(this.txtDictionaryFilterFirst);
-            this.tabPage1.Controls.Add(this.lblDictionaryFilterFirst);
-            this.tabPage1.Controls.Add(this.lblDictionaries);
-            this.tabPage1.Controls.Add(this.chkDictSkipDigits);
-            this.tabPage1.Controls.Add(this.chkDictSkipSpecials);
-            this.tabPage1.Controls.Add(this.chkDictForceLowercase);
-            this.tabPage1.Controls.Add(this.chkDictAddTypos);
-            this.tabPage1.Controls.Add(this.chkDictReverseOrder);
+            this.tabPage1.Controls.Add(this.tabMainDictionaries);
             this.tabPage1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
@@ -1196,75 +1234,114 @@ namespace BruteForceHash.GUI
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(436, 550);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Main";
+            this.tabPage1.Text = "Main Dictionary";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // tvDictMain
+            // tabMainDictionaries
             // 
-            this.tvDictMain.Location = new System.Drawing.Point(136, 8);
-            this.tvDictMain.Margin = new System.Windows.Forms.Padding(2);
-            this.tvDictMain.Name = "tvDictMain";
-            this.tvDictMain.Size = new System.Drawing.Size(299, 534);
-            this.tvDictMain.TabIndex = 84;
-            this.tvDictMain.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
+            this.tabMainDictionaries.Controls.Add(this.tabMainDictionariesCommon);
+            this.tabMainDictionaries.Controls.Add(this.tabMainDictionariesCustom);
+            this.tabMainDictionaries.Controls.Add(this.tabMainDictionariesExcludeWords);
+            this.tabMainDictionaries.Location = new System.Drawing.Point(0, 0);
+            this.tabMainDictionaries.Name = "tabMainDictionaries";
+            this.tabMainDictionaries.SelectedIndex = 0;
+            this.tabMainDictionaries.Size = new System.Drawing.Size(436, 550);
+            this.tabMainDictionaries.TabIndex = 85;
+            // 
+            // tabMainDictionariesCommon
+            // 
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictionariesUse);
+            this.tabMainDictionariesCommon.Controls.Add(this.lblDictionariesUse);
+            this.tabMainDictionariesCommon.Controls.Add(this.btnDictUnselected);
+            this.tabMainDictionariesCommon.Controls.Add(this.tvDictMain);
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictReverseOrder);
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictAddTypos);
+            this.tabMainDictionariesCommon.Controls.Add(this.txtDictionaryFilterFirst);
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictForceLowercase);
+            this.tabMainDictionariesCommon.Controls.Add(this.lblDictionaryFilterFirst);
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictSkipSpecials);
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictSkipDigits);
+            this.tabMainDictionariesCommon.Location = new System.Drawing.Point(4, 22);
+            this.tabMainDictionariesCommon.Name = "tabMainDictionariesCommon";
+            this.tabMainDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMainDictionariesCommon.Size = new System.Drawing.Size(428, 524);
+            this.tabMainDictionariesCommon.TabIndex = 0;
+            this.tabMainDictionariesCommon.Text = "Common Dictionaries";
+            this.tabMainDictionariesCommon.UseVisualStyleBackColor = true;
+            // 
+            // chkDictionariesUse
+            // 
+            this.chkDictionariesUse.AutoSize = true;
+            this.chkDictionariesUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesUse.Name = "chkDictionariesUse";
+            this.chkDictionariesUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesUse.TabIndex = 93;
+            this.chkDictionariesUse.UseVisualStyleBackColor = true;
+            this.chkDictionariesUse.CheckedChanged += new System.EventHandler(this.chkDictionariesUse_CheckedChanged);
+            // 
+            // lblDictionariesUse
+            // 
+            this.lblDictionariesUse.AutoSize = true;
+            this.lblDictionariesUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesUse.Name = "lblDictionariesUse";
+            this.lblDictionariesUse.Size = new System.Drawing.Size(29, 13);
+            this.lblDictionariesUse.TabIndex = 22;
+            this.lblDictionariesUse.Text = "Use:";
             // 
             // btnDictUnselected
             // 
-            this.btnDictUnselected.Location = new System.Drawing.Point(10, 512);
+            this.btnDictUnselected.Location = new System.Drawing.Point(4, 497);
             this.btnDictUnselected.Margin = new System.Windows.Forms.Padding(2);
             this.btnDictUnselected.Name = "btnDictUnselected";
-            this.btnDictUnselected.Size = new System.Drawing.Size(122, 22);
+            this.btnDictUnselected.Size = new System.Drawing.Size(102, 22);
             this.btnDictUnselected.TabIndex = 55;
             this.btnDictUnselected.Text = "Unselect All";
             this.btnDictUnselected.UseVisualStyleBackColor = true;
             this.btnDictUnselected.Click += new System.EventHandler(this.btnDictUnselected_Click);
             // 
+            // tvDictMain
+            // 
+            this.tvDictMain.Location = new System.Drawing.Point(109, 2);
+            this.tvDictMain.Margin = new System.Windows.Forms.Padding(2);
+            this.tvDictMain.Name = "tvDictMain";
+            this.tvDictMain.Size = new System.Drawing.Size(317, 520);
+            this.tvDictMain.TabIndex = 84;
+            this.tvDictMain.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
+            // 
+            // chkDictReverseOrder
+            // 
+            this.chkDictReverseOrder.AutoSize = true;
+            this.chkDictReverseOrder.Location = new System.Drawing.Point(6, 120);
+            this.chkDictReverseOrder.Name = "chkDictReverseOrder";
+            this.chkDictReverseOrder.Size = new System.Drawing.Size(98, 17);
+            this.chkDictReverseOrder.TabIndex = 54;
+            this.chkDictReverseOrder.Text = "Reverse Order";
+            this.chkDictReverseOrder.UseVisualStyleBackColor = true;
+            // 
+            // chkDictAddTypos
+            // 
+            this.chkDictAddTypos.AutoSize = true;
+            this.chkDictAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictAddTypos.Name = "chkDictAddTypos";
+            this.chkDictAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictAddTypos.TabIndex = 53;
+            this.chkDictAddTypos.Text = "Add Typos";
+            this.chkDictAddTypos.UseVisualStyleBackColor = true;
+            // 
             // txtDictionaryFilterFirst
             // 
-            this.txtDictionaryFilterFirst.Location = new System.Drawing.Point(10, 159);
+            this.txtDictionaryFilterFirst.Location = new System.Drawing.Point(6, 162);
             this.txtDictionaryFilterFirst.Name = "txtDictionaryFilterFirst";
             this.txtDictionaryFilterFirst.PlaceholderText = "a-b";
             this.txtDictionaryFilterFirst.Size = new System.Drawing.Size(66, 22);
             this.txtDictionaryFilterFirst.TabIndex = 82;
-            // 
-            // lblDictionaryFilterFirst
-            // 
-            this.lblDictionaryFilterFirst.AutoSize = true;
-            this.lblDictionaryFilterFirst.Location = new System.Drawing.Point(7, 140);
-            this.lblDictionaryFilterFirst.Name = "lblDictionaryFilterFirst";
-            this.lblDictionaryFilterFirst.Size = new System.Drawing.Size(93, 13);
-            this.lblDictionaryFilterFirst.TabIndex = 83;
-            this.lblDictionaryFilterFirst.Text = "First Word Filter:";
-            // 
-            // chkDictSkipDigits
-            // 
-            this.chkDictSkipDigits.AutoSize = true;
-            this.chkDictSkipDigits.Location = new System.Drawing.Point(10, 29);
-            this.chkDictSkipDigits.Name = "chkDictSkipDigits";
-            this.chkDictSkipDigits.Size = new System.Drawing.Size(81, 17);
-            this.chkDictSkipDigits.TabIndex = 50;
-            this.chkDictSkipDigits.Text = "Skip Digits";
-            this.chkDictSkipDigits.UseVisualStyleBackColor = true;
-            // 
-            // chkDictSkipSpecials
-            // 
-            this.chkDictSkipSpecials.AutoSize = true;
-            this.chkDictSkipSpecials.Checked = true;
-            this.chkDictSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictSkipSpecials.Location = new System.Drawing.Point(10, 52);
-            this.chkDictSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
-            this.chkDictSkipSpecials.Name = "chkDictSkipSpecials";
-            this.chkDictSkipSpecials.Size = new System.Drawing.Size(92, 17);
-            this.chkDictSkipSpecials.TabIndex = 51;
-            this.chkDictSkipSpecials.Text = "Skip Specials";
-            this.chkDictSkipSpecials.UseVisualStyleBackColor = true;
             // 
             // chkDictForceLowercase
             // 
             this.chkDictForceLowercase.AutoSize = true;
             this.chkDictForceLowercase.Checked = true;
             this.chkDictForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictForceLowercase.Location = new System.Drawing.Point(10, 74);
+            this.chkDictForceLowercase.Location = new System.Drawing.Point(6, 74);
             this.chkDictForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.chkDictForceLowercase.Name = "chkDictForceLowercase";
             this.chkDictForceLowercase.Size = new System.Drawing.Size(79, 17);
@@ -1272,38 +1349,228 @@ namespace BruteForceHash.GUI
             this.chkDictForceLowercase.Text = "Lowercase";
             this.chkDictForceLowercase.UseVisualStyleBackColor = true;
             // 
-            // chkDictAddTypos
+            // lblDictionaryFilterFirst
             // 
-            this.chkDictAddTypos.AutoSize = true;
-            this.chkDictAddTypos.Location = new System.Drawing.Point(10, 95);
-            this.chkDictAddTypos.Name = "chkDictAddTypos";
-            this.chkDictAddTypos.Size = new System.Drawing.Size(79, 17);
-            this.chkDictAddTypos.TabIndex = 53;
-            this.chkDictAddTypos.Text = "Add Typos";
-            this.chkDictAddTypos.UseVisualStyleBackColor = true;
+            this.lblDictionaryFilterFirst.AutoSize = true;
+            this.lblDictionaryFilterFirst.Location = new System.Drawing.Point(6, 145);
+            this.lblDictionaryFilterFirst.Name = "lblDictionaryFilterFirst";
+            this.lblDictionaryFilterFirst.Size = new System.Drawing.Size(93, 13);
+            this.lblDictionaryFilterFirst.TabIndex = 83;
+            this.lblDictionaryFilterFirst.Text = "First Word Filter:";
             // 
-            // chkDictReverseOrder
+            // chkDictSkipSpecials
             // 
-            this.chkDictReverseOrder.AutoSize = true;
-            this.chkDictReverseOrder.Location = new System.Drawing.Point(10, 118);
-            this.chkDictReverseOrder.Name = "chkDictReverseOrder";
-            this.chkDictReverseOrder.Size = new System.Drawing.Size(98, 17);
-            this.chkDictReverseOrder.TabIndex = 54;
-            this.chkDictReverseOrder.Text = "Reverse Order";
-            this.chkDictReverseOrder.UseVisualStyleBackColor = true;
+            this.chkDictSkipSpecials.AutoSize = true;
+            this.chkDictSkipSpecials.Checked = true;
+            this.chkDictSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDictSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictSkipSpecials.Name = "chkDictSkipSpecials";
+            this.chkDictSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictSkipSpecials.TabIndex = 51;
+            this.chkDictSkipSpecials.Text = "Skip Specials";
+            this.chkDictSkipSpecials.UseVisualStyleBackColor = true;
+            // 
+            // chkDictSkipDigits
+            // 
+            this.chkDictSkipDigits.AutoSize = true;
+            this.chkDictSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictSkipDigits.Name = "chkDictSkipDigits";
+            this.chkDictSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictSkipDigits.TabIndex = 50;
+            this.chkDictSkipDigits.Text = "Skip Digits";
+            this.chkDictSkipDigits.UseVisualStyleBackColor = true;
+            // 
+            // tabMainDictionariesCustom
+            // 
+            this.tabMainDictionariesCustom.Controls.Add(this.chkDictionariesCustomWordsUse);
+            this.tabMainDictionariesCustom.Controls.Add(this.lblDictionariesCustomWordsUse);
+            this.tabMainDictionariesCustom.Controls.Add(this.lblDictionariesCustomWordsAtLeast);
+            this.tabMainDictionariesCustom.Controls.Add(this.lblDictionariesCustomWordsHash);
+            this.tabMainDictionariesCustom.Controls.Add(this.cbDictionariesCustomWordsMinimumInHash);
+            this.tabMainDictionariesCustom.Controls.Add(this.lblDictionariesCustomWordsFiltering);
+            this.tabMainDictionariesCustom.Controls.Add(this.chkDictCustomWordsAddTypos);
+            this.tabMainDictionariesCustom.Controls.Add(this.chkDictCustomWordsForceLowercase);
+            this.tabMainDictionariesCustom.Controls.Add(this.chkDictCustomWordsSkipSpecials);
+            this.tabMainDictionariesCustom.Controls.Add(this.chkDictCustomWordsSkipDigits);
+            this.tabMainDictionariesCustom.Controls.Add(this.txtDictCustWords);
+            this.tabMainDictionariesCustom.Location = new System.Drawing.Point(4, 22);
+            this.tabMainDictionariesCustom.Name = "tabMainDictionariesCustom";
+            this.tabMainDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMainDictionariesCustom.Size = new System.Drawing.Size(428, 524);
+            this.tabMainDictionariesCustom.TabIndex = 1;
+            this.tabMainDictionariesCustom.Text = "Custom Words";
+            this.tabMainDictionariesCustom.UseVisualStyleBackColor = true;
+            // 
+            // chkDictionariesCustomWordsUse
+            // 
+            this.chkDictionariesCustomWordsUse.AutoSize = true;
+            this.chkDictionariesCustomWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesCustomWordsUse.Name = "chkDictionariesCustomWordsUse";
+            this.chkDictionariesCustomWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesCustomWordsUse.TabIndex = 92;
+            this.chkDictionariesCustomWordsUse.UseVisualStyleBackColor = true;
+            this.chkDictionariesCustomWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesCustomWordsUse_CheckedChanged);
+            // 
+            // lblDictionariesCustomWordsUse
+            // 
+            this.lblDictionariesCustomWordsUse.AutoSize = true;
+            this.lblDictionariesCustomWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesCustomWordsUse.Name = "lblDictionariesCustomWordsUse";
+            this.lblDictionariesCustomWordsUse.Size = new System.Drawing.Size(29, 13);
+            this.lblDictionariesCustomWordsUse.TabIndex = 91;
+            this.lblDictionariesCustomWordsUse.Text = "Use:";
+            // 
+            // lblDictionariesCustomWordsAtLeast
+            // 
+            this.lblDictionariesCustomWordsAtLeast.AutoSize = true;
+            this.lblDictionariesCustomWordsAtLeast.Location = new System.Drawing.Point(9, 147);
+            this.lblDictionariesCustomWordsAtLeast.Name = "lblDictionariesCustomWordsAtLeast";
+            this.lblDictionariesCustomWordsAtLeast.Size = new System.Drawing.Size(45, 13);
+            this.lblDictionariesCustomWordsAtLeast.TabIndex = 89;
+            this.lblDictionariesCustomWordsAtLeast.Text = "At least";
+            // 
+            // lblDictionariesCustomWordsHash
+            // 
+            this.lblDictionariesCustomWordsHash.AutoSize = true;
+            this.lblDictionariesCustomWordsHash.Location = new System.Drawing.Point(9, 166);
+            this.lblDictionariesCustomWordsHash.Name = "lblDictionariesCustomWordsHash";
+            this.lblDictionariesCustomWordsHash.Size = new System.Drawing.Size(86, 13);
+            this.lblDictionariesCustomWordsHash.TabIndex = 88;
+            this.lblDictionariesCustomWordsHash.Text = "word(s) in hash";
+            // 
+            // cbDictionariesCustomWordsMinimumInHash
+            // 
+            this.cbDictionariesCustomWordsMinimumInHash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDictionariesCustomWordsMinimumInHash.FormattingEnabled = true;
+            this.cbDictionariesCustomWordsMinimumInHash.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.cbDictionariesCustomWordsMinimumInHash.Location = new System.Drawing.Point(57, 143);
+            this.cbDictionariesCustomWordsMinimumInHash.Name = "cbDictionariesCustomWordsMinimumInHash";
+            this.cbDictionariesCustomWordsMinimumInHash.Size = new System.Drawing.Size(38, 21);
+            this.cbDictionariesCustomWordsMinimumInHash.TabIndex = 87;
+            // 
+            // lblDictionariesCustomWordsFiltering
+            // 
+            this.lblDictionariesCustomWordsFiltering.AutoSize = true;
+            this.lblDictionariesCustomWordsFiltering.Location = new System.Drawing.Point(6, 122);
+            this.lblDictionariesCustomWordsFiltering.Name = "lblDictionariesCustomWordsFiltering";
+            this.lblDictionariesCustomWordsFiltering.Size = new System.Drawing.Size(53, 13);
+            this.lblDictionariesCustomWordsFiltering.TabIndex = 86;
+            this.lblDictionariesCustomWordsFiltering.Text = "Filtering:";
+            // 
+            // chkDictCustomWordsAddTypos
+            // 
+            this.chkDictCustomWordsAddTypos.AutoSize = true;
+            this.chkDictCustomWordsAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictCustomWordsAddTypos.Name = "chkDictCustomWordsAddTypos";
+            this.chkDictCustomWordsAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictCustomWordsAddTypos.TabIndex = 58;
+            this.chkDictCustomWordsAddTypos.Text = "Add Typos";
+            this.chkDictCustomWordsAddTypos.UseVisualStyleBackColor = true;
+            // 
+            // chkDictCustomWordsForceLowercase
+            // 
+            this.chkDictCustomWordsForceLowercase.AutoSize = true;
+            this.chkDictCustomWordsForceLowercase.Checked = true;
+            this.chkDictCustomWordsForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDictCustomWordsForceLowercase.Location = new System.Drawing.Point(6, 74);
+            this.chkDictCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictCustomWordsForceLowercase.Name = "chkDictCustomWordsForceLowercase";
+            this.chkDictCustomWordsForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictCustomWordsForceLowercase.TabIndex = 57;
+            this.chkDictCustomWordsForceLowercase.Text = "Lowercase";
+            this.chkDictCustomWordsForceLowercase.UseVisualStyleBackColor = true;
+            // 
+            // chkDictCustomWordsSkipSpecials
+            // 
+            this.chkDictCustomWordsSkipSpecials.AutoSize = true;
+            this.chkDictCustomWordsSkipSpecials.Checked = true;
+            this.chkDictCustomWordsSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDictCustomWordsSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictCustomWordsSkipSpecials.Name = "chkDictCustomWordsSkipSpecials";
+            this.chkDictCustomWordsSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictCustomWordsSkipSpecials.TabIndex = 56;
+            this.chkDictCustomWordsSkipSpecials.Text = "Skip Specials";
+            this.chkDictCustomWordsSkipSpecials.UseVisualStyleBackColor = true;
+            // 
+            // chkDictCustomWordsSkipDigits
+            // 
+            this.chkDictCustomWordsSkipDigits.AutoSize = true;
+            this.chkDictCustomWordsSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictCustomWordsSkipDigits.Name = "chkDictCustomWordsSkipDigits";
+            this.chkDictCustomWordsSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictCustomWordsSkipDigits.TabIndex = 55;
+            this.chkDictCustomWordsSkipDigits.Text = "Skip Digits";
+            this.chkDictCustomWordsSkipDigits.UseVisualStyleBackColor = true;
+            // 
+            // txtDictCustWords
+            // 
+            this.txtDictCustWords.Location = new System.Drawing.Point(109, 2);
+            this.txtDictCustWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictCustWords.Multiline = true;
+            this.txtDictCustWords.Name = "txtDictCustWords";
+            this.txtDictCustWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictCustWords.TabIndex = 0;
+            // 
+            // tabMainDictionariesExcludeWords
+            // 
+            this.tabMainDictionariesExcludeWords.Controls.Add(this.chkDictExcludePartialWords);
+            this.tabMainDictionariesExcludeWords.Controls.Add(this.chkDictionariesExcludeWordsUse);
+            this.tabMainDictionariesExcludeWords.Controls.Add(this.lblDictionariesExcludeWordsUse);
+            this.tabMainDictionariesExcludeWords.Controls.Add(this.txtDictExcludeWords);
+            this.tabMainDictionariesExcludeWords.Location = new System.Drawing.Point(4, 22);
+            this.tabMainDictionariesExcludeWords.Name = "tabMainDictionariesExcludeWords";
+            this.tabMainDictionariesExcludeWords.Size = new System.Drawing.Size(428, 524);
+            this.tabMainDictionariesExcludeWords.TabIndex = 2;
+            this.tabMainDictionariesExcludeWords.Text = "Exclude Words";
+            this.tabMainDictionariesExcludeWords.UseVisualStyleBackColor = true;
+            // 
+            // chkDictExcludePartialWords
+            // 
+            this.chkDictExcludePartialWords.AutoSize = true;
+            this.chkDictExcludePartialWords.Location = new System.Drawing.Point(6, 28);
+            this.chkDictExcludePartialWords.Name = "chkDictExcludePartialWords";
+            this.chkDictExcludePartialWords.Size = new System.Drawing.Size(93, 17);
+            this.chkDictExcludePartialWords.TabIndex = 93;
+            this.chkDictExcludePartialWords.Text = "Partial words";
+            this.chkDictExcludePartialWords.UseVisualStyleBackColor = true;
+            // 
+            // chkDictionariesExcludeWordsUse
+            // 
+            this.chkDictionariesExcludeWordsUse.AutoSize = true;
+            this.chkDictionariesExcludeWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesExcludeWordsUse.Name = "chkDictionariesExcludeWordsUse";
+            this.chkDictionariesExcludeWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesExcludeWordsUse.TabIndex = 92;
+            this.chkDictionariesExcludeWordsUse.UseVisualStyleBackColor = true;
+            this.chkDictionariesExcludeWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesExcludeWordsUse_CheckedChanged);
+            // 
+            // lblDictionariesExcludeWordsUse
+            // 
+            this.lblDictionariesExcludeWordsUse.AutoSize = true;
+            this.lblDictionariesExcludeWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesExcludeWordsUse.Name = "lblDictionariesExcludeWordsUse";
+            this.lblDictionariesExcludeWordsUse.Size = new System.Drawing.Size(29, 13);
+            this.lblDictionariesExcludeWordsUse.TabIndex = 91;
+            this.lblDictionariesExcludeWordsUse.Text = "Use:";
+            // 
+            // txtDictExcludeWords
+            // 
+            this.txtDictExcludeWords.Location = new System.Drawing.Point(109, 2);
+            this.txtDictExcludeWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictExcludeWords.Multiline = true;
+            this.txtDictExcludeWords.Name = "txtDictExcludeWords";
+            this.txtDictExcludeWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictExcludeWords.TabIndex = 1;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.tvDictFirstWord);
-            this.tabPage2.Controls.Add(this.btnCopyToDictFirst);
-            this.tabPage2.Controls.Add(this.btnDictFirstUnselected);
-            this.tabPage2.Controls.Add(this.lblDictionariesFirstWord);
-            this.tabPage2.Controls.Add(this.chkUseCustomDictFirst);
-            this.tabPage2.Controls.Add(this.chkDictFirstSkipDigits);
-            this.tabPage2.Controls.Add(this.chkDictFirstSkipSpecials);
-            this.tabPage2.Controls.Add(this.chkDictFirstForceLowercase);
-            this.tabPage2.Controls.Add(this.chkDictFirstAddTypos);
-            this.tabPage2.Controls.Add(this.chkDictFirstReverseOrder);
+            this.tabPage2.Controls.Add(this.tabFirstWordDictionaries);
             this.tabPage2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
@@ -1311,291 +1578,614 @@ namespace BruteForceHash.GUI
             this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage2.Size = new System.Drawing.Size(436, 550);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "1st Word";
+            this.tabPage2.Text = "First Word Overrides";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tabFirstWordDictionaries
+            // 
+            this.tabFirstWordDictionaries.Controls.Add(this.tabFirstWordDictionariesCommon);
+            this.tabFirstWordDictionaries.Controls.Add(this.tabFirstWordDictionariesCustom);
+            this.tabFirstWordDictionaries.Controls.Add(this.tabFirstWordDictionariesExcludeWords);
+            this.tabFirstWordDictionaries.Location = new System.Drawing.Point(0, 0);
+            this.tabFirstWordDictionaries.Name = "tabFirstWordDictionaries";
+            this.tabFirstWordDictionaries.SelectedIndex = 0;
+            this.tabFirstWordDictionaries.Size = new System.Drawing.Size(436, 550);
+            this.tabFirstWordDictionaries.TabIndex = 86;
+            // 
+            // tabFirstWordDictionariesCommon
+            // 
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.lblDictionariesFirstWordUse);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.tvDictFirstWord);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.chkDictFirstReverseOrder);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.btnCopyToDictFirst);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.btnDictFirstUnselected);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.chkDictFirstAddTypos);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.chkDictFirstForceLowercase);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.chkDictFirstSkipSpecials);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.chkUseDictFirst);
+            this.tabFirstWordDictionariesCommon.Controls.Add(this.chkDictFirstSkipDigits);
+            this.tabFirstWordDictionariesCommon.Location = new System.Drawing.Point(4, 22);
+            this.tabFirstWordDictionariesCommon.Name = "tabFirstWordDictionariesCommon";
+            this.tabFirstWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFirstWordDictionariesCommon.Size = new System.Drawing.Size(428, 524);
+            this.tabFirstWordDictionariesCommon.TabIndex = 0;
+            this.tabFirstWordDictionariesCommon.Text = "Common Dictionaries";
+            this.tabFirstWordDictionariesCommon.UseVisualStyleBackColor = true;
+            // 
+            // lblDictionariesFirstWordUse
+            // 
+            this.lblDictionariesFirstWordUse.AutoSize = true;
+            this.lblDictionariesFirstWordUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesFirstWordUse.Name = "lblDictionariesFirstWordUse";
+            this.lblDictionariesFirstWordUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesFirstWordUse.TabIndex = 33;
+            this.lblDictionariesFirstWordUse.Text = "Override:";
             // 
             // tvDictFirstWord
             // 
-            this.tvDictFirstWord.Location = new System.Drawing.Point(136, 8);
+            this.tvDictFirstWord.Location = new System.Drawing.Point(109, 2);
             this.tvDictFirstWord.Margin = new System.Windows.Forms.Padding(2);
             this.tvDictFirstWord.Name = "tvDictFirstWord";
-            this.tvDictFirstWord.Size = new System.Drawing.Size(299, 534);
+            this.tvDictFirstWord.Size = new System.Drawing.Size(317, 520);
             this.tvDictFirstWord.TabIndex = 58;
             this.tvDictFirstWord.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
-            // 
-            // btnCopyToDictFirst
-            // 
-            this.btnCopyToDictFirst.Location = new System.Drawing.Point(10, 479);
-            this.btnCopyToDictFirst.Margin = new System.Windows.Forms.Padding(2);
-            this.btnCopyToDictFirst.Name = "btnCopyToDictFirst";
-            this.btnCopyToDictFirst.Size = new System.Drawing.Size(122, 22);
-            this.btnCopyToDictFirst.TabIndex = 57;
-            this.btnCopyToDictFirst.Text = "Copy fr. Main";
-            this.btnCopyToDictFirst.UseVisualStyleBackColor = true;
-            this.btnCopyToDictFirst.Click += new System.EventHandler(this.btnCopyToDictFirst_Click);
-            // 
-            // btnDictFirstUnselected
-            // 
-            this.btnDictFirstUnselected.Location = new System.Drawing.Point(10, 512);
-            this.btnDictFirstUnselected.Margin = new System.Windows.Forms.Padding(2);
-            this.btnDictFirstUnselected.Name = "btnDictFirstUnselected";
-            this.btnDictFirstUnselected.Size = new System.Drawing.Size(122, 22);
-            this.btnDictFirstUnselected.TabIndex = 56;
-            this.btnDictFirstUnselected.Text = "Unselect All";
-            this.btnDictFirstUnselected.UseVisualStyleBackColor = true;
-            this.btnDictFirstUnselected.Click += new System.EventHandler(this.btnDictFirstUnselected_Click);
-            // 
-            // lblDictionariesFirstWord
-            // 
-            this.lblDictionariesFirstWord.AutoSize = true;
-            this.lblDictionariesFirstWord.Location = new System.Drawing.Point(10, 8);
-            this.lblDictionariesFirstWord.Name = "lblDictionariesFirstWord";
-            this.lblDictionariesFirstWord.Size = new System.Drawing.Size(71, 13);
-            this.lblDictionariesFirstWord.TabIndex = 33;
-            this.lblDictionariesFirstWord.Text = "Dictionaries:";
-            // 
-            // chkUseCustomDictFirst
-            // 
-            this.chkUseCustomDictFirst.AutoSize = true;
-            this.chkUseCustomDictFirst.Location = new System.Drawing.Point(10, 29);
-            this.chkUseCustomDictFirst.Name = "chkUseCustomDictFirst";
-            this.chkUseCustomDictFirst.Size = new System.Drawing.Size(87, 17);
-            this.chkUseCustomDictFirst.TabIndex = 38;
-            this.chkUseCustomDictFirst.Text = "Use Custom";
-            this.chkUseCustomDictFirst.UseVisualStyleBackColor = true;
-            this.chkUseCustomDictFirst.CheckedChanged += new System.EventHandler(this.OnCustomDictFirstCheckedChanged);
-            // 
-            // chkDictFirstSkipDigits
-            // 
-            this.chkDictFirstSkipDigits.AutoSize = true;
-            this.chkDictFirstSkipDigits.Location = new System.Drawing.Point(10, 52);
-            this.chkDictFirstSkipDigits.Name = "chkDictFirstSkipDigits";
-            this.chkDictFirstSkipDigits.Size = new System.Drawing.Size(81, 17);
-            this.chkDictFirstSkipDigits.TabIndex = 40;
-            this.chkDictFirstSkipDigits.Text = "Skip Digits";
-            this.chkDictFirstSkipDigits.UseVisualStyleBackColor = true;
-            // 
-            // chkDictFirstSkipSpecials
-            // 
-            this.chkDictFirstSkipSpecials.AutoSize = true;
-            this.chkDictFirstSkipSpecials.Location = new System.Drawing.Point(10, 74);
-            this.chkDictFirstSkipSpecials.Name = "chkDictFirstSkipSpecials";
-            this.chkDictFirstSkipSpecials.Size = new System.Drawing.Size(92, 17);
-            this.chkDictFirstSkipSpecials.TabIndex = 41;
-            this.chkDictFirstSkipSpecials.Text = "Skip Specials";
-            this.chkDictFirstSkipSpecials.UseVisualStyleBackColor = true;
-            // 
-            // chkDictFirstForceLowercase
-            // 
-            this.chkDictFirstForceLowercase.AutoSize = true;
-            this.chkDictFirstForceLowercase.Location = new System.Drawing.Point(10, 95);
-            this.chkDictFirstForceLowercase.Name = "chkDictFirstForceLowercase";
-            this.chkDictFirstForceLowercase.Size = new System.Drawing.Size(79, 17);
-            this.chkDictFirstForceLowercase.TabIndex = 42;
-            this.chkDictFirstForceLowercase.Text = "Lowercase";
-            this.chkDictFirstForceLowercase.UseVisualStyleBackColor = true;
-            // 
-            // chkDictFirstAddTypos
-            // 
-            this.chkDictFirstAddTypos.AutoSize = true;
-            this.chkDictFirstAddTypos.Location = new System.Drawing.Point(10, 118);
-            this.chkDictFirstAddTypos.Name = "chkDictFirstAddTypos";
-            this.chkDictFirstAddTypos.Size = new System.Drawing.Size(79, 17);
-            this.chkDictFirstAddTypos.TabIndex = 43;
-            this.chkDictFirstAddTypos.Text = "Add Typos";
-            this.chkDictFirstAddTypos.UseVisualStyleBackColor = true;
             // 
             // chkDictFirstReverseOrder
             // 
             this.chkDictFirstReverseOrder.AutoSize = true;
-            this.chkDictFirstReverseOrder.Location = new System.Drawing.Point(10, 140);
+            this.chkDictFirstReverseOrder.Location = new System.Drawing.Point(6, 120);
             this.chkDictFirstReverseOrder.Name = "chkDictFirstReverseOrder";
             this.chkDictFirstReverseOrder.Size = new System.Drawing.Size(98, 17);
             this.chkDictFirstReverseOrder.TabIndex = 44;
             this.chkDictFirstReverseOrder.Text = "Reverse Order";
             this.chkDictFirstReverseOrder.UseVisualStyleBackColor = true;
             // 
+            // btnCopyToDictFirst
+            // 
+            this.btnCopyToDictFirst.Location = new System.Drawing.Point(4, 471);
+            this.btnCopyToDictFirst.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictFirst.Name = "btnCopyToDictFirst";
+            this.btnCopyToDictFirst.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictFirst.TabIndex = 57;
+            this.btnCopyToDictFirst.Text = "Copy from Main";
+            this.btnCopyToDictFirst.UseVisualStyleBackColor = true;
+            this.btnCopyToDictFirst.Click += new System.EventHandler(this.btnCopyToDictFirst_Click);
+            // 
+            // btnDictFirstUnselected
+            // 
+            this.btnDictFirstUnselected.Location = new System.Drawing.Point(4, 497);
+            this.btnDictFirstUnselected.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDictFirstUnselected.Name = "btnDictFirstUnselected";
+            this.btnDictFirstUnselected.Size = new System.Drawing.Size(102, 22);
+            this.btnDictFirstUnselected.TabIndex = 56;
+            this.btnDictFirstUnselected.Text = "Unselect All";
+            this.btnDictFirstUnselected.UseVisualStyleBackColor = true;
+            this.btnDictFirstUnselected.Click += new System.EventHandler(this.btnDictFirstUnselected_Click);
+            // 
+            // chkDictFirstAddTypos
+            // 
+            this.chkDictFirstAddTypos.AutoSize = true;
+            this.chkDictFirstAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictFirstAddTypos.Name = "chkDictFirstAddTypos";
+            this.chkDictFirstAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstAddTypos.TabIndex = 43;
+            this.chkDictFirstAddTypos.Text = "Add Typos";
+            this.chkDictFirstAddTypos.UseVisualStyleBackColor = true;
+            // 
+            // chkDictFirstForceLowercase
+            // 
+            this.chkDictFirstForceLowercase.AutoSize = true;
+            this.chkDictFirstForceLowercase.Location = new System.Drawing.Point(6, 74);
+            this.chkDictFirstForceLowercase.Name = "chkDictFirstForceLowercase";
+            this.chkDictFirstForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstForceLowercase.TabIndex = 42;
+            this.chkDictFirstForceLowercase.Text = "Lowercase";
+            this.chkDictFirstForceLowercase.UseVisualStyleBackColor = true;
+            // 
+            // chkDictFirstSkipSpecials
+            // 
+            this.chkDictFirstSkipSpecials.AutoSize = true;
+            this.chkDictFirstSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictFirstSkipSpecials.Name = "chkDictFirstSkipSpecials";
+            this.chkDictFirstSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictFirstSkipSpecials.TabIndex = 41;
+            this.chkDictFirstSkipSpecials.Text = "Skip Specials";
+            this.chkDictFirstSkipSpecials.UseVisualStyleBackColor = true;
+            // 
+            // chkUseDictFirst
+            // 
+            this.chkUseDictFirst.AutoSize = true;
+            this.chkUseDictFirst.Location = new System.Drawing.Point(80, 8);
+            this.chkUseDictFirst.Name = "chkUseDictFirst";
+            this.chkUseDictFirst.Size = new System.Drawing.Size(15, 14);
+            this.chkUseDictFirst.TabIndex = 38;
+            this.chkUseDictFirst.UseVisualStyleBackColor = true;
+            this.chkUseDictFirst.CheckedChanged += new System.EventHandler(this.OnCustomDictFirstCheckedChanged);
+            // 
+            // chkDictFirstSkipDigits
+            // 
+            this.chkDictFirstSkipDigits.AutoSize = true;
+            this.chkDictFirstSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictFirstSkipDigits.Name = "chkDictFirstSkipDigits";
+            this.chkDictFirstSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictFirstSkipDigits.TabIndex = 40;
+            this.chkDictFirstSkipDigits.Text = "Skip Digits";
+            this.chkDictFirstSkipDigits.UseVisualStyleBackColor = true;
+            // 
+            // tabFirstWordDictionariesCustom
+            // 
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.btnCopyToDictCustomFirst);
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.chkDictionariesFirstWordCustomWordsUse);
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.lblDictionariesFirstWordCustomWordsUse);
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.chkDictFirstWordCustomWordsAddTypos);
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.chkDictFirstWordCustomWordsForceLowercase);
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.chkDictFirstWordCustomWordsSkipSpecials);
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.chkDictFirstWordCustomWordsSkipDigits);
+            this.tabFirstWordDictionariesCustom.Controls.Add(this.txtDictFirstCustWords);
+            this.tabFirstWordDictionariesCustom.Location = new System.Drawing.Point(4, 22);
+            this.tabFirstWordDictionariesCustom.Name = "tabFirstWordDictionariesCustom";
+            this.tabFirstWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
+            this.tabFirstWordDictionariesCustom.Size = new System.Drawing.Size(428, 524);
+            this.tabFirstWordDictionariesCustom.TabIndex = 1;
+            this.tabFirstWordDictionariesCustom.Text = "Custom Words";
+            this.tabFirstWordDictionariesCustom.UseVisualStyleBackColor = true;
+            // 
+            // btnCopyToDictCustomFirst
+            // 
+            this.btnCopyToDictCustomFirst.Location = new System.Drawing.Point(4, 497);
+            this.btnCopyToDictCustomFirst.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictCustomFirst.Name = "btnCopyToDictCustomFirst";
+            this.btnCopyToDictCustomFirst.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictCustomFirst.TabIndex = 106;
+            this.btnCopyToDictCustomFirst.Text = "Copy from Main";
+            this.btnCopyToDictCustomFirst.UseVisualStyleBackColor = true;
+            this.btnCopyToDictCustomFirst.Click += new System.EventHandler(this.btnCopyToDictCustomFirst_Click);
+            // 
+            // chkDictionariesFirstWordCustomWordsUse
+            // 
+            this.chkDictionariesFirstWordCustomWordsUse.AutoSize = true;
+            this.chkDictionariesFirstWordCustomWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesFirstWordCustomWordsUse.Name = "chkDictionariesFirstWordCustomWordsUse";
+            this.chkDictionariesFirstWordCustomWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesFirstWordCustomWordsUse.TabIndex = 105;
+            this.chkDictionariesFirstWordCustomWordsUse.UseVisualStyleBackColor = true;
+            this.chkDictionariesFirstWordCustomWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesFirstWordCustomWordsUse_CheckedChanged);
+            // 
+            // lblDictionariesFirstWordCustomWordsUse
+            // 
+            this.lblDictionariesFirstWordCustomWordsUse.AutoSize = true;
+            this.lblDictionariesFirstWordCustomWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesFirstWordCustomWordsUse.Name = "lblDictionariesFirstWordCustomWordsUse";
+            this.lblDictionariesFirstWordCustomWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesFirstWordCustomWordsUse.TabIndex = 104;
+            this.lblDictionariesFirstWordCustomWordsUse.Text = "Override:";
+            // 
+            // chkDictFirstWordCustomWordsAddTypos
+            // 
+            this.chkDictFirstWordCustomWordsAddTypos.AutoSize = true;
+            this.chkDictFirstWordCustomWordsAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictFirstWordCustomWordsAddTypos.Name = "chkDictFirstWordCustomWordsAddTypos";
+            this.chkDictFirstWordCustomWordsAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstWordCustomWordsAddTypos.TabIndex = 98;
+            this.chkDictFirstWordCustomWordsAddTypos.Text = "Add Typos";
+            this.chkDictFirstWordCustomWordsAddTypos.UseVisualStyleBackColor = true;
+            // 
+            // chkDictFirstWordCustomWordsForceLowercase
+            // 
+            this.chkDictFirstWordCustomWordsForceLowercase.AutoSize = true;
+            this.chkDictFirstWordCustomWordsForceLowercase.Checked = true;
+            this.chkDictFirstWordCustomWordsForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDictFirstWordCustomWordsForceLowercase.Location = new System.Drawing.Point(6, 74);
+            this.chkDictFirstWordCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictFirstWordCustomWordsForceLowercase.Name = "chkDictFirstWordCustomWordsForceLowercase";
+            this.chkDictFirstWordCustomWordsForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstWordCustomWordsForceLowercase.TabIndex = 97;
+            this.chkDictFirstWordCustomWordsForceLowercase.Text = "Lowercase";
+            this.chkDictFirstWordCustomWordsForceLowercase.UseVisualStyleBackColor = true;
+            // 
+            // chkDictFirstWordCustomWordsSkipSpecials
+            // 
+            this.chkDictFirstWordCustomWordsSkipSpecials.AutoSize = true;
+            this.chkDictFirstWordCustomWordsSkipSpecials.Checked = true;
+            this.chkDictFirstWordCustomWordsSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDictFirstWordCustomWordsSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictFirstWordCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictFirstWordCustomWordsSkipSpecials.Name = "chkDictFirstWordCustomWordsSkipSpecials";
+            this.chkDictFirstWordCustomWordsSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictFirstWordCustomWordsSkipSpecials.TabIndex = 96;
+            this.chkDictFirstWordCustomWordsSkipSpecials.Text = "Skip Specials";
+            this.chkDictFirstWordCustomWordsSkipSpecials.UseVisualStyleBackColor = true;
+            // 
+            // chkDictFirstWordCustomWordsSkipDigits
+            // 
+            this.chkDictFirstWordCustomWordsSkipDigits.AutoSize = true;
+            this.chkDictFirstWordCustomWordsSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictFirstWordCustomWordsSkipDigits.Name = "chkDictFirstWordCustomWordsSkipDigits";
+            this.chkDictFirstWordCustomWordsSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictFirstWordCustomWordsSkipDigits.TabIndex = 95;
+            this.chkDictFirstWordCustomWordsSkipDigits.Text = "Skip Digits";
+            this.chkDictFirstWordCustomWordsSkipDigits.UseVisualStyleBackColor = true;
+            // 
+            // txtDictFirstCustWords
+            // 
+            this.txtDictFirstCustWords.Location = new System.Drawing.Point(109, 2);
+            this.txtDictFirstCustWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictFirstCustWords.Multiline = true;
+            this.txtDictFirstCustWords.Name = "txtDictFirstCustWords";
+            this.txtDictFirstCustWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictFirstCustWords.TabIndex = 0;
+            // 
+            // tabFirstWordDictionariesExcludeWords
+            // 
+            this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.btnCopyToDictExcludeFirst);
+            this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.txtDictFirstWordExcludeWords);
+            this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.chkDictFirstWordExcludePartialWords);
+            this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.chkDictionariesFirstWordExcludeWordsUse);
+            this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.lblDictionariesFirstWordExcludeWordsUse);
+            this.tabFirstWordDictionariesExcludeWords.Location = new System.Drawing.Point(4, 22);
+            this.tabFirstWordDictionariesExcludeWords.Name = "tabFirstWordDictionariesExcludeWords";
+            this.tabFirstWordDictionariesExcludeWords.Size = new System.Drawing.Size(428, 524);
+            this.tabFirstWordDictionariesExcludeWords.TabIndex = 2;
+            this.tabFirstWordDictionariesExcludeWords.Text = "Exclude Words";
+            this.tabFirstWordDictionariesExcludeWords.UseVisualStyleBackColor = true;
+            // 
+            // btnCopyToDictExcludeFirst
+            // 
+            this.btnCopyToDictExcludeFirst.Location = new System.Drawing.Point(4, 497);
+            this.btnCopyToDictExcludeFirst.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictExcludeFirst.Name = "btnCopyToDictExcludeFirst";
+            this.btnCopyToDictExcludeFirst.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictExcludeFirst.TabIndex = 98;
+            this.btnCopyToDictExcludeFirst.Text = "Copy from Main";
+            this.btnCopyToDictExcludeFirst.UseVisualStyleBackColor = true;
+            this.btnCopyToDictExcludeFirst.Click += new System.EventHandler(this.btnCopyToDictExcludeFirst_Click);
+            // 
+            // txtDictFirstWordExcludeWords
+            // 
+            this.txtDictFirstWordExcludeWords.Location = new System.Drawing.Point(109, 2);
+            this.txtDictFirstWordExcludeWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictFirstWordExcludeWords.Multiline = true;
+            this.txtDictFirstWordExcludeWords.Name = "txtDictFirstWordExcludeWords";
+            this.txtDictFirstWordExcludeWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictFirstWordExcludeWords.TabIndex = 97;
+            // 
+            // chkDictFirstWordExcludePartialWords
+            // 
+            this.chkDictFirstWordExcludePartialWords.AutoSize = true;
+            this.chkDictFirstWordExcludePartialWords.Location = new System.Drawing.Point(6, 28);
+            this.chkDictFirstWordExcludePartialWords.Name = "chkDictFirstWordExcludePartialWords";
+            this.chkDictFirstWordExcludePartialWords.Size = new System.Drawing.Size(93, 17);
+            this.chkDictFirstWordExcludePartialWords.TabIndex = 96;
+            this.chkDictFirstWordExcludePartialWords.Text = "Partial words";
+            this.chkDictFirstWordExcludePartialWords.UseVisualStyleBackColor = true;
+            // 
+            // chkDictionariesFirstWordExcludeWordsUse
+            // 
+            this.chkDictionariesFirstWordExcludeWordsUse.AutoSize = true;
+            this.chkDictionariesFirstWordExcludeWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesFirstWordExcludeWordsUse.Name = "chkDictionariesFirstWordExcludeWordsUse";
+            this.chkDictionariesFirstWordExcludeWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesFirstWordExcludeWordsUse.TabIndex = 95;
+            this.chkDictionariesFirstWordExcludeWordsUse.UseVisualStyleBackColor = true;
+            this.chkDictionariesFirstWordExcludeWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesFirstWordExcludeWordsUse_CheckedChanged);
+            // 
+            // lblDictionariesFirstWordExcludeWordsUse
+            // 
+            this.lblDictionariesFirstWordExcludeWordsUse.AutoSize = true;
+            this.lblDictionariesFirstWordExcludeWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesFirstWordExcludeWordsUse.Name = "lblDictionariesFirstWordExcludeWordsUse";
+            this.lblDictionariesFirstWordExcludeWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesFirstWordExcludeWordsUse.TabIndex = 94;
+            this.lblDictionariesFirstWordExcludeWordsUse.Text = "Override:";
+            // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.tvDictLastWord);
-            this.tabPage3.Controls.Add(this.btnCopyToDictLast);
-            this.tabPage3.Controls.Add(this.btnDictLastUnselected);
-            this.tabPage3.Controls.Add(this.lblDictionaryLastWord);
-            this.tabPage3.Controls.Add(this.chkUseCustomDictLast);
-            this.tabPage3.Controls.Add(this.chkDictLastReverseOrder);
-            this.tabPage3.Controls.Add(this.chkDictLastSkipDigits);
-            this.tabPage3.Controls.Add(this.chkDictLastAddTypos);
-            this.tabPage3.Controls.Add(this.chkDictLastSkipSpecials);
-            this.tabPage3.Controls.Add(this.chkDictLastForceLowercase);
+            this.tabPage3.Controls.Add(this.tabLastWordDictionaries);
             this.tabPage3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tabPage3.Location = new System.Drawing.Point(4, 24);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(436, 550);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Last Word";
+            this.tabPage3.Text = "Last Word Overrides";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tabLastWordDictionaries
+            // 
+            this.tabLastWordDictionaries.Controls.Add(this.tabLastWordDictionariesCommon);
+            this.tabLastWordDictionaries.Controls.Add(this.tabLastWordDictionariesCustom);
+            this.tabLastWordDictionaries.Controls.Add(this.tabLastWordDictionariesExcludeWords);
+            this.tabLastWordDictionaries.Location = new System.Drawing.Point(0, 0);
+            this.tabLastWordDictionaries.Name = "tabLastWordDictionaries";
+            this.tabLastWordDictionaries.SelectedIndex = 0;
+            this.tabLastWordDictionaries.Size = new System.Drawing.Size(436, 550);
+            this.tabLastWordDictionaries.TabIndex = 87;
+            // 
+            // tabLastWordDictionariesCommon
+            // 
+            this.tabLastWordDictionariesCommon.Controls.Add(this.lblDictionaryLastWordUse);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.tvDictLastWord);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.chkDictLastForceLowercase);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.btnCopyToDictLast);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.btnDictLastUnselected);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.chkDictLastSkipSpecials);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.chkDictLastAddTypos);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.chkDictLastSkipDigits);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.chkUseDictLast);
+            this.tabLastWordDictionariesCommon.Controls.Add(this.chkDictLastReverseOrder);
+            this.tabLastWordDictionariesCommon.Location = new System.Drawing.Point(4, 22);
+            this.tabLastWordDictionariesCommon.Name = "tabLastWordDictionariesCommon";
+            this.tabLastWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLastWordDictionariesCommon.Size = new System.Drawing.Size(428, 524);
+            this.tabLastWordDictionariesCommon.TabIndex = 0;
+            this.tabLastWordDictionariesCommon.Text = "Common Dictionaries";
+            this.tabLastWordDictionariesCommon.UseVisualStyleBackColor = true;
+            // 
+            // lblDictionaryLastWordUse
+            // 
+            this.lblDictionaryLastWordUse.AutoSize = true;
+            this.lblDictionaryLastWordUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionaryLastWordUse.Name = "lblDictionaryLastWordUse";
+            this.lblDictionaryLastWordUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionaryLastWordUse.TabIndex = 31;
+            this.lblDictionaryLastWordUse.Text = "Override:";
             // 
             // tvDictLastWord
             // 
-            this.tvDictLastWord.Location = new System.Drawing.Point(136, 8);
+            this.tvDictLastWord.Location = new System.Drawing.Point(109, 2);
             this.tvDictLastWord.Margin = new System.Windows.Forms.Padding(2);
             this.tvDictLastWord.Name = "tvDictLastWord";
-            this.tvDictLastWord.Size = new System.Drawing.Size(299, 534);
+            this.tvDictLastWord.Size = new System.Drawing.Size(317, 520);
             this.tvDictLastWord.TabIndex = 59;
             this.tvDictLastWord.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
-            // 
-            // btnCopyToDictLast
-            // 
-            this.btnCopyToDictLast.Location = new System.Drawing.Point(10, 479);
-            this.btnCopyToDictLast.Margin = new System.Windows.Forms.Padding(2);
-            this.btnCopyToDictLast.Name = "btnCopyToDictLast";
-            this.btnCopyToDictLast.Size = new System.Drawing.Size(122, 22);
-            this.btnCopyToDictLast.TabIndex = 58;
-            this.btnCopyToDictLast.Text = "Copy fr. Main";
-            this.btnCopyToDictLast.UseVisualStyleBackColor = true;
-            this.btnCopyToDictLast.Click += new System.EventHandler(this.btnCopyToDictLast_Click);
-            // 
-            // btnDictLastUnselected
-            // 
-            this.btnDictLastUnselected.Location = new System.Drawing.Point(10, 512);
-            this.btnDictLastUnselected.Margin = new System.Windows.Forms.Padding(2);
-            this.btnDictLastUnselected.Name = "btnDictLastUnselected";
-            this.btnDictLastUnselected.Size = new System.Drawing.Size(122, 22);
-            this.btnDictLastUnselected.TabIndex = 57;
-            this.btnDictLastUnselected.Text = "Unselect All";
-            this.btnDictLastUnselected.UseVisualStyleBackColor = true;
-            this.btnDictLastUnselected.Click += new System.EventHandler(this.btnDictLastUnselected_Click);
-            // 
-            // lblDictionaryLastWord
-            // 
-            this.lblDictionaryLastWord.AutoSize = true;
-            this.lblDictionaryLastWord.Location = new System.Drawing.Point(10, 8);
-            this.lblDictionaryLastWord.Name = "lblDictionaryLastWord";
-            this.lblDictionaryLastWord.Size = new System.Drawing.Size(71, 13);
-            this.lblDictionaryLastWord.TabIndex = 31;
-            this.lblDictionaryLastWord.Text = "Dictionaries:";
-            // 
-            // chkUseCustomDictLast
-            // 
-            this.chkUseCustomDictLast.AutoSize = true;
-            this.chkUseCustomDictLast.Location = new System.Drawing.Point(10, 29);
-            this.chkUseCustomDictLast.Name = "chkUseCustomDictLast";
-            this.chkUseCustomDictLast.Size = new System.Drawing.Size(87, 17);
-            this.chkUseCustomDictLast.TabIndex = 39;
-            this.chkUseCustomDictLast.Text = "Use Custom";
-            this.chkUseCustomDictLast.UseVisualStyleBackColor = true;
-            this.chkUseCustomDictLast.CheckedChanged += new System.EventHandler(this.OnCustomDictLastCheckedChanged);
-            // 
-            // chkDictLastReverseOrder
-            // 
-            this.chkDictLastReverseOrder.AutoSize = true;
-            this.chkDictLastReverseOrder.Location = new System.Drawing.Point(10, 140);
-            this.chkDictLastReverseOrder.Name = "chkDictLastReverseOrder";
-            this.chkDictLastReverseOrder.Size = new System.Drawing.Size(98, 17);
-            this.chkDictLastReverseOrder.TabIndex = 49;
-            this.chkDictLastReverseOrder.Text = "Reverse Order";
-            this.chkDictLastReverseOrder.UseVisualStyleBackColor = true;
-            // 
-            // chkDictLastSkipDigits
-            // 
-            this.chkDictLastSkipDigits.AutoSize = true;
-            this.chkDictLastSkipDigits.Location = new System.Drawing.Point(10, 52);
-            this.chkDictLastSkipDigits.Name = "chkDictLastSkipDigits";
-            this.chkDictLastSkipDigits.Size = new System.Drawing.Size(81, 17);
-            this.chkDictLastSkipDigits.TabIndex = 45;
-            this.chkDictLastSkipDigits.Text = "Skip Digits";
-            this.chkDictLastSkipDigits.UseVisualStyleBackColor = true;
-            // 
-            // chkDictLastAddTypos
-            // 
-            this.chkDictLastAddTypos.AutoSize = true;
-            this.chkDictLastAddTypos.Location = new System.Drawing.Point(10, 118);
-            this.chkDictLastAddTypos.Name = "chkDictLastAddTypos";
-            this.chkDictLastAddTypos.Size = new System.Drawing.Size(79, 17);
-            this.chkDictLastAddTypos.TabIndex = 48;
-            this.chkDictLastAddTypos.Text = "Add Typos";
-            this.chkDictLastAddTypos.UseVisualStyleBackColor = true;
-            // 
-            // chkDictLastSkipSpecials
-            // 
-            this.chkDictLastSkipSpecials.AutoSize = true;
-            this.chkDictLastSkipSpecials.Location = new System.Drawing.Point(10, 74);
-            this.chkDictLastSkipSpecials.Name = "chkDictLastSkipSpecials";
-            this.chkDictLastSkipSpecials.Size = new System.Drawing.Size(92, 17);
-            this.chkDictLastSkipSpecials.TabIndex = 46;
-            this.chkDictLastSkipSpecials.Text = "Skip Specials";
-            this.chkDictLastSkipSpecials.UseVisualStyleBackColor = true;
             // 
             // chkDictLastForceLowercase
             // 
             this.chkDictLastForceLowercase.AutoSize = true;
-            this.chkDictLastForceLowercase.Location = new System.Drawing.Point(10, 95);
+            this.chkDictLastForceLowercase.Location = new System.Drawing.Point(6, 74);
             this.chkDictLastForceLowercase.Name = "chkDictLastForceLowercase";
             this.chkDictLastForceLowercase.Size = new System.Drawing.Size(79, 17);
             this.chkDictLastForceLowercase.TabIndex = 47;
             this.chkDictLastForceLowercase.Text = "Lowercase";
             this.chkDictLastForceLowercase.UseVisualStyleBackColor = true;
             // 
-            // tabPage4
+            // btnCopyToDictLast
             // 
-            this.tabPage4.Controls.Add(this.txtDictCustWords);
-            this.tabPage4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabPage4.Location = new System.Drawing.Point(4, 24);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(436, 550);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Cust. Main";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.btnCopyToDictLast.Location = new System.Drawing.Point(4, 471);
+            this.btnCopyToDictLast.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictLast.Name = "btnCopyToDictLast";
+            this.btnCopyToDictLast.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictLast.TabIndex = 58;
+            this.btnCopyToDictLast.Text = "Copy from Main";
+            this.btnCopyToDictLast.UseVisualStyleBackColor = true;
+            this.btnCopyToDictLast.Click += new System.EventHandler(this.btnCopyToDictLast_Click);
             // 
-            // txtDictCustWords
+            // btnDictLastUnselected
             // 
-            this.txtDictCustWords.Location = new System.Drawing.Point(8, 5);
-            this.txtDictCustWords.Margin = new System.Windows.Forms.Padding(2);
-            this.txtDictCustWords.Multiline = true;
-            this.txtDictCustWords.Name = "txtDictCustWords";
-            this.txtDictCustWords.Size = new System.Drawing.Size(422, 542);
-            this.txtDictCustWords.TabIndex = 0;
+            this.btnDictLastUnselected.Location = new System.Drawing.Point(4, 497);
+            this.btnDictLastUnselected.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDictLastUnselected.Name = "btnDictLastUnselected";
+            this.btnDictLastUnselected.Size = new System.Drawing.Size(102, 22);
+            this.btnDictLastUnselected.TabIndex = 57;
+            this.btnDictLastUnselected.Text = "Unselect All";
+            this.btnDictLastUnselected.UseVisualStyleBackColor = true;
+            this.btnDictLastUnselected.Click += new System.EventHandler(this.btnDictLastUnselected_Click);
             // 
-            // tabPage5
+            // chkDictLastSkipSpecials
             // 
-            this.tabPage5.Controls.Add(this.txtDictFirstCustWords);
-            this.tabPage5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabPage5.Location = new System.Drawing.Point(4, 24);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(436, 550);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Cust. 1st Word";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            this.chkDictLastSkipSpecials.AutoSize = true;
+            this.chkDictLastSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictLastSkipSpecials.Name = "chkDictLastSkipSpecials";
+            this.chkDictLastSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictLastSkipSpecials.TabIndex = 46;
+            this.chkDictLastSkipSpecials.Text = "Skip Specials";
+            this.chkDictLastSkipSpecials.UseVisualStyleBackColor = true;
             // 
-            // txtDictFirstCustWords
+            // chkDictLastAddTypos
             // 
-            this.txtDictFirstCustWords.Location = new System.Drawing.Point(8, 5);
-            this.txtDictFirstCustWords.Margin = new System.Windows.Forms.Padding(2);
-            this.txtDictFirstCustWords.Multiline = true;
-            this.txtDictFirstCustWords.Name = "txtDictFirstCustWords";
-            this.txtDictFirstCustWords.Size = new System.Drawing.Size(422, 542);
-            this.txtDictFirstCustWords.TabIndex = 0;
+            this.chkDictLastAddTypos.AutoSize = true;
+            this.chkDictLastAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictLastAddTypos.Name = "chkDictLastAddTypos";
+            this.chkDictLastAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictLastAddTypos.TabIndex = 48;
+            this.chkDictLastAddTypos.Text = "Add Typos";
+            this.chkDictLastAddTypos.UseVisualStyleBackColor = true;
             // 
-            // tabPage6
+            // chkDictLastSkipDigits
             // 
-            this.tabPage6.Controls.Add(this.txtDictLastCustWords);
-            this.tabPage6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabPage6.Location = new System.Drawing.Point(4, 24);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(436, 550);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Cust. Last Word";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.chkDictLastSkipDigits.AutoSize = true;
+            this.chkDictLastSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictLastSkipDigits.Name = "chkDictLastSkipDigits";
+            this.chkDictLastSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictLastSkipDigits.TabIndex = 45;
+            this.chkDictLastSkipDigits.Text = "Skip Digits";
+            this.chkDictLastSkipDigits.UseVisualStyleBackColor = true;
+            // 
+            // chkUseDictLast
+            // 
+            this.chkUseDictLast.AutoSize = true;
+            this.chkUseDictLast.Location = new System.Drawing.Point(80, 8);
+            this.chkUseDictLast.Name = "chkUseDictLast";
+            this.chkUseDictLast.Size = new System.Drawing.Size(15, 14);
+            this.chkUseDictLast.TabIndex = 39;
+            this.chkUseDictLast.UseVisualStyleBackColor = true;
+            this.chkUseDictLast.CheckedChanged += new System.EventHandler(this.OnCustomDictLastCheckedChanged);
+            // 
+            // chkDictLastReverseOrder
+            // 
+            this.chkDictLastReverseOrder.AutoSize = true;
+            this.chkDictLastReverseOrder.Location = new System.Drawing.Point(6, 120);
+            this.chkDictLastReverseOrder.Name = "chkDictLastReverseOrder";
+            this.chkDictLastReverseOrder.Size = new System.Drawing.Size(98, 17);
+            this.chkDictLastReverseOrder.TabIndex = 49;
+            this.chkDictLastReverseOrder.Text = "Reverse Order";
+            this.chkDictLastReverseOrder.UseVisualStyleBackColor = true;
+            // 
+            // tabLastWordDictionariesCustom
+            // 
+            this.tabLastWordDictionariesCustom.Controls.Add(this.btnCopyToDictCustomLast);
+            this.tabLastWordDictionariesCustom.Controls.Add(this.chkDictionariesLastWordCustomWordsUse);
+            this.tabLastWordDictionariesCustom.Controls.Add(this.lblDictionariesLastWordCustomWordsUse);
+            this.tabLastWordDictionariesCustom.Controls.Add(this.chkDictLastWordCustomWordsAddTypos);
+            this.tabLastWordDictionariesCustom.Controls.Add(this.chkDictLastWordCustomWordsForceLowercase);
+            this.tabLastWordDictionariesCustom.Controls.Add(this.chkDictLastWordCustomWordsSkipSpecials);
+            this.tabLastWordDictionariesCustom.Controls.Add(this.chkDictLastWordCustomWordsSkipDigits);
+            this.tabLastWordDictionariesCustom.Controls.Add(this.txtDictLastCustWords);
+            this.tabLastWordDictionariesCustom.Location = new System.Drawing.Point(4, 22);
+            this.tabLastWordDictionariesCustom.Name = "tabLastWordDictionariesCustom";
+            this.tabLastWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
+            this.tabLastWordDictionariesCustom.Size = new System.Drawing.Size(428, 524);
+            this.tabLastWordDictionariesCustom.TabIndex = 1;
+            this.tabLastWordDictionariesCustom.Text = "Custom Words";
+            this.tabLastWordDictionariesCustom.UseVisualStyleBackColor = true;
+            // 
+            // btnCopyToDictCustomLast
+            // 
+            this.btnCopyToDictCustomLast.Location = new System.Drawing.Point(4, 497);
+            this.btnCopyToDictCustomLast.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictCustomLast.Name = "btnCopyToDictCustomLast";
+            this.btnCopyToDictCustomLast.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictCustomLast.TabIndex = 106;
+            this.btnCopyToDictCustomLast.Text = "Copy from Main";
+            this.btnCopyToDictCustomLast.UseVisualStyleBackColor = true;
+            this.btnCopyToDictCustomLast.Click += new System.EventHandler(this.btnCopyToDictCustomLast_Click);
+            // 
+            // chkDictionariesLastWordCustomWordsUse
+            // 
+            this.chkDictionariesLastWordCustomWordsUse.AutoSize = true;
+            this.chkDictionariesLastWordCustomWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesLastWordCustomWordsUse.Name = "chkDictionariesLastWordCustomWordsUse";
+            this.chkDictionariesLastWordCustomWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesLastWordCustomWordsUse.TabIndex = 105;
+            this.chkDictionariesLastWordCustomWordsUse.UseVisualStyleBackColor = true;
+            this.chkDictionariesLastWordCustomWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesLastWordCustomWordsUse_CheckedChanged);
+            // 
+            // lblDictionariesLastWordCustomWordsUse
+            // 
+            this.lblDictionariesLastWordCustomWordsUse.AutoSize = true;
+            this.lblDictionariesLastWordCustomWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesLastWordCustomWordsUse.Name = "lblDictionariesLastWordCustomWordsUse";
+            this.lblDictionariesLastWordCustomWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesLastWordCustomWordsUse.TabIndex = 104;
+            this.lblDictionariesLastWordCustomWordsUse.Text = "Override:";
+            // 
+            // chkDictLastWordCustomWordsAddTypos
+            // 
+            this.chkDictLastWordCustomWordsAddTypos.AutoSize = true;
+            this.chkDictLastWordCustomWordsAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictLastWordCustomWordsAddTypos.Name = "chkDictLastWordCustomWordsAddTypos";
+            this.chkDictLastWordCustomWordsAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictLastWordCustomWordsAddTypos.TabIndex = 98;
+            this.chkDictLastWordCustomWordsAddTypos.Text = "Add Typos";
+            this.chkDictLastWordCustomWordsAddTypos.UseVisualStyleBackColor = true;
+            // 
+            // chkDictLastWordCustomWordsForceLowercase
+            // 
+            this.chkDictLastWordCustomWordsForceLowercase.AutoSize = true;
+            this.chkDictLastWordCustomWordsForceLowercase.Checked = true;
+            this.chkDictLastWordCustomWordsForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDictLastWordCustomWordsForceLowercase.Location = new System.Drawing.Point(6, 74);
+            this.chkDictLastWordCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictLastWordCustomWordsForceLowercase.Name = "chkDictLastWordCustomWordsForceLowercase";
+            this.chkDictLastWordCustomWordsForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictLastWordCustomWordsForceLowercase.TabIndex = 97;
+            this.chkDictLastWordCustomWordsForceLowercase.Text = "Lowercase";
+            this.chkDictLastWordCustomWordsForceLowercase.UseVisualStyleBackColor = true;
+            // 
+            // chkDictLastWordCustomWordsSkipSpecials
+            // 
+            this.chkDictLastWordCustomWordsSkipSpecials.AutoSize = true;
+            this.chkDictLastWordCustomWordsSkipSpecials.Checked = true;
+            this.chkDictLastWordCustomWordsSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkDictLastWordCustomWordsSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictLastWordCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictLastWordCustomWordsSkipSpecials.Name = "chkDictLastWordCustomWordsSkipSpecials";
+            this.chkDictLastWordCustomWordsSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictLastWordCustomWordsSkipSpecials.TabIndex = 96;
+            this.chkDictLastWordCustomWordsSkipSpecials.Text = "Skip Specials";
+            this.chkDictLastWordCustomWordsSkipSpecials.UseVisualStyleBackColor = true;
+            // 
+            // chkDictLastWordCustomWordsSkipDigits
+            // 
+            this.chkDictLastWordCustomWordsSkipDigits.AutoSize = true;
+            this.chkDictLastWordCustomWordsSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictLastWordCustomWordsSkipDigits.Name = "chkDictLastWordCustomWordsSkipDigits";
+            this.chkDictLastWordCustomWordsSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictLastWordCustomWordsSkipDigits.TabIndex = 95;
+            this.chkDictLastWordCustomWordsSkipDigits.Text = "Skip Digits";
+            this.chkDictLastWordCustomWordsSkipDigits.UseVisualStyleBackColor = true;
             // 
             // txtDictLastCustWords
             // 
-            this.txtDictLastCustWords.Location = new System.Drawing.Point(8, 5);
+            this.txtDictLastCustWords.Location = new System.Drawing.Point(109, 2);
             this.txtDictLastCustWords.Margin = new System.Windows.Forms.Padding(2);
             this.txtDictLastCustWords.Multiline = true;
             this.txtDictLastCustWords.Name = "txtDictLastCustWords";
-            this.txtDictLastCustWords.Size = new System.Drawing.Size(422, 542);
+            this.txtDictLastCustWords.Size = new System.Drawing.Size(317, 520);
             this.txtDictLastCustWords.TabIndex = 0;
+            // 
+            // tabLastWordDictionariesExcludeWords
+            // 
+            this.tabLastWordDictionariesExcludeWords.Controls.Add(this.btnCopyToDictExcludeLast);
+            this.tabLastWordDictionariesExcludeWords.Controls.Add(this.txtDictLastWordExcludeWords);
+            this.tabLastWordDictionariesExcludeWords.Controls.Add(this.chkDictLastWordExcludePartialWords);
+            this.tabLastWordDictionariesExcludeWords.Controls.Add(this.chkDictionariesLastWordExcludeWordsUse);
+            this.tabLastWordDictionariesExcludeWords.Controls.Add(this.lblDictionariesLastWordExcludeWordsUse);
+            this.tabLastWordDictionariesExcludeWords.Location = new System.Drawing.Point(4, 22);
+            this.tabLastWordDictionariesExcludeWords.Name = "tabLastWordDictionariesExcludeWords";
+            this.tabLastWordDictionariesExcludeWords.Size = new System.Drawing.Size(428, 524);
+            this.tabLastWordDictionariesExcludeWords.TabIndex = 2;
+            this.tabLastWordDictionariesExcludeWords.Text = "Exclude Words";
+            this.tabLastWordDictionariesExcludeWords.UseVisualStyleBackColor = true;
+            // 
+            // btnCopyToDictExcludeLast
+            // 
+            this.btnCopyToDictExcludeLast.Location = new System.Drawing.Point(4, 497);
+            this.btnCopyToDictExcludeLast.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictExcludeLast.Name = "btnCopyToDictExcludeLast";
+            this.btnCopyToDictExcludeLast.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictExcludeLast.TabIndex = 98;
+            this.btnCopyToDictExcludeLast.Text = "Copy from Main";
+            this.btnCopyToDictExcludeLast.UseVisualStyleBackColor = true;
+            this.btnCopyToDictExcludeLast.Click += new System.EventHandler(this.btnCopyToDictExcludeLast_Click);
+            // 
+            // txtDictLastWordExcludeWords
+            // 
+            this.txtDictLastWordExcludeWords.Location = new System.Drawing.Point(109, 2);
+            this.txtDictLastWordExcludeWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictLastWordExcludeWords.Multiline = true;
+            this.txtDictLastWordExcludeWords.Name = "txtDictLastWordExcludeWords";
+            this.txtDictLastWordExcludeWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictLastWordExcludeWords.TabIndex = 97;
+            // 
+            // chkDictLastWordExcludePartialWords
+            // 
+            this.chkDictLastWordExcludePartialWords.AutoSize = true;
+            this.chkDictLastWordExcludePartialWords.Location = new System.Drawing.Point(6, 28);
+            this.chkDictLastWordExcludePartialWords.Name = "chkDictLastWordExcludePartialWords";
+            this.chkDictLastWordExcludePartialWords.Size = new System.Drawing.Size(93, 17);
+            this.chkDictLastWordExcludePartialWords.TabIndex = 96;
+            this.chkDictLastWordExcludePartialWords.Text = "Partial words";
+            this.chkDictLastWordExcludePartialWords.UseVisualStyleBackColor = true;
+            // 
+            // chkDictionariesLastWordExcludeWordsUse
+            // 
+            this.chkDictionariesLastWordExcludeWordsUse.AutoSize = true;
+            this.chkDictionariesLastWordExcludeWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesLastWordExcludeWordsUse.Name = "chkDictionariesLastWordExcludeWordsUse";
+            this.chkDictionariesLastWordExcludeWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesLastWordExcludeWordsUse.TabIndex = 95;
+            this.chkDictionariesLastWordExcludeWordsUse.UseVisualStyleBackColor = true;
+            this.chkDictionariesLastWordExcludeWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesLastWordExcludeWordsUse_CheckedChanged);
+            // 
+            // lblDictionariesLastWordExcludeWordsUse
+            // 
+            this.lblDictionariesLastWordExcludeWordsUse.AutoSize = true;
+            this.lblDictionariesLastWordExcludeWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesLastWordExcludeWordsUse.Name = "lblDictionariesLastWordExcludeWordsUse";
+            this.lblDictionariesLastWordExcludeWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesLastWordExcludeWordsUse.TabIndex = 94;
+            this.lblDictionariesLastWordExcludeWordsUse.Text = "Override:";
             // 
             // grpAdvanced
             // 
@@ -2185,7 +2775,8 @@ namespace BruteForceHash.GUI
             // 
             this.mnStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.mnStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnFile});
+            this.mnFile,
+            this.toolsToolStripMenuItem});
             this.mnStrip.Location = new System.Drawing.Point(0, 0);
             this.mnStrip.Name = "mnStrip";
             this.mnStrip.Size = new System.Drawing.Size(848, 24);
@@ -2264,6 +2855,21 @@ namespace BruteForceHash.GUI
             this.mnSave.Name = "mnSave";
             this.mnSave.Size = new System.Drawing.Size(138, 22);
             this.mnSave.Text = "Save...";
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.printLatestCommandToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // printLatestCommandToolStripMenuItem
+            // 
+            this.printLatestCommandToolStripMenuItem.Name = "printLatestCommandToolStripMenuItem";
+            this.printLatestCommandToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.printLatestCommandToolStripMenuItem.Text = "Print latest command";
+            this.printLatestCommandToolStripMenuItem.Click += new System.EventHandler(this.printLatestCommandToolStripMenuItem_Click);
             // 
             // openFile
             // 
@@ -2350,17 +2956,29 @@ namespace BruteForceHash.GUI
             this.groupBoxWordFiltering.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabMainDictionaries.ResumeLayout(false);
+            this.tabMainDictionariesCommon.ResumeLayout(false);
+            this.tabMainDictionariesCommon.PerformLayout();
+            this.tabMainDictionariesCustom.ResumeLayout(false);
+            this.tabMainDictionariesCustom.PerformLayout();
+            this.tabMainDictionariesExcludeWords.ResumeLayout(false);
+            this.tabMainDictionariesExcludeWords.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.tabFirstWordDictionaries.ResumeLayout(false);
+            this.tabFirstWordDictionariesCommon.ResumeLayout(false);
+            this.tabFirstWordDictionariesCommon.PerformLayout();
+            this.tabFirstWordDictionariesCustom.ResumeLayout(false);
+            this.tabFirstWordDictionariesCustom.PerformLayout();
+            this.tabFirstWordDictionariesExcludeWords.ResumeLayout(false);
+            this.tabFirstWordDictionariesExcludeWords.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
+            this.tabLastWordDictionaries.ResumeLayout(false);
+            this.tabLastWordDictionariesCommon.ResumeLayout(false);
+            this.tabLastWordDictionariesCommon.PerformLayout();
+            this.tabLastWordDictionariesCustom.ResumeLayout(false);
+            this.tabLastWordDictionariesCustom.PerformLayout();
+            this.tabLastWordDictionariesExcludeWords.ResumeLayout(false);
+            this.tabLastWordDictionariesExcludeWords.PerformLayout();
             this.grpAdvanced.ResumeLayout(false);
             this.grpAdvanced.PerformLayout();
             this.grpTypos.ResumeLayout(false);
@@ -2401,7 +3019,6 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.TextBox txtIncludeWord;
         private System.Windows.Forms.Label lblWordsLimit;
         private System.Windows.Forms.ComboBox cbWordsLimit;
-        private System.Windows.Forms.Label lblDictionaries;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.CheckBox chkDictFirstAddTypos;
         private System.Windows.Forms.Label lblSuffix;
@@ -2428,11 +3045,11 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.OpenFileDialog openFile;
         private System.Windows.Forms.SaveFileDialog saveFile;
         private System.Windows.Forms.Label lblVerbose;
-        private System.Windows.Forms.Label lblDictionaryLastWord;
-        private System.Windows.Forms.Label lblDictionariesFirstWord;
+        private System.Windows.Forms.Label lblDictionaryLastWordUse;
+        private System.Windows.Forms.Label lblDictionariesFirstWordUse;
         private System.Windows.Forms.CheckBox chkIncludeWordNotFirst;
-        private System.Windows.Forms.CheckBox chkUseCustomDictLast;
-        private System.Windows.Forms.CheckBox chkUseCustomDictFirst;
+        private System.Windows.Forms.CheckBox chkUseDictLast;
+        private System.Windows.Forms.CheckBox chkUseDictFirst;
         private System.Windows.Forms.CheckBox chkDictFirstSkipSpecials;
         private System.Windows.Forms.CheckBox chkDictFirstSkipDigits;
         private System.Windows.Forms.CheckBox chkDictFirstForceLowercase;
@@ -2441,7 +3058,6 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.CheckBox chkDictLastSkipSpecials;
         private System.Windows.Forms.CheckBox chkDictLastForceLowercase;
         private System.Windows.Forms.CheckBox chkDictLastAddTypos;
-        private System.Windows.Forms.CheckBox chkDictLastReverseOrder;
         private System.Windows.Forms.CheckBox chkDictSkipDigits;
         private System.Windows.Forms.CheckBox chkDictSkipSpecials;
         private System.Windows.Forms.CheckBox chkDictForceLowercase;
@@ -2519,9 +3135,6 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.ToolStripMenuItem mnQuickLoad;
         private System.Windows.Forms.ToolStripMenuItem mnQuickSave;
         private System.Windows.Forms.ToolStripSeparator mnSeparator3;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.TextBox txtDictCustWords;
         private System.Windows.Forms.TextBox txtDictLastCustWords;
         private System.Windows.Forms.TextBox txtDictFirstCustWords;
@@ -2552,6 +3165,61 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblAtLeastUnder;
         private System.Windows.Forms.ComboBox cbAtLeastUnderNbrChars;
         private System.Windows.Forms.ComboBox cbAtLeastUnderNbrWords;
+        private System.Windows.Forms.TabControl tabMainDictionaries;
+        private System.Windows.Forms.TabPage tabMainDictionariesCommon;
+        private System.Windows.Forms.TabPage tabMainDictionariesCustom;
+        private System.Windows.Forms.TabControl tabFirstWordDictionaries;
+        private System.Windows.Forms.TabPage tabFirstWordDictionariesCommon;
+        private System.Windows.Forms.TabPage tabFirstWordDictionariesCustom;
+        private System.Windows.Forms.TabControl tabLastWordDictionaries;
+        private System.Windows.Forms.TabPage tabLastWordDictionariesCommon;
+        private System.Windows.Forms.TabPage tabLastWordDictionariesCustom;
+        private System.Windows.Forms.TabPage tabMainDictionariesExcludeWords;
+        private System.Windows.Forms.TabPage tabFirstWordDictionariesExcludeWords;
+        private System.Windows.Forms.TabPage tabLastWordDictionariesExcludeWords;
+        private System.Windows.Forms.CheckBox chkDictCustomWordsAddTypos;
+        private System.Windows.Forms.CheckBox chkDictCustomWordsForceLowercase;
+        private System.Windows.Forms.CheckBox chkDictCustomWordsSkipSpecials;
+        private System.Windows.Forms.CheckBox chkDictCustomWordsSkipDigits;
+        private System.Windows.Forms.Label lblDictionariesCustomWordsAtLeast;
+        private System.Windows.Forms.Label lblDictionariesCustomWordsHash;
+        private System.Windows.Forms.ComboBox cbDictionariesCustomWordsMinimumInHash;
+        private System.Windows.Forms.Label lblDictionariesCustomWordsFiltering;
+        private System.Windows.Forms.TextBox txtDictExcludeWords;
+        private System.Windows.Forms.CheckBox chkDictionariesExcludeWordsUse;
+        private System.Windows.Forms.Label lblDictionariesExcludeWordsUse;
+        private System.Windows.Forms.CheckBox chkDictionariesCustomWordsUse;
+        private System.Windows.Forms.Label lblDictionariesCustomWordsUse;
+        private System.Windows.Forms.CheckBox chkDictExcludePartialWords;
+        private System.Windows.Forms.Label lblDictionariesUse;
+        private System.Windows.Forms.CheckBox chkDictionariesUse;
+        private System.Windows.Forms.CheckBox chkDictionariesFirstWordCustomWordsUse;
+        private System.Windows.Forms.Label lblDictionariesFirstWordCustomWordsUse;
+        private System.Windows.Forms.CheckBox chkDictFirstWordCustomWordsAddTypos;
+        private System.Windows.Forms.CheckBox chkDictFirstWordCustomWordsForceLowercase;
+        private System.Windows.Forms.CheckBox chkDictFirstWordCustomWordsSkipSpecials;
+        private System.Windows.Forms.CheckBox chkDictFirstWordCustomWordsSkipDigits;
+        private System.Windows.Forms.CheckBox chkDictionariesLastWordCustomWordsUse;
+        private System.Windows.Forms.Label lblDictionariesLastWordCustomWordsUse;
+        private System.Windows.Forms.CheckBox chkDictLastWordCustomWordsAddTypos;
+        private System.Windows.Forms.CheckBox chkDictLastWordCustomWordsForceLowercase;
+        private System.Windows.Forms.CheckBox chkDictLastWordCustomWordsSkipSpecials;
+        private System.Windows.Forms.CheckBox chkDictLastWordCustomWordsSkipDigits;
+        private System.Windows.Forms.TextBox txtDictFirstWordExcludeWords;
+        private System.Windows.Forms.CheckBox chkDictFirstWordExcludePartialWords;
+        private System.Windows.Forms.CheckBox chkDictionariesFirstWordExcludeWordsUse;
+        private System.Windows.Forms.Label lblDictionariesFirstWordExcludeWordsUse;
+        private System.Windows.Forms.TextBox txtDictLastWordExcludeWords;
+        private System.Windows.Forms.CheckBox chkDictLastWordExcludePartialWords;
+        private System.Windows.Forms.CheckBox chkDictionariesLastWordExcludeWordsUse;
+        private System.Windows.Forms.Label lblDictionariesLastWordExcludeWordsUse;
+        private System.Windows.Forms.CheckBox chkDictLastReverseOrder;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printLatestCommandToolStripMenuItem;
+        private System.Windows.Forms.Button btnCopyToDictCustomFirst;
+        private System.Windows.Forms.Button btnCopyToDictExcludeFirst;
+        private System.Windows.Forms.Button btnCopyToDictCustomLast;
+        private System.Windows.Forms.Button btnCopyToDictExcludeLast;
     }
 }
 
