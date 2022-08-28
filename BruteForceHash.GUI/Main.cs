@@ -1075,7 +1075,7 @@ namespace BruteForceHash.GUI
 
         private bool ShouldEnableHashCat()
         {
-            return IsValidHex() && ((pnlCharacter.Visible && !chkUtf8Toggle.Checked)); // || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked)) ;
+            return IsValidHex() && ((pnlCharacter.Visible && !chkUtf8Toggle.Checked) || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked));
         }
 
         private bool IsValidHex()

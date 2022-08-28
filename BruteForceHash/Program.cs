@@ -64,7 +64,7 @@ namespace BruteForceHash
                         else if (o.Method.Equals("dictionary_advanced", StringComparison.OrdinalIgnoreCase))
                             new BruteForceDictionaryAdvanced(logger, o, length, hexToFind).Run();
                         else if (o.Method.Equals("dictionary_hashcat", StringComparison.OrdinalIgnoreCase))
-                            new BruteForceDictionary(logger, o, length, hexToFind).Run();
+                            new BruteForceDictionaryHashcat(logger, o, length, hexToFind).Run();
                         else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
                             new BruteForceCharacter(logger, o, length, hexToFind).Run();
                         else if (o.Method.Equals("character_utf8", StringComparison.OrdinalIgnoreCase))

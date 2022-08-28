@@ -19,6 +19,7 @@ namespace BruteForceHash
         protected readonly Dictionary<string, byte[][]> _dictionariesLast;
         protected readonly Options _options;
         protected readonly uint _hexValue;
+        protected readonly int _combinationSize;
         protected readonly int _stringLength;
         protected readonly string _delimiter;
         protected readonly byte _delimiterByte;
@@ -45,6 +46,7 @@ namespace BruteForceHash
         protected readonly int _maxConsecutiveConcatenated;
         protected readonly int _minConsecutiveConcatenated;
         protected readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
+        protected CancellationTokenSource _cancellationTokenSource;
         protected int _foundResult = 0;
 
         public BruteForceDictionaryBase(Logger logger, Options options, int stringLength, uint hexValue)
@@ -91,9 +93,9 @@ namespace BruteForceHash
             _stringLength = stringLength;
 
             //Generate combinations
-            var combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
+            _combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
             _maxWordLength = Math.Min(options.MaxWordLength, _stringLength);
-            _combinationPatterns = GenerateCombinations(combinationSize);
+            _combinationPatterns = GenerateCombinations(_combinationSize);
 
             //Load common dictionary
             _dictionaries = GetDictionaries(_options.Dictionaries, null, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos,
@@ -318,12 +320,12 @@ namespace BruteForceHash
 
             if (_options.Verbose)
             {
-                for (int i = 1; i <= _stringLength - Encoding.UTF8.GetByteCount(_options.Prefix) - Encoding.UTF8.GetByteCount(_options.Suffix); i++)
+                for (int i = 1; i <= _combinationSize; i++)
                 {
                     _logger.Log($"{i}-letter words: {_dictionaries[$"{{{i}}}"].Length}", false);
                 }
             }
-            _logger.Log($"Search on: {_stringLength - Encoding.UTF8.GetByteCount(_options.Prefix) - Encoding.UTF8.GetByteCount(_options.Suffix)} characters");
+            _logger.Log($"Search on: {_combinationSize} characters");
             _logger.Log("-----------------------------------------");
         }
 
@@ -335,6 +337,7 @@ namespace BruteForceHash
 
             // Create a TaskFactory and pass it our custom scheduler.
             TaskFactory factory = new TaskFactory(taskScheduler);
+            _cancellationTokenSource = new CancellationTokenSource();
 
             PrintHeaders();
 
@@ -345,12 +348,14 @@ namespace BruteForceHash
                     var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
                     if (_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
-                    RunDictionaries(strBuilder, combinationPattern, true);
+                    RunDictionaries(strBuilder, combinationPattern, true, _cancellationTokenSource.Token);
                 });
                 tasks.Add(task);
             }
 
-            WaitForDictionariesToRun(tasks.ToArray());
+            WaitForDictionariesToRun(tasks.ToArray(), _cancellationTokenSource.Token);
+
+            //_cancellationTokenSource.Dispose();
 
             _logger.Log("-----------------------------------------");
             if (_foundResult > 0)
@@ -363,11 +368,11 @@ namespace BruteForceHash
             }
         }
 
-        protected virtual void WaitForDictionariesToRun(Task[] tasks)
+        protected virtual void WaitForDictionariesToRun(Task[] tasks, CancellationToken cancellationToken)
         {
-            Task.WaitAll(tasks);
+            Task.WaitAll(tasks, cancellationToken);
         }
-        protected abstract void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord);
+        protected abstract void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord, CancellationToken cancellationToken);
         protected abstract IEnumerable<string> GenerateCombinations(int combinationSize);
 
         #region Generate Dictionaries

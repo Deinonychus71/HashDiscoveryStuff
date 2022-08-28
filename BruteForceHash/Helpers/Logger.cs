@@ -62,11 +62,6 @@ namespace BruteForceHash.Helpers
                 _queue.Enqueue(line);
         }
 
-        public void LogDiscret(string line)
-        {
-            _queue.Enqueue(line);
-        }
-
         public void Dispose()
         {
             _queueCts.Cancel();

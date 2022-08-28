@@ -168,7 +168,7 @@ namespace BruteForceHash
                 {
                     argumentLists.Add($"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3{quiet}");
                 }
-                new HashcatTask(_logger, _options).Run(argumentLists, _options.Verbose);
+                new HashcatTask(_logger, _options).Run(argumentLists, _options.Verbose, true);
 
                 Task.WaitAll(tasks.ToArray());
                 cts.Dispose();

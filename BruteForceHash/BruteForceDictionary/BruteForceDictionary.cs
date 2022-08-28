@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace BruteForceHash
 {
@@ -16,8 +17,11 @@ namespace BruteForceHash
         }
 
         #region Run Attack
-        protected override void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord)
+        protected override void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
             string wordSize;
             bool lastWord = false;
 
@@ -35,7 +39,7 @@ namespace BruteForceHash
                     if (_delimiterLength > 0)
                         candidate.Append(_delimiterByte);
                     combinationPattern = combinationPattern[(wordSize.Length + 1)..];
-                    RunDictionaries(candidate, combinationPattern, false);
+                    RunDictionaries(candidate, combinationPattern, false, cancellationToken);
                     candidate.Cursor -= Encoding.UTF8.GetByteCount(wordSize) + _delimiterLength;
                     return;
                 }
@@ -58,6 +62,9 @@ namespace BruteForceHash
                     words = _dictionaries[wordSize];
                 foreach (var word in words)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
+
                     if (lastWord)
                     {
                         candidate.Replace(word);
@@ -68,7 +75,7 @@ namespace BruteForceHash
                         candidate.Append(word);
                         if (_delimiterLength > 0)
                             candidate.Append(_delimiterByte);
-                        RunDictionaries(candidate, combinationPattern, false);
+                        RunDictionaries(candidate, combinationPattern, false, cancellationToken);
                         candidate.Cursor -= word.Length + _delimiterLength;
                     }
                 }

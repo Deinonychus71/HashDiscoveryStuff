@@ -196,7 +196,8 @@ namespace BruteForceHash
         public bool TyposEnableWrongLetter { get; set; }
         [Option('T', "typos_enable_reverse_letter", Required = false, Default = false, HelpText = "Typos - Enable reverse letter. (for dictionary attack).")]
         public bool TyposEnableReverseLetter { get; set; }
-
+        [Option('H', "run_hashcat", Required = false, Default = false, HelpText = "Script running in hashcat mode (silent) to generate a list of dictionaries. (for dictionary attack).")]
+        public bool RunHashcat { get; set; }
 
 
         //Character attack

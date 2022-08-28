@@ -1,4 +1,5 @@
 ﻿using BruteForceHash.Helpers;
+using CommandLine;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,12 +23,64 @@ namespace BruteForceHash
 
         public void Run(string arguments, bool verbose = false)
         {
-            Run(new List<string>() { arguments }, verbose);
+            Run(new List<string>() { arguments }, verbose, true);
         }
 
-        public void Run(List<string> argumentsList, bool verbose = false)
+        public void RunWithWrapper(string arguments, bool monitor)
         {
+            if (monitor)
+                LaunchMonitoringTask();
+
+            string arg = $"/c \"BruteForceHash.exe {Parser.Default.FormatCommandLine(_options)} | (cd \"{Path.GetDirectoryName(_options.PathHashCat)}\" && \"{Path.GetFileName(_options.PathHashCat)}\" {arguments}\")";
+
+            _logger.Log("SLOWER!! DO NOT USE :(");
+            if (monitor) {
+                _logger.Log($"Launch hashcat: \"{_options.PathHashCat}\" {arguments}");
+            }
+
+            using (var process = new Process())
+            {
+                var processInfo = new ProcessStartInfo("cmd.exe");
+                processInfo.Arguments = arg;
+                processInfo.CreateNoWindow = true;
+                processInfo.UseShellExecute = true;
+                process.StartInfo = processInfo;
+                process.Start();
+                process.WaitForExit();
+                process.Close();
+            }
+
+            _hashCatProcessDone = true;
+        }
+
+        public void Run(List<string> argumentsList, bool verbose, bool monitor)
+        {
+            if(monitor)
+                LaunchMonitoringTask();
+
             // Launch HashCat
+            foreach (var arguments in argumentsList)
+            {
+                if(verbose)
+                    _logger.Log($"Running hashcat with arguments {arguments}.", false);
+
+                using (var process = new Process())
+                {
+                    process.StartInfo.FileName = _options.PathHashCat;
+                    process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
+                    process.StartInfo.Arguments = arguments;
+                    process.StartInfo.CreateNoWindow = false;
+                    process.Start();
+                    process.WaitForExit();
+                    process.Close();
+                }
+            }
+
+            _hashCatProcessDone = true;
+        }
+
+        private void LaunchMonitoringTask()
+        {
             var output = Path.Combine(Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt"));
 
             Task.Run(async () =>
@@ -84,25 +137,6 @@ namespace BruteForceHash
                     await Task.Delay(2000);
                 }
             });
-
-            foreach (var arguments in argumentsList)
-            {
-                if(verbose)
-                    _logger.Log($"Running hashcat with arguments {arguments}.", false);
-
-                using (var process = new Process())
-                {
-                    process.StartInfo.FileName = _options.PathHashCat;
-                    process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
-                    process.StartInfo.Arguments = arguments;
-                    process.StartInfo.CreateNoWindow = false;
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close();
-                }
-            }
-
-            _hashCatProcessDone = true;
         }
     }
 }
