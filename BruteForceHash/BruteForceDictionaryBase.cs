@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BruteForceHash
 {
@@ -16,18 +18,40 @@ namespace BruteForceHash
         protected readonly Dictionary<string, byte[][]> _dictionariesFirst;
         protected readonly Dictionary<string, byte[][]> _dictionariesLast;
         protected readonly Options _options;
+        protected readonly uint _hexValue;
         protected readonly int _stringLength;
         protected readonly string _delimiter;
         protected readonly byte _delimiterByte;
         protected readonly int _delimiterLength;
-        private readonly int _minWordLength;
-        private readonly int _maxWordLength;
+        protected readonly int _minWordLength;
+        protected readonly int _maxWordLength;
+        protected readonly int _maxDelimiters;
+        protected readonly int _minDelimiters;
+        protected readonly int _maxConsecutives;
+        protected readonly int _minConsecutives;
+        protected readonly int _maxWords;
+        protected readonly int _minWords;
+        protected readonly bool _concatenateOnlyLastTwo;
+        protected readonly bool _concatenateOnlyFirstTwo;
+        protected readonly int _maxOnes;
+        protected readonly int _minOnes;
+        protected readonly int _maxTwos;
+        protected readonly int _minTwos;
+        protected readonly int _maxThrees;
+        protected readonly int _minThrees;
+        protected readonly int _maxFours;
+        protected readonly int _minFours;
+        protected readonly int _maxConsecutiveOnes;
+        protected readonly int _maxConsecutiveConcatenated;
+        protected readonly int _minConsecutiveConcatenated;
         protected readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
+        protected int _foundResult = 0;
 
         public BruteForceDictionaryBase(Logger logger, Options options, int stringLength, uint hexValue)
         {
             _logger = logger;
             _options = options;
+            _hexValue = hexValue;
             if (string.IsNullOrEmpty(options.Delimiter))
             {
                 _delimiter = "|";
@@ -41,6 +65,25 @@ namespace BruteForceHash
                 _delimiterLength = Encoding.UTF8.GetByteCount(_delimiter);
             }
 
+            _maxDelimiters = options.MaxDelimiters;
+            _minDelimiters = options.MinDelimiters;
+            _maxConsecutives = options.MaxConcatenatedWords;
+            _minConsecutives = options.MinConcatenatedWords;
+            _maxWords = options.WordsLimit;
+            _minWords = options.MinWordsLimit;
+            _concatenateOnlyLastTwo = options.ConcatenateLastTwoWords;
+            _concatenateOnlyFirstTwo = options.ConcatenateFirstTwoWords;
+            _maxOnes = options.MaxOnes;
+            _minOnes = options.MinOnes;
+            _maxTwos = options.MaxTwos;
+            _minTwos = options.MinTwos;
+            _maxThrees = options.MaxThrees;
+            _minThrees = options.MinThrees;
+            _maxFours = options.MaxFours;
+            _minFours = options.MinFours;
+            _maxConsecutiveOnes = options.MaxConsecutiveOnes;
+            _maxConsecutiveConcatenated = options.MaxConsecutiveConcatenation;
+            _minConsecutiveConcatenated = options.MinConsecutiveConcatenation;
             _minWordLength = options.MinWordLength;
             _options.IncludeWord = _options.IncludeWord.ToLower();
 
@@ -284,10 +327,51 @@ namespace BruteForceHash
             _logger.Log("-----------------------------------------");
         }
 
+        public void Run()
+        {
+            //Run
+            var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads);
+            var tasks = new List<Task>();
+
+            // Create a TaskFactory and pass it our custom scheduler.
+            TaskFactory factory = new TaskFactory(taskScheduler);
+
+            PrintHeaders();
+
+            foreach (var combinationPattern in _combinationPatterns)
+            {
+                var task = factory.StartNew(() =>
+                {
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
+                    if (_options.Verbose)
+                        _logger.Log($"Running Pattern: {combinationPattern}", false);
+                    RunDictionaries(strBuilder, combinationPattern, true);
+                });
+                tasks.Add(task);
+            }
+
+            WaitForDictionariesToRun(tasks.ToArray());
+
+            _logger.Log("-----------------------------------------");
+            if (_foundResult > 0)
+            {
+                _logger.Log($"Found {_foundResult} results!");
+            }
+            else
+            {
+                _logger.Log($"Nothing :(");
+            }
+        }
+
+        protected virtual void WaitForDictionariesToRun(Task[] tasks)
+        {
+            Task.WaitAll(tasks);
+        }
+        protected abstract void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord);
         protected abstract IEnumerable<string> GenerateCombinations(int combinationSize);
 
         #region Generate Dictionaries
-        protected Dictionary<string, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirst, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos,
+        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirst, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos,
             string dictionariesCustom, bool customSkipDigits, bool customSkipSpecials, bool customForceLowerCase, bool customAddTypos, bool reverseOrder,
             string dictionariesExclude, bool excludePartialWords)
         {

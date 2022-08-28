@@ -19,13 +19,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Dictionaries\dictionary_english.dic">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Dictionaries\dictionary_smash.dic">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -5,163 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BruteForceHash
 {
     public class BruteForceDictionaryAdvanced : BruteForceDictionaryBase
     {
-        private Logger _hashCatLogger;
-        private readonly Action<ByteString> _testCandidate;
-        private readonly bool _runInHashCat;
-        private readonly uint _hexValue;
-        private uint _hexExtract;
-        private int _foundResult = 0;
-
-        private readonly int _maxDelimiters;
-        private readonly int _minDelimiters;
-        private readonly int _maxConsecutives;
-        private readonly int _minConsecutives;
-        private readonly int _maxWords;
-        private readonly int _minWords;
-        private readonly bool _concatenateOnlyLastTwo;
-        private readonly bool _concatenateOnlyFirstTwo;
-        private readonly int _minWordLength;
-        private readonly int _maxWordLength;
-        private readonly int _maxOnes;
-        private readonly int _minOnes;
-        private readonly int _maxTwos;
-        private readonly int _minTwos;
-        private readonly int _maxThrees;
-        private readonly int _minThrees;
-        private readonly int _maxFours;
-        private readonly int _minFours;
-        private readonly int _maxConsecutiveOnes;
-        private readonly int _maxConsecutiveConcatenated;
-        private readonly int _minConsecutiveConcatenated;
-
-        public BruteForceDictionaryAdvanced(Logger logger, Options options, int stringLength, uint hexValue, bool runInHashCat = false)
+        public BruteForceDictionaryAdvanced(Logger logger, Options options, int stringLength, uint hexValue)
             : base(logger, options, stringLength, hexValue)
         {
-            _runInHashCat = runInHashCat;
-            _hexValue = hexValue;
-
-            _maxDelimiters = options.MaxDelimiters;
-            _minDelimiters = options.MinDelimiters;
-            _maxConsecutives = options.MaxConcatenatedWords;
-            _minConsecutives = options.MinConcatenatedWords;
-            _maxWords = options.WordsLimit;
-            _minWords = options.MinWordsLimit;
-            _concatenateOnlyLastTwo = options.ConcatenateLastTwoWords;
-            _concatenateOnlyFirstTwo = options.ConcatenateFirstTwoWords;
-            _maxOnes = options.MaxOnes;
-            _minOnes = options.MinOnes;
-            _maxTwos = options.MaxTwos;
-            _minTwos = options.MinTwos;
-            _maxThrees = options.MaxThrees;
-            _minThrees = options.MinThrees;
-            _maxFours = options.MaxFours;
-            _minFours = options.MinFours;
-            _maxConsecutiveOnes = options.MaxConsecutiveOnes;
-            _maxConsecutiveConcatenated = options.MaxConsecutiveConcatenation;
-            _minConsecutiveConcatenated = options.MinConsecutiveConcatenation;
-
-            _minWordLength = options.MinWordLength;
-
-            if (runInHashCat)
-            {
-                Directory.CreateDirectory("Temp");
-                _hashCatLogger = new Logger(Path.Combine("Temp", $"{Path.GetFileNameWithoutExtension(_logger.PathFile)}.temp.dic"));
-                if (string.IsNullOrEmpty(_options.Prefix) && string.IsNullOrEmpty(_options.Suffix))
-                {
-                    _hexExtract = _hexValue;
-                }
-                _testCandidate = WriteCandidateToDictionary;
-                _hashCatLogger.Init();
-            }
-            else
-            {
-                _testCandidate = TestCandidate;
-            }
-        }
-
-        public void Run()
-        {
-            //Run
-            var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads);
-            var tasks = new List<Task>();
-
-            // Create a TaskFactory and pass it our custom scheduler.
-            TaskFactory factory = new TaskFactory(taskScheduler);
-            CancellationTokenSource cts = new CancellationTokenSource();
-
-            PrintHeaders();
-
-            foreach (var combinationPattern in _combinationPatterns)
-            {
-                var task = factory.StartNew(() =>
-                {
-                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
-                    if (_options.Verbose)
-                        _logger.Log($"Running Pattern: {combinationPattern}", false);
-                    RunDictionaries(strBuilder, combinationPattern, true);
-                });
-                tasks.Add(task);
-            }
-
-            // Wait for the tasks to complete before displaying a completion message.
-            Task.WaitAll(tasks.ToArray());
-            cts.Dispose();
-
-            if (_runInHashCat)
-            {
-                Thread.Sleep(2000);
-                _hashCatLogger.Dispose();
-
-                var dictionaryPath = Path.GetFullPath(_hashCatLogger.PathFile);
-
-                if (_hexExtract == 0)
-                {
-                    _logger.Log($"No false positive found. Aborting operation.");
-                    try
-                    {
-                        if (_options.DeleteGeneratedDictionary)
-                            File.Delete(dictionaryPath);
-                    }
-                    catch { }
-                    return;
-                }
-
-                Thread.Sleep(2000);
-
-                // Launch HashCat
-                var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
-
-                string args = $"--hash-type 11500 -a 0 {_hexExtract:x}:00000000 --outfile \"{output}\" \"{dictionaryPath}\"";
-                new HashcatTask(_logger, _options).Run(args, _options.Verbose);
-
-                try
-                {
-                    if (_options.DeleteGeneratedDictionary)
-                        File.Delete(dictionaryPath);
-                }
-                catch { }
-            }
-
-            _logger.Log("-----------------------------------------");
-            if (_foundResult > 0)
-            {
-                _logger.Log($"Found {_foundResult} results!");
-            }
-            else
-            {
-                _logger.Log($"Nothing :(");
-            }
         }
 
         #region Run Attack
-        private void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord)
+        protected override void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord)
         {
             string currentWord;
             bool lastWord;
@@ -208,7 +63,7 @@ namespace BruteForceHash
             if (lastWord && !currentWord.StartsWith("{"))
             {
                 candidate.Replace(combinationPattern);
-                _testCandidate(candidate);
+                TestCandidate(candidate);
             }
             else
             {
@@ -224,7 +79,7 @@ namespace BruteForceHash
                     if (lastWord)
                     {
                         candidate.Replace(word);
-                        _testCandidate(candidate);
+                        TestCandidate(candidate);
                     }
                     else
                     {
@@ -238,7 +93,7 @@ namespace BruteForceHash
             }
         }
 
-        private void TestCandidate(ByteString candidate)
+        protected virtual void TestCandidate(ByteString candidate)
         {
             if (candidate.CRC32Check())
             {
@@ -246,32 +101,11 @@ namespace BruteForceHash
                 _foundResult++;
             }
         }
-
-        private void WriteCandidateToDictionary(ByteString candidate)
-        {
-            _hashCatLogger.LogDiscret(candidate.ToString(false));
-            if (candidate.CRC32Check() && _hexExtract == 0)
-            {
-                _logger.LogResult($"False positive found: 0x{candidate.HexSearchValue:x}.");
-                _hexExtract = candidate.HexSearchValue;
-            }
-        }
         #endregion
 
         #region Generate Combinations
         protected override IEnumerable<string> GenerateCombinations(int stringLength)
         {
-            var maxOnes = _options.MaxOnes;
-            var minOnes = _options.MinOnes;
-            var maxTwos = _options.MaxTwos;
-            var minTwos = _options.MinTwos;
-            var maxThrees = _options.MaxThrees;
-            var minThrees = _options.MinThrees;
-            var maxFours = _options.MaxFours;
-            var minFours = _options.MinFours;
-            var maxDelimiters = _options.MaxDelimiters;
-            var minDelimiters = _options.MinDelimiters;
-
             //Get combinations of custom words
             List<IEnumerable<string>> combinationsCustom = new List<IEnumerable<string>>();
             if (_options.DictionariesCustomMinWordsHash > 0 && File.Exists(_options.DictionariesCustom))
