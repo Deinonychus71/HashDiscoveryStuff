@@ -345,7 +345,7 @@ namespace BruteForceHash
             {
                 var task = factory.StartNew(() =>
                 {
-                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix);
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix, true);
                     if (_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
                     RunDictionaries(strBuilder, combinationPattern, true, _cancellationTokenSource.Token);

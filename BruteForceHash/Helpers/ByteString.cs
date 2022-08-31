@@ -5,6 +5,9 @@ namespace BruteForceHash.Helpers
 {
     public class ByteString
     {
+        public static uint OptimizedValue { get; set; }
+        public static bool IsOptimizedValue { get; set; }
+
         private readonly int _leadPrefixOffset;
         private readonly int _leadSuffixOffset;
         private readonly string _prefix;
@@ -20,23 +23,33 @@ namespace BruteForceHash.Helpers
 
         public int Cursor { get; set; }
 
-        public ByteString(int length, uint hexToFind, string prefix, string suffix)
+        public ByteString(int length, uint hexToFind, string prefix, string suffix, bool useGlobalOptimization = false)
         {
             _leadPrefixOffset = Encoding.UTF8.GetByteCount(prefix);
             _leadSuffixOffset = Encoding.UTF8.GetByteCount(suffix);
             _prefix = prefix;
             _suffix = suffix;
             _canBeOptimized = _leadPrefixOffset != 0 || _leadSuffixOffset != 0;
-            _hexToFind = hexToFind;
-            _value = new byte[length];
-            if (!string.IsNullOrEmpty(suffix))
+            if (_canBeOptimized && useGlobalOptimization && IsOptimizedValue)
             {
-                Append(suffix, length - _leadSuffixOffset);
-                Cursor = 0;
+                _hexToFind = OptimizedValue;
+                _canBeOptimized = false;
+                _wasOptimized = true;
+                _value = new byte[length - _leadPrefixOffset - _leadSuffixOffset];
             }
-            if (!string.IsNullOrEmpty(prefix))
+            else
             {
-                Append(Encoding.UTF8.GetBytes(prefix), 0);
+                _hexToFind = hexToFind; 
+                _value = new byte[length];
+                if (!string.IsNullOrEmpty(suffix))
+                {
+                    Append(suffix, length - _leadSuffixOffset);
+                    Cursor = 0;
+                }
+                if (!string.IsNullOrEmpty(prefix))
+                {
+                    Append(Encoding.UTF8.GetBytes(prefix), 0);
+                }
             }
         }
 
@@ -131,6 +144,8 @@ namespace BruteForceHash.Helpers
                     Cursor = newLength - (temp.Length - Cursor) + _leadSuffixOffset;
                     _canBeOptimized = false;
                     _wasOptimized = true;
+                    OptimizedValue = _hexToFind;
+                    IsOptimizedValue = true;
                 }
                 return true;
             }
