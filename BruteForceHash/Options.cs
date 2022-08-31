@@ -59,14 +59,22 @@ namespace BruteForceHash
         public int MaxFours { get; set; }
         [Option('P', "min_fours", Required = false, Default = 0, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
         public int MinFours { get; set; }
-        [Option('P', "at_least_above_chars", Required = false, Default = 0, HelpText = "To have least x words above y characters (for dictionary attack).")]
+        [Option('P', "at_least_gte_chars", Required = false, Default = 0, HelpText = "To have least x words above y characters (for dictionary attack).")]
         public int AtLeastAboveChars { get; set; }
-        [Option('P', "at_least_above_words", Required = false, Default = 0, HelpText = "To have least x words above y characters (for dictionary attack).")]
+        [Option('P', "at_least_gte_words", Required = false, Default = 0, HelpText = "To have least x words above y characters (for dictionary attack).")]
         public int AtLeastAboveWords { get; set; }
-        [Option('P', "at_least_under_chars", Required = false, Default = 0, HelpText = "To have least x words under y characters (for dictionary attack).")]
+        [Option('P', "at_least_lte_chars", Required = false, Default = 0, HelpText = "To have least x words under y characters (for dictionary attack).")]
         public int AtLeastUnderChars { get; set; }
-        [Option('P', "at_least_under_words", Required = false, Default = 0, HelpText = "To have least x words under y characters (for dictionary attack).")]
+        [Option('P', "at_least_lte_words", Required = false, Default = 0, HelpText = "To have least x words under y characters (for dictionary attack).")]
         public int AtLeastUnderWords { get; set; }
+        [Option('P', "at_most_gte_chars", Required = false, Default = 0, HelpText = "To have most x words above y characters (for dictionary attack).")]
+        public int AtMostAboveChars { get; set; }
+        [Option('P', "at_most_gte_words", Required = false, Default = 0, HelpText = "To have most x words above y characters (for dictionary attack).")]
+        public int AtMostAboveWords { get; set; }
+        [Option('P', "at_most_lte_chars", Required = false, Default = 0, HelpText = "To have most x words under y characters (for dictionary attack).")]
+        public int AtMostUnderChars { get; set; }
+        [Option('P', "at_most_lte_words", Required = false, Default = 0, HelpText = "To have most x words under y characters (for dictionary attack).")]
+        public int AtMostUnderWords { get; set; }
         [Option('P', "max_concatenated_words", Required = false, Default = 10, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
         public int MaxConcatenatedWords { get; set; }
         [Option('P', "min_concatenated_words", Required = false, Default = 0, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]

@@ -56,10 +56,8 @@ namespace BruteForceHash.GUI
             this.grpSizeFiltering = new System.Windows.Forms.GroupBox();
             this.cbAtLeastUnderNbrChars = new System.Windows.Forms.ComboBox();
             this.cbAtLeastUnderNbrWords = new System.Windows.Forms.ComboBox();
-            this.lblAtLeastUnder2 = new System.Windows.Forms.Label();
             this.lblAtLeastUnder = new System.Windows.Forms.Label();
             this.cbAtLeastAboveNbrChars = new System.Windows.Forms.ComboBox();
-            this.lblAtLeastAbove2 = new System.Windows.Forms.Label();
             this.cbAtLeastAboveNbrWords = new System.Windows.Forms.ComboBox();
             this.lblAtLeastAbove = new System.Windows.Forms.Label();
             this.cbMinFours = new System.Windows.Forms.ComboBox();
@@ -249,6 +247,12 @@ namespace BruteForceHash.GUI
             this.btnStartHashCat = new System.Windows.Forms.Button();
             this.btnQuickSave = new System.Windows.Forms.Button();
             this.btnQuickLoad = new System.Windows.Forms.Button();
+            this.lblAtMostAbove = new System.Windows.Forms.Label();
+            this.lblAtMostUnder = new System.Windows.Forms.Label();
+            this.cbAtMostAboveNbrWords = new System.Windows.Forms.ComboBox();
+            this.cbAtMostUnderNbrWords = new System.Windows.Forms.ComboBox();
+            this.cbAtMostAboveNbrChars = new System.Windows.Forms.ComboBox();
+            this.cbAtMostUnderNbrChars = new System.Windows.Forms.ComboBox();
             this.pnlDictionary.SuspendLayout();
             this.grpSizeFiltering.SuspendLayout();
             this.groupBoxWordFiltering.SuspendLayout();
@@ -566,12 +570,16 @@ namespace BruteForceHash.GUI
             // 
             // grpSizeFiltering
             // 
+            this.grpSizeFiltering.Controls.Add(this.cbAtMostUnderNbrChars);
+            this.grpSizeFiltering.Controls.Add(this.cbAtMostAboveNbrChars);
+            this.grpSizeFiltering.Controls.Add(this.cbAtMostUnderNbrWords);
+            this.grpSizeFiltering.Controls.Add(this.cbAtMostAboveNbrWords);
+            this.grpSizeFiltering.Controls.Add(this.lblAtMostUnder);
+            this.grpSizeFiltering.Controls.Add(this.lblAtMostAbove);
             this.grpSizeFiltering.Controls.Add(this.cbAtLeastUnderNbrChars);
             this.grpSizeFiltering.Controls.Add(this.cbAtLeastUnderNbrWords);
-            this.grpSizeFiltering.Controls.Add(this.lblAtLeastUnder2);
             this.grpSizeFiltering.Controls.Add(this.lblAtLeastUnder);
             this.grpSizeFiltering.Controls.Add(this.cbAtLeastAboveNbrChars);
-            this.grpSizeFiltering.Controls.Add(this.lblAtLeastAbove2);
             this.grpSizeFiltering.Controls.Add(this.cbAtLeastAboveNbrWords);
             this.grpSizeFiltering.Controls.Add(this.lblAtLeastAbove);
             this.grpSizeFiltering.Controls.Add(this.cbMinFours);
@@ -610,122 +618,108 @@ namespace BruteForceHash.GUI
             // cbAtLeastUnderNbrChars
             // 
             this.cbAtLeastUnderNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtLeastUnderNbrChars.DropDownWidth = 90;
             this.cbAtLeastUnderNbrChars.FormattingEnabled = true;
             this.cbAtLeastUnderNbrChars.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbAtLeastUnderNbrChars.Location = new System.Drawing.Point(240, 153);
+            "0 character",
+            "1 character",
+            "2 characters",
+            "3 characters",
+            "4 characters",
+            "5 characters",
+            "6 characters",
+            "7 characters",
+            "8 characters",
+            "9 characters",
+            "10 characters"});
+            this.cbAtLeastUnderNbrChars.Location = new System.Drawing.Point(305, 101);
             this.cbAtLeastUnderNbrChars.Name = "cbAtLeastUnderNbrChars";
-            this.cbAtLeastUnderNbrChars.Size = new System.Drawing.Size(38, 23);
+            this.cbAtLeastUnderNbrChars.Size = new System.Drawing.Size(45, 23);
             this.cbAtLeastUnderNbrChars.TabIndex = 92;
             // 
             // cbAtLeastUnderNbrWords
             // 
             this.cbAtLeastUnderNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtLeastUnderNbrWords.DropDownWidth = 70;
             this.cbAtLeastUnderNbrWords.FormattingEnabled = true;
             this.cbAtLeastUnderNbrWords.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbAtLeastUnderNbrWords.Location = new System.Drawing.Point(240, 127);
+            "0 word",
+            "1 word",
+            "2 words",
+            "3 words",
+            "4 words",
+            "5 words",
+            "6 words",
+            "7 words",
+            "8 words",
+            "9 words",
+            "10 words"});
+            this.cbAtLeastUnderNbrWords.Location = new System.Drawing.Point(237, 101);
             this.cbAtLeastUnderNbrWords.Name = "cbAtLeastUnderNbrWords";
-            this.cbAtLeastUnderNbrWords.Size = new System.Drawing.Size(38, 23);
+            this.cbAtLeastUnderNbrWords.Size = new System.Drawing.Size(45, 23);
             this.cbAtLeastUnderNbrWords.TabIndex = 87;
-            // 
-            // lblAtLeastUnder2
-            // 
-            this.lblAtLeastUnder2.AutoSize = true;
-            this.lblAtLeastUnder2.Location = new System.Drawing.Point(193, 156);
-            this.lblAtLeastUnder2.Name = "lblAtLeastUnder2";
-            this.lblAtLeastUnder2.Size = new System.Drawing.Size(154, 15);
-            this.lblAtLeastUnder2.TabIndex = 91;
-            this.lblAtLeastUnder2.Text = "under                  character(s)";
             // 
             // lblAtLeastUnder
             // 
             this.lblAtLeastUnder.AutoSize = true;
-            this.lblAtLeastUnder.Location = new System.Drawing.Point(193, 131);
+            this.lblAtLeastUnder.Location = new System.Drawing.Point(188, 104);
             this.lblAtLeastUnder.Name = "lblAtLeastUnder";
-            this.lblAtLeastUnder.Size = new System.Drawing.Size(134, 15);
+            this.lblAtLeastUnder.Size = new System.Drawing.Size(111, 15);
             this.lblAtLeastUnder.TabIndex = 90;
-            this.lblAtLeastUnder.Text = "At least                word(s)";
+            this.lblAtLeastUnder.Text = "At least                   ≤";
             // 
             // cbAtLeastAboveNbrChars
             // 
             this.cbAtLeastAboveNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtLeastAboveNbrChars.DropDownWidth = 90;
             this.cbAtLeastAboveNbrChars.FormattingEnabled = true;
             this.cbAtLeastAboveNbrChars.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbAtLeastAboveNbrChars.Location = new System.Drawing.Point(240, 101);
+            "0 character",
+            "1 character",
+            "2 characters",
+            "3 characters",
+            "4 characters",
+            "5 characters",
+            "6 characters",
+            "7 characters",
+            "8 characters",
+            "9 characters",
+            "10 characters"});
+            this.cbAtLeastAboveNbrChars.Location = new System.Drawing.Point(305, 75);
             this.cbAtLeastAboveNbrChars.Name = "cbAtLeastAboveNbrChars";
-            this.cbAtLeastAboveNbrChars.Size = new System.Drawing.Size(38, 23);
+            this.cbAtLeastAboveNbrChars.Size = new System.Drawing.Size(45, 23);
             this.cbAtLeastAboveNbrChars.TabIndex = 89;
-            // 
-            // lblAtLeastAbove2
-            // 
-            this.lblAtLeastAbove2.AutoSize = true;
-            this.lblAtLeastAbove2.Location = new System.Drawing.Point(194, 104);
-            this.lblAtLeastAbove2.Name = "lblAtLeastAbove2";
-            this.lblAtLeastAbove2.Size = new System.Drawing.Size(155, 15);
-            this.lblAtLeastAbove2.TabIndex = 87;
-            this.lblAtLeastAbove2.Text = "above                  character(s)";
             // 
             // cbAtLeastAboveNbrWords
             // 
             this.cbAtLeastAboveNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtLeastAboveNbrWords.DropDownWidth = 70;
             this.cbAtLeastAboveNbrWords.FormattingEnabled = true;
             this.cbAtLeastAboveNbrWords.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.cbAtLeastAboveNbrWords.Location = new System.Drawing.Point(240, 75);
+            "0 word",
+            "1 word",
+            "2 words",
+            "3 words",
+            "4 words",
+            "5 words",
+            "6 words",
+            "7 words",
+            "8 words",
+            "9 words",
+            "10 words"});
+            this.cbAtLeastAboveNbrWords.Location = new System.Drawing.Point(237, 75);
             this.cbAtLeastAboveNbrWords.Name = "cbAtLeastAboveNbrWords";
-            this.cbAtLeastAboveNbrWords.Size = new System.Drawing.Size(38, 23);
+            this.cbAtLeastAboveNbrWords.Size = new System.Drawing.Size(45, 23);
             this.cbAtLeastAboveNbrWords.TabIndex = 86;
             // 
             // lblAtLeastAbove
             // 
             this.lblAtLeastAbove.AutoSize = true;
-            this.lblAtLeastAbove.Location = new System.Drawing.Point(194, 78);
+            this.lblAtLeastAbove.Location = new System.Drawing.Point(188, 78);
             this.lblAtLeastAbove.Name = "lblAtLeastAbove";
-            this.lblAtLeastAbove.Size = new System.Drawing.Size(134, 15);
+            this.lblAtLeastAbove.Size = new System.Drawing.Size(111, 15);
             this.lblAtLeastAbove.TabIndex = 85;
-            this.lblAtLeastAbove.Text = "At least                word(s)";
+            this.lblAtLeastAbove.Text = "At least                   ≥";
             // 
             // cbMinFours
             // 
@@ -773,7 +767,7 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxFours.Location = new System.Drawing.Point(137, 154);
+            this.cbMaxFours.Location = new System.Drawing.Point(137, 153);
             this.cbMaxFours.Name = "cbMaxFours";
             this.cbMaxFours.Size = new System.Drawing.Size(38, 23);
             this.cbMaxFours.TabIndex = 82;
@@ -833,7 +827,7 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxThrees.Location = new System.Drawing.Point(137, 128);
+            this.cbMaxThrees.Location = new System.Drawing.Point(137, 127);
             this.cbMaxThrees.Name = "cbMaxThrees";
             this.cbMaxThrees.Size = new System.Drawing.Size(38, 23);
             this.cbMaxThrees.TabIndex = 78;
@@ -969,7 +963,7 @@ namespace BruteForceHash.GUI
             // lblMinWordLength
             // 
             this.lblMinWordLength.AutoSize = true;
-            this.lblMinWordLength.Location = new System.Drawing.Point(194, 50);
+            this.lblMinWordLength.Location = new System.Drawing.Point(188, 50);
             this.lblMinWordLength.Name = "lblMinWordLength";
             this.lblMinWordLength.Size = new System.Drawing.Size(106, 15);
             this.lblMinWordLength.TabIndex = 67;
@@ -1099,7 +1093,7 @@ namespace BruteForceHash.GUI
             // lblMinDelim
             // 
             this.lblMinDelim.AutoSize = true;
-            this.lblMinDelim.Location = new System.Drawing.Point(194, 24);
+            this.lblMinDelim.Location = new System.Drawing.Point(188, 24);
             this.lblMinDelim.Name = "lblMinDelim";
             this.lblMinDelim.Size = new System.Drawing.Size(87, 15);
             this.lblMinDelim.TabIndex = 59;
@@ -2918,6 +2912,112 @@ namespace BruteForceHash.GUI
             this.btnQuickLoad.Text = "Load";
             this.btnQuickLoad.UseVisualStyleBackColor = true;
             // 
+            // lblAtMostAbove
+            // 
+            this.lblAtMostAbove.AutoSize = true;
+            this.lblAtMostAbove.Location = new System.Drawing.Point(188, 130);
+            this.lblAtMostAbove.Name = "lblAtMostAbove";
+            this.lblAtMostAbove.Size = new System.Drawing.Size(111, 15);
+            this.lblAtMostAbove.TabIndex = 93;
+            this.lblAtMostAbove.Text = "At most                  ≥";
+            // 
+            // lblAtMostUnder
+            // 
+            this.lblAtMostUnder.AutoSize = true;
+            this.lblAtMostUnder.Location = new System.Drawing.Point(188, 157);
+            this.lblAtMostUnder.Name = "lblAtMostUnder";
+            this.lblAtMostUnder.Size = new System.Drawing.Size(111, 15);
+            this.lblAtMostUnder.TabIndex = 94;
+            this.lblAtMostUnder.Text = "At most                  ≤";
+            // 
+            // cbAtMostAboveNbrWords
+            // 
+            this.cbAtMostAboveNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtMostAboveNbrWords.DropDownWidth = 70;
+            this.cbAtMostAboveNbrWords.FormattingEnabled = true;
+            this.cbAtMostAboveNbrWords.Items.AddRange(new object[] {
+            "0 word",
+            "1 word",
+            "2 words",
+            "3 words",
+            "4 words",
+            "5 words",
+            "6 words",
+            "7 words",
+            "8 words",
+            "9 words",
+            "10 words"});
+            this.cbAtMostAboveNbrWords.Location = new System.Drawing.Point(237, 127);
+            this.cbAtMostAboveNbrWords.Name = "cbAtMostAboveNbrWords";
+            this.cbAtMostAboveNbrWords.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostAboveNbrWords.TabIndex = 95;
+            // 
+            // cbAtMostUnderNbrWords
+            // 
+            this.cbAtMostUnderNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtMostUnderNbrWords.DropDownWidth = 70;
+            this.cbAtMostUnderNbrWords.FormattingEnabled = true;
+            this.cbAtMostUnderNbrWords.Items.AddRange(new object[] {
+            "0 word",
+            "1 word",
+            "2 words",
+            "3 words",
+            "4 words",
+            "5 words",
+            "6 words",
+            "7 words",
+            "8 words",
+            "9 words",
+            "10 words"});
+            this.cbAtMostUnderNbrWords.Location = new System.Drawing.Point(237, 153);
+            this.cbAtMostUnderNbrWords.Name = "cbAtMostUnderNbrWords";
+            this.cbAtMostUnderNbrWords.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostUnderNbrWords.TabIndex = 96;
+            // 
+            // cbAtMostAboveNbrChars
+            // 
+            this.cbAtMostAboveNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtMostAboveNbrChars.DropDownWidth = 90;
+            this.cbAtMostAboveNbrChars.FormattingEnabled = true;
+            this.cbAtMostAboveNbrChars.Items.AddRange(new object[] {
+            "0 character",
+            "1 character",
+            "2 characters",
+            "3 characters",
+            "4 characters",
+            "5 characters",
+            "6 characters",
+            "7 characters",
+            "8 characters",
+            "9 characters",
+            "10 characters"});
+            this.cbAtMostAboveNbrChars.Location = new System.Drawing.Point(305, 127);
+            this.cbAtMostAboveNbrChars.Name = "cbAtMostAboveNbrChars";
+            this.cbAtMostAboveNbrChars.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostAboveNbrChars.TabIndex = 97;
+            // 
+            // cbAtMostUnderNbrChars
+            // 
+            this.cbAtMostUnderNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAtMostUnderNbrChars.DropDownWidth = 90;
+            this.cbAtMostUnderNbrChars.FormattingEnabled = true;
+            this.cbAtMostUnderNbrChars.Items.AddRange(new object[] {
+            "0 character",
+            "1 character",
+            "2 characters",
+            "3 characters",
+            "4 characters",
+            "5 characters",
+            "6 characters",
+            "7 characters",
+            "8 characters",
+            "9 characters",
+            "10 characters"});
+            this.cbAtMostUnderNbrChars.Location = new System.Drawing.Point(305, 153);
+            this.cbAtMostUnderNbrChars.Name = "cbAtMostUnderNbrChars";
+            this.cbAtMostUnderNbrChars.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostUnderNbrChars.TabIndex = 98;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -3158,10 +3258,8 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.ComboBox cbMaxThrees;
         private System.Windows.Forms.Label lblThrees;
         private System.Windows.Forms.ComboBox cbAtLeastAboveNbrChars;
-        private System.Windows.Forms.Label lblAtLeastAbove2;
         private System.Windows.Forms.ComboBox cbAtLeastAboveNbrWords;
         private System.Windows.Forms.Label lblAtLeastAbove;
-        private System.Windows.Forms.Label lblAtLeastUnder2;
         private System.Windows.Forms.Label lblAtLeastUnder;
         private System.Windows.Forms.ComboBox cbAtLeastUnderNbrChars;
         private System.Windows.Forms.ComboBox cbAtLeastUnderNbrWords;
@@ -3220,6 +3318,12 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Button btnCopyToDictExcludeFirst;
         private System.Windows.Forms.Button btnCopyToDictCustomLast;
         private System.Windows.Forms.Button btnCopyToDictExcludeLast;
+        private System.Windows.Forms.ComboBox cbAtMostAboveNbrWords;
+        private System.Windows.Forms.Label lblAtMostUnder;
+        private System.Windows.Forms.Label lblAtMostAbove;
+        private System.Windows.Forms.ComboBox cbAtMostUnderNbrWords;
+        private System.Windows.Forms.ComboBox cbAtMostAboveNbrChars;
+        private System.Windows.Forms.ComboBox cbAtMostUnderNbrChars;
     }
 }
 

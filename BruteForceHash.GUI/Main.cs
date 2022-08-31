@@ -133,6 +133,10 @@ namespace BruteForceHash.GUI
             cbAtLeastAboveNbrWords.SelectedIndex = 0;
             cbAtLeastUnderNbrChars.SelectedIndex = 0;
             cbAtLeastUnderNbrWords.SelectedIndex = 0;
+            cbAtMostAboveNbrChars.SelectedIndex = 0;
+            cbAtMostAboveNbrWords.SelectedIndex = 0;
+            cbAtMostUnderNbrChars.SelectedIndex = 0;
+            cbAtMostUnderNbrWords.SelectedIndex = 0;
             cbMaxConsecutiveOnes.SelectedIndex = 1;
             cbMinWordsLimit.SelectedIndex = 0;
             cbMaxConsecutiveConcat.SelectedIndex = 1;
@@ -372,10 +376,14 @@ namespace BruteForceHash.GUI
                                                     $"--min_threes {cbMinThrees.SelectedItem} " +
                                                     $"--max_fours {cbMaxFours.SelectedItem} " +
                                                     $"--min_fours {cbMinFours.SelectedItem} " +
-                                                    $"--at_least_above_chars {cbAtLeastAboveNbrChars.SelectedItem} " +
-                                                    $"--at_least_above_words {cbAtLeastAboveNbrWords.SelectedItem} " +
-                                                    $"--at_least_under_chars {cbAtLeastUnderNbrChars.SelectedItem} " +
-                                                    $"--at_least_under_words {cbAtLeastUnderNbrWords.SelectedItem} " +
+                                                    (cbAtLeastAboveNbrChars.SelectedIndex > 0 ? $"--at_least_gte_chars {cbAtLeastAboveNbrChars.SelectedIndex} " +
+                                                    $"--at_least_gte_words {cbAtLeastAboveNbrWords.SelectedIndex} " : string.Empty) +
+                                                    (cbAtLeastUnderNbrChars.SelectedIndex > 0 ? $"--at_least_lte_chars {cbAtLeastUnderNbrChars.SelectedIndex} " +
+                                                    $"--at_least_lte_words {cbAtLeastUnderNbrWords.SelectedItem} " : string.Empty) +
+                                                    (cbAtMostAboveNbrChars.SelectedIndex > 0 ? $"--at_most_gte_chars {cbAtMostAboveNbrChars.SelectedIndex} " +
+                                                    $"--at_most_gte_words {cbAtMostAboveNbrWords.SelectedIndex} " : string.Empty) +
+                                                    (cbAtMostUnderNbrChars.SelectedIndex > 0 ? $"--at_most_lte_chars {cbAtMostUnderNbrChars.SelectedIndex} " +
+                                                    $"--at_most_lte_words {cbAtMostUnderNbrWords.SelectedItem} " : string.Empty) +
                                                     $"--max_consecutive_ones {cbMaxConsecutiveOnes.SelectedItem} " +
                                                     $"{(chkDictionariesUse.Checked && chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
                                                     $"{(chkDictionariesUse.Checked && chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
@@ -608,10 +616,14 @@ namespace BruteForceHash.GUI
                 MinThrees = Convert.ToInt32(cbMinThrees.SelectedItem),
                 MaxFours = Convert.ToInt32(cbMaxFours.SelectedItem),
                 MinFours = Convert.ToInt32(cbMinFours.SelectedItem),
-                AtLeastNbrAboveCharacters = Convert.ToInt32(cbAtLeastAboveNbrChars.SelectedItem),
-                AtLeastNbrAboveWords = Convert.ToInt32(cbAtLeastAboveNbrWords.SelectedItem),
-                AtLeastNbrUnderCharacters = Convert.ToInt32(cbAtLeastUnderNbrChars.SelectedItem),
-                AtLeastNbrUnderWords = Convert.ToInt32(cbAtLeastUnderNbrWords.SelectedItem),
+                AtLeastNbrGteCharacters = cbAtLeastAboveNbrChars.SelectedIndex,
+                AtLeastNbrGteWords = cbAtLeastAboveNbrWords.SelectedIndex,
+                AtLeastNbrLteCharacters = cbAtLeastUnderNbrChars.SelectedIndex,
+                AtLeastNbrLteWords = cbAtLeastUnderNbrWords.SelectedIndex,
+                AtMostNbrGteCharacters = cbAtMostAboveNbrChars.SelectedIndex,
+                AtMostNbrGteWords = cbAtMostAboveNbrWords.SelectedIndex,
+                AtMostNbrLteCharacters = cbAtMostUnderNbrChars.SelectedIndex,
+                AtMostNbrLteWords = cbAtMostUnderNbrWords.SelectedIndex,
                 MaxConsecutiveOnes = Convert.ToInt32(cbMaxConsecutiveOnes.SelectedItem),
                 MinWordsLimit = Convert.ToInt32(cbMinWordsLimit.SelectedItem),
                 MaxConsecutiveConcatenation = Convert.ToInt32(cbMaxConsecutiveConcat.SelectedItem),
@@ -739,10 +751,14 @@ namespace BruteForceHash.GUI
             cbMinThrees.SelectedItem = hbtObject.MinThrees.ToString();
             cbMaxFours.SelectedItem = hbtObject.MaxFours.ToString();
             cbMinFours.SelectedItem = hbtObject.MinFours.ToString();
-            cbAtLeastAboveNbrChars.SelectedItem = hbtObject.AtLeastNbrAboveCharacters.ToString();
-            cbAtLeastAboveNbrWords.SelectedItem = hbtObject.AtLeastNbrAboveWords.ToString();
-            cbAtLeastUnderNbrChars.SelectedItem = hbtObject.AtLeastNbrUnderCharacters.ToString();
-            cbAtLeastUnderNbrWords.SelectedItem = hbtObject.AtLeastNbrUnderWords.ToString();
+            cbAtLeastAboveNbrChars.SelectedIndex = hbtObject.AtLeastNbrGteCharacters;
+            cbAtLeastAboveNbrWords.SelectedIndex = hbtObject.AtLeastNbrGteWords;
+            cbAtLeastUnderNbrChars.SelectedIndex = hbtObject.AtLeastNbrLteCharacters;
+            cbAtLeastUnderNbrWords.SelectedIndex = hbtObject.AtLeastNbrLteWords;
+            cbAtMostAboveNbrChars.SelectedIndex = hbtObject.AtMostNbrGteCharacters;
+            cbAtMostAboveNbrWords.SelectedIndex = hbtObject.AtMostNbrGteWords;
+            cbAtMostUnderNbrChars.SelectedIndex = hbtObject.AtMostNbrLteCharacters;
+            cbAtMostUnderNbrWords.SelectedIndex = hbtObject.AtMostNbrLteWords;
 
             //Advanced
             chkDictionaryAdvanced.Checked = hbtObject.DictionaryAdvanced;

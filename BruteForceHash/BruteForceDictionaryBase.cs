@@ -211,10 +211,14 @@ namespace BruteForceHash
             _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
 
             if (_options.AtLeastAboveChars > 0 && _options.AtLeastAboveWords > 0)
-                _logger.Log($"Size: At least {_options.AtLeastAboveWords} words above {_options.AtLeastAboveChars} characters");
+                _logger.Log($"Size: At least {_options.AtLeastAboveWords} word(s) greater than/equal to {_options.AtLeastAboveChars} character(s)");
             if (_options.AtLeastUnderChars > 0 && _options.AtLeastUnderWords > 0)
-                _logger.Log($"Size: At least {_options.AtLeastUnderWords} words under {_options.AtLeastUnderChars} characters");
-            
+                _logger.Log($"Size: At least {_options.AtLeastUnderWords} word(s) less than/equal to {_options.AtLeastUnderChars} character(s)");
+            if (_options.AtMostAboveChars > 0 && _options.AtMostAboveWords > 0)
+                _logger.Log($"Size: At most {_options.AtMostAboveWords} word(s) greater than/equal to {_options.AtMostAboveChars} character(s)");
+            if (_options.AtMostUnderChars > 0 && _options.AtMostUnderWords > 0)
+                _logger.Log($"Size: At most {_options.AtMostUnderWords} word(s) less than/equal to {_options.AtMostUnderChars} character(s)");
+
             if (!string.IsNullOrEmpty(_options.ExcludePatterns))
                 _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
             if (!string.IsNullOrEmpty(_options.IncludePatterns))
