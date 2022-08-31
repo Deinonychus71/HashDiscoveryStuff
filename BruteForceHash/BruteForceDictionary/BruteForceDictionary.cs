@@ -153,7 +153,7 @@ namespace BruteForceHash
                     continue;
                 if (_options.AtLeastAboveWords > 0 || _options.AtLeastUnderWords > 0 || _options.AtMostAboveWords > 0 || _options.AtMostUnderWords > 0)
                 {
-                    var dictNbr = new int[11];
+                    var dictNbr = new int[50];
                     for (var i = 0; i < dictNbr.Length; i++)
                     {
                         dictNbr[i] = combination.Split("{" + (i + 1) + "}").Length - 1;
@@ -162,7 +162,7 @@ namespace BruteForceHash
                         continue;
                     if (_options.AtLeastUnderWords > 0 && dictNbr.Where((p, i) => i <= _options.AtLeastUnderChars - 1).Sum() < _options.AtLeastUnderWords)
                         continue;
-                    if (_options.AtMostAboveWords > 0 && dictNbr.Where((p, i) => i >= _options.AtMostAboveChars - 1).Sum() >= _options.AtMostAboveWords)
+                    if (_options.AtMostAboveWords > 0 && dictNbr.Where((p, i) => i >= _options.AtMostAboveChars - 1).Sum() > _options.AtMostAboveWords)
                         continue;
                     if (_options.AtMostUnderWords > 0 && dictNbr.Where((p, i) => i <= _options.AtMostUnderChars - 1).Sum() > _options.AtMostUnderWords)
                         continue;
