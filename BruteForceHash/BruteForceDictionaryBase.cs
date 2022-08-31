@@ -392,7 +392,7 @@ namespace BruteForceHash
                 dictionaryHashRef.Add($"{{{i}}}", new HashSet<string>());
 
             FillDictionaries(dictionaryHashRef, dictionaries, dictionariesFilterFirst, skipDigits, skipSpecials, forceLowerCase, addTypos);
-            FillDictionaries(dictionaryHashRef, dictionariesCustom, null, customSkipDigits, customSkipSpecials, customForceLowerCase, customAddTypos);
+            FillDictionaries(dictionaryHashRef, dictionariesCustom, dictionariesFilterFirst, customSkipDigits, customSkipSpecials, customForceLowerCase, customAddTypos);
 
             //Exclude
             if (!string.IsNullOrEmpty(dictionariesExclude) && File.Exists(dictionariesExclude))
