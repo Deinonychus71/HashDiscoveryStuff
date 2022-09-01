@@ -28,11 +28,11 @@ namespace ParamLabelsParser
                 var allWords = GetAllWords(allHashes);
 
                 //Export Full Dictionary
-                ExportDictionary("[Smash]_PL_Full.dic", allWords);
+                ExportDictionary("[Smash][Ultimate][ParamLabels]Full.dic", allWords);
 
                 //Export Digits Only
                 var numericHashes = allWords.Where(p => _regOnlyDigits.IsMatch(p));
-                ExportDictionary("[Smash]_PL_Digits.dic", numericHashes);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Digits_Only.dic", numericHashes);
 
                 //Remove exclusively digits hashes
                 allHashes = allHashes.Where(p => !_regOnlyDigits.IsMatch(p));
@@ -49,11 +49,11 @@ namespace ParamLabelsParser
                 fightersList.AddRange(fighters4Hashes);
                 fightersList.AddRange(fighters5Hashes);
                 var fighterWords = GetAllWords(fightersList.Distinct(), true, 2);
-                ExportDictionary("[Smash]_PL_Fighters.dic", fighterWords);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Fighters.dic", fighterWords);
 
                 var stagesHashes = allHashes.Where(p => p.StartsWith("ui_stage_")).Select(p => p.Replace("ui_stage_", string.Empty));
                 var stageWords = GetAllWords(stagesHashes.Distinct(), true, 2);
-                ExportDictionary("[Smash]_PL_Stages.dic", stageWords);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Stages.dic", stageWords);
 
                 var itemsHashes = allHashes.Where(p => p.StartsWith("item_kind_") && !p.StartsWith("ui_item_assist_")).Select(p => p.Replace("item_kind_", string.Empty));
                 var items2Hashes = allHashes.Where(p => p.StartsWith("ui_item_")).Select(p => p.Replace("ui_item_", string.Empty));
@@ -68,7 +68,7 @@ namespace ParamLabelsParser
                 itemsList.AddRange(spiritsHashes);
                 itemsList.AddRange(spirits2Hashes);
                 var itemsWords = GetAllWords(itemsList.Distinct(), true, 2);
-                ExportDictionary("[Smash]_PL_Items+Assists+Spirits.dic", itemsWords);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Items_Assists_Spirits.dic", itemsWords);
 
                 var seriesHashes = allHashes.Where(p => p.StartsWith("ui_series_")).Select(p => p.Replace("ui_series_", string.Empty));
                 var series2Hashes = allHashes.Where(p => p.StartsWith("ui_profile_em_")).Select(p => p.Replace("ui_profile_em_", string.Empty));
@@ -77,17 +77,17 @@ namespace ParamLabelsParser
                 gamesList.AddRange(series2Hashes);
                 gamesList.AddRange(gameTitleHashes);
                 var gameWords = GetAllWords(gamesList.Distinct(), true, 2);
-                ExportDictionary("[Smash]_PL_Games.dic", gameWords);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Games.dic", gameWords);
 
                 var bgmHashes = allHashes.Where(p => p.StartsWith("ui_bgm_")).Select(p => p.Replace("ui_bgm_", string.Empty));
                 var bgmWordsAll = GetAllWords(bgmHashes.Distinct(), false, 2);
                 var bgmWordsNoDigits = GetAllWords(bgmHashes.Distinct(), true, 2);
-                ExportDictionary("[Smash]_PL_Bgms_Full.dic", bgmWordsAll);
-                ExportDictionary("[Smash]_PL_Bgms_Names.dic", bgmWordsNoDigits);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Bgms_Full.dic", bgmWordsAll);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Bgms_Names.dic", bgmWordsNoDigits);
 
                 var actorsHashes = allHashes.Where(p => p.StartsWith("sound_actor_")).Select(p => p.Replace("sound_actor_", string.Empty));
                 var actorsWords = GetAllWords(actorsHashes.Distinct(), false, 2);
-                ExportDictionary("[Smash]_PL_Actors.dic", actorsWords);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Actors.dic", actorsWords);
 
                 //Files & Directories
                 var filesHashes = allHashes.Where(p => p.Contains('.'));
@@ -98,24 +98,26 @@ namespace ParamLabelsParser
                 filesList.AddRange(filesWords);
                 filesList.AddRange(directoryHashes);
                 filesList.AddRange(GetAllWords(directoryHashes));
-                ExportDictionary("[Smash]_PL_File+Directories.dic", filesList);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]File_Directories.dic", filesList);
 
                 var allWordsPlusDouble = GetAllWords(allHashes, false, -1, -1, true);
                 //Get all english words
                 var outputEnglishWords = FilterWithDictionary(allWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
-                ExportDictionary("[Smash]_PL_ENG_1-4_Letters.dic", outputEnglishWords.Distinct().Where(p => p.Length < 5));
-                ExportDictionary("[Smash]_PL_ENG_5+_Letters.dic", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
-                ExportDictionary("[Smash]_PL_ENG_Common.dic", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Language]English.dic", outputEnglishWords.Distinct());
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]English_1-4_Letters.dic", outputEnglishWords.Distinct().Where(p => p.Length < 5));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]English_5+_Letters.dic", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]English_Common.dic", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
                 //Get all japanese words
                 var outputJapaneseWords = FilterWithDictionary(allWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
-                ExportDictionary("[Smash]_PL_JPN_1-4_Letters.dic", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
-                ExportDictionary("[Smash]_PL_JPN_5+_Letters.dic", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
-                ExportDictionary("[Smash]_PL_JPN_Common.dic", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Language]Japanese.dic", outputJapaneseWords.Distinct());
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Japanese_1-4_Letters.dic", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Japanese_5+_Letters.dic", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Japanese_Common.dic", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
                 //- Technical word / dev language
                 var techWords = allHashes.Where(p => p.Contains("_")).Select(p => p.Substring(p.LastIndexOf("_") + 1)).Where(p => p.All(char.IsLetter));
-                ExportDictionary("[Smash]_PL_LastWord_Common.dic", techWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]LastWord_Common.dic", techWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
                 //Other
                 var otherList = new List<string>();
@@ -133,8 +135,8 @@ namespace ParamLabelsParser
                     .Except(outputEnglishWords)
                     .Except(outputJapaneseWords)
                     .Except(techWords);
-                ExportDictionary("[Smash]_PL_Other.dic", exportOtherList);
-                ExportDictionary("[Smash]_PL_Other_No_Digits.dic", exportOtherList.Where(p => p.All(char.IsLetter)));
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Other.dic", exportOtherList);
+                ExportDictionary("[Smash][Ultimate][ParamLabels][Specialized]Other_No_Digits.dic", exportOtherList.Where(p => p.All(char.IsLetter)));
             });
         }
 

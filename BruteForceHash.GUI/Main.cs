@@ -235,7 +235,7 @@ namespace BruteForceHash.GUI
             tvDictLastWord.Nodes.Clear();
             if (Directory.Exists("Dictionaries"))
             {
-                var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
+                var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic", SearchOption.AllDirectories);
                 foreach (var dictionaryPath in allDictionaries)
                 {
                     var filename = Path.GetFileName(dictionaryPath);

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DictSplit": {
+      "commandName": "Project",
+      "commandLineArgs": "[Smash][Ultimate][ParamLabels]eng_5+_chars.dic"
+    }
+  }
+}
