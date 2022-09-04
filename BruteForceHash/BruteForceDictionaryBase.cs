@@ -97,6 +97,18 @@ namespace BruteForceHash
             _maxWordLength = Math.Min(options.MaxWordLength, _stringLength);
             _combinationPatterns = GenerateCombinations(_combinationSize);
 
+            //Filter combinations
+            var isFirstFilterFrom = !string.IsNullOrEmpty(options.DictionaryFilterFirstFrom);
+            var isFirstFilterTo = !string.IsNullOrEmpty(options.DictionaryFilterFirstTo);
+            if((isFirstFilterFrom || isFirstFilterTo) && (options.DictionariesCustomMinWordsHash > 0 || !string.IsNullOrEmpty(options.IncludeWord)))
+            {
+                _combinationPatterns = _combinationPatterns.Where(p => !(
+                    !p.StartsWith("{") &&
+                    (!isFirstFilterFrom || string.Compare(p, options.DictionaryFilterFirstFrom) < 0) ||
+                    (!isFirstFilterTo || string.Compare(p, options.DictionaryFilterFirstTo) > 0))
+                );
+            }
+
             //Load common dictionary
             _dictionaries = GetDictionaries(_options.Dictionaries, null, null, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos,
                 _options.DictionariesCustom, _options.DictionariesCustomSkipDigits, _options.DictionariesCustomSkipSpecials, _options.DictionariesCustomForceLowercase, _options.DictionariesCustomAddTypos,
