@@ -98,7 +98,7 @@ namespace BruteForceHash
             _combinationPatterns = GenerateCombinations(_combinationSize);
 
             //Load common dictionary
-            _dictionaries = GetDictionaries(_options.Dictionaries, null, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos,
+            _dictionaries = GetDictionaries(_options.Dictionaries, null, null, options.DictionariesSkipDigits, options.DictionariesSkipSpecials, options.DictionariesForceLowercase, options.DictionariesAddTypos,
                 _options.DictionariesCustom, _options.DictionariesCustomSkipDigits, _options.DictionariesCustomSkipSpecials, _options.DictionariesCustomForceLowercase, _options.DictionariesCustomAddTypos,
                 options.DictionariesReverseOrder, _options.DictionariesExclude, _options.DictionariesExcludePartialWords);
 
@@ -116,7 +116,8 @@ namespace BruteForceHash
             var dictionaryFirstWordReverseOrder = options.DictionariesReverseOrder;
             var dictionaryFirstWordExclude = _options.DictionariesExclude;
             var dictionaryFirstWordExcludePartialWords = _options.DictionariesExcludePartialWords;
-            if (options.DictionariesFirstWord == null && options.DictionariesFirstWordCustom == null && options.DictionariesFirstWordExclude == null && string.IsNullOrEmpty(options.DictionaryFilterFirst))
+            if (options.DictionariesFirstWord == null && options.DictionariesFirstWordCustom == null && options.DictionariesFirstWordExclude == null 
+                && string.IsNullOrEmpty(options.DictionaryFilterFirstFrom) && string.IsNullOrEmpty(options.DictionaryFilterFirstTo))
             {
                 _dictionariesFirst = _dictionaries;
             }
@@ -145,7 +146,7 @@ namespace BruteForceHash
                     dictionaryFirstWordExcludePartialWords = options.DictionariesFirstWordExcludePartialWords;
                 }
 
-                _dictionariesFirst = GetDictionaries(dictionaryFirstWord, options.DictionaryFilterFirst, dictionaryFirstWordSkipDigits, dictionaryFirstWordSkipSpecials, dictionaryFirstWordForceLowercase, dictionaryFirstWordAddTypos,
+                _dictionariesFirst = GetDictionaries(dictionaryFirstWord, options.DictionaryFilterFirstFrom, options.DictionaryFilterFirstTo, dictionaryFirstWordSkipDigits, dictionaryFirstWordSkipSpecials, dictionaryFirstWordForceLowercase, dictionaryFirstWordAddTypos,
                     dictionaryFirstWordCustom, dictionaryFirstWordCustomSkipDigits, dictionaryFirstWordCustomSkipSpecials, dictionaryFirstWordCustomForceLowercase, dictionaryFirstWordCustomAddTypos,
                     dictionaryFirstWordReverseOrder, dictionaryFirstWordExclude, dictionaryFirstWordExcludePartialWords);
             }
@@ -193,7 +194,7 @@ namespace BruteForceHash
                     dictionaryLastWordExcludePartialWords = options.DictionariesLastWordExcludePartialWords;
                 }
 
-                _dictionariesLast = GetDictionaries(dictionaryLastWord, null, dictionaryLastWordSkipDigits, dictionaryLastWordSkipSpecials, dictionaryLastWordForceLowercase, dictionaryLastWordAddTypos,
+                _dictionariesLast = GetDictionaries(dictionaryLastWord, null, null, dictionaryLastWordSkipDigits, dictionaryLastWordSkipSpecials, dictionaryLastWordForceLowercase, dictionaryLastWordAddTypos,
                     dictionaryLastWordCustom, dictionaryLastWordCustomSkipDigits, dictionaryLastWordCustomSkipSpecials, dictionaryLastWordCustomForceLowercase, dictionaryLastWordCustomAddTypos,
                     dictionaryLastWordReverseOrder, dictionaryLastWordExclude, dictionaryLastWordExcludePartialWords);
             }
@@ -292,8 +293,12 @@ namespace BruteForceHash
                 }
                 _logger.Log($"Dictionaries (1st word) words: {_dictionariesFirst.Values.Sum(p => p.Length)}");
             }
-            if (!string.IsNullOrEmpty(_options.DictionaryFilterFirst))
-                _logger.Log($"Dictionaries (1st word) filter: {_options.DictionaryFilterFirst}");
+            if (!string.IsNullOrEmpty(_options.DictionaryFilterFirstFrom) && !string.IsNullOrEmpty(_options.DictionaryFilterFirstTo))
+                _logger.Log($"Dictionaries (1st word) filter: Between '{_options.DictionaryFilterFirstFrom.Trim()}' and '{_options.DictionaryFilterFirstTo.Trim()}'");
+            else if (!string.IsNullOrEmpty(_options.DictionaryFilterFirstFrom))
+                _logger.Log($"Dictionaries (1st word) filter: From '{_options.DictionaryFilterFirstFrom.Trim()}'");
+            else if (!string.IsNullOrEmpty(_options.DictionaryFilterFirstTo))
+                _logger.Log($"Dictionaries (1st word) filter: Until '{_options.DictionaryFilterFirstTo.Trim()}'");
             if (_dictionaries != _dictionariesLast)
             {
                 if (_options.Verbose)
@@ -380,7 +385,7 @@ namespace BruteForceHash
         protected abstract IEnumerable<string> GenerateCombinations(int combinationSize);
 
         #region Generate Dictionaries
-        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirst, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos,
+        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirstFrom, string dictionariesFilterFirstTo, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos,
             string dictionariesCustom, bool customSkipDigits, bool customSkipSpecials, bool customForceLowerCase, bool customAddTypos, bool reverseOrder,
             string dictionariesExclude, bool excludePartialWords)
         {
@@ -391,8 +396,8 @@ namespace BruteForceHash
             for (int i = 1; i <= 100; i++)
                 dictionaryHashRef.Add($"{{{i}}}", new HashSet<string>());
 
-            FillDictionaries(dictionaryHashRef, dictionaries, dictionariesFilterFirst, skipDigits, skipSpecials, forceLowerCase, addTypos);
-            FillDictionaries(dictionaryHashRef, dictionariesCustom, dictionariesFilterFirst, customSkipDigits, customSkipSpecials, customForceLowerCase, customAddTypos);
+            FillDictionaries(dictionaryHashRef, dictionaries, dictionariesFilterFirstFrom, dictionariesFilterFirstTo, skipDigits, skipSpecials, forceLowerCase, addTypos);
+            FillDictionaries(dictionaryHashRef, dictionariesCustom, dictionariesFilterFirstFrom, dictionariesFilterFirstTo, customSkipDigits, customSkipSpecials, customForceLowerCase, customAddTypos);
 
             //Exclude
             if (!string.IsNullOrEmpty(dictionariesExclude) && File.Exists(dictionariesExclude))
@@ -427,7 +432,7 @@ namespace BruteForceHash
             return output;
         }
 
-        private void FillDictionaries(Dictionary<string, HashSet<string>> dictionaryHashRef, string dictionaries, string dictionariesFilterFirst, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos)
+        private void FillDictionaries(Dictionary<string, HashSet<string>> dictionaryHashRef, string dictionaries, string dictionariesFilterFirstFrom, string dictionariesFilterFirstTo, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos)
         {
             if (string.IsNullOrEmpty(dictionaries))
                 return;
@@ -438,11 +443,13 @@ namespace BruteForceHash
             else
                 allDictionaries = dictionaries.Split(";", StringSplitOptions.RemoveEmptyEntries);
 
-            var filterStartList = GetFilterStartList(dictionariesFilterFirst);
+            var isFirstFilterFrom = !string.IsNullOrEmpty(dictionariesFilterFirstFrom);
+            var isFirstFilterTo = !string.IsNullOrEmpty(dictionariesFilterFirstTo);
 
             foreach (var dictionaryPath in allDictionaries)
             {
                 var allWords = File.ReadAllLines(dictionaryPath).Distinct();
+
                 foreach (var word in allWords)
                 {
                     if (word.Length == 0)
@@ -457,7 +464,9 @@ namespace BruteForceHash
                     if (forceLowerCase)
                         wordToAdd = word.ToLower();
 
-                    if (filterStartList != null && !filterStartList.Contains(wordToAdd[0]))
+                    if (isFirstFilterFrom && string.Compare(word, dictionariesFilterFirstFrom) < 0)
+                        continue;
+                    if (isFirstFilterTo && string.Compare(word, dictionariesFilterFirstTo) > 0)
                         continue;
 
                     if (addTypos && Encoding.UTF8.GetByteCount(wordToAdd) > 3)
@@ -476,7 +485,9 @@ namespace BruteForceHash
                             var lengthStr = $"{{{byteCount}}}";
                             if (!dictionaryHashRef[lengthStr].Contains(newWord))
                             {
-                                if (filterStartList != null && !filterStartList.Contains(newWord[0]))
+                                if (isFirstFilterFrom && string.Compare(newWord, dictionariesFilterFirstFrom) < 0)
+                                    continue;
+                                if (isFirstFilterTo && string.Compare(newWord, dictionariesFilterFirstTo) > 0)
                                     continue;
 
                                 dictionaryHashRef[lengthStr].Add(newWord);
@@ -495,21 +506,6 @@ namespace BruteForceHash
                     }
                 }
             }
-        }
-
-        private IEnumerable<char> GetFilterStartList(string dictionariesFilterFirst)
-        {
-            if (string.IsNullOrEmpty(dictionariesFilterFirst))
-                return null;
-
-            var split = dictionariesFilterFirst.Split("-");
-            var dictionariesFilterFirstA = split.Length == 2 ? split[0] : string.Empty;
-            var dictionariesFilterFirstB = split.Length == 2 ? split[1] : string.Empty;
-
-            if (!string.IsNullOrEmpty(dictionariesFilterFirstA) && !string.IsNullOrEmpty(dictionariesFilterFirstB))
-                return Enumerable.Range((int)dictionariesFilterFirstA[0], (int)dictionariesFilterFirstB[0] - (int)dictionariesFilterFirstA[0] + 1).Select(i => (char)i);
-
-            return null;
         }
 
         private IEnumerable<string> GenerateLetterSwapTypos(string input, char char1, char char2)

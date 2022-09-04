@@ -14,6 +14,7 @@ namespace BruteForceHash.GUI
     public partial class Main : Form
     {
         private static string _lastCommand = string.Empty;
+        private bool _needOverrideConfirmation = false;
 
         public Main()
         {
@@ -107,7 +108,8 @@ namespace BruteForceHash.GUI
             numStartPosition.Value = 0;
             numEndPosition.Value = 0;
             txtHexValues.Text = string.Empty;
-            txtDictionaryFilterFirst.Text = string.Empty;
+            txtDictionaryFilterFirstFrom.Text = string.Empty;
+            txtDictionaryFilterFirstTo.Text = string.Empty;
 
             //Dictionary Advanced
             chkDictionaryAdvanced.Checked = false;
@@ -436,7 +438,8 @@ namespace BruteForceHash.GUI
                                                     (chkDictionariesLastWordExcludeWordsUse.Checked ? $"--dictionaries_last_word_exclude \"{dictionariesLastWordExclude}\" " : string.Empty) +
                                                     $"{(chkDictionariesLastWordExcludeWordsUse.Checked && chkDictLastWordExcludePartialWords.Checked ? "--dictionaries_last_word_exclude_partial" : "")} " +
                                                     $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
-                                                    $"--dictionary_filter_first \"{txtDictionaryFilterFirst.Text.Trim()}\" " +
+                                                    (!string.IsNullOrEmpty(txtDictionaryFilterFirstFrom.Text.Trim()) ? $"--dictionary_filter_first_from \"{txtDictionaryFilterFirstFrom.Text.Trim()}\" " : string.Empty) +
+                                                    (!string.IsNullOrEmpty(txtDictionaryFilterFirstTo.Text.Trim()) ? $"--dictionary_filter_first_to \"{txtDictionaryFilterFirstTo.Text.Trim()}\" " : string.Empty) +
                                                     $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
                                                     $"{(chkIncludeWordNotLast.Checked ? "--include_word_not_last" : "")} " +
                                                     $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
@@ -514,6 +517,18 @@ namespace BruteForceHash.GUI
 
         private void SaveHBT(string fileName)
         {
+            var hex = GetHex();
+            if(_needOverrideConfirmation)
+            {
+                var hexFolder = GetHexFolder(false);
+                var isValidHex = IsValidHex();
+                var fileNameLoad = $"{hexFolder}\\[{hex}].hbt";
+
+                if (File.Exists(fileNameLoad) && MessageBox.Show($"Do you want to override the current configuration for Hex 0x{hex:x}", "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+                _needOverrideConfirmation = false;
+            }
+
             var dictionaries = GetDictionary(tvDictMain);
             var dictionariesFirstWord = GetDictionary(tvDictFirstWord);
             var dictionariesLastWord = GetDictionary(tvDictLastWord);
@@ -597,7 +612,8 @@ namespace BruteForceHash.GUI
                 EndPosition = Convert.ToInt32(numEndPosition.Value),
                 HexValue = txtHexValues.Text.Trim(),
                 PathHashCat = txtHashCatPath.Text.Trim(),
-                DictionaryFilterFirst = txtDictionaryFilterFirst.Text.Trim(),
+                DictionaryFilterFirstFrom = txtDictionaryFilterFirstFrom.Text.Trim(),
+                DictionaryFilterFirstTo = txtDictionaryFilterFirstTo.Text.Trim(),
                 //Advanced
                 DictionaryAdvanced = chkDictionaryAdvanced.Checked,
                 ConcatenateFirstTwoWords = chkOnlyFirstTwoWordsConcat.Checked,
@@ -712,7 +728,8 @@ namespace BruteForceHash.GUI
             txtSuffix.Text = hbtObject.Suffix;
             txtValidChars.Text = hbtObject.ValidChars;
             txtStartingValidChars.Text = hbtObject.ValidStartingChars;
-            txtDictionaryFilterFirst.Text = hbtObject.DictionaryFilterFirst;
+            txtDictionaryFilterFirstFrom.Text = hbtObject.DictionaryFilterFirstFrom;
+            txtDictionaryFilterFirstTo.Text = hbtObject.DictionaryFilterFirstTo;
             numStartPosition.Value = hbtObject.StartPosition;
             numEndPosition.Value = hbtObject.EndPosition;
             txtHexValues.Text = hbtObject.HexValue;
@@ -774,6 +791,8 @@ namespace BruteForceHash.GUI
             txtDictCustWords.Text = string.Join("\r\n", hbtObject.CustomMainWords);
             txtDictFirstCustWords.Text = string.Join("\r\n", hbtObject.CustomFirstWords);
             txtDictLastCustWords.Text = string.Join("\r\n", hbtObject.CustomLastWords);
+
+            _needOverrideConfirmation = false;
         }
 
         public void OnCleanQuickAndCustom(object sender, EventArgs e)
@@ -832,7 +851,7 @@ namespace BruteForceHash.GUI
 
         private string GetDictionary(TriStateTreeView tv)
         {
-            var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic");
+            var allDictionaries = Directory.GetFiles("Dictionaries", "*.dic", SearchOption.AllDirectories);
             return GetDictionaryRec(tv.Nodes, string.Empty, allDictionaries);
         }
 
@@ -1113,6 +1132,8 @@ namespace BruteForceHash.GUI
 
             btnStartHashCat.Enabled = ShouldEnableHashCat();
             btnStart.Enabled = IsValidHex();
+
+            _needOverrideConfirmation = true;
         }
 
         private void chkDictionariesUse_CheckedChanged(object sender, EventArgs e)
@@ -1123,7 +1144,7 @@ namespace BruteForceHash.GUI
             chkDictAddTypos.Enabled = chkDictionariesUse.Checked;
             chkDictReverseOrder.Enabled = chkDictionariesUse.Checked;
             tvDictMain.Enabled = chkDictionariesUse.Checked;
-            txtDictionaryFilterFirst.Enabled = chkDictionariesUse.Checked;
+            txtDictionaryFilterFirstFrom.Enabled = chkDictionariesUse.Checked;
             btnDictUnselected.Enabled = chkDictionariesUse.Checked;
         }
 

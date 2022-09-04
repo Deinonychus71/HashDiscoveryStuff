@@ -136,8 +136,10 @@ namespace BruteForceHash
         [Option('D', "delete_generated_dictionary", Required = false, Default = false, HelpText = "Delete hashcat dictionary after it's done using it (for dictionary attack).")]
         public bool DeleteGeneratedDictionary { get; set; }
 
-        [Option('D', "dictionary_filter_first", Required = false, Default = "", HelpText = "Filter the first words of a dictionary.")]
-        public string DictionaryFilterFirst { get; set; }
+        [Option('D', "dictionary_filter_first_from", Required = false, Default = "", HelpText = "Filter the first words of a dictionary - left word (for dictionary attack).")]
+        public string DictionaryFilterFirstFrom { get; set; }
+        [Option('D', "dictionary_filter_first_to", Required = false, Default = "", HelpText = "Filter the first words of a dictionary - right word (for dictionary attack).")]
+        public string DictionaryFilterFirstTo { get; set; }
         [Option('D', "dictionaries_first_word", Required = false, Default = null, HelpText = "List all the dictionaries to use (separated by semi-colon) for first word (for dictionary attack).")]
         public string DictionariesFirstWord { get; set; }
         [Option('D', "dictionaries_first_word_custom", Required = false, Default = null, HelpText = "Path of a custom dictionary for this hash for first word (for custom dictionary attack).")]
