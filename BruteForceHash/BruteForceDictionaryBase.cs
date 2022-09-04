@@ -100,13 +100,14 @@ namespace BruteForceHash
             //Filter combinations
             var isFirstFilterFrom = !string.IsNullOrEmpty(options.DictionaryFilterFirstFrom);
             var isFirstFilterTo = !string.IsNullOrEmpty(options.DictionaryFilterFirstTo);
-            if((isFirstFilterFrom || isFirstFilterTo) && (options.DictionariesCustomMinWordsHash > 0 || !string.IsNullOrEmpty(options.IncludeWord)))
+            if ((isFirstFilterFrom || isFirstFilterTo) && (options.DictionariesCustomMinWordsHash > 0 || !string.IsNullOrEmpty(options.IncludeWord)))
             {
-                _combinationPatterns = _combinationPatterns.Where(p => !(
-                    !p.StartsWith("{") &&
-                    (!isFirstFilterFrom || string.Compare(p, options.DictionaryFilterFirstFrom) < 0) &&
-                    (!isFirstFilterTo || string.Compare(p, options.DictionaryFilterFirstTo) > 0))
-                );
+                _combinationPatterns = _combinationPatterns.Where(p =>
+                    p.StartsWith("{") || (
+                        (!isFirstFilterFrom || string.Compare(p, options.DictionaryFilterFirstFrom) > 0) &&
+                        (!isFirstFilterTo || string.Compare(p, options.DictionaryFilterFirstTo) < 0)
+                    )
+                ); ;
             }
 
             //Load common dictionary
