@@ -104,7 +104,7 @@ namespace BruteForceHash
             {
                 _combinationPatterns = _combinationPatterns.Where(p => !(
                     !p.StartsWith("{") &&
-                    (!isFirstFilterFrom || string.Compare(p, options.DictionaryFilterFirstFrom) < 0) ||
+                    (!isFirstFilterFrom || string.Compare(p, options.DictionaryFilterFirstFrom) < 0) &&
                     (!isFirstFilterTo || string.Compare(p, options.DictionaryFilterFirstTo) > 0))
                 );
             }
