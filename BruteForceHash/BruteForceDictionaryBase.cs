@@ -1,6 +1,7 @@
 ﻿using BruteForceHash.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,15 +15,15 @@ namespace BruteForceHash
     {
         protected readonly Logger _logger;
         protected readonly IEnumerable<string> _combinationPatterns;
-        protected readonly Dictionary<string, byte[][]> _dictionaries;
-        protected readonly Dictionary<string, byte[][]> _dictionariesFirst;
-        protected readonly Dictionary<string, byte[][]> _dictionariesLast;
+        protected readonly Dictionary<byte, byte[][]> _dictionaries;
+        protected readonly Dictionary<byte, byte[][]> _dictionariesFirst;
+        protected readonly Dictionary<byte, byte[][]> _dictionariesLast;
         protected readonly Options _options;
+        private readonly byte _nullByte = 0x00;
         protected readonly uint _hexValue;
         protected readonly int _combinationSize;
         protected readonly int _stringLength;
         protected readonly string _delimiter;
-        protected readonly byte _delimiterByte;
         protected readonly int _delimiterLength;
         protected readonly int _minWordLength;
         protected readonly int _maxWordLength;
@@ -57,13 +58,11 @@ namespace BruteForceHash
             if (string.IsNullOrEmpty(options.Delimiter))
             {
                 _delimiter = "|";
-                _delimiterByte = Encoding.UTF8.GetBytes("|")[0];
                 _delimiterLength = 0;
             }
             else
             {
                 _delimiter = options.Delimiter;
-                _delimiterByte = Encoding.UTF8.GetBytes(options.Delimiter)[0];
                 _delimiterLength = Encoding.UTF8.GetByteCount(_delimiter);
             }
 
@@ -129,7 +128,7 @@ namespace BruteForceHash
             var dictionaryFirstWordReverseOrder = options.DictionariesReverseOrder;
             var dictionaryFirstWordExclude = _options.DictionariesExclude;
             var dictionaryFirstWordExcludePartialWords = _options.DictionariesExcludePartialWords;
-            if (options.DictionariesFirstWord == null && options.DictionariesFirstWordCustom == null && options.DictionariesFirstWordExclude == null 
+            if (options.DictionariesFirstWord == null && options.DictionariesFirstWordCustom == null && options.DictionariesFirstWordExclude == null
                 && string.IsNullOrEmpty(options.DictionaryFilterFirstFrom) && string.IsNullOrEmpty(options.DictionaryFilterFirstTo))
             {
                 _dictionariesFirst = _dictionaries;
@@ -342,9 +341,9 @@ namespace BruteForceHash
 
             if (_options.Verbose)
             {
-                for (int i = 1; i <= _combinationSize; i++)
+                for (byte i = 1; i <= _combinationSize; i++)
                 {
-                    _logger.Log($"{i}-letter words: {_dictionaries[$"{{{i}}}"].Length}", false);
+                    _logger.Log($"{i}-letter words: {_dictionaries[i].Length}", false);
                 }
             }
             _logger.Log($"Search on: {_combinationSize} characters");
@@ -370,14 +369,17 @@ namespace BruteForceHash
                     var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix, true);
                     if (_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
-                    RunDictionaries(strBuilder, combinationPattern, true, _cancellationTokenSource.Token);
+
+                    var compiledCombination = CompileCombinations(combinationPattern);
+                    RunDictionaries(strBuilder, compiledCombination, true, 0, _cancellationTokenSource.Token);
+
                 });
                 tasks.Add(task);
             }
 
             WaitForDictionariesToRun(tasks.ToArray(), _cancellationTokenSource.Token);
 
-            //_cancellationTokenSource.Dispose();
+            //_cancellationTokenSource.Dispose(); //For Hashcat
 
             _logger.Log("-----------------------------------------");
             if (_foundResult > 0)
@@ -394,20 +396,91 @@ namespace BruteForceHash
         {
             Task.WaitAll(tasks, cancellationToken);
         }
-        protected abstract void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord, CancellationToken cancellationToken);
+
+        protected virtual void TestCandidate(ByteString candidate)
+        {
+            if (candidate.CRC32Check())
+            {
+                _logger.LogResult(candidate.ToString());
+                _foundResult++;
+            }
+        }
+
         protected abstract IEnumerable<string> GenerateCombinations(int combinationSize);
 
+        protected abstract byte[] CompileCombinations(string combinationPattern);
+
+        #region Run Attack
+        protected void RunDictionaries(ByteString candidate, byte[] combinationPattern, bool firstWord, int combinationCursor, CancellationToken cancellationToken)
+        {
+            //For Hashcat, disabled
+            //if (cancellationToken.IsCancellationRequested)
+            //    return;
+
+            bool lastWord;
+            int preWordSize = 0;
+            byte wordSize;
+            byte[][] words;
+
+            if (combinationPattern[combinationCursor] != 0)
+            {
+                preWordSize = Array.IndexOf(combinationPattern, _nullByte, combinationCursor) - combinationCursor;
+                if (preWordSize > 0)
+                {
+                    candidate.Append(combinationPattern, combinationCursor, preWordSize);
+                    combinationCursor += preWordSize;
+                }
+                else
+                {
+                    candidate.Replace(combinationPattern, combinationCursor, combinationPattern.Length - combinationCursor);
+                    TestCandidate(candidate);
+                    return;
+                }
+            }
+
+            wordSize = combinationPattern[combinationCursor + 1];
+            combinationCursor += 2;
+            lastWord = combinationCursor == combinationPattern.Length;
+
+            if (lastWord)
+            {
+                words = _dictionariesLast[wordSize];
+                foreach (var word in words)
+                {
+                    candidate.Replace(word);
+                    TestCandidate(candidate);
+                }
+            }
+            else
+            {
+                if (firstWord)
+                    words = _dictionariesFirst[wordSize];
+                else
+                    words = _dictionaries[wordSize];
+
+                foreach (var word in words)
+                {
+                    candidate.Append(word);
+                    RunDictionaries(candidate, combinationPattern, false, combinationCursor, cancellationToken);
+                    candidate.Cursor -= wordSize;
+                }
+            }
+
+            candidate.Cursor -= preWordSize;
+        }
+        #endregion
+
         #region Generate Dictionaries
-        private Dictionary<string, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirstFrom, string dictionariesFilterFirstTo, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos,
+        private Dictionary<byte, byte[][]> GetDictionaries(string dictionaries, string dictionariesFilterFirstFrom, string dictionariesFilterFirstTo, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos,
             string dictionariesCustom, bool customSkipDigits, bool customSkipSpecials, bool customForceLowerCase, bool customAddTypos, bool reverseOrder,
             string dictionariesExclude, bool excludePartialWords)
         {
-            Dictionary<string, HashSet<string>> dictionaryHashRef = new Dictionary<string, HashSet<string>>();
-            var output = new Dictionary<string, byte[][]>();
+            Dictionary<byte, HashSet<string>> dictionaryHashRef = new Dictionary<byte, HashSet<string>>();
+            var output = new Dictionary<byte, byte[][]>();
 
             //Fill if no data present
-            for (int i = 1; i <= 100; i++)
-                dictionaryHashRef.Add($"{{{i}}}", new HashSet<string>());
+            for (byte i = 1; i <= 100; i++)
+                dictionaryHashRef.Add(i, new HashSet<string>());
 
             FillDictionaries(dictionaryHashRef, dictionaries, dictionariesFilterFirstFrom, dictionariesFilterFirstTo, skipDigits, skipSpecials, forceLowerCase, addTypos);
             FillDictionaries(dictionaryHashRef, dictionariesCustom, dictionariesFilterFirstFrom, dictionariesFilterFirstTo, customSkipDigits, customSkipSpecials, customForceLowerCase, customAddTypos);
@@ -445,7 +518,7 @@ namespace BruteForceHash
             return output;
         }
 
-        private void FillDictionaries(Dictionary<string, HashSet<string>> dictionaryHashRef, string dictionaries, string dictionariesFilterFirstFrom, string dictionariesFilterFirstTo, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos)
+        private void FillDictionaries(Dictionary<byte, HashSet<string>> dictionaryHashRef, string dictionaries, string dictionariesFilterFirstFrom, string dictionariesFilterFirstTo, bool skipDigits, bool skipSpecials, bool forceLowerCase, bool addTypos)
         {
             if (string.IsNullOrEmpty(dictionaries))
                 return;
@@ -491,31 +564,29 @@ namespace BruteForceHash
                             allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, 'l', 'r'));
                         foreach (var newWord in allNewWords)
                         {
-                            var byteCount = Encoding.UTF8.GetByteCount(newWord);
+                            var byteCount = (byte)Encoding.UTF8.GetByteCount(newWord);
                             if (byteCount < _minWordLength || byteCount > _maxWordLength)
                                 continue;
 
-                            var lengthStr = $"{{{byteCount}}}";
-                            if (!dictionaryHashRef[lengthStr].Contains(newWord))
+                            if (!dictionaryHashRef[byteCount].Contains(newWord))
                             {
                                 if (isFirstFilterFrom && string.Compare(newWord, dictionariesFilterFirstFrom) < 0)
                                     continue;
                                 if (isFirstFilterTo && string.Compare(newWord, dictionariesFilterFirstTo) > 0)
                                     continue;
 
-                                dictionaryHashRef[lengthStr].Add(newWord);
+                                dictionaryHashRef[byteCount].Add(newWord);
                             }
                         }
                     }
                     else
                     {
-                        var byteCount = Encoding.UTF8.GetByteCount(wordToAdd);
+                        var byteCount = (byte)Encoding.UTF8.GetByteCount(wordToAdd);
                         if (byteCount < _minWordLength || byteCount > _maxWordLength)
                             continue;
 
-                        var lengthStr = $"{{{byteCount}}}";
-                        if (!dictionaryHashRef[lengthStr].Contains(wordToAdd))
-                            dictionaryHashRef[lengthStr].Add(wordToAdd);
+                        if (!dictionaryHashRef[byteCount].Contains(wordToAdd))
+                            dictionaryHashRef[byteCount].Add(wordToAdd);
                     }
                 }
             }

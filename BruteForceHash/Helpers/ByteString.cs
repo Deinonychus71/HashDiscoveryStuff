@@ -1,4 +1,5 @@
 ﻿using Force.Crc32;
+using System;
 using System.Text;
 
 namespace BruteForceHash.Helpers
@@ -72,6 +73,12 @@ namespace BruteForceHash.Helpers
             Cursor += value.Length;
         }
 
+        public void Append(byte[] srcArray, int srcPosition, int length)
+        {
+            Buffer.BlockCopy(srcArray, srcPosition, _value, Cursor, length);
+            Cursor += length;
+        }
+
         public void Append(byte[] value)
         {
             value.CopyTo(_value, Cursor);
@@ -110,6 +117,11 @@ namespace BruteForceHash.Helpers
         public void Replace(byte[] bytes, int position)
         {
             bytes.CopyTo(_value, position);
+        }
+
+        public void Replace(byte[] srcArray, int srcPosition, int length)
+        {
+            Buffer.BlockCopy(srcArray, srcPosition, _value, Cursor, length);
         }
 
         public void Replace(byte value)

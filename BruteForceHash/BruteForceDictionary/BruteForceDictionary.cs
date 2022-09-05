@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace BruteForceHash
 {
@@ -16,79 +15,29 @@ namespace BruteForceHash
         {
         }
 
-        #region Run Attack
-        protected override void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord, CancellationToken cancellationToken)
+        #region Compile Combinations
+        protected override byte[] CompileCombinations(string combinationPattern)
         {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
-            string wordSize;
-            bool lastWord = false;
-
-            if (!combinationPattern.Contains(_delimiter))
+            var bytes = new List<byte>();
+            var index = 0;
+            while (index < combinationPattern.Length)
             {
-                wordSize = combinationPattern;
-                lastWord = true;
-            }
-            else
-            {
-                wordSize = combinationPattern.Substring(0, combinationPattern.IndexOf(_delimiter));
-                if (!wordSize.StartsWith("{"))
+                var chara = combinationPattern[index];
+                if (chara == '{')
                 {
-                    candidate.Append(wordSize);
-                    if (_delimiterLength > 0)
-                        candidate.Append(_delimiterByte);
-                    combinationPattern = combinationPattern[(wordSize.Length + 1)..];
-                    RunDictionaries(candidate, combinationPattern, false, cancellationToken);
-                    candidate.Cursor -= Encoding.UTF8.GetByteCount(wordSize) + _delimiterLength;
-                    return;
+                    index++;
+                    bytes.Add(0);
+                    var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
+                    bytes.Add(Convert.ToByte(valueStr));
+                    index += valueStr.Length + 1;
                 }
-                combinationPattern = combinationPattern[(combinationPattern.IndexOf(_delimiter) + 1)..];
-            }
-
-            if (lastWord && !wordSize.StartsWith("{"))
-            {
-                candidate.Replace(combinationPattern);
-                TestCandidate(candidate);
-            }
-            else
-            {
-                byte[][] words;
-                if (lastWord)
-                    words = _dictionariesLast[wordSize];
-                else if (firstWord)
-                    words = _dictionariesFirst[wordSize];
                 else
-                    words = _dictionaries[wordSize];
-                foreach (var word in words)
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                        return;
-
-                    if (lastWord)
-                    {
-                        candidate.Replace(word);
-                        TestCandidate(candidate);
-                    }
-                    else
-                    {
-                        candidate.Append(word);
-                        if (_delimiterLength > 0)
-                            candidate.Append(_delimiterByte);
-                        RunDictionaries(candidate, combinationPattern, false, cancellationToken);
-                        candidate.Cursor -= word.Length + _delimiterLength;
-                    }
+                    index++;
+                    bytes.Add(Encoding.UTF8.GetBytes(new char[] { chara })[0]);
                 }
             }
-        }
-
-        protected virtual void TestCandidate(ByteString candidate)
-        {
-            if (candidate.CRC32Check())
-            {
-                _logger.LogResult(candidate.ToString());
-                _foundResult++;
-            }
+            return bytes.ToArray();
         }
         #endregion
 

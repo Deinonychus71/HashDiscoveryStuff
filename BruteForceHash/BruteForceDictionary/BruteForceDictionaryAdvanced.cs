@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace BruteForceHash
 {
@@ -16,97 +15,33 @@ namespace BruteForceHash
         {
         }
 
-        #region Run Attack
-        protected override void RunDictionaries(ByteString candidate, string combinationPattern, bool firstWord, CancellationToken cancellationToken)
+        #region Compile Combinations
+        protected override byte[] CompileCombinations(string combinationPattern)
         {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
-            string currentWord;
-            bool lastWord;
-            int nextDelimiter;
-            bool appendDelimiterByte;
-
-            int nextActualDel = combinationPattern.IndexOf(_delimiter);
-            int nextFakeDel = combinationPattern.IndexOf("|");
-            if (nextActualDel == -1)
-                nextDelimiter = nextFakeDel;
-            else
+            var bytes = new List<byte>();
+            var index = 0;
+            while (index < combinationPattern.Length)
             {
-
-                if (nextFakeDel == -1)
-                    nextDelimiter = nextActualDel;
-                else
-                    nextDelimiter = Math.Min(nextActualDel, nextFakeDel);
-            }
-
-            appendDelimiterByte = nextActualDel == nextDelimiter;
-            lastWord = nextDelimiter == -1;
-
-            if (lastWord)
-            {
-                currentWord = combinationPattern;
-            }
-
-            else
-            {
-                currentWord = combinationPattern.Substring(0, nextDelimiter);
-                if (!currentWord.StartsWith("{"))
+                var chara = combinationPattern[index];
+                if (chara == '{')
                 {
-                    candidate.Append(currentWord);
-                    if (_delimiterLength > 0 && appendDelimiterByte)
-                        candidate.Append(_delimiterByte);
-                    combinationPattern = combinationPattern[(currentWord.Length + 1)..];
-                    RunDictionaries(candidate, combinationPattern, false, cancellationToken);
-                    candidate.Cursor -= Encoding.UTF8.GetByteCount(currentWord) + (appendDelimiterByte ? _delimiterLength : 0);
-                    return;
+                    index++;
+                    bytes.Add(0);
+                    var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
+                    bytes.Add(Convert.ToByte(valueStr));
+                    index += valueStr.Length + 1;
                 }
-                combinationPattern = combinationPattern[(nextDelimiter + 1)..];
-            }
-
-            if (lastWord && !currentWord.StartsWith("{"))
-            {
-                candidate.Replace(combinationPattern);
-                TestCandidate(candidate);
-            }
-            else
-            {
-                byte[][] words;
-                if (lastWord)
-                    words = _dictionariesLast[currentWord];
-                else if (firstWord)
-                    words = _dictionariesFirst[currentWord];
-                else
-                    words = _dictionaries[currentWord];
-                foreach (var word in words)
+                else if (chara == '|')
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                        return;
-
-                    if (lastWord)
-                    {
-                        candidate.Replace(word);
-                        TestCandidate(candidate);
-                    }
-                    else
-                    {
-                        candidate.Append(word);
-                        if (_delimiterLength > 0 && appendDelimiterByte)
-                            candidate.Append(_delimiterByte);
-                        RunDictionaries(candidate, combinationPattern, false, cancellationToken);
-                        candidate.Cursor -= word.Length + (appendDelimiterByte ? _delimiterLength : 0);
-                    }
+                    index++;
+                }
+                else
+                {
+                    index++;
+                    bytes.Add(Encoding.UTF8.GetBytes(new char[] { chara })[0]);
                 }
             }
-        }
-
-        protected virtual void TestCandidate(ByteString candidate)
-        {
-            if (candidate.CRC32Check())
-            {
-                _logger.LogResult(candidate.ToString());
-                _foundResult++;
-            }
+            return bytes.ToArray();
         }
         #endregion
 
