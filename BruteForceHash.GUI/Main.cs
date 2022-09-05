@@ -559,7 +559,7 @@ namespace BruteForceHash.GUI
                 DictionariesCustomWordsMinimumInHash = Convert.ToInt32(cbDictionariesCustomWordsMinimumInHash.SelectedItem),
                 DictionariesExcludeWordsUse = chkDictionariesExcludeWordsUse.Checked,
                 DictionariesExcludePartialWords = chkDictExcludePartialWords.Checked,
-                DictionariesExcludeWords = txtDictExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
+                DictionariesExcludeWords = txtDictExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 UseDictionaryFirstWord = chkUseDictFirst.Checked,
                 DictionariesFirstWord = dictionariesFirstWord,
                 DictionariesFirstWordSkipDigits = chkDictFirstSkipDigits.Checked,
@@ -574,7 +574,7 @@ namespace BruteForceHash.GUI
                 DictionariesFirstWordCustomWordsAddTypos = chkDictFirstWordCustomWordsAddTypos.Checked,
                 DictionariesFirstWordExcludeWordsUse = chkDictionariesFirstWordExcludeWordsUse.Checked,
                 DictionariesFirstWordExcludePartialWords = chkDictFirstWordExcludePartialWords.Checked,
-                DictionariesFirstWordExcludeWords = txtDictFirstWordExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
+                DictionariesFirstWordExcludeWords = txtDictFirstWordExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 UseDictionaryLastWord = chkUseDictLast.Checked,
                 DictionariesLastWord = dictionariesLastWord,
                 DictionariesLastWordSkipDigits = chkDictLastSkipDigits.Checked,
@@ -589,7 +589,7 @@ namespace BruteForceHash.GUI
                 DictionariesLastWordCustomWordsAddTypos = chkDictLastWordCustomWordsAddTypos.Checked,
                 DictionariesLastWordExcludeWordsUse = chkDictionariesLastWordExcludeWordsUse.Checked,
                 DictionariesLastWordExcludePartialWords = chkDictLastWordExcludePartialWords.Checked,
-                DictionariesLastWordExcludeWords = txtDictLastWordExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
+                DictionariesLastWordExcludeWords = txtDictLastWordExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 TyposEnableDoubleLetter = chkTyposDoubleLetter.Checked,
                 TyposEnableExtraLetter = chkTyposExtraLetter.Checked,
                 TyposEnableLetterSwap = chkTyposLetterSwap.Checked,
@@ -644,9 +644,9 @@ namespace BruteForceHash.GUI
                 MinWordsLimit = Convert.ToInt32(cbMinWordsLimit.SelectedItem),
                 MaxConsecutiveConcatenation = Convert.ToInt32(cbMaxConsecutiveConcat.SelectedItem),
                 MinConsecutiveConcatenation = Convert.ToInt32(cbMinConsecutiveConcat.SelectedItem),
-                CustomMainWords = txtDictCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
-                CustomFirstWords = txtDictFirstCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList(),
-                CustomLastWords = txtDictLastCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList()
+                CustomMainWords = txtDictCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
+                CustomFirstWords = txtDictFirstCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
+                CustomLastWords = txtDictLastCustWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList()
             };
             File.WriteAllText(fileName, JsonConvert.SerializeObject(hbtObject));
         }
