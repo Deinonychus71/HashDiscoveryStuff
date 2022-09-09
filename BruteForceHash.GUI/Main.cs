@@ -414,7 +414,7 @@ namespace BruteForceHash.GUI
                                                     $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipDigits.Checked ? "--dictionaries_last_custom_skip_digits" : "")} " +
                                                     $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipSpecials.Checked ? "--dictionaries_last_custom_skip_specials" : "")} " +
                                                     $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsForceLowercase.Checked ? "--dictionaries_last_custom_force_lowercase" : "")} " +
-                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsAddTypos.Checked ? "--dictionaries_last_add_custom_typos" : "")} " +
+                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsAddTypos.Checked ? "--dictionaries_last_custom_add_typos" : "")} " +
                                                     $"{(chkTyposLetterSwap.Checked ? "--typos_enable_letter_swap" : "")} " +
                                                     $"{(chkTyposSkipLetter.Checked ? "--typos_enable_skip_letter" : "")} " +
                                                     $"{(chkTyposDoubleLetter.Checked ? "--typos_enable_double_letter" : "")} " +
