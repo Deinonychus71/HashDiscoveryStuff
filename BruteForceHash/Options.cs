@@ -194,10 +194,12 @@ namespace BruteForceHash
         [Option('D', "dictionaries_last_custom_add_typos", Required = false, Default = false, HelpText = "Add all sorts of typos to the dictionary (for custom dictionary attack).")]
         public bool DictionariesLastCustomAddTypos { get; set; }
 
-        [Option('T', "typos_enable_letter_swap", Required = false, Default = false, HelpText = "Typos - Enable l-r swapping. (for dictionary attack).")]
-        public bool TyposEnableLetterSwap { get; set; }
+        [Option('T', "typos_enable_letter_swap", Required = false, Default = "", HelpText = "Typos - Enable letter swap, formatted like x-y,a-b. (for dictionary attack).")]
+        public string TyposEnableLetterSwap { get; set; }
         [Option('T', "typos_enable_skip_letter", Required = false, Default = false, HelpText = "Typos - Enable letter skipping. (for dictionary attack).")]
         public bool TyposEnableSkipLetter { get; set; }
+        [Option('T', "typos_enable_skip_double_letter", Required = false, Default = false, HelpText = "Typos - Enable letter doubling. (for dictionary attack).")]
+        public bool TyposEnableSkipDoubleLetter { get; set; }
         [Option('T', "typos_enable_double_letter", Required = false, Default = false, HelpText = "Typos - Enable letter doubling. (for dictionary attack).")]
         public bool TyposEnableDoubleLetter { get; set; }
         [Option('T', "typos_enable_extra_letter", Required = false, Default = false, HelpText = "Typos - Enable extra letter. (for dictionary attack).")]

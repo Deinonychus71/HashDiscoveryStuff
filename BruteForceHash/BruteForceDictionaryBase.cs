@@ -532,6 +532,17 @@ namespace BruteForceHash
             var isFirstFilterFrom = !string.IsNullOrEmpty(dictionariesFilterFirstFrom);
             var isFirstFilterTo = !string.IsNullOrEmpty(dictionariesFilterFirstTo);
 
+            List<Tuple<char, char>> letterSwapPatterns = new List<Tuple<char, char>>();
+            if (!string.IsNullOrEmpty(_options.TyposEnableLetterSwap))
+            {
+                foreach (var pattern in _options.TyposEnableLetterSwap.Split(",", StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var split = pattern.Trim().Split("-", StringSplitOptions.RemoveEmptyEntries);
+                    if(split.Length == 2 && split[0].Trim().Length > 0 && split[1].Trim().Length > 0)
+                        letterSwapPatterns.Add(new Tuple<char, char>(split[0].Trim()[0], split[1].Trim()[0]));
+                }
+            }
+
             foreach (var dictionaryPath in allDictionaries)
             {
                 var allWords = File.ReadAllLines(dictionaryPath).Distinct();
@@ -560,8 +571,13 @@ namespace BruteForceHash
                         var allNewWords = new List<string>();
                         allNewWords.Add(wordToAdd);
                         allNewWords.AddRange(GenerateTypos(wordToAdd));
-                        if (_options.TyposEnableLetterSwap)
-                            allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, 'l', 'r'));
+                        if (letterSwapPatterns.Count > 0)
+                        {
+                            foreach (var letterSwapPattern in letterSwapPatterns)
+                            {
+                                allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, letterSwapPattern.Item1, letterSwapPattern.Item2));
+                            }
+                        }
                         foreach (var newWord in allNewWords)
                         {
                             var byteCount = (byte)Encoding.UTF8.GetByteCount(newWord);
@@ -677,6 +693,16 @@ namespace BruteForceHash
             return nearKeys;
         }
 
+        private string RemoveConsLetterDuplicates(string input)
+        {
+            if (input.Length <= 1)
+                return input;
+            if (input[0] == input[1])
+                return RemoveConsLetterDuplicates(input.Substring(1));
+            else
+                return input[0] + RemoveConsLetterDuplicates(input.Substring(1));
+        }
+
         private IEnumerable<string> GenerateTypos(string word)
         {
             var typo = new List<string>();
@@ -691,6 +717,8 @@ namespace BruteForceHash
             {
                 if (_options.TyposEnableSkipLetter)
                     typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip letter
+                else if(_options.TyposEnableSkipDoubleLetter && j > 0 && word[j] == word[j-1])
+                    typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip double letter
                 if (_options.TyposEnableDoubleLetter)
                     typo.Add(word.Insert(j, word[j].ToString())); // Double Letter
 

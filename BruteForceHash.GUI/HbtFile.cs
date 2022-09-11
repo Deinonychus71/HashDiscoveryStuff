@@ -67,7 +67,8 @@ namespace BruteForceHash.GUI
         public bool DictionariesLastWordExcludePartialWords { get; set; }
         public int WordsLimit { get; set; }
         public string Order { get; set; }
-        public bool TyposEnableLetterSwap { get; set; }
+        public string TyposEnableLetterSwap { get; set; }
+        public bool TyposEnableSkipDoubleLetter { get; set; }
         public bool TyposEnableSkipLetter { get; set; }
         public bool TyposEnableDoubleLetter { get; set; }
         public bool TyposEnableExtraLetter { get; set; }

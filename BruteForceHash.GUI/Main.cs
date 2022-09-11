@@ -86,7 +86,7 @@ namespace BruteForceHash.GUI
 
             chkTyposDoubleLetter.Checked = true;
             chkTyposExtraLetter.Checked = true;
-            chkTyposLetterSwap.Checked = true;
+            chkTyposSkipDoubleLetter.Checked = true;
             chkTyposReverseLetter.Checked = true;
             chkTyposSkipLetter.Checked = true;
             chkTyposWrongLetter.Checked = true;
@@ -110,6 +110,7 @@ namespace BruteForceHash.GUI
             txtHexValues.Text = string.Empty;
             txtDictionaryFilterFirstFrom.Text = string.Empty;
             txtDictionaryFilterFirstTo.Text = string.Empty;
+            txtTyposSwapLetters.Text = string.Empty;
 
             //Dictionary Advanced
             chkDictionaryAdvanced.Checked = false;
@@ -415,12 +416,13 @@ namespace BruteForceHash.GUI
                                                     $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipSpecials.Checked ? "--dictionaries_last_custom_skip_specials" : "")} " +
                                                     $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsForceLowercase.Checked ? "--dictionaries_last_custom_force_lowercase" : "")} " +
                                                     $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsAddTypos.Checked ? "--dictionaries_last_custom_add_typos" : "")} " +
-                                                    $"{(chkTyposLetterSwap.Checked ? "--typos_enable_letter_swap" : "")} " +
+                                                    $"{(chkTyposSkipDoubleLetter.Checked ? "--typos_enable_skip_double_letter" : "")} " +
                                                     $"{(chkTyposSkipLetter.Checked ? "--typos_enable_skip_letter" : "")} " +
                                                     $"{(chkTyposDoubleLetter.Checked ? "--typos_enable_double_letter" : "")} " +
                                                     $"{(chkTyposExtraLetter.Checked ? "--typos_enable_extra_letter" : "")} " +
                                                     $"{(chkTyposWrongLetter.Checked ? "--typos_enable_wrong_letter" : "")} " +
                                                     $"{(chkTyposReverseLetter.Checked ? "--typos_enable_reverse_letter" : "")} " +
+                                                    (!string.IsNullOrEmpty(txtTyposSwapLetters.Text.Trim()) ? $"--typos_enable_letter_swap \"{txtTyposSwapLetters.Text.Trim()}\" " : string.Empty) +
                                                     $"--order_algorithm {GetCombinationOrderName()} " +
                                                     $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
@@ -590,9 +592,10 @@ namespace BruteForceHash.GUI
                 DictionariesLastWordExcludeWordsUse = chkDictionariesLastWordExcludeWordsUse.Checked,
                 DictionariesLastWordExcludePartialWords = chkDictLastWordExcludePartialWords.Checked,
                 DictionariesLastWordExcludeWords = txtDictLastWordExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
+                TyposEnableSkipDoubleLetter = chkTyposSkipDoubleLetter.Checked,
                 TyposEnableDoubleLetter = chkTyposDoubleLetter.Checked,
                 TyposEnableExtraLetter = chkTyposExtraLetter.Checked,
-                TyposEnableLetterSwap = chkTyposLetterSwap.Checked,
+                TyposEnableLetterSwap = txtTyposSwapLetters.Text.Trim(),
                 TyposEnableReverseLetter = chkTyposReverseLetter.Checked,
                 TyposEnableSkipLetter = chkTyposSkipLetter.Checked,
                 TyposEnableWrongLetter = chkTyposWrongLetter.Checked,
@@ -712,10 +715,11 @@ namespace BruteForceHash.GUI
 
             chkTyposDoubleLetter.Checked = hbtObject.TyposEnableDoubleLetter;
             chkTyposExtraLetter.Checked = hbtObject.TyposEnableExtraLetter;
-            chkTyposLetterSwap.Checked = hbtObject.TyposEnableLetterSwap;
+            chkTyposSkipDoubleLetter.Checked = hbtObject.TyposEnableSkipDoubleLetter;
             chkTyposReverseLetter.Checked = hbtObject.TyposEnableReverseLetter;
             chkTyposSkipLetter.Checked = hbtObject.TyposEnableSkipLetter;
             chkTyposWrongLetter.Checked = hbtObject.TyposEnableWrongLetter;
+            txtTyposSwapLetters.Text = hbtObject.TyposEnableLetterSwap;
 
             txtIncludeWord.Text = hbtObject.IncludeWordDict;
             chkIncludeWordNotFirst.Checked = hbtObject.IncludeWordNotFirst;
@@ -1145,6 +1149,7 @@ namespace BruteForceHash.GUI
             chkDictReverseOrder.Enabled = chkDictionariesUse.Checked;
             tvDictMain.Enabled = chkDictionariesUse.Checked;
             txtDictionaryFilterFirstFrom.Enabled = chkDictionariesUse.Checked;
+            txtDictionaryFilterFirstTo.Enabled = chkDictionariesUse.Checked;
             btnDictUnselected.Enabled = chkDictionariesUse.Checked;
         }
 
