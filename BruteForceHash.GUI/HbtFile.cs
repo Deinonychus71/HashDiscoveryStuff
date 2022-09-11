@@ -68,6 +68,7 @@ namespace BruteForceHash.GUI
         public int WordsLimit { get; set; }
         public string Order { get; set; }
         public string TyposEnableLetterSwap { get; set; }
+        public string TyposEnableAppendLetter { get; set; }
         public bool TyposEnableSkipDoubleLetter { get; set; }
         public bool TyposEnableSkipLetter { get; set; }
         public bool TyposEnableDoubleLetter { get; set; }

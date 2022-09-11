@@ -196,6 +196,8 @@ namespace BruteForceHash
 
         [Option('T', "typos_enable_letter_swap", Required = false, Default = "", HelpText = "Typos - Enable letter swap, formatted like x-y,a-b. (for dictionary attack).")]
         public string TyposEnableLetterSwap { get; set; }
+        [Option('T', "typos_enable_append_letters", Required = false, Default = "", HelpText = "Typos - Enable append letter, formatted like s,ed. (for dictionary attack).")]
+        public string TyposEnableAppendLetters { get; set; }
         [Option('T', "typos_enable_skip_letter", Required = false, Default = false, HelpText = "Typos - Enable letter skipping. (for dictionary attack).")]
         public bool TyposEnableSkipLetter { get; set; }
         [Option('T', "typos_enable_skip_double_letter", Required = false, Default = false, HelpText = "Typos - Enable letter doubling. (for dictionary attack).")]

@@ -257,6 +257,8 @@ namespace BruteForceHash.GUI
             this.btnStartHashCat = new System.Windows.Forms.Button();
             this.btnQuickSave = new System.Windows.Forms.Button();
             this.btnQuickLoad = new System.Windows.Forms.Button();
+            this.lblTyposAppendLetters = new System.Windows.Forms.Label();
+            this.txtTyposAppendLetters = new System.Windows.Forms.TextBox();
             this.pnlDictionary.SuspendLayout();
             this.grpSizeFiltering.SuspendLayout();
             this.groupBoxWordFiltering.SuspendLayout();
@@ -636,7 +638,7 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtMostUnderNbrChars.Location = new System.Drawing.Point(305, 153);
+            this.cbAtMostUnderNbrChars.Location = new System.Drawing.Point(306, 153);
             this.cbAtMostUnderNbrChars.Name = "cbAtMostUnderNbrChars";
             this.cbAtMostUnderNbrChars.Size = new System.Drawing.Size(45, 23);
             this.cbAtMostUnderNbrChars.TabIndex = 98;
@@ -658,7 +660,7 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtMostAboveNbrChars.Location = new System.Drawing.Point(305, 127);
+            this.cbAtMostAboveNbrChars.Location = new System.Drawing.Point(306, 127);
             this.cbAtMostAboveNbrChars.Name = "cbAtMostAboveNbrChars";
             this.cbAtMostAboveNbrChars.Size = new System.Drawing.Size(45, 23);
             this.cbAtMostAboveNbrChars.TabIndex = 97;
@@ -712,18 +714,18 @@ namespace BruteForceHash.GUI
             this.lblAtMostUnder.AutoSize = true;
             this.lblAtMostUnder.Location = new System.Drawing.Point(188, 157);
             this.lblAtMostUnder.Name = "lblAtMostUnder";
-            this.lblAtMostUnder.Size = new System.Drawing.Size(111, 15);
+            this.lblAtMostUnder.Size = new System.Drawing.Size(114, 15);
             this.lblAtMostUnder.TabIndex = 94;
-            this.lblAtMostUnder.Text = "At most                  ≤";
+            this.lblAtMostUnder.Text = "At most                   ≤";
             // 
             // lblAtMostAbove
             // 
             this.lblAtMostAbove.AutoSize = true;
             this.lblAtMostAbove.Location = new System.Drawing.Point(188, 130);
             this.lblAtMostAbove.Name = "lblAtMostAbove";
-            this.lblAtMostAbove.Size = new System.Drawing.Size(111, 15);
+            this.lblAtMostAbove.Size = new System.Drawing.Size(114, 15);
             this.lblAtMostAbove.TabIndex = 93;
-            this.lblAtMostAbove.Text = "At most                  ≥";
+            this.lblAtMostAbove.Text = "At most                   ≥";
             // 
             // cbAtLeastUnderNbrChars
             // 
@@ -742,7 +744,7 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtLeastUnderNbrChars.Location = new System.Drawing.Point(305, 101);
+            this.cbAtLeastUnderNbrChars.Location = new System.Drawing.Point(306, 101);
             this.cbAtLeastUnderNbrChars.Name = "cbAtLeastUnderNbrChars";
             this.cbAtLeastUnderNbrChars.Size = new System.Drawing.Size(45, 23);
             this.cbAtLeastUnderNbrChars.TabIndex = 92;
@@ -774,9 +776,9 @@ namespace BruteForceHash.GUI
             this.lblAtLeastUnder.AutoSize = true;
             this.lblAtLeastUnder.Location = new System.Drawing.Point(188, 104);
             this.lblAtLeastUnder.Name = "lblAtLeastUnder";
-            this.lblAtLeastUnder.Size = new System.Drawing.Size(111, 15);
+            this.lblAtLeastUnder.Size = new System.Drawing.Size(114, 15);
             this.lblAtLeastUnder.TabIndex = 90;
-            this.lblAtLeastUnder.Text = "At least                   ≤";
+            this.lblAtLeastUnder.Text = "At least                    ≤";
             // 
             // cbAtLeastAboveNbrChars
             // 
@@ -795,7 +797,7 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtLeastAboveNbrChars.Location = new System.Drawing.Point(305, 75);
+            this.cbAtLeastAboveNbrChars.Location = new System.Drawing.Point(306, 75);
             this.cbAtLeastAboveNbrChars.Name = "cbAtLeastAboveNbrChars";
             this.cbAtLeastAboveNbrChars.Size = new System.Drawing.Size(45, 23);
             this.cbAtLeastAboveNbrChars.TabIndex = 89;
@@ -827,9 +829,9 @@ namespace BruteForceHash.GUI
             this.lblAtLeastAbove.AutoSize = true;
             this.lblAtLeastAbove.Location = new System.Drawing.Point(188, 78);
             this.lblAtLeastAbove.Name = "lblAtLeastAbove";
-            this.lblAtLeastAbove.Size = new System.Drawing.Size(111, 15);
+            this.lblAtLeastAbove.Size = new System.Drawing.Size(114, 15);
             this.lblAtLeastAbove.TabIndex = 85;
-            this.lblAtLeastAbove.Text = "At least                   ≥";
+            this.lblAtLeastAbove.Text = "At least                    ≥";
             // 
             // cbMinFours
             // 
@@ -1044,7 +1046,7 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinWordLength.Location = new System.Drawing.Point(312, 47);
+            this.cbMinWordLength.Location = new System.Drawing.Point(313, 47);
             this.cbMinWordLength.Name = "cbMinWordLength";
             this.cbMinWordLength.Size = new System.Drawing.Size(38, 23);
             this.cbMinWordLength.TabIndex = 68;
@@ -1226,7 +1228,7 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinDelim.Location = new System.Drawing.Point(312, 21);
+            this.cbMinDelim.Location = new System.Drawing.Point(313, 21);
             this.cbMinDelim.Name = "cbMinDelim";
             this.cbMinDelim.Size = new System.Drawing.Size(38, 23);
             this.cbMinDelim.TabIndex = 60;
@@ -2564,6 +2566,8 @@ namespace BruteForceHash.GUI
             // 
             // grpTypos
             // 
+            this.grpTypos.Controls.Add(this.txtTyposAppendLetters);
+            this.grpTypos.Controls.Add(this.lblTyposAppendLetters);
             this.grpTypos.Controls.Add(this.txtTyposSwapLetters);
             this.grpTypos.Controls.Add(this.lblTyposSwapLetters);
             this.grpTypos.Controls.Add(this.chkTyposReverseLetter);
@@ -2581,16 +2585,16 @@ namespace BruteForceHash.GUI
             // 
             // txtTyposSwapLetters
             // 
-            this.txtTyposSwapLetters.Location = new System.Drawing.Point(121, 67);
+            this.txtTyposSwapLetters.Location = new System.Drawing.Point(88, 67);
             this.txtTyposSwapLetters.Name = "txtTyposSwapLetters";
             this.txtTyposSwapLetters.PlaceholderText = "l-r,a-e,i-y";
-            this.txtTyposSwapLetters.Size = new System.Drawing.Size(228, 23);
+            this.txtTyposSwapLetters.Size = new System.Drawing.Size(77, 23);
             this.txtTyposSwapLetters.TabIndex = 86;
             // 
             // lblTyposSwapLetters
             // 
             this.lblTyposSwapLetters.AutoSize = true;
-            this.lblTyposSwapLetters.Location = new System.Drawing.Point(28, 70);
+            this.lblTyposSwapLetters.Location = new System.Drawing.Point(12, 70);
             this.lblTyposSwapLetters.Name = "lblTyposSwapLetters";
             this.lblTyposSwapLetters.Size = new System.Drawing.Size(70, 15);
             this.lblTyposSwapLetters.TabIndex = 85;
@@ -3059,6 +3063,23 @@ namespace BruteForceHash.GUI
             this.btnQuickLoad.Text = "Load";
             this.btnQuickLoad.UseVisualStyleBackColor = true;
             // 
+            // lblTyposAppendLetters
+            // 
+            this.lblTyposAppendLetters.AutoSize = true;
+            this.lblTyposAppendLetters.Location = new System.Drawing.Point(183, 70);
+            this.lblTyposAppendLetters.Name = "lblTyposAppendLetters";
+            this.lblTyposAppendLetters.Size = new System.Drawing.Size(85, 15);
+            this.lblTyposAppendLetters.TabIndex = 87;
+            this.lblTyposAppendLetters.Text = "Append Letter:";
+            // 
+            // txtTyposAppendLetters
+            // 
+            this.txtTyposAppendLetters.Location = new System.Drawing.Point(274, 66);
+            this.txtTyposAppendLetters.Name = "txtTyposAppendLetters";
+            this.txtTyposAppendLetters.PlaceholderText = "s,ed";
+            this.txtTyposAppendLetters.Size = new System.Drawing.Size(77, 23);
+            this.txtTyposAppendLetters.TabIndex = 88;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -3369,6 +3390,8 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.TextBox txtDictionaryFilterFirstTo;
         private System.Windows.Forms.TextBox txtTyposSwapLetters;
         private System.Windows.Forms.Label lblTyposSwapLetters;
+        private System.Windows.Forms.TextBox txtTyposAppendLetters;
+        private System.Windows.Forms.Label lblTyposAppendLetters;
     }
 }
 

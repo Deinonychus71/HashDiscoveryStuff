@@ -423,6 +423,7 @@ namespace BruteForceHash.GUI
                                                     $"{(chkTyposWrongLetter.Checked ? "--typos_enable_wrong_letter" : "")} " +
                                                     $"{(chkTyposReverseLetter.Checked ? "--typos_enable_reverse_letter" : "")} " +
                                                     (!string.IsNullOrEmpty(txtTyposSwapLetters.Text.Trim()) ? $"--typos_enable_letter_swap \"{txtTyposSwapLetters.Text.Trim()}\" " : string.Empty) +
+                                                    (!string.IsNullOrEmpty(txtTyposAppendLetters.Text.Trim()) ? $"--typos_enable_append_letters \"{txtTyposAppendLetters.Text.Trim()}\" " : string.Empty) +
                                                     $"--order_algorithm {GetCombinationOrderName()} " +
                                                     $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
                                                     $"{(chkVerbose.Checked ? "--verbose" : "")} " +
@@ -596,6 +597,7 @@ namespace BruteForceHash.GUI
                 TyposEnableDoubleLetter = chkTyposDoubleLetter.Checked,
                 TyposEnableExtraLetter = chkTyposExtraLetter.Checked,
                 TyposEnableLetterSwap = txtTyposSwapLetters.Text.Trim(),
+                TyposEnableAppendLetter = txtTyposAppendLetters.Text.Trim(),
                 TyposEnableReverseLetter = chkTyposReverseLetter.Checked,
                 TyposEnableSkipLetter = chkTyposSkipLetter.Checked,
                 TyposEnableWrongLetter = chkTyposWrongLetter.Checked,
@@ -720,6 +722,7 @@ namespace BruteForceHash.GUI
             chkTyposSkipLetter.Checked = hbtObject.TyposEnableSkipLetter;
             chkTyposWrongLetter.Checked = hbtObject.TyposEnableWrongLetter;
             txtTyposSwapLetters.Text = hbtObject.TyposEnableLetterSwap;
+            txtTyposAppendLetters.Text = hbtObject.TyposEnableAppendLetter;
 
             txtIncludeWord.Text = hbtObject.IncludeWordDict;
             chkIncludeWordNotFirst.Checked = hbtObject.IncludeWordNotFirst;

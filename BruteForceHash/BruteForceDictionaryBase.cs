@@ -543,6 +543,15 @@ namespace BruteForceHash
                 }
             }
 
+            List<string> letterAppendPatterns = new List<string>();
+            if (!string.IsNullOrEmpty(_options.TyposEnableAppendLetters))
+            {
+                foreach (var pattern in _options.TyposEnableAppendLetters.Split(",", StringSplitOptions.RemoveEmptyEntries))
+                {
+                    letterAppendPatterns.Add(pattern.Trim());
+                }
+            }
+
             foreach (var dictionaryPath in allDictionaries)
             {
                 var allWords = File.ReadAllLines(dictionaryPath).Distinct();
@@ -576,6 +585,14 @@ namespace BruteForceHash
                             foreach (var letterSwapPattern in letterSwapPatterns)
                             {
                                 allNewWords.AddRange(GenerateLetterSwapTypos(wordToAdd, letterSwapPattern.Item1, letterSwapPattern.Item2));
+                            }
+                        }
+                        if(letterAppendPatterns.Count > 0)
+                        {
+                            foreach (var letterAppendPattern in letterAppendPatterns)
+                            {
+                                if (!wordToAdd.EndsWith(letterAppendPattern))
+                                    allNewWords.Add($"{wordToAdd}{letterAppendPattern}");
                             }
                         }
                         foreach (var newWord in allNewWords)
