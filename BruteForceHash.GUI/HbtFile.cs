@@ -18,7 +18,6 @@ namespace BruteForceHash.GUI
         public string IncludeWordDict { get; set; }
         public bool IncludeWordNotFirst { get; set; }
         public bool IncludeWordNotLast { get; set; }
-        public string IncludeWordChar { get; set; }
         public bool UseMainDictionaries { get; set; }
         public string Dictionaries { get; set; }
         public bool DictionariesSkipDigits { get; set; }
@@ -77,13 +76,7 @@ namespace BruteForceHash.GUI
         public bool TyposEnableReverseLetter { get; set; }
 
         public int NbrThreads { get; set; }
-        public string ValidChars { get; set; }
-        public string ValidStartingChars { get; set; }
-        public List<string> Charsets { get; set; }
-        public int StartPosition { get; set; }
-        public int EndPosition { get; set; }
-        public bool Verbose { get; set; }
-        public string PathHashCat { get; set; }
+
         public string DictionaryFilterFirstFrom { get; set; }
         public string DictionaryFilterFirstTo { get; set; }
 
@@ -122,5 +115,19 @@ namespace BruteForceHash.GUI
         public List<string> CustomMainWords { get; set; }
         public List<string> CustomFirstWords { get; set; }
         public List<string> CustomLastWords { get; set; }
+
+        /* Char Bruteforce */
+        public string ValidChars { get; set; }
+        public string ValidStartingChars { get; set; }
+        public List<string> Charsets { get; set; }
+        public bool Verbose { get; set; }
+        public string PathHashCat { get; set; }
+        public bool UseHybridDictionaries { get; set; }
+        public int HybridDictionariesBruteforceMaxChars { get; set; }
+        public List<string> HybridDictionariesWords { get; set; }
+        public bool UseHybridDictionariesFirstWord { get; set; }
+        public List<string> HybridDictionariesFirstWords { get; set; }
+        public bool UseHybridDictionariesLastWord { get; set; }
+        public List<string> HybridDictionariesLastWords { get; set; }
     }
 }

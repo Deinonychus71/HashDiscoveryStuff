@@ -97,7 +97,6 @@ namespace BruteForceHash.GUI
             txtIncludeWord.Text = string.Empty;
             chkIncludeWordNotFirst.Checked = false;
             chkIncludeWordNotLast.Checked = false;
-            txtIncludeWordsCharacter.Text = string.Empty;
             txtIncludePatterns.Text = string.Empty;
             txtExcludePatterns.Text = string.Empty;
             txtDelimiter.Text = "_";
@@ -105,8 +104,6 @@ namespace BruteForceHash.GUI
             txtSuffix.Text = string.Empty;
             txtValidChars.Text = "etainoshrdlucmfwygpbvkqjxz0123456789_";
             txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
-            numStartPosition.Value = 0;
-            numEndPosition.Value = 0;
             txtHexValues.Text = string.Empty;
             txtDictionaryFilterFirstFrom.Text = string.Empty;
             txtDictionaryFilterFirstTo.Text = string.Empty;
@@ -168,8 +165,21 @@ namespace BruteForceHash.GUI
             LoadDictionaries();
             LoadPatternSamples();
 
+            chkHybridDictFirstWordUse.Checked = false;
+            chkHybridDictLastWordUse.Checked = false;
+            chkHybridDictUse.Checked = false;
+            chkHybridDictFirstWordUse_CheckedChanged(this, null);
+            chkHybridDictLastWordUse_CheckedChanged(this, null);
+            chkHybridDictUse_CheckedChanged(this, null);
+            cbHybridBruteForceMaxCharacters.SelectedIndex = 6;
+
+            grpTypos.Enabled = true;
             pnlDictionary.Visible = true;
-            pnlCharacter.Visible = false;
+            grpWordFiltering.Enabled = true;
+            grpSizeFiltering.Enabled = true;
+            grpAdvanced.Enabled = true;
+            pnlDictBruteforce.Visible = true;
+            pnlCharBruteforce.Visible = false;
             btnStartHashCat.Enabled = ShouldEnableHashCat();
         }
 
@@ -350,131 +360,150 @@ namespace BruteForceHash.GUI
                 dictionariesLastWordExclude = $"{hexFolder}\\[{hex}][Last][Exclude].dic";
 
             var useUtf8 = !useHashCat && chkUtf8Toggle.Checked;
+            var useMethodDictionary = cbMethod.SelectedItem.ToString() == "Dictionary";
+            var useMethodCharacter = cbMethod.SelectedItem.ToString() == "Character";
+            var useMethodHybrid = cbMethod.SelectedItem.ToString() == "Hybrid";
             var useDictAdvanced = chkDictionaryAdvanced.Checked;
+
+            //Common All
+            string arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
+                                $"--method {(useMethodDictionary ? "dictionary" : useMethodCharacter ? "character" : useMethodHybrid ? "hybrid": string.Empty)} " +
+                                $"{(chkVerbose.Checked ? "--verbose" : "")} " +
+                                $"--confirm_end " +
+                                $"--prefix \"{txtPrefix.Text.Trim()}\" " +
+                                $"--suffix \"{txtSuffix.Text.Trim()}\" " +
+                                $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
+                                $"--hex_value \"{txtHexValues.Text.Trim()}\" ";
+
+            //Common Dictionary & Hybrid
+            if (useMethodDictionary || useMethodHybrid)
+            {
+                arguments += $"--words_limit {cbWordsLimit.SelectedItem} " +
+                                $"--max_delimiters {cbMaxDelim.SelectedItem} " +
+                                $"--min_delimiters {cbMinDelim.SelectedItem} " +
+                                $"--max_word_length {cbMaxWordLength.SelectedItem} " +
+                                $"--min_word_length {cbMinWordLength.SelectedItem} " +
+                                $"--max_ones {cbMaxOnes.SelectedItem} " +
+                                $"--min_ones {cbMinOnes.SelectedItem} " +
+                                $"--max_twos {cbMaxTwos.SelectedItem} " +
+                                $"--min_twos {cbMinTwos.SelectedItem} " +
+                                $"--max_threes {cbMaxThrees.SelectedItem} " +
+                                $"--min_threes {cbMinThrees.SelectedItem} " +
+                                $"--max_fours {cbMaxFours.SelectedItem} " +
+                                $"--min_fours {cbMinFours.SelectedItem} " +
+                                (cbAtLeastAboveNbrChars.SelectedIndex > 0 ? $"--at_least_gte_chars {cbAtLeastAboveNbrChars.SelectedIndex} " +
+                                $"--at_least_gte_words {cbAtLeastAboveNbrWords.SelectedIndex} " : string.Empty) +
+                                (cbAtLeastUnderNbrChars.SelectedIndex > 0 ? $"--at_least_lte_chars {cbAtLeastUnderNbrChars.SelectedIndex} " +
+                                $"--at_least_lte_words {cbAtLeastUnderNbrWords.SelectedItem} " : string.Empty) +
+                                (cbAtMostAboveNbrChars.SelectedIndex > 0 ? $"--at_most_gte_chars {cbAtMostAboveNbrChars.SelectedIndex} " +
+                                $"--at_most_gte_words {cbAtMostAboveNbrWords.SelectedIndex} " : string.Empty) +
+                                (cbAtMostUnderNbrChars.SelectedIndex > 0 ? $"--at_most_lte_chars {cbAtMostUnderNbrChars.SelectedIndex} " +
+                                $"--at_most_lte_words {cbAtMostUnderNbrWords.SelectedItem} " : string.Empty) +
+                                $"--order_algorithm {GetCombinationOrderName()} " +
+                                $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
+                                $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
+                                $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
+                                $"{(chkIncludeWordNotLast.Checked ? "--include_word_not_last" : "")} " +
+                                $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
+                                $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +
+                                $"--delimiter \"{txtDelimiter.Text.Trim()}\" ";
+            }
+
+            //Common Dictionary & Hybrid Avanced
+            if (useDictAdvanced && (useMethodDictionary || useMethodHybrid))
+            {
+                arguments += $"--min_words_limit {cbMinWordsLimit.SelectedItem} " +
+                    $"--max_concatenated_words {cbMaxConcatWords.SelectedItem} " +
+                    $"--min_concatenated_words {cbMinConcatWords.SelectedItem} " +
+                    $"{(chkOnlyLastTwoWordsConcat.Checked ? "--only_last_two_concatenated" : "")} " +
+                    $"{(chkOnlyFirstTwoWordsConcat.Checked ? "--only_first_two_concatenated" : "")} " +
+                    $"--max_consecutive_concatenation_limit {cbMaxConsecutiveConcat.SelectedItem} " +
+                    $"--min_consecutive_concatenation_limit {cbMinConsecutiveConcat.SelectedItem} " +
+                    $"--max_consecutive_ones {cbMaxConsecutiveOnes.SelectedItem} ";
+            }
+
+            //Dictionary Only
+            if (useMethodDictionary)
+            {
+                arguments += $"{(chkDictionariesUse.Checked && chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
+                                $"{(chkDictionariesUse.Checked && chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
+                                $"{(chkDictionariesUse.Checked && chkDictForceLowercase.Checked ? "--dictionaries_force_lowercase" : "")} " +
+                                $"{(chkDictionariesUse.Checked && chkDictAddTypos.Checked ? "--dictionaries_add_typos" : "")} " +
+                                $"{(chkDictionariesUse.Checked && chkDictReverseOrder.Checked ? "--dictionaries_reverse_order" : "")} " +
+                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipDigits.Checked ? "--dictionaries_custom_skip_digits" : "")} " +
+                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipSpecials.Checked ? "--dictionaries_custom_skip_specials" : "")} " +
+                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsForceLowercase.Checked ? "--dictionaries_custom_force_lowercase" : "")} " +
+                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsAddTypos.Checked ? "--dictionaries_custom_add_typos" : "")} " +
+                                (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom_min_words_hash {cbDictionariesCustomWordsMinimumInHash.SelectedItem} " : string.Empty) +
+                                $"{(chkUseDictFirst.Checked && chkDictFirstSkipDigits.Checked ? "--dictionaries_first_skip_digits" : "")} " +
+                                $"{(chkUseDictFirst.Checked && chkDictFirstSkipSpecials.Checked ? "--dictionaries_first_skip_specials" : "")} " +
+                                $"{(chkUseDictFirst.Checked && chkDictFirstForceLowercase.Checked ? "--dictionaries_first_force_lowercase" : "")} " +
+                                $"{(chkUseDictFirst.Checked && chkDictFirstAddTypos.Checked ? "--dictionaries_first_add_typos" : "")} " +
+                                $"{(chkUseDictFirst.Checked && chkDictFirstReverseOrder.Checked ? "--dictionaries_first_reverse_order" : "")} " +
+                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipDigits.Checked ? "--dictionaries_first_custom_skip_digits" : "")} " +
+                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipSpecials.Checked ? "--dictionaries_first_custom_skip_specials" : "")} " +
+                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsForceLowercase.Checked ? "--dictionaries_first_custom_force_lowercase" : "")} " +
+                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsAddTypos.Checked ? "--dictionaries_first_custom_add_typos" : "")} " +
+                                $"{(chkUseDictLast.Checked && chkDictLastSkipDigits.Checked ? "--dictionaries_last_skip_digits" : "")} " +
+                                $"{(chkUseDictLast.Checked && chkDictLastSkipSpecials.Checked ? "--dictionaries_last_skip_specials" : "")} " +
+                                $"{(chkUseDictLast.Checked && chkDictLastForceLowercase.Checked ? "--dictionaries_last_force_lowercase" : "")} " +
+                                $"{(chkUseDictLast.Checked && chkDictLastAddTypos.Checked ? "--dictionaries_last_add_typos" : "")} " +
+                                $"{(chkUseDictLast.Checked && chkDictLastReverseOrder.Checked ? "--dictionaries_last_reverse_order" : "")} " +
+                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipDigits.Checked ? "--dictionaries_last_custom_skip_digits" : "")} " +
+                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipSpecials.Checked ? "--dictionaries_last_custom_skip_specials" : "")} " +
+                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsForceLowercase.Checked ? "--dictionaries_last_custom_force_lowercase" : "")} " +
+                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsAddTypos.Checked ? "--dictionaries_last_custom_add_typos" : "")} " +
+                                $"{(chkTyposSkipDoubleLetter.Checked ? "--typos_enable_skip_double_letter" : "")} " +
+                                $"{(chkTyposSkipLetter.Checked ? "--typos_enable_skip_letter" : "")} " +
+                                $"{(chkTyposDoubleLetter.Checked ? "--typos_enable_double_letter" : "")} " +
+                                $"{(chkTyposExtraLetter.Checked ? "--typos_enable_extra_letter" : "")} " +
+                                $"{(chkTyposWrongLetter.Checked ? "--typos_enable_wrong_letter" : "")} " +
+                                $"{(chkTyposReverseLetter.Checked ? "--typos_enable_reverse_letter" : "")} " +
+                                (!string.IsNullOrEmpty(txtTyposSwapLetters.Text.Trim()) ? $"--typos_enable_letter_swap \"{txtTyposSwapLetters.Text.Trim()}\" " : string.Empty) +
+                                (!string.IsNullOrEmpty(txtTyposAppendLetters.Text.Trim()) ? $"--typos_enable_append_letters \"{txtTyposAppendLetters.Text.Trim()}\" " : string.Empty) +
+                                (chkDictionariesUse.Checked ? $"--dictionaries \"{dictionaries}\" " : string.Empty) +
+                                (chkUseDictFirst.Checked ? $"--dictionaries_first_word \"{dictionariesFirstWord}\" " : string.Empty) +
+                                (chkUseDictLast.Checked ? $"--dictionaries_last_word \"{dictionariesLastWord}\" " : string.Empty) +
+                                (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom \"{dictionariesCustom}\" " : string.Empty) +
+                                (chkDictionariesFirstWordCustomWordsUse.Checked ? $"--dictionaries_first_word_custom \"{dictionariesFirstWordCustom}\" " : string.Empty) +
+                                (chkDictionariesLastWordCustomWordsUse.Checked ? $"--dictionaries_last_word_custom \"{dictionariesLastWordCustom}\" " : string.Empty) +
+                                (chkDictionariesExcludeWordsUse.Checked ? $"--dictionaries_exclude \"{dictionariesExclude}\" " : string.Empty) +
+                                $"{(chkDictionariesExcludeWordsUse.Checked && chkDictExcludePartialWords.Checked ? "--dictionaries_exclude_partial" : "")} " +
+                                (chkDictionariesFirstWordExcludeWordsUse.Checked ? $"--dictionaries_first_word_exclude \"{dictionariesFirstWordExclude}\" " : string.Empty) +
+                                $"{(chkDictionariesFirstWordExcludeWordsUse.Checked && chkDictFirstWordExcludePartialWords.Checked ? "--dictionaries_first_word_exclude_partial" : "")} " +
+                                (chkDictionariesLastWordExcludeWordsUse.Checked ? $"--dictionaries_last_word_exclude \"{dictionariesLastWordExclude}\" " : string.Empty) +
+                                $"{(chkDictionariesLastWordExcludeWordsUse.Checked && chkDictLastWordExcludePartialWords.Checked ? "--dictionaries_last_word_exclude_partial" : "")} " +
+                                (!string.IsNullOrEmpty(txtDictionaryFilterFirstFrom.Text.Trim()) ? $"--dictionary_filter_first_from \"{txtDictionaryFilterFirstFrom.Text.Trim()}\" " : string.Empty) +
+                                (!string.IsNullOrEmpty(txtDictionaryFilterFirstTo.Text.Trim()) ? $"--dictionary_filter_first_to \"{txtDictionaryFilterFirstTo.Text.Trim()}\" " : string.Empty);
+            }
+
+            //Common Character & Hybrid
+            if (useMethodCharacter || useMethodHybrid)
+            {
+                arguments += $"--valid_chars \"{txtValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
+                                $"--valid_starting_chars \"{txtStartingValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
+                                $"{(useHashCat ? "--use_hashcat" : "")} " +
+                                $"{(!useHashCat && chkUtf8Toggle.Checked ? "--use_utf8" : "")} ";
+            }
+
+            //Hybrid only
+            if (useMethodHybrid)
+            {
+                /*arguments += $"--valid_chars \"{txtValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
+                                $"--valid_starting_chars \"{txtStartingValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
+                                $"{(useHashCat ? "--use_hashcat" : "")} " +
+                                $"{(!useHashCat && chkUtf8Toggle.Checked ? "--use_utf8" : "")} ";*/
+            }
+
 
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "BruteForceHash.exe";
-                if (cbMethod.SelectedItem.ToString() == "Dictionary")
-                {
-                    process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {(useDictAdvanced ? "dictionary_advanced" : useHashCat ? "dictionary_hashcat" : cbMethod.SelectedItem)} " +
-                                                    $"--words_limit {cbWordsLimit.SelectedItem} " +
-                                                    $"--min_words_limit {cbMinWordsLimit.SelectedItem} " +
-                                                    $"--max_delimiters {cbMaxDelim.SelectedItem} " +
-                                                    $"--min_delimiters {cbMinDelim.SelectedItem} " +
-                                                    $"--max_concatenated_words {cbMaxConcatWords.SelectedItem} " +
-                                                    $"--min_concatenated_words {cbMinConcatWords.SelectedItem} " +
-                                                    $"{(chkOnlyLastTwoWordsConcat.Checked ? "--only_last_two_concatenated" : "")} " +
-                                                    $"{(chkOnlyFirstTwoWordsConcat.Checked ? "--only_first_two_concatenated" : "")} " +
-                                                    $"--max_consecutive_concatenation_limit {cbMaxConsecutiveConcat.SelectedItem} " +
-                                                    $"--min_consecutive_concatenation_limit {cbMinConsecutiveConcat.SelectedItem} " +
-                                                    $"--max_word_length {cbMaxWordLength.SelectedItem} " +
-                                                    $"--min_word_length {cbMinWordLength.SelectedItem} " +
-                                                    $"--max_ones {cbMaxOnes.SelectedItem} " +
-                                                    $"--min_ones {cbMinOnes.SelectedItem} " +
-                                                    $"--max_twos {cbMaxTwos.SelectedItem} " +
-                                                    $"--min_twos {cbMinTwos.SelectedItem} " +
-                                                    $"--max_threes {cbMaxThrees.SelectedItem} " +
-                                                    $"--min_threes {cbMinThrees.SelectedItem} " +
-                                                    $"--max_fours {cbMaxFours.SelectedItem} " +
-                                                    $"--min_fours {cbMinFours.SelectedItem} " +
-                                                    (cbAtLeastAboveNbrChars.SelectedIndex > 0 ? $"--at_least_gte_chars {cbAtLeastAboveNbrChars.SelectedIndex} " +
-                                                    $"--at_least_gte_words {cbAtLeastAboveNbrWords.SelectedIndex} " : string.Empty) +
-                                                    (cbAtLeastUnderNbrChars.SelectedIndex > 0 ? $"--at_least_lte_chars {cbAtLeastUnderNbrChars.SelectedIndex} " +
-                                                    $"--at_least_lte_words {cbAtLeastUnderNbrWords.SelectedItem} " : string.Empty) +
-                                                    (cbAtMostAboveNbrChars.SelectedIndex > 0 ? $"--at_most_gte_chars {cbAtMostAboveNbrChars.SelectedIndex} " +
-                                                    $"--at_most_gte_words {cbAtMostAboveNbrWords.SelectedIndex} " : string.Empty) +
-                                                    (cbAtMostUnderNbrChars.SelectedIndex > 0 ? $"--at_most_lte_chars {cbAtMostUnderNbrChars.SelectedIndex} " +
-                                                    $"--at_most_lte_words {cbAtMostUnderNbrWords.SelectedItem} " : string.Empty) +
-                                                    $"--max_consecutive_ones {cbMaxConsecutiveOnes.SelectedItem} " +
-                                                    $"{(chkDictionariesUse.Checked && chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
-                                                    $"{(chkDictionariesUse.Checked && chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
-                                                    $"{(chkDictionariesUse.Checked && chkDictForceLowercase.Checked ? "--dictionaries_force_lowercase" : "")} " +
-                                                    $"{(chkDictionariesUse.Checked && chkDictAddTypos.Checked ? "--dictionaries_add_typos" : "")} " +
-                                                    $"{(chkDictionariesUse.Checked && chkDictReverseOrder.Checked ? "--dictionaries_reverse_order" : "")} " +
-                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipDigits.Checked ? "--dictionaries_custom_skip_digits" : "")} " +
-                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipSpecials.Checked ? "--dictionaries_custom_skip_specials" : "")} " +
-                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsForceLowercase.Checked ? "--dictionaries_custom_force_lowercase" : "")} " +
-                                                    $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsAddTypos.Checked ? "--dictionaries_custom_add_typos" : "")} " +
-                                                    (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom_min_words_hash {cbDictionariesCustomWordsMinimumInHash.SelectedItem} " : string.Empty) +
-                                                    $"{(chkUseDictFirst.Checked && chkDictFirstSkipDigits.Checked ? "--dictionaries_first_skip_digits" : "")} " +
-                                                    $"{(chkUseDictFirst.Checked && chkDictFirstSkipSpecials.Checked ? "--dictionaries_first_skip_specials" : "")} " +
-                                                    $"{(chkUseDictFirst.Checked && chkDictFirstForceLowercase.Checked ? "--dictionaries_first_force_lowercase" : "")} " +
-                                                    $"{(chkUseDictFirst.Checked && chkDictFirstAddTypos.Checked ? "--dictionaries_first_add_typos" : "")} " +
-                                                    $"{(chkUseDictFirst.Checked && chkDictFirstReverseOrder.Checked ? "--dictionaries_first_reverse_order" : "")} " +
-                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipDigits.Checked ? "--dictionaries_first_custom_skip_digits" : "")} " +
-                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipSpecials.Checked ? "--dictionaries_first_custom_skip_specials" : "")} " +
-                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsForceLowercase.Checked ? "--dictionaries_first_custom_force_lowercase" : "")} " +
-                                                    $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsAddTypos.Checked ? "--dictionaries_first_custom_add_typos" : "")} " +
-                                                    $"{(chkUseDictLast.Checked && chkDictLastSkipDigits.Checked ? "--dictionaries_last_skip_digits" : "")} " +
-                                                    $"{(chkUseDictLast.Checked && chkDictLastSkipSpecials.Checked ? "--dictionaries_last_skip_specials" : "")} " +
-                                                    $"{(chkUseDictLast.Checked && chkDictLastForceLowercase.Checked ? "--dictionaries_last_force_lowercase" : "")} " +
-                                                    $"{(chkUseDictLast.Checked && chkDictLastAddTypos.Checked ? "--dictionaries_last_add_typos" : "")} " +
-                                                    $"{(chkUseDictLast.Checked && chkDictLastReverseOrder.Checked ? "--dictionaries_last_reverse_order" : "")} " +
-                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipDigits.Checked ? "--dictionaries_last_custom_skip_digits" : "")} " +
-                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipSpecials.Checked ? "--dictionaries_last_custom_skip_specials" : "")} " +
-                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsForceLowercase.Checked ? "--dictionaries_last_custom_force_lowercase" : "")} " +
-                                                    $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsAddTypos.Checked ? "--dictionaries_last_custom_add_typos" : "")} " +
-                                                    $"{(chkTyposSkipDoubleLetter.Checked ? "--typos_enable_skip_double_letter" : "")} " +
-                                                    $"{(chkTyposSkipLetter.Checked ? "--typos_enable_skip_letter" : "")} " +
-                                                    $"{(chkTyposDoubleLetter.Checked ? "--typos_enable_double_letter" : "")} " +
-                                                    $"{(chkTyposExtraLetter.Checked ? "--typos_enable_extra_letter" : "")} " +
-                                                    $"{(chkTyposWrongLetter.Checked ? "--typos_enable_wrong_letter" : "")} " +
-                                                    $"{(chkTyposReverseLetter.Checked ? "--typos_enable_reverse_letter" : "")} " +
-                                                    (!string.IsNullOrEmpty(txtTyposSwapLetters.Text.Trim()) ? $"--typos_enable_letter_swap \"{txtTyposSwapLetters.Text.Trim()}\" " : string.Empty) +
-                                                    (!string.IsNullOrEmpty(txtTyposAppendLetters.Text.Trim()) ? $"--typos_enable_append_letters \"{txtTyposAppendLetters.Text.Trim()}\" " : string.Empty) +
-                                                    $"--order_algorithm {GetCombinationOrderName()} " +
-                                                    $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
-                                                    $"{(chkVerbose.Checked ? "--verbose" : "")} " +
-                                                    $"--confirm_end " +
-                                                    (chkDictionariesUse.Checked ? $"--dictionaries \"{dictionaries}\" " : string.Empty) +
-                                                    (chkUseDictFirst.Checked ? $"--dictionaries_first_word \"{dictionariesFirstWord}\" " : string.Empty) +
-                                                    (chkUseDictLast.Checked ? $"--dictionaries_last_word \"{dictionariesLastWord}\" " : string.Empty) +
-                                                    (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom \"{dictionariesCustom}\" " : string.Empty) +
-                                                    (chkDictionariesFirstWordCustomWordsUse.Checked ? $"--dictionaries_first_word_custom \"{dictionariesFirstWordCustom}\" " : string.Empty) +
-                                                    (chkDictionariesLastWordCustomWordsUse.Checked ? $"--dictionaries_last_word_custom \"{dictionariesLastWordCustom}\" " : string.Empty) +
-                                                    (chkDictionariesExcludeWordsUse.Checked ? $"--dictionaries_exclude \"{dictionariesExclude}\" " : string.Empty) +
-                                                    $"{(chkDictionariesExcludeWordsUse.Checked && chkDictExcludePartialWords.Checked ? "--dictionaries_exclude_partial" : "")} " +
-                                                    (chkDictionariesFirstWordExcludeWordsUse.Checked ? $"--dictionaries_first_word_exclude \"{dictionariesFirstWordExclude}\" " : string.Empty) +
-                                                    $"{(chkDictionariesFirstWordExcludeWordsUse.Checked && chkDictFirstWordExcludePartialWords.Checked ? "--dictionaries_first_word_exclude_partial" : "")} " +
-                                                    (chkDictionariesLastWordExcludeWordsUse.Checked ? $"--dictionaries_last_word_exclude \"{dictionariesLastWordExclude}\" " : string.Empty) +
-                                                    $"{(chkDictionariesLastWordExcludeWordsUse.Checked && chkDictLastWordExcludePartialWords.Checked ? "--dictionaries_last_word_exclude_partial" : "")} " +
-                                                    $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
-                                                    (!string.IsNullOrEmpty(txtDictionaryFilterFirstFrom.Text.Trim()) ? $"--dictionary_filter_first_from \"{txtDictionaryFilterFirstFrom.Text.Trim()}\" " : string.Empty) +
-                                                    (!string.IsNullOrEmpty(txtDictionaryFilterFirstTo.Text.Trim()) ? $"--dictionary_filter_first_to \"{txtDictionaryFilterFirstTo.Text.Trim()}\" " : string.Empty) +
-                                                    $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
-                                                    $"{(chkIncludeWordNotLast.Checked ? "--include_word_not_last" : "")} " +
-                                                    $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
-                                                    $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +
-                                                    $"--delimiter \"{txtDelimiter.Text.Trim()}\" " +
-                                                    $"--prefix \"{txtPrefix.Text.Trim()}\" " +
-                                                    $"--suffix \"{txtSuffix.Text.Trim()}\" " +
-                                                    $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
-                                                    $"--hex_value \"{txtHexValues.Text.Trim()}\"";
-                }
-                else
-                {
-                    PreviewCharsets();
-                    process.StartInfo.Arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                                    $"--method {(useUtf8 ? "character_utf8" : useHashCat ? "character_hashcat" : cbMethod.SelectedItem)} " +
-                                                    $"{(chkVerbose.Checked ? "--verbose" : "")} " +
-                                                    $"--confirm_end " +
-                                                    $"--valid_chars \"{txtValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                                    $"--valid_starting_chars \"{txtStartingValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                                    $"--start_position \"{numStartPosition.Value}\" " +
-                                                    $"--end_position \"{numEndPosition.Value}\" " +
-                                                    $"--include_word \"{txtIncludeWordsCharacter.Text.Trim()}\" " +
-                                                    $"--prefix \"{txtPrefix.Text.Trim()}\" " +
-                                                    $"--suffix \"{txtSuffix.Text.Trim()}\" " +
-                                                    $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
-                                                    $"--hex_value \"{txtHexValues.Text.Trim()}\"";
-                }
+                process.StartInfo.Arguments = arguments;
                 _lastCommand = process.StartInfo.Arguments;
 
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
-
                 process.WaitForExit();
                 process.Close();
             }
@@ -604,7 +633,6 @@ namespace BruteForceHash.GUI
                 IncludeWordDict = txtIncludeWord.Text.Trim(),
                 IncludeWordNotFirst = chkIncludeWordNotFirst.Checked,
                 IncludeWordNotLast = chkIncludeWordNotLast.Checked,
-                IncludeWordChar = txtIncludeWordsCharacter.Text.Trim(),
                 IncludePatterns = txtIncludePatterns.Text.Trim(),
                 ExcludePatterns = txtExcludePatterns.Text.Trim(),
                 Delimiter = txtDelimiter.Text.Trim(),
@@ -613,9 +641,14 @@ namespace BruteForceHash.GUI
                 ValidChars = txtValidChars.Text.Trim(),
                 ValidStartingChars = txtStartingValidChars.Text.Trim(),
                 Charsets = charsets,
-                StartPosition = Convert.ToInt32(numStartPosition.Value),
-                EndPosition = Convert.ToInt32(numEndPosition.Value),
                 HexValue = txtHexValues.Text.Trim(),
+                UseHybridDictionaries = chkHybridDictUse.Checked,
+                UseHybridDictionariesFirstWord = chkHybridDictFirstWordUse.Checked,
+                UseHybridDictionariesLastWord = chkHybridDictLastWordUse.Checked,
+                HybridDictionariesBruteforceMaxChars = Convert.ToInt32(cbHybridBruteForceMaxCharacters.SelectedItem),
+                HybridDictionariesWords = txtHybridDictWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
+                HybridDictionariesFirstWords = txtHybridDictFirstWord.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
+                HybridDictionariesLastWords = txtHybridDictLastWord.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 PathHashCat = txtHashCatPath.Text.Trim(),
                 DictionaryFilterFirstFrom = txtDictionaryFilterFirstFrom.Text.Trim(),
                 DictionaryFilterFirstTo = txtDictionaryFilterFirstTo.Text.Trim(),
@@ -727,18 +760,22 @@ namespace BruteForceHash.GUI
             txtIncludeWord.Text = hbtObject.IncludeWordDict;
             chkIncludeWordNotFirst.Checked = hbtObject.IncludeWordNotFirst;
             chkIncludeWordNotLast.Checked = hbtObject.IncludeWordNotLast;
-            txtIncludeWordsCharacter.Text = hbtObject.IncludeWordChar;
             txtIncludePatterns.Text = hbtObject.IncludePatterns;
             txtExcludePatterns.Text = hbtObject.ExcludePatterns;
             txtDelimiter.Text = hbtObject.Delimiter;
             txtPrefix.Text = hbtObject.Prefix;
             txtSuffix.Text = hbtObject.Suffix;
             txtValidChars.Text = hbtObject.ValidChars;
+            chkHybridDictUse.Checked = hbtObject.UseHybridDictionaries;
+            chkHybridDictFirstWordUse.Checked = hbtObject.UseHybridDictionariesFirstWord;
+            chkHybridDictLastWordUse.Checked = hbtObject.UseHybridDictionariesLastWord;
+            cbHybridBruteForceMaxCharacters.SelectedItem = hbtObject.HybridDictionariesBruteforceMaxChars.ToString();
+            txtHybridDictWords.Text = string.Join("\r\n", hbtObject.HybridDictionariesWords ?? new List<string>());
+            txtHybridDictFirstWord.Text = string.Join("\r\n", hbtObject.HybridDictionariesFirstWords ?? new List<string>());
+            txtHybridDictLastWord.Text = string.Join("\r\n", hbtObject.HybridDictionariesLastWords ?? new List<string>());
             txtStartingValidChars.Text = hbtObject.ValidStartingChars;
             txtDictionaryFilterFirstFrom.Text = hbtObject.DictionaryFilterFirstFrom;
             txtDictionaryFilterFirstTo.Text = hbtObject.DictionaryFilterFirstTo;
-            numStartPosition.Value = hbtObject.StartPosition;
-            numEndPosition.Value = hbtObject.EndPosition;
             txtHexValues.Text = hbtObject.HexValue;
             txtHashCatPath.Text = hbtObject.PathHashCat;
 
@@ -923,8 +960,17 @@ namespace BruteForceHash.GUI
 
         private void OnCbMethodChanged(object sender, EventArgs e)
         {
-            pnlDictionary.Visible = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
-            pnlCharacter.Visible = !pnlDictionary.Visible;
+            var isDictionary = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
+            var isHybrid = cbMethod.SelectedItem.ToString() == "Hybrid";
+            grpTypos.Enabled = isDictionary;
+            grpWordFiltering.Enabled = isDictionary || isHybrid;
+            grpSizeFiltering.Enabled = isDictionary || isHybrid;
+            grpAdvanced.Enabled = isDictionary || isHybrid;
+            pnlHybridDict.Enabled = isHybrid;
+            pnlHybridDictFirstWord.Enabled = isHybrid;
+            pnlHybridDictLastWord.Enabled = isHybrid;
+            pnlDictBruteforce.Visible = isDictionary;
+            pnlCharBruteforce.Visible = !isDictionary;
             btnStartHashCat.Enabled = ShouldEnableHashCat();
         }
 
@@ -1117,7 +1163,7 @@ namespace BruteForceHash.GUI
 
         private bool ShouldEnableHashCat()
         {
-            return IsValidHex() && ((pnlCharacter.Visible && !chkUtf8Toggle.Checked)); // || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked));
+            return IsValidHex() && ((pnlCharBruteforce.Visible && !chkUtf8Toggle.Checked)); // || (pnlDictionary.Visible && !chkDictionaryAdvanced.Checked));
         }
 
         private bool IsValidHex()
@@ -1280,6 +1326,21 @@ namespace BruteForceHash.GUI
             chkDictLastWordExcludePartialWords.Enabled = chkDictionariesLastWordExcludeWordsUse.Checked;
             txtDictLastWordExcludeWords.Enabled = chkDictionariesLastWordExcludeWordsUse.Checked;
             btnCopyToDictExcludeLast.Enabled = chkDictionariesLastWordExcludeWordsUse.Checked;
+        }
+
+        private void chkHybridDictUse_CheckedChanged(object sender, EventArgs e)
+        {
+            txtHybridDictWords.Enabled = chkHybridDictUse.Checked;
+        }
+
+        private void chkHybridDictFirstWordUse_CheckedChanged(object sender, EventArgs e)
+        {
+            txtHybridDictFirstWord.Enabled = chkHybridDictFirstWordUse.Checked;
+        }
+
+        private void chkHybridDictLastWordUse_CheckedChanged(object sender, EventArgs e)
+        {
+            txtHybridDictLastWord.Enabled = chkHybridDictLastWordUse.Checked;
         }
 
         private void printLatestCommandToolStripMenuItem_Click(object sender, EventArgs e)

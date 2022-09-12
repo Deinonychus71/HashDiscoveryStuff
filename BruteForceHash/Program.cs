@@ -37,6 +37,8 @@ namespace BruteForceHash
 
                     var input = hexValueEntry.Trim();
                     logger.Log($"Hex Value: {input}");
+                    logger.Log($"Use Hashcat: {(o.UseHashcat ? "Yes" : "No")}");
+                    logger.Log($"Use UTF8: {(o.UseUTF8 ? "Yes" : "No")}");
                     logger.Log($"Description: {o.Description}");
 
                     var split = input.Split("x".ToCharArray());
@@ -60,17 +62,21 @@ namespace BruteForceHash
                     {
                         //Run script
                         if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
-                            new BruteForceDictionary(logger, o, length, hexToFind).Run();
-                        else if (o.Method.Equals("dictionary_advanced", StringComparison.OrdinalIgnoreCase))
-                            new BruteForceDictionaryAdvanced(logger, o, length, hexToFind).Run();
-                        else if (o.Method.Equals("dictionary_hashcat", StringComparison.OrdinalIgnoreCase))
-                            new BruteForceDictionaryHashcat(logger, o, length, hexToFind).Run();
+                        {
+                            if(o.UseHashcat)
+                                new DictionaryAttackHashcat(logger, o, length, hexToFind).Run();
+                            else
+                                new DictionaryAttack(logger, o, length, hexToFind).Run();
+                        }
                         else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
-                            new BruteForceCharacter(logger, o, length, hexToFind).Run();
-                        else if (o.Method.Equals("character_utf8", StringComparison.OrdinalIgnoreCase))
-                            new BruteForceCharacterUtf8(logger, o, length, hexToFind).Run();
-                        else if (o.Method.Equals("character_hashcat", StringComparison.OrdinalIgnoreCase))
-                            new BruteForceCharacterHashCat(logger, o, length, hexToFind).Run();
+                        {
+                            if(o.UseUTF8)
+                                new BruteForceCharacterUtf8(logger, o, length, hexToFind).Run();
+                            else if(o.UseHashcat)
+                                new BruteForceCharacterHashCat(logger, o, length, hexToFind).Run();
+                            else
+                                new BruteForceCharacter(logger, o, length, hexToFind).Run();
+                        }
                         else
                             logger.Log("Method invalid");
                         await Task.Delay(2000);

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace BruteForceHash
 {
-    public class BruteForceDictionaryHashcat : BruteForceDictionary
+    public class DictionaryAttackHashcat : DictionaryAttack
     {
         private readonly bool _runHashCat;
         private uint _hexExtract;
 
-        public BruteForceDictionaryHashcat(Logger logger, Options options, int stringLength, uint hexValue)
+        public DictionaryAttackHashcat(Logger logger, Options options, int stringLength, uint hexValue)
             : base(logger, options, stringLength, hexValue)
         {
             _runHashCat = options.RunHashcat;

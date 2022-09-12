@@ -1,4 +1,5 @@
-﻿using BruteForceHash.Helpers;
+﻿using BruteForceHash.CombinationGenerator;
+using BruteForceHash.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,46 +12,28 @@ using System.Threading.Tasks;
 
 namespace BruteForceHash
 {
-    public abstract class BruteForceDictionaryBase
+    public class DictionaryAttack
     {
         protected readonly Logger _logger;
-        protected readonly IEnumerable<string> _combinationPatterns;
-        protected readonly Dictionary<byte, byte[][]> _dictionaries;
-        protected readonly Dictionary<byte, byte[][]> _dictionariesFirst;
-        protected readonly Dictionary<byte, byte[][]> _dictionariesLast;
         protected readonly Options _options;
-        private readonly byte _nullByte = 0x00;
         protected readonly uint _hexValue;
         protected readonly int _combinationSize;
-        protected readonly int _stringLength;
-        protected readonly string _delimiter;
-        protected readonly int _delimiterLength;
-        protected readonly int _minWordLength;
-        protected readonly int _maxWordLength;
-        protected readonly int _maxDelimiters;
-        protected readonly int _minDelimiters;
-        protected readonly int _maxConsecutives;
-        protected readonly int _minConsecutives;
-        protected readonly int _maxWords;
-        protected readonly int _minWords;
-        protected readonly bool _concatenateOnlyLastTwo;
-        protected readonly bool _concatenateOnlyFirstTwo;
-        protected readonly int _maxOnes;
-        protected readonly int _minOnes;
-        protected readonly int _maxTwos;
-        protected readonly int _minTwos;
-        protected readonly int _maxThrees;
-        protected readonly int _minThrees;
-        protected readonly int _maxFours;
-        protected readonly int _minFours;
-        protected readonly int _maxConsecutiveOnes;
-        protected readonly int _maxConsecutiveConcatenated;
-        protected readonly int _minConsecutiveConcatenated;
-        protected readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
         protected CancellationTokenSource _cancellationTokenSource;
-        protected int _foundResult = 0;
 
-        public BruteForceDictionaryBase(Logger logger, Options options, int stringLength, uint hexValue)
+        private readonly IEnumerable<string> _combinationPatterns;
+        private readonly Dictionary<byte, byte[][]> _dictionaries;
+        private readonly Dictionary<byte, byte[][]> _dictionariesFirst;
+        private readonly Dictionary<byte, byte[][]> _dictionariesLast;
+        private readonly byte _nullByte = 0x00;
+        private readonly int _stringLength;
+        private readonly string _delimiter;
+        private readonly int _minWordLength;
+        private readonly int _maxWordLength;
+        private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
+        private CombinationGeneratorBase _combinationGeneration;
+        private int _foundResult = 0;
+
+        public DictionaryAttack(Logger logger, Options options, int stringLength, uint hexValue)
         {
             _logger = logger;
             _options = options;
@@ -58,33 +41,17 @@ namespace BruteForceHash
             if (string.IsNullOrEmpty(options.Delimiter))
             {
                 _delimiter = "|";
-                _delimiterLength = 0;
             }
             else
             {
                 _delimiter = options.Delimiter;
-                _delimiterLength = Encoding.UTF8.GetByteCount(_delimiter);
             }
 
-            _maxDelimiters = options.MaxDelimiters;
-            _minDelimiters = options.MinDelimiters;
-            _maxConsecutives = options.MaxConcatenatedWords;
-            _minConsecutives = options.MinConcatenatedWords;
-            _maxWords = options.WordsLimit;
-            _minWords = options.MinWordsLimit;
-            _concatenateOnlyLastTwo = options.ConcatenateLastTwoWords;
-            _concatenateOnlyFirstTwo = options.ConcatenateFirstTwoWords;
-            _maxOnes = options.MaxOnes;
-            _minOnes = options.MinOnes;
-            _maxTwos = options.MaxTwos;
-            _minTwos = options.MinTwos;
-            _maxThrees = options.MaxThrees;
-            _minThrees = options.MinThrees;
-            _maxFours = options.MaxFours;
-            _minFours = options.MinFours;
-            _maxConsecutiveOnes = options.MaxConsecutiveOnes;
-            _maxConsecutiveConcatenated = options.MaxConsecutiveConcatenation;
-            _minConsecutiveConcatenated = options.MinConsecutiveConcatenation;
+            if (_options.MaxConcatenatedWords == 0)
+                _combinationGeneration = new CombinationGeneratorSimple(options, stringLength);
+            else
+                _combinationGeneration = new CombinationGeneratorAdvanced(options, stringLength);
+
             _minWordLength = options.MinWordLength;
             _options.IncludeWord = _options.IncludeWord.ToLower();
 
@@ -94,7 +61,7 @@ namespace BruteForceHash
             //Generate combinations
             _combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
             _maxWordLength = Math.Min(options.MaxWordLength, _stringLength);
-            _combinationPatterns = GenerateCombinations(_combinationSize);
+            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize);
 
             //Filter combinations
             var isFirstFilterFrom = !string.IsNullOrEmpty(options.DictionaryFilterFirstFrom);
@@ -242,7 +209,7 @@ namespace BruteForceHash
                 _logger.Log($"Include Word - Skip first word: {_options.IncludeWordNotFirst}");
             }
 
-            if (this is BruteForceDictionaryAdvanced)
+            if (_options.MaxConcatenatedWords > 0)
             {
                 _logger.Log($"Concatenated Words: Between {_options.MinConcatenatedWords} and {_options.MaxConcatenatedWords}");
                 _logger.Log($"Consecutive Concatenation Limit: Between {_options.MinConsecutiveConcatenation} and  {_options.MaxConsecutiveConcatenation}");
@@ -350,6 +317,7 @@ namespace BruteForceHash
             _logger.Log("-----------------------------------------");
         }
 
+        #region Run Attack
         public void Run()
         {
             //Run
@@ -370,7 +338,7 @@ namespace BruteForceHash
                     if (_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
 
-                    var compiledCombination = CompileCombinations(combinationPattern);
+                    var compiledCombination = _combinationGeneration.CompileCombinations(combinationPattern);
                     RunDictionaries(strBuilder, compiledCombination, true, 0, _cancellationTokenSource.Token);
 
                 });
@@ -396,21 +364,9 @@ namespace BruteForceHash
         {
             Task.WaitAll(tasks, cancellationToken);
         }
+        #endregion
 
-        protected virtual void TestCandidate(ByteString candidate)
-        {
-            if (candidate.CRC32Check())
-            {
-                _logger.LogResult(candidate.ToString());
-                _foundResult++;
-            }
-        }
-
-        protected abstract IEnumerable<string> GenerateCombinations(int combinationSize);
-
-        protected abstract byte[] CompileCombinations(string combinationPattern);
-
-        #region Run Attack
+        #region Run Attack - Per Dictionary
         protected void RunDictionaries(ByteString candidate, byte[] combinationPattern, bool firstWord, int combinationCursor, CancellationToken cancellationToken)
         {
             //For Hashcat, disabled
@@ -467,6 +423,15 @@ namespace BruteForceHash
             }
 
             candidate.Cursor -= preWordSize;
+        }
+
+        protected virtual void TestCandidate(ByteString candidate)
+        {
+            if (candidate.CRC32Check())
+            {
+                _logger.LogResult(candidate.ToString());
+                _foundResult++;
+            }
         }
         #endregion
 

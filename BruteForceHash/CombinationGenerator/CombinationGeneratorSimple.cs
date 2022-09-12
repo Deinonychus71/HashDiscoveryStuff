@@ -6,17 +6,53 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace BruteForceHash
+namespace BruteForceHash.CombinationGenerator
 {
-    public class BruteForceDictionaryAdvanced : BruteForceDictionaryBase
+    public class CombinationGeneratorSimple : CombinationGeneratorBase
     {
-        public BruteForceDictionaryAdvanced(Logger logger, Options options, int stringLength, uint hexValue)
-            : base(logger, options, stringLength, hexValue)
+        private readonly string _delimiter;
+        private readonly int _delimiterLength;
+        private readonly int _maxDelimiters;
+        private readonly int _minDelimiters;
+        private readonly int _maxWords;
+        private readonly int _maxOnes;
+        private readonly int _minOnes;
+        private readonly int _maxTwos;
+        private readonly int _minTwos;
+        private readonly int _maxThrees;
+        private readonly int _minThrees;
+        private readonly int _maxFours;
+        private readonly int _minFours;
+
+        public CombinationGeneratorSimple(Options options, int stringLength) : 
+            base(options, stringLength)
         {
+            if (string.IsNullOrEmpty(options.Delimiter))
+            {
+                _delimiter = "|";
+                _delimiterLength = 0;
+            }
+            else
+            {
+                _delimiter = options.Delimiter;
+                _delimiterLength = Encoding.UTF8.GetByteCount(_delimiter);
+            }
+
+            _maxDelimiters = options.MaxDelimiters;
+            _minDelimiters = options.MinDelimiters;
+            _maxWords = options.WordsLimit;
+
+            _maxOnes = options.MaxOnes;
+            _minOnes = options.MinOnes;
+            _maxTwos = options.MaxTwos;
+            _minTwos = options.MinTwos;
+            _maxThrees = options.MaxThrees;
+            _minThrees = options.MinThrees;
+            _maxFours = options.MaxFours;
+            _minFours = options.MinFours;
         }
 
-        #region Compile Combinations
-        protected override byte[] CompileCombinations(string combinationPattern)
+        public override byte[] CompileCombinations(string combinationPattern)
         {
             var bytes = new List<byte>();
             var index = 0;
@@ -31,10 +67,6 @@ namespace BruteForceHash
                     bytes.Add(Convert.ToByte(valueStr));
                     index += valueStr.Length + 1;
                 }
-                else if (chara == '|')
-                {
-                    index++;
-                }
                 else
                 {
                     index++;
@@ -43,10 +75,8 @@ namespace BruteForceHash
             }
             return bytes.ToArray();
         }
-        #endregion
 
-        #region Generate Combinations
-        protected override IEnumerable<string> GenerateCombinations(int stringLength)
+        public override IEnumerable<string> GenerateCombinations(int stringLength)
         {
             //Get combinations of custom words
             List<IEnumerable<string>> combinationsCustom = new List<IEnumerable<string>>();
@@ -64,12 +94,11 @@ namespace BruteForceHash
             var alreadyFoundMap = new Dictionary<int, List<string>>();
             for (var i = 1; i <= stringLength; i++)
             {
-                alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, _delimiterLength, 0, _options.OrderLongerWordsFirst, 0);
+                alreadyFoundMap[i] = GenerateValidCombinations(i, alreadyFoundMap, _delimiterLength, 0, _options.OrderLongerWordsFirst);
             }
 
             //Sorting
-            var inputList = Filter(alreadyFoundMap[stringLength]);
-
+            var inputList = alreadyFoundMap[stringLength];
 
             switch (_options.Order.ToLower())
             {
@@ -89,6 +118,39 @@ namespace BruteForceHash
             var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             foreach (var combination in inputList.Select(p => $"${p}^"))
             {
+                //Size Filtering
+                var nbrDelimiters = combination.Split(_delimiter).Length - 1;
+                var nbrOnes = combination.Split("{1}").Length - 1;
+                var nbrTwos = combination.Split("{2}").Length - 1;
+                var nbrThrees = combination.Split("{3}").Length - 1;
+                var nbrFours = combination.Split("{4}").Length - 1;
+                if (nbrDelimiters < _minDelimiters || (nbrDelimiters > _maxDelimiters && _maxDelimiters != -1))
+                    continue;
+                if (nbrOnes < _minOnes || nbrOnes > _maxOnes)
+                    continue;
+                if (nbrTwos < _minTwos || nbrTwos > _maxTwos)
+                    continue;
+                if (nbrThrees < _minThrees || nbrThrees > _maxThrees)
+                    continue;
+                if (nbrFours < _minFours || nbrFours > _maxFours)
+                    continue;
+                if (_options.AtLeastAboveWords > 0 || _options.AtLeastUnderWords > 0 || _options.AtMostAboveWords > 0 || _options.AtMostUnderWords > 0)
+                {
+                    var dictNbr = new int[50];
+                    for (var i = 0; i < dictNbr.Length; i++)
+                    {
+                        dictNbr[i] = combination.Split("{" + (i + 1) + "}").Length - 1;
+                    }
+                    if (_options.AtLeastAboveWords > 0 && dictNbr.Where((p, i) => i >= _options.AtLeastAboveChars - 1).Sum() < _options.AtLeastAboveWords)
+                        continue;
+                    if (_options.AtLeastUnderWords > 0 && dictNbr.Where((p, i) => i <= _options.AtLeastUnderChars - 1).Sum() < _options.AtLeastUnderWords)
+                        continue;
+                    if (_options.AtMostAboveWords > 0 && dictNbr.Where((p, i) => i >= _options.AtMostAboveChars - 1).Sum() > _options.AtMostAboveWords)
+                        continue;
+                    if (_options.AtMostUnderWords > 0 && dictNbr.Where((p, i) => i <= _options.AtMostUnderChars - 1).Sum() > _options.AtMostUnderWords)
+                        continue;
+                }
+
                 List<string> nbrChar = new List<string>();
                 string reducedCombination = combination;
                 while (reducedCombination.IndexOf('}') != -1)
@@ -173,7 +235,7 @@ namespace BruteForceHash
                 foreach (var wordCandidate in wordCandidates)
                 {
                     if (!wordCandidate.Contains(combinationMatch))
-                        continue;
+                        return null;
                     var nbrMatch = Regex.Matches(wordCandidate, combinationRegexp).Count;
                     for (int i = 0; i < nbrMatch; i++)
                     {
@@ -185,16 +247,16 @@ namespace BruteForceHash
             return wordCandidates.Select(p => p.TrimStart('$').Trim('^'));
         }
 
-        private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, int delimiterLength, int wordsSoFar, bool longerWordsFirst, int delimitersSoFar)
+        private List<string> GenerateValidCombinations(int stringLength, Dictionary<int, List<string>> alreadyFoundMap, int delimiterLength, int wordsSoFar, bool longerWordsFirst)
         {
             var returnCombinations = new List<string>();
             if (wordsSoFar >= _maxWords && stringLength > 0)
             {
                 returnCombinations.Add("invalid");
             }
-            else if (stringLength == _minWordLength)
+            else if (stringLength == 1)
             {
-                returnCombinations.Add($"{{{_minWordLength}}}");
+                returnCombinations.Add("{1}");
             }
             else if (stringLength == 0)
             {
@@ -211,66 +273,40 @@ namespace BruteForceHash
             {
                 returnCombinations.Add("ended");
             }
-            else if (delimiterLength != 0 && stringLength < 0 && stringLength != delimiterLength * -1)
+            else if (delimiterLength == 0 && stringLength < 0 && stringLength != delimiterLength * -1)
             {
                 returnCombinations.Add("invalid");
             }
 
             else
             {
-                int i = longerWordsFirst ? Math.Min(_maxWordLength, stringLength) : _minWordLength;
-                while ((longerWordsFirst && i >= _minWordLength) || (!longerWordsFirst && i <= Math.Min(_maxWordLength, stringLength)))
+                int i = longerWordsFirst ? stringLength : 1;
+                while ((longerWordsFirst && i >= 1) || (!longerWordsFirst && i <= stringLength))
                 {
-                    int remainingLength = stringLength;
+                    var remainingLength = stringLength - i - delimiterLength;
                     var pattern = i.ToString();
-                    //j= 0 means do not include delimiter, j = 1 means include it (if applicable)
-                    for (int j = 0; j < 2; j++)
+                    List<string> subCombinations;
+                    if (alreadyFoundMap.ContainsKey(remainingLength))
                     {
-
-                        if (j == 0)
-                        {
-                            remainingLength = stringLength - i;
-                        }
-
-                        var soFar = delimitersSoFar;
-                        if (j == 0 || j == 1 && _delimiterLength > 0 && (soFar < _maxDelimiters || _maxDelimiters == -1))
-                        {
-                            if (j == 1)
-                            {
-                                remainingLength = remainingLength - _delimiterLength;
-                                soFar++;
-                            }
-
-
-                            List<string> subCombinations;
-                            if (alreadyFoundMap.ContainsKey(remainingLength))
-                            {
-                                subCombinations = alreadyFoundMap[remainingLength];
-                            }
-                            else
-                            {
-                                subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength, wordsSoFar + 1, longerWordsFirst, soFar);
-                            }
-
-                            foreach (var remainingStringPattern in subCombinations)
-                            {
-                                if (remainingStringPattern == "ended")
-                                {
-                                    returnCombinations.Add($"{{{pattern}}}");
-                                }
-                                else if (remainingStringPattern != "invalid" && (Encoding.UTF8.GetByteCount(remainingStringPattern) - Encoding.UTF8.GetByteCount(remainingStringPattern.Replace("{", ""))) + wordsSoFar + 1 <= _maxWords && (_maxDelimiters == -1 || (remainingStringPattern.Length - remainingStringPattern.Replace(_delimiter, "").Length) + soFar <= _maxDelimiters))
-                                {
-                                    if (j == 1)
-                                        returnCombinations.Add($"{{{pattern}}}{_delimiter}{remainingStringPattern}");
-                                    else
-                                        returnCombinations.Add($"{{{pattern}}}{"|"}{remainingStringPattern}");
-
-                                }
-                            }
-                        }
-
-
+                        subCombinations = alreadyFoundMap[remainingLength];
                     }
+                    else
+                    {
+                        subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength, wordsSoFar + 1, longerWordsFirst);
+                    }
+
+                    foreach (var remainingStringPattern in subCombinations)
+                    {
+                        if (remainingStringPattern == "ended")
+                        {
+                            returnCombinations.Add($"{{{pattern}}}");
+                        }
+                        else if (remainingStringPattern != "invalid" && (Encoding.UTF8.GetByteCount(remainingStringPattern) - Encoding.UTF8.GetByteCount(remainingStringPattern.Replace("{", ""))) + wordsSoFar + 1 <= _maxWords)
+                        {
+                            returnCombinations.Add($"{{{pattern}}}{_delimiter}{remainingStringPattern}");
+                        }
+                    }
+
                     if (longerWordsFirst)
                         i--;
                     else
@@ -279,103 +315,6 @@ namespace BruteForceHash
 
             }
             return returnCombinations;
-        }
-
-        private List<string> Filter(List<string> inputList)
-        {
-            List<string> finalList = new List<string>();
-            foreach (string pattern in inputList)
-            {
-                if (_concatenateOnlyFirstTwo && !(pattern.Length - pattern.Replace("|", "").Length == 1 && (pattern.IndexOf('|') < pattern.IndexOf(_delimiter) || pattern.IndexOf(_delimiter) == -1 || _delimiterLength == 0)))
-                    continue;
-                if (_concatenateOnlyLastTwo && !(pattern.Length - pattern.Replace("|", "").Length == 1 && (pattern.IndexOf('|') > pattern.LastIndexOf(_delimiter) || _delimiterLength == 0)))
-                    continue;
-                if (((pattern.Length - pattern.Replace("{1}", "").Length) > _maxOnes * 3 || (pattern.Length - pattern.Replace("{1}", "").Length) < _minOnes * 3))
-                    continue;
-                if (_delimiterLength > 0 && (pattern.Length - pattern.Replace(_delimiter, "").Length < _minDelimiters))
-                    continue;
-                if (pattern.Length - pattern.Replace("{", "").Length < _minWords)
-                    continue;
-
-                var freqConsecutives = pattern.Split('|').Length - 1;
-                if (freqConsecutives < _minConsecutives || freqConsecutives > _maxConsecutives)
-                    continue;
-
-                var nbrTwos = pattern.Split("{2}").Length - 1;
-                var nbrThrees = pattern.Split("{3}").Length - 1;
-                var nbrFours = pattern.Split("{4}").Length - 1;
-                if (nbrTwos < _minTwos || nbrTwos > _maxTwos)
-                    continue;
-                if (nbrThrees < _minThrees || nbrThrees > _maxThrees)
-                    continue;
-                if (nbrFours < _minFours || nbrFours > _maxFours)
-                    continue;
-                if (_options.AtLeastAboveWords > 0 || _options.AtLeastUnderWords > 0 || _options.AtMostAboveWords > 0 || _options.AtMostUnderWords > 0)
-                {
-                    var dictNbr = new int[50];
-                    for (var i = 0; i < dictNbr.Length; i++)
-                    {
-                        dictNbr[i] = pattern.Split("{" + (i + 1) + "}").Length - 1;
-                    }
-                    if (_options.AtLeastAboveWords > 0 && dictNbr.Where((p, i) => i >= _options.AtLeastAboveChars - 1).Sum() < _options.AtLeastAboveWords)
-                        continue;
-                    if (_options.AtLeastUnderWords > 0 && dictNbr.Where((p, i) => i <= _options.AtLeastUnderChars - 1).Sum() < _options.AtLeastUnderWords)
-                        continue;
-                    if (_options.AtMostAboveWords > 0 && dictNbr.Where((p, i) => i >= _options.AtMostAboveChars - 1).Sum() > _options.AtMostAboveWords)
-                        continue;
-                    if (_options.AtMostUnderWords > 0 && dictNbr.Where((p, i) => i <= _options.AtMostUnderChars - 1).Sum() > _options.AtMostUnderWords)
-                        continue;
-                }
-
-                string tempPattern = pattern;
-                int numberOfConsecutive = 0;
-                int numberOfOnes = 0;
-                int maxNumberOfConsecutiveWords = 0;
-                int minNumberOfConsecutiveWords = 0;
-                int maxOnesInARow = 0;
-                while (tempPattern.IndexOf('{') != -1)
-                {
-                    if (tempPattern.StartsWith(_delimiter) && _delimiter != "|")
-                    {
-                        tempPattern = tempPattern.Substring(_delimiterLength);
-                        if (numberOfConsecutive > maxNumberOfConsecutiveWords)
-                            maxNumberOfConsecutiveWords = numberOfConsecutive;
-                        if (numberOfConsecutive < minNumberOfConsecutiveWords || minNumberOfConsecutiveWords == 0)
-                            minNumberOfConsecutiveWords = numberOfConsecutive;
-                        numberOfConsecutive = 0;
-                    }
-                    else if (tempPattern.StartsWith('|'))
-                        tempPattern = tempPattern.Substring(1);
-                    else
-                    {
-                        numberOfConsecutive++;
-                        if (tempPattern.StartsWith("{1}"))
-                        {
-                            numberOfOnes++;
-                            tempPattern = tempPattern.Substring(3);
-                        }
-                        else
-                        {
-                            if (numberOfOnes > maxOnesInARow)
-                                maxOnesInARow = numberOfOnes;
-                            numberOfOnes = 0;
-                            tempPattern = tempPattern.Substring(tempPattern.IndexOf('}') + 1);
-                        }
-                    }
-                }
-                if (numberOfConsecutive > maxNumberOfConsecutiveWords)
-                    maxNumberOfConsecutiveWords = numberOfConsecutive;
-                if (numberOfConsecutive < minNumberOfConsecutiveWords || minNumberOfConsecutiveWords == 0)
-                    minNumberOfConsecutiveWords = numberOfConsecutive;
-                if (numberOfOnes > maxOnesInARow)
-                    maxOnesInARow = numberOfOnes;
-
-                if (maxOnesInARow > _maxConsecutiveOnes || minNumberOfConsecutiveWords < _minConsecutiveConcatenated || maxNumberOfConsecutiveWords > _maxConsecutiveConcatenated)
-                    continue;
-
-                finalList.Add(pattern);
-            }
-            return finalList;
         }
 
         private string ReplaceNthOccurrence(string obj, string find, string replace, int nthOccurrence)
@@ -454,6 +393,5 @@ namespace BruteForceHash
             KeyValueList.Sort((Pair1, Pair2) => Pair2.Value.CompareTo(Pair1.Value));
             return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
         }
-        #endregion
     }
 }

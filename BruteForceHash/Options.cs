@@ -23,6 +23,10 @@ namespace BruteForceHash
         public string Description { get; set; }
         [Option('v', "verbose", Required = false, Default = false, HelpText = "Display more search and thread information.")]
         public bool Verbose { get; set; }
+        [Option('v', "use_utf8", Required = false, Default = false, HelpText = "Use UTF8.")]
+        public bool UseUTF8 { get; set; }
+        [Option('v', "use_hashcat", Required = false, Default = false, HelpText = "Use Hashcat.")]
+        public bool UseHashcat { get; set; }
         [Option('e', "confirm_end", Required = false, Default = false, HelpText = "Confirm before exiting the window.")]
         public bool ConfirmEnd { get; set; }
 
@@ -35,7 +39,7 @@ namespace BruteForceHash
         public bool ConcatenateLastTwoWords { get; set; }
         [Option('P', "only_first_two_concatenated", Required = false, Default = false, HelpText = "Only concatenate the first two words in the pattern, everything else should be delimiter separated.")]
         public bool ConcatenateFirstTwoWords { get; set; }
-        [Option('P', "max_consecutive_concatenation_limit", Required = false, Default = 10, HelpText = "To apply a limit on concatenated words (for dictionary attack).")]
+        [Option('P', "max_consecutive_concatenation_limit", Required = false, Default = 2, HelpText = "To apply a limit on concatenated words (for dictionary attack).")]
         public int MaxConsecutiveConcatenation { get; set; }
         [Option('P', "min_consecutive_concatenation_limit", Required = false, Default = 1, HelpText = "To apply a limit on concatenated words (for dictionary attack).")]
         public int MinConsecutiveConcatenation { get; set; }
@@ -75,11 +79,11 @@ namespace BruteForceHash
         public int AtMostUnderChars { get; set; }
         [Option('P', "at_most_lte_words", Required = false, Default = 0, HelpText = "To have most x words under y characters (for dictionary attack).")]
         public int AtMostUnderWords { get; set; }
-        [Option('P', "max_concatenated_words", Required = false, Default = 10, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
+        [Option('P', "max_concatenated_words", Required = false, Default = 0, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
         public int MaxConcatenatedWords { get; set; }
         [Option('P', "min_concatenated_words", Required = false, Default = 0, HelpText = "To apply a global limit on concatenated words (for dictionary attack).")]
         public int MinConcatenatedWords { get; set; }
-        [Option('P', "max_consecutive_ones", Required = false, Default = 10, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
+        [Option('P', "max_consecutive_ones", Required = false, Default = 1, HelpText = "To apply a limit on low-length words (for dictionary attack).")]
         public int MaxConsecutiveOnes { get; set; }
 
 
