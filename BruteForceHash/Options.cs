@@ -223,12 +223,23 @@ namespace BruteForceHash
         public string ValidChars { get; set; }
         [Option('C', "valid_starting_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz_", HelpText = "All the characters to start with for bruteforce (for character attack).")]
         public string ValidStartingChars { get; set; }
-        [Option('0', "start_position", Required = false, Default = 0, HelpText = "Start position when searching for a word (for character attack).")]
-        public int StartPosition { get; set; }
-        [Option('1', "end_position", Required = false, Default = -1, HelpText = "End position when searching for a word (for character attack).")]
-        public int EndPosition { get; set; }
         [Option('h', "path_hashcat", Required = false, Default = "Tools\\Hashcat\\hashcat.exe", HelpText = "Path for HashCat (for character attack).")]
         public string PathHashCat { get; set; }
+
+        //Hybrid attack
+        [Option('C', "hybrid_min_characters", Required = false, Default = 1, HelpText = "Min number of unknown characters to bruteforce (for hybrid attack).")]
+        public int HybridMinCharacters { get; set; }
+        [Option('C', "hybrid_max_characters", Required = false, Default = 7, HelpText = "Max number of unknown characters to bruteforce (for hybrid attack).")]
+        public int HybridMaxCharacters { get; set; }
+        [Option('D', "hybrid_words_hash", Required = false, Default = 0, HelpText = "Use x words to use in addition to character bruteforcing (for hybrid attack).")]
+        public int HybridWordsHash { get; set; }
+        [Option('D', "hybrid_dictionary", Required = false, Default = null, HelpText = "Path of a dictionary for this hash (for hybrid attack). First and Last words can be overriden by other parameters.")]
+        public string HybridDictionary { get; set; }
+        [Option('D', "hybrid_dictionary_first_word", Required = false, Default = null, HelpText = "Path of a dictionary for this hash for first word (for hybrid attack).")]
+        public string HybridDictionaryFirstWord { get; set; }
+        [Option('D', "hybrid_dictionary_last_word", Required = false, Default = null, HelpText = "Path of a dictionary for this hash for last word (for hybrid attack).")]
+        public string HybridDictionaryLastWord { get; set; }
+
         /*[Option('2', "skip_delimiter_in_last_position", Required = false, Default = false, HelpText = "If true, the last character check will skip the delimiter value (for character attack).")]
         public bool SkipDelimiterInLastPosition { get; set; }
         [Option('3', "skip_delimiter_in_first_position", Required = false, Default = false, HelpText = "If true, the first character check will skip the delimiter value (for character attack).")]

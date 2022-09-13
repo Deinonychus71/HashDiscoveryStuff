@@ -1,11 +1,10 @@
 ﻿using BruteForceHash.Helpers;
-using CommandLine;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BruteForceHash
+namespace BruteForceHash.Methods
 {
     public class DictionaryAttackHashcat : DictionaryAttack
     {

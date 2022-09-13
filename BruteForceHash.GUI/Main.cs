@@ -171,7 +171,9 @@ namespace BruteForceHash.GUI
             chkHybridDictFirstWordUse_CheckedChanged(this, null);
             chkHybridDictLastWordUse_CheckedChanged(this, null);
             chkHybridDictUse_CheckedChanged(this, null);
+            cbHybridBruteForceMinCharacters.SelectedIndex = 1;
             cbHybridBruteForceMaxCharacters.SelectedIndex = 6;
+            cbHybridWordsInHash.SelectedIndex = 2;
 
             grpTypos.Enabled = true;
             pnlDictionary.Visible = true;
@@ -336,6 +338,9 @@ namespace BruteForceHash.GUI
             var dictionariesLastWordExclude = string.Empty;
             var dictionariesFirstWord = string.Empty;
             var dictionariesLastWord = string.Empty;
+            var dictionaryHybrid = string.Empty;
+            var dictionaryHybridFirstWord = string.Empty;
+            var dictionaryHybridLastWord = string.Empty;
 
             SaveCustomDictionaries();
             if(chkDictionariesUse.Checked)
@@ -358,6 +363,13 @@ namespace BruteForceHash.GUI
                 dictionariesLastWordCustom = $"{hexFolder}\\[{hex}][Last].dic";
             if (chkDictionariesLastWordExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Last][Exclude].dic"))
                 dictionariesLastWordExclude = $"{hexFolder}\\[{hex}][Last][Exclude].dic";
+
+            if (chkHybridDictUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Hybrid].dic"))
+                dictionaryHybrid = $"{hexFolder}\\[{hex}][Hybrid].dic";
+            if (chkHybridDictFirstWordUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Hybrid][1st].dic"))
+                dictionaryHybridFirstWord = $"{hexFolder}\\[{hex}][Hybrid][1st].dic";
+            if (chkHybridDictLastWordUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Hybrid][Last].dic"))
+                dictionaryHybridLastWord = $"{hexFolder}\\[{hex}][Hybrid][Last].dic";
 
             var useUtf8 = !useHashCat && chkUtf8Toggle.Checked;
             var useMethodDictionary = cbMethod.SelectedItem.ToString() == "Dictionary";
@@ -482,17 +494,24 @@ namespace BruteForceHash.GUI
             {
                 arguments += $"--valid_chars \"{txtValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
                                 $"--valid_starting_chars \"{txtStartingValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                $"{(useHashCat ? "--use_hashcat" : "")} " +
-                                $"{(!useHashCat && chkUtf8Toggle.Checked ? "--use_utf8" : "")} ";
+                                $"{(useHashCat ? "--use_hashcat" : "")} ";
+            }
+
+            //Character only
+            if (useMethodCharacter)
+            {
+                arguments += $"{(useUtf8 ? "--use_utf8" : "")} ";
             }
 
             //Hybrid only
             if (useMethodHybrid)
             {
-                /*arguments += $"--valid_chars \"{txtValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                $"--valid_starting_chars \"{txtStartingValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                $"{(useHashCat ? "--use_hashcat" : "")} " +
-                                $"{(!useHashCat && chkUtf8Toggle.Checked ? "--use_utf8" : "")} ";*/
+                arguments += $" --hybrid_words_hash {cbHybridWordsInHash.SelectedItem} " +
+                                $"--hybrid_min_characters {cbHybridBruteForceMinCharacters.SelectedItem} " +
+                                $"--hybrid_max_characters {cbHybridBruteForceMaxCharacters.SelectedItem} " +
+                                (chkHybridDictUse.Checked ? $"--hybrid_dictionary \"{dictionaryHybrid}\" " : string.Empty) +
+                                (chkHybridDictFirstWordUse.Checked ? $"--hybrid_dictionary_first_word \"{dictionaryHybridFirstWord}\" " : string.Empty) +
+                                (chkHybridDictLastWordUse.Checked ? $"--hybrid_dictionary_last_word \"{dictionaryHybridLastWord}\" " : string.Empty);
             }
 
 
@@ -645,7 +664,9 @@ namespace BruteForceHash.GUI
                 UseHybridDictionaries = chkHybridDictUse.Checked,
                 UseHybridDictionariesFirstWord = chkHybridDictFirstWordUse.Checked,
                 UseHybridDictionariesLastWord = chkHybridDictLastWordUse.Checked,
-                HybridDictionariesBruteforceMaxChars = Convert.ToInt32(cbHybridBruteForceMaxCharacters.SelectedItem),
+                HybridBruteforceMaxChars = Convert.ToInt32(cbHybridBruteForceMaxCharacters.SelectedItem),
+                HybridBruteforceMinChars = Convert.ToInt32(cbHybridBruteForceMinCharacters.SelectedItem),
+                HybridWordsInHash = cbHybridWordsInHash.SelectedIndex + 1,
                 HybridDictionariesWords = txtHybridDictWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 HybridDictionariesFirstWords = txtHybridDictFirstWord.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 HybridDictionariesLastWords = txtHybridDictLastWord.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
@@ -769,7 +790,9 @@ namespace BruteForceHash.GUI
             chkHybridDictUse.Checked = hbtObject.UseHybridDictionaries;
             chkHybridDictFirstWordUse.Checked = hbtObject.UseHybridDictionariesFirstWord;
             chkHybridDictLastWordUse.Checked = hbtObject.UseHybridDictionariesLastWord;
-            cbHybridBruteForceMaxCharacters.SelectedItem = hbtObject.HybridDictionariesBruteforceMaxChars.ToString();
+            cbHybridBruteForceMinCharacters.SelectedItem = hbtObject.HybridBruteforceMinChars.ToString();
+            cbHybridBruteForceMaxCharacters.SelectedItem = hbtObject.HybridBruteforceMaxChars.ToString();
+            cbHybridWordsInHash.SelectedIndex = hbtObject.HybridWordsInHash - 1;
             txtHybridDictWords.Text = string.Join("\r\n", hbtObject.HybridDictionariesWords ?? new List<string>());
             txtHybridDictFirstWord.Text = string.Join("\r\n", hbtObject.HybridDictionariesFirstWords ?? new List<string>());
             txtHybridDictLastWord.Text = string.Join("\r\n", hbtObject.HybridDictionariesLastWords ?? new List<string>());
@@ -889,6 +912,9 @@ namespace BruteForceHash.GUI
                 File.WriteAllText($"{hexFolder}\\[{hex}][1st][Exclude].dic", txtDictFirstWordExcludeWords.Text);
                 File.WriteAllText($"{hexFolder}\\[{hex}][Last].dic", txtDictLastCustWords.Text);
                 File.WriteAllText($"{hexFolder}\\[{hex}][Last][Exclude].dic", txtDictLastWordExcludeWords.Text);
+                File.WriteAllText($"{hexFolder}\\[{hex}][Hybrid].dic", txtHybridDictWords.Text);
+                File.WriteAllText($"{hexFolder}\\[{hex}][Hybrid][1st].dic", txtHybridDictFirstWord.Text);
+                File.WriteAllText($"{hexFolder}\\[{hex}][Hybrid][Last].dic", txtHybridDictLastWord.Text);
             }
         }
         #endregion
@@ -962,6 +988,7 @@ namespace BruteForceHash.GUI
         {
             var isDictionary = cbMethod.SelectedItem == null || cbMethod.SelectedItem.ToString() == "Dictionary";
             var isHybrid = cbMethod.SelectedItem.ToString() == "Hybrid";
+            chkUtf8Toggle.Enabled = !isHybrid;
             grpTypos.Enabled = isDictionary;
             grpWordFiltering.Enabled = isDictionary || isHybrid;
             grpSizeFiltering.Enabled = isDictionary || isHybrid;

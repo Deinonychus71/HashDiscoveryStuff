@@ -2,7 +2,6 @@
 using BruteForceHash.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BruteForceHash
+namespace BruteForceHash.Methods
 {
     public class DictionaryAttack
     {
@@ -53,7 +52,6 @@ namespace BruteForceHash
                 _combinationGeneration = new CombinationGeneratorAdvanced(options, stringLength);
 
             _minWordLength = options.MinWordLength;
-            _options.IncludeWord = _options.IncludeWord.ToLower();
 
             //Calculate stringLength after prefix;
             _stringLength = stringLength;
@@ -61,7 +59,7 @@ namespace BruteForceHash
             //Generate combinations
             _combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
             _maxWordLength = Math.Min(options.MaxWordLength, _stringLength);
-            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize);
+            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize, _options.DictionariesCustom, _options.DictionariesCustomMinWordsHash);
 
             //Filter combinations
             var isFirstFilterFrom = !string.IsNullOrEmpty(options.DictionaryFilterFirstFrom);
@@ -338,7 +336,7 @@ namespace BruteForceHash
                     if (_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
 
-                    var compiledCombination = _combinationGeneration.CompileCombinations(combinationPattern);
+                    var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
                     RunDictionaries(strBuilder, compiledCombination, true, 0, _cancellationTokenSource.Token);
 
                 });

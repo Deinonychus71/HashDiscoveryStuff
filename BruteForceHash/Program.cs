@@ -1,4 +1,5 @@
 ﻿using BruteForceHash.Helpers;
+using BruteForceHash.Methods;
 using CommandLine;
 using System;
 using System.IO;
@@ -63,19 +64,26 @@ namespace BruteForceHash
                         //Run script
                         if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
                         {
-                            if(o.UseHashcat)
+                            if (o.UseHashcat)
                                 new DictionaryAttackHashcat(logger, o, length, hexToFind).Run();
                             else
                                 new DictionaryAttack(logger, o, length, hexToFind).Run();
                         }
                         else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
                         {
-                            if(o.UseUTF8)
-                                new BruteForceCharacterUtf8(logger, o, length, hexToFind).Run();
-                            else if(o.UseHashcat)
-                                new BruteForceCharacterHashCat(logger, o, length, hexToFind).Run();
+                            if (o.UseUTF8)
+                                new CharacterAttackUtf8(logger, o, length, hexToFind).Run();
+                            else if (o.UseHashcat)
+                                new CharacterAttackHashCat(logger, o, length, hexToFind).Run();
                             else
-                                new BruteForceCharacter(logger, o, length, hexToFind).Run();
+                                new CharacterAttack(logger, o, length, hexToFind).Run();
+                        }
+                        else if (o.Method.Equals("hybrid", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (o.UseHashcat)
+                                new HybridAttackHashCat(logger, o, length, hexToFind).Run();
+                            else
+                                new HybridAttack(logger, o, length, hexToFind).Run();
                         }
                         else
                             logger.Log("Method invalid");

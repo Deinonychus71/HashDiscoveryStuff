@@ -72,7 +72,7 @@ namespace BruteForceHash.CombinationGenerator
             _maxWordLength = Math.Min(options.MaxWordLength, stringLength);
         }
 
-        public override byte[] CompileCombinations(string combinationPattern)
+        public override byte[] CompileCombination(string combinationPattern)
         {
             var bytes = new List<byte>();
             var index = 0;
@@ -100,14 +100,23 @@ namespace BruteForceHash.CombinationGenerator
             return bytes.ToArray();
         }
 
-        public override IEnumerable<string> GenerateCombinations(int stringLength)
+        public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
         {
             //Get combinations of custom words
             List<IEnumerable<string>> combinationsCustom = new List<IEnumerable<string>>();
-            if (_options.DictionariesCustomMinWordsHash > 0 && File.Exists(_options.DictionariesCustom))
+            if (combinationDeepLevel > 0 && !string.IsNullOrEmpty(customWordsDictionariesPaths))
             {
-                var allCustomWords = File.ReadAllLines(_options.DictionariesCustom).Distinct();
-                combinationsCustom = allCustomWords.Combinations(_options.DictionariesCustomMinWordsHash).ToList();
+                var splitPaths = customWordsDictionariesPaths.Split(";", StringSplitOptions.RemoveEmptyEntries);
+                var allCustomWords = new List<string>();
+                foreach (var dictPath in splitPaths)
+                {
+                    if (File.Exists(dictPath))
+                    {
+                        allCustomWords.AddRange(File.ReadAllLines(dictPath));
+                    }
+                }
+                allCustomWords = allCustomWords.Distinct().ToList();
+                combinationsCustom = allCustomWords.Combinations(combinationDeepLevel).ToList();
             }
             var hasCombinationsCustom = combinationsCustom.Count > 0;
 

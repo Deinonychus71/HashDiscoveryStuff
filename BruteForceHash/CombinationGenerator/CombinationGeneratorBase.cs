@@ -14,8 +14,8 @@ namespace BruteForceHash.CombinationGenerator
             _stringLength = stringLength;
         }
 
-        public abstract byte[] CompileCombinations(string combinationPattern);
+        public abstract byte[] CompileCombination(string combinationPattern);
 
-        public abstract IEnumerable<string> GenerateCombinations(int stringLength);
+        public abstract IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel);
     }
 }

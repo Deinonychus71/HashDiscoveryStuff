@@ -249,20 +249,24 @@ namespace BruteForceHash.GUI
             this.txtValidCharsPreview = new System.Windows.Forms.TextBox();
             this.tabBruteforceDict = new System.Windows.Forms.TabPage();
             this.pnlHybridDict = new System.Windows.Forms.Panel();
+            this.lblHybridWordsInHash = new System.Windows.Forms.Label();
+            this.cbHybridWordsInHash = new System.Windows.Forms.ComboBox();
+            this.lblHybridCombination = new System.Windows.Forms.Label();
             this.lblHybridDictUse = new System.Windows.Forms.Label();
-            this.lblHybridBruteForce2 = new System.Windows.Forms.Label();
             this.chkHybridDictUse = new System.Windows.Forms.CheckBox();
             this.cbHybridBruteForceMaxCharacters = new System.Windows.Forms.ComboBox();
             this.txtHybridDictWords = new System.Windows.Forms.TextBox();
             this.lblHybridBruteForce = new System.Windows.Forms.Label();
             this.tabBruteforceDictFirstWord = new System.Windows.Forms.TabPage();
-            this.chkHybridDictFirstWordUse = new System.Windows.Forms.CheckBox();
+            this.pnlHybridDictFirstWord = new System.Windows.Forms.Panel();
             this.lblHybridDictFirstWordUse = new System.Windows.Forms.Label();
             this.txtHybridDictFirstWord = new System.Windows.Forms.TextBox();
+            this.chkHybridDictFirstWordUse = new System.Windows.Forms.CheckBox();
             this.tabBruteforceDictLastWord = new System.Windows.Forms.TabPage();
-            this.chkHybridDictLastWordUse = new System.Windows.Forms.CheckBox();
+            this.pnlHybridDictLastWord = new System.Windows.Forms.Panel();
             this.lblHybridDictLastWordUse = new System.Windows.Forms.Label();
             this.txtHybridDictLastWord = new System.Windows.Forms.TextBox();
+            this.chkHybridDictLastWordUse = new System.Windows.Forms.CheckBox();
             this.grpGeneral = new System.Windows.Forms.GroupBox();
             this.txtValidChars = new System.Windows.Forms.TextBox();
             this.lblValidChars = new System.Windows.Forms.Label();
@@ -272,8 +276,9 @@ namespace BruteForceHash.GUI
             this.lblStartingValidChars = new System.Windows.Forms.Label();
             this.chkUtf8Toggle = new System.Windows.Forms.CheckBox();
             this.txtStartingValidChars = new System.Windows.Forms.TextBox();
-            this.pnlHybridDictFirstWord = new System.Windows.Forms.Panel();
-            this.pnlHybridDictLastWord = new System.Windows.Forms.Panel();
+            this.cbHybridBruteForceMinCharacters = new System.Windows.Forms.ComboBox();
+            this.lblHybridBruteForceFrom = new System.Windows.Forms.Label();
+            this.lblHybridBruteForceUpTo = new System.Windows.Forms.Label();
             this.pnlDictionary.SuspendLayout();
             this.grpSizeFiltering.SuspendLayout();
             this.grpWordFiltering.SuspendLayout();
@@ -305,36 +310,39 @@ namespace BruteForceHash.GUI
             this.tabBruteforceDict.SuspendLayout();
             this.pnlHybridDict.SuspendLayout();
             this.tabBruteforceDictFirstWord.SuspendLayout();
-            this.tabBruteforceDictLastWord.SuspendLayout();
-            this.grpGeneral.SuspendLayout();
             this.pnlHybridDictFirstWord.SuspendLayout();
+            this.tabBruteforceDictLastWord.SuspendLayout();
             this.pnlHybridDictLastWord.SuspendLayout();
+            this.grpGeneral.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblHexValues
             // 
             this.lblHexValues.AutoSize = true;
-            this.lblHexValues.Location = new System.Drawing.Point(16, 76);
+            this.lblHexValues.Location = new System.Drawing.Point(23, 127);
+            this.lblHexValues.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHexValues.Name = "lblHexValues";
-            this.lblHexValues.Size = new System.Drawing.Size(75, 15);
+            this.lblHexValues.Size = new System.Drawing.Size(111, 25);
             this.lblHexValues.TabIndex = 0;
             this.lblHexValues.Text = "Hex Value(s):";
             // 
             // txtHexValues
             // 
-            this.txtHexValues.Location = new System.Drawing.Point(123, 74);
+            this.txtHexValues.Location = new System.Drawing.Point(176, 123);
+            this.txtHexValues.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtHexValues.Name = "txtHexValues";
             this.txtHexValues.PlaceholderText = "0x105274ba4f";
-            this.txtHexValues.Size = new System.Drawing.Size(160, 23);
+            this.txtHexValues.Size = new System.Drawing.Size(227, 31);
             this.txtHexValues.TabIndex = 1;
             this.txtHexValues.TextChanged += new System.EventHandler(this.txtHexValues_TextChanged);
             // 
             // lblMethod
             // 
             this.lblMethod.AutoSize = true;
-            this.lblMethod.Location = new System.Drawing.Point(16, 36);
+            this.lblMethod.Location = new System.Drawing.Point(23, 60);
+            this.lblMethod.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMethod.Name = "lblMethod";
-            this.lblMethod.Size = new System.Drawing.Size(71, 15);
+            this.lblMethod.Size = new System.Drawing.Size(108, 25);
             this.lblMethod.TabIndex = 2;
             this.lblMethod.Text = "Attack Type:";
             // 
@@ -346,43 +354,48 @@ namespace BruteForceHash.GUI
             "Dictionary",
             "Character",
             "Hybrid"});
-            this.cbMethod.Location = new System.Drawing.Point(123, 33);
+            this.cbMethod.Location = new System.Drawing.Point(176, 55);
+            this.cbMethod.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMethod.Name = "cbMethod";
-            this.cbMethod.Size = new System.Drawing.Size(160, 23);
+            this.cbMethod.Size = new System.Drawing.Size(227, 33);
             this.cbMethod.TabIndex = 3;
             this.cbMethod.SelectedIndexChanged += new System.EventHandler(this.OnCbMethodChanged);
             // 
             // lblPrefix
             // 
             this.lblPrefix.AutoSize = true;
-            this.lblPrefix.Location = new System.Drawing.Point(409, 76);
+            this.lblPrefix.Location = new System.Drawing.Point(584, 127);
+            this.lblPrefix.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPrefix.Name = "lblPrefix";
-            this.lblPrefix.Size = new System.Drawing.Size(40, 15);
+            this.lblPrefix.Size = new System.Drawing.Size(59, 25);
             this.lblPrefix.TabIndex = 4;
             this.lblPrefix.Text = "Prefix:";
             // 
             // txtPrefix
             // 
-            this.txtPrefix.Location = new System.Drawing.Point(480, 74);
+            this.txtPrefix.Location = new System.Drawing.Point(686, 123);
+            this.txtPrefix.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtPrefix.Name = "txtPrefix";
-            this.txtPrefix.Size = new System.Drawing.Size(143, 23);
+            this.txtPrefix.Size = new System.Drawing.Size(203, 31);
             this.txtPrefix.TabIndex = 5;
             // 
             // lblDelimiter
             // 
             this.lblDelimiter.AutoSize = true;
-            this.lblDelimiter.Location = new System.Drawing.Point(599, 36);
+            this.lblDelimiter.Location = new System.Drawing.Point(856, 60);
+            this.lblDelimiter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDelimiter.Name = "lblDelimiter";
-            this.lblDelimiter.Size = new System.Drawing.Size(58, 15);
+            this.lblDelimiter.Size = new System.Drawing.Size(87, 25);
             this.lblDelimiter.TabIndex = 6;
             this.lblDelimiter.Text = "Delimiter:";
             // 
             // txtDelimiter
             // 
-            this.txtDelimiter.Location = new System.Drawing.Point(680, 32);
+            this.txtDelimiter.Location = new System.Drawing.Point(971, 53);
+            this.txtDelimiter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtDelimiter.MaxLength = 1;
             this.txtDelimiter.Name = "txtDelimiter";
-            this.txtDelimiter.Size = new System.Drawing.Size(27, 23);
+            this.txtDelimiter.Size = new System.Drawing.Size(37, 31);
             this.txtDelimiter.TabIndex = 7;
             this.txtDelimiter.Text = "_";
             this.txtDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -390,9 +403,10 @@ namespace BruteForceHash.GUI
             // lblNbThreads
             // 
             this.lblNbThreads.AutoSize = true;
-            this.lblNbThreads.Location = new System.Drawing.Point(409, 36);
+            this.lblNbThreads.Location = new System.Drawing.Point(584, 60);
+            this.lblNbThreads.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNbThreads.Name = "lblNbThreads";
-            this.lblNbThreads.Size = new System.Drawing.Size(51, 15);
+            this.lblNbThreads.Size = new System.Drawing.Size(78, 25);
             this.lblNbThreads.TabIndex = 12;
             this.lblNbThreads.Text = "Threads:";
             // 
@@ -465,68 +479,76 @@ namespace BruteForceHash.GUI
             "62",
             "63",
             "64"});
-            this.cbNbThreads.Location = new System.Drawing.Point(480, 34);
+            this.cbNbThreads.Location = new System.Drawing.Point(686, 57);
+            this.cbNbThreads.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbNbThreads.Name = "cbNbThreads";
-            this.cbNbThreads.Size = new System.Drawing.Size(78, 23);
+            this.cbNbThreads.Size = new System.Drawing.Size(110, 33);
             this.cbNbThreads.TabIndex = 13;
             // 
             // lblExcludePatterns
             // 
             this.lblExcludePatterns.AutoSize = true;
-            this.lblExcludePatterns.Location = new System.Drawing.Point(6, 22);
+            this.lblExcludePatterns.Location = new System.Drawing.Point(9, 37);
+            this.lblExcludePatterns.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblExcludePatterns.Name = "lblExcludePatterns";
-            this.lblExcludePatterns.Size = new System.Drawing.Size(97, 15);
+            this.lblExcludePatterns.Size = new System.Drawing.Size(143, 25);
             this.lblExcludePatterns.TabIndex = 14;
             this.lblExcludePatterns.Text = "Exclude Patterns:";
             // 
             // txtExcludePatterns
             // 
-            this.txtExcludePatterns.Location = new System.Drawing.Point(121, 20);
+            this.txtExcludePatterns.Location = new System.Drawing.Point(173, 33);
+            this.txtExcludePatterns.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtExcludePatterns.Name = "txtExcludePatterns";
             this.txtExcludePatterns.PlaceholderText = "{1}_{1},{2}_{2}";
-            this.txtExcludePatterns.Size = new System.Drawing.Size(188, 23);
+            this.txtExcludePatterns.Size = new System.Drawing.Size(267, 31);
             this.txtExcludePatterns.TabIndex = 15;
             // 
             // lblIncludePatterns
             // 
             this.lblIncludePatterns.AutoSize = true;
-            this.lblIncludePatterns.Location = new System.Drawing.Point(6, 53);
+            this.lblIncludePatterns.Location = new System.Drawing.Point(9, 88);
+            this.lblIncludePatterns.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblIncludePatterns.Name = "lblIncludePatterns";
-            this.lblIncludePatterns.Size = new System.Drawing.Size(95, 15);
+            this.lblIncludePatterns.Size = new System.Drawing.Size(141, 25);
             this.lblIncludePatterns.TabIndex = 16;
             this.lblIncludePatterns.Text = "Include Patterns:";
             // 
             // txtIncludePatterns
             // 
-            this.txtIncludePatterns.Location = new System.Drawing.Point(121, 50);
+            this.txtIncludePatterns.Location = new System.Drawing.Point(173, 83);
+            this.txtIncludePatterns.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtIncludePatterns.Name = "txtIncludePatterns";
             this.txtIncludePatterns.PlaceholderText = "{3}";
-            this.txtIncludePatterns.Size = new System.Drawing.Size(188, 23);
+            this.txtIncludePatterns.Size = new System.Drawing.Size(267, 31);
             this.txtIncludePatterns.TabIndex = 17;
             // 
             // lblIncludeWord
             // 
             this.lblIncludeWord.AutoSize = true;
-            this.lblIncludeWord.Location = new System.Drawing.Point(6, 87);
+            this.lblIncludeWord.Location = new System.Drawing.Point(9, 145);
+            this.lblIncludeWord.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblIncludeWord.Name = "lblIncludeWord";
-            this.lblIncludeWord.Size = new System.Drawing.Size(81, 15);
+            this.lblIncludeWord.Size = new System.Drawing.Size(122, 25);
             this.lblIncludeWord.TabIndex = 18;
             this.lblIncludeWord.Text = "Include Word:";
             // 
             // txtIncludeWord
             // 
-            this.txtIncludeWord.Location = new System.Drawing.Point(120, 83);
+            this.txtIncludeWord.Location = new System.Drawing.Point(171, 138);
+            this.txtIncludeWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtIncludeWord.Name = "txtIncludeWord";
             this.txtIncludeWord.PlaceholderText = "mario,luigi";
-            this.txtIncludeWord.Size = new System.Drawing.Size(114, 23);
+            this.txtIncludeWord.Size = new System.Drawing.Size(161, 31);
             this.txtIncludeWord.TabIndex = 19;
             // 
             // lblWordsLimit
             // 
             this.lblWordsLimit.AutoSize = true;
-            this.lblWordsLimit.Location = new System.Drawing.Point(236, 125);
+            this.lblWordsLimit.Location = new System.Drawing.Point(337, 208);
+            this.lblWordsLimit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWordsLimit.Name = "lblWordsLimit";
-            this.lblWordsLimit.Size = new System.Drawing.Size(74, 15);
+            this.lblWordsLimit.Size = new System.Drawing.Size(111, 25);
             this.lblWordsLimit.TabIndex = 20;
             this.lblWordsLimit.Text = "Words Limit:";
             // 
@@ -545,16 +567,18 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbWordsLimit.Location = new System.Drawing.Point(314, 122);
+            this.cbWordsLimit.Location = new System.Drawing.Point(449, 203);
+            this.cbWordsLimit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbWordsLimit.Name = "cbWordsLimit";
-            this.cbWordsLimit.Size = new System.Drawing.Size(38, 23);
+            this.cbWordsLimit.Size = new System.Drawing.Size(53, 33);
             this.cbWordsLimit.TabIndex = 21;
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(175, 694);
+            this.btnStart.Location = new System.Drawing.Point(250, 1157);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(213, 22);
+            this.btnStart.Size = new System.Drawing.Size(304, 37);
             this.btnStart.TabIndex = 24;
             this.btnStart.Text = "START";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -563,25 +587,28 @@ namespace BruteForceHash.GUI
             // lblSuffix
             // 
             this.lblSuffix.AutoSize = true;
-            this.lblSuffix.Location = new System.Drawing.Point(635, 76);
+            this.lblSuffix.Location = new System.Drawing.Point(907, 127);
+            this.lblSuffix.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSuffix.Name = "lblSuffix";
-            this.lblSuffix.Size = new System.Drawing.Size(40, 15);
+            this.lblSuffix.Size = new System.Drawing.Size(60, 25);
             this.lblSuffix.TabIndex = 27;
             this.lblSuffix.Text = "Suffix:";
             // 
             // txtSuffix
             // 
-            this.txtSuffix.Location = new System.Drawing.Point(682, 74);
+            this.txtSuffix.Location = new System.Drawing.Point(974, 123);
+            this.txtSuffix.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtSuffix.Name = "txtSuffix";
-            this.txtSuffix.Size = new System.Drawing.Size(154, 23);
+            this.txtSuffix.Size = new System.Drawing.Size(218, 31);
             this.txtSuffix.TabIndex = 28;
             // 
             // lblCombinationOrder
             // 
             this.lblCombinationOrder.AutoSize = true;
-            this.lblCombinationOrder.Location = new System.Drawing.Point(10, 125);
+            this.lblCombinationOrder.Location = new System.Drawing.Point(14, 208);
+            this.lblCombinationOrder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCombinationOrder.Name = "lblCombinationOrder";
-            this.lblCombinationOrder.Size = new System.Drawing.Size(40, 15);
+            this.lblCombinationOrder.Size = new System.Drawing.Size(62, 25);
             this.lblCombinationOrder.TabIndex = 29;
             this.lblCombinationOrder.Text = "Order:";
             // 
@@ -592,9 +619,10 @@ namespace BruteForceHash.GUI
             this.pnlDictionary.Controls.Add(this.grpAdvanced);
             this.pnlDictionary.Controls.Add(this.grpTypos);
             this.pnlDictionary.Controls.Add(this.pnlDictBruteforce);
-            this.pnlDictionary.Location = new System.Drawing.Point(12, 104);
+            this.pnlDictionary.Location = new System.Drawing.Point(17, 173);
+            this.pnlDictionary.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnlDictionary.Name = "pnlDictionary";
-            this.pnlDictionary.Size = new System.Drawing.Size(827, 586);
+            this.pnlDictionary.Size = new System.Drawing.Size(1181, 977);
             this.pnlDictionary.TabIndex = 31;
             // 
             // grpSizeFiltering
@@ -635,11 +663,9 @@ namespace BruteForceHash.GUI
             this.grpSizeFiltering.Controls.Add(this.lblMaxWordLength);
             this.grpSizeFiltering.Controls.Add(this.lblMinDelim);
             this.grpSizeFiltering.Controls.Add(this.cbMinDelim);
-            this.grpSizeFiltering.Location = new System.Drawing.Point(7, 164);
-            this.grpSizeFiltering.Margin = new System.Windows.Forms.Padding(2);
+            this.grpSizeFiltering.Location = new System.Drawing.Point(10, 273);
             this.grpSizeFiltering.Name = "grpSizeFiltering";
-            this.grpSizeFiltering.Padding = new System.Windows.Forms.Padding(2);
-            this.grpSizeFiltering.Size = new System.Drawing.Size(364, 182);
+            this.grpSizeFiltering.Size = new System.Drawing.Size(520, 303);
             this.grpSizeFiltering.TabIndex = 86;
             this.grpSizeFiltering.TabStop = false;
             this.grpSizeFiltering.Text = "Size Filtering";
@@ -647,7 +673,7 @@ namespace BruteForceHash.GUI
             // cbAtMostUnderNbrChars
             // 
             this.cbAtMostUnderNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtMostUnderNbrChars.DropDownWidth = 90;
+            this.cbAtMostUnderNbrChars.DropDownWidth = 110;
             this.cbAtMostUnderNbrChars.FormattingEnabled = true;
             this.cbAtMostUnderNbrChars.Items.AddRange(new object[] {
             "0 character",
@@ -661,15 +687,16 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtMostUnderNbrChars.Location = new System.Drawing.Point(306, 153);
+            this.cbAtMostUnderNbrChars.Location = new System.Drawing.Point(437, 255);
+            this.cbAtMostUnderNbrChars.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtMostUnderNbrChars.Name = "cbAtMostUnderNbrChars";
-            this.cbAtMostUnderNbrChars.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostUnderNbrChars.Size = new System.Drawing.Size(63, 33);
             this.cbAtMostUnderNbrChars.TabIndex = 98;
             // 
             // cbAtMostAboveNbrChars
             // 
             this.cbAtMostAboveNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtMostAboveNbrChars.DropDownWidth = 90;
+            this.cbAtMostAboveNbrChars.DropDownWidth = 110;
             this.cbAtMostAboveNbrChars.FormattingEnabled = true;
             this.cbAtMostAboveNbrChars.Items.AddRange(new object[] {
             "0 character",
@@ -683,15 +710,16 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtMostAboveNbrChars.Location = new System.Drawing.Point(306, 127);
+            this.cbAtMostAboveNbrChars.Location = new System.Drawing.Point(437, 212);
+            this.cbAtMostAboveNbrChars.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtMostAboveNbrChars.Name = "cbAtMostAboveNbrChars";
-            this.cbAtMostAboveNbrChars.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostAboveNbrChars.Size = new System.Drawing.Size(63, 33);
             this.cbAtMostAboveNbrChars.TabIndex = 97;
             // 
             // cbAtMostUnderNbrWords
             // 
             this.cbAtMostUnderNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtMostUnderNbrWords.DropDownWidth = 70;
+            this.cbAtMostUnderNbrWords.DropDownWidth = 80;
             this.cbAtMostUnderNbrWords.FormattingEnabled = true;
             this.cbAtMostUnderNbrWords.Items.AddRange(new object[] {
             "0 word",
@@ -705,15 +733,16 @@ namespace BruteForceHash.GUI
             "8 words",
             "9 words",
             "10 words"});
-            this.cbAtMostUnderNbrWords.Location = new System.Drawing.Point(237, 153);
+            this.cbAtMostUnderNbrWords.Location = new System.Drawing.Point(345, 255);
+            this.cbAtMostUnderNbrWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtMostUnderNbrWords.Name = "cbAtMostUnderNbrWords";
-            this.cbAtMostUnderNbrWords.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostUnderNbrWords.Size = new System.Drawing.Size(63, 33);
             this.cbAtMostUnderNbrWords.TabIndex = 96;
             // 
             // cbAtMostAboveNbrWords
             // 
             this.cbAtMostAboveNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtMostAboveNbrWords.DropDownWidth = 70;
+            this.cbAtMostAboveNbrWords.DropDownWidth = 80;
             this.cbAtMostAboveNbrWords.FormattingEnabled = true;
             this.cbAtMostAboveNbrWords.Items.AddRange(new object[] {
             "0 word",
@@ -727,33 +756,36 @@ namespace BruteForceHash.GUI
             "8 words",
             "9 words",
             "10 words"});
-            this.cbAtMostAboveNbrWords.Location = new System.Drawing.Point(237, 127);
+            this.cbAtMostAboveNbrWords.Location = new System.Drawing.Point(345, 212);
+            this.cbAtMostAboveNbrWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtMostAboveNbrWords.Name = "cbAtMostAboveNbrWords";
-            this.cbAtMostAboveNbrWords.Size = new System.Drawing.Size(45, 23);
+            this.cbAtMostAboveNbrWords.Size = new System.Drawing.Size(63, 33);
             this.cbAtMostAboveNbrWords.TabIndex = 95;
             // 
             // lblAtMostUnder
             // 
             this.lblAtMostUnder.AutoSize = true;
-            this.lblAtMostUnder.Location = new System.Drawing.Point(188, 157);
+            this.lblAtMostUnder.Location = new System.Drawing.Point(269, 262);
+            this.lblAtMostUnder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAtMostUnder.Name = "lblAtMostUnder";
-            this.lblAtMostUnder.Size = new System.Drawing.Size(114, 15);
+            this.lblAtMostUnder.Size = new System.Drawing.Size(168, 25);
             this.lblAtMostUnder.TabIndex = 94;
-            this.lblAtMostUnder.Text = "At most                   ≤";
+            this.lblAtMostUnder.Text = "At most                ≤";
             // 
             // lblAtMostAbove
             // 
             this.lblAtMostAbove.AutoSize = true;
-            this.lblAtMostAbove.Location = new System.Drawing.Point(188, 130);
+            this.lblAtMostAbove.Location = new System.Drawing.Point(269, 217);
+            this.lblAtMostAbove.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAtMostAbove.Name = "lblAtMostAbove";
-            this.lblAtMostAbove.Size = new System.Drawing.Size(114, 15);
+            this.lblAtMostAbove.Size = new System.Drawing.Size(168, 25);
             this.lblAtMostAbove.TabIndex = 93;
-            this.lblAtMostAbove.Text = "At most                   ≥";
+            this.lblAtMostAbove.Text = "At most                ≥";
             // 
             // cbAtLeastUnderNbrChars
             // 
             this.cbAtLeastUnderNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtLeastUnderNbrChars.DropDownWidth = 90;
+            this.cbAtLeastUnderNbrChars.DropDownWidth = 110;
             this.cbAtLeastUnderNbrChars.FormattingEnabled = true;
             this.cbAtLeastUnderNbrChars.Items.AddRange(new object[] {
             "0 character",
@@ -767,15 +799,16 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtLeastUnderNbrChars.Location = new System.Drawing.Point(306, 101);
+            this.cbAtLeastUnderNbrChars.Location = new System.Drawing.Point(437, 168);
+            this.cbAtLeastUnderNbrChars.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtLeastUnderNbrChars.Name = "cbAtLeastUnderNbrChars";
-            this.cbAtLeastUnderNbrChars.Size = new System.Drawing.Size(45, 23);
+            this.cbAtLeastUnderNbrChars.Size = new System.Drawing.Size(63, 33);
             this.cbAtLeastUnderNbrChars.TabIndex = 92;
             // 
             // cbAtLeastUnderNbrWords
             // 
             this.cbAtLeastUnderNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtLeastUnderNbrWords.DropDownWidth = 70;
+            this.cbAtLeastUnderNbrWords.DropDownWidth = 80;
             this.cbAtLeastUnderNbrWords.FormattingEnabled = true;
             this.cbAtLeastUnderNbrWords.Items.AddRange(new object[] {
             "0 word",
@@ -789,24 +822,26 @@ namespace BruteForceHash.GUI
             "8 words",
             "9 words",
             "10 words"});
-            this.cbAtLeastUnderNbrWords.Location = new System.Drawing.Point(237, 101);
+            this.cbAtLeastUnderNbrWords.Location = new System.Drawing.Point(345, 168);
+            this.cbAtLeastUnderNbrWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtLeastUnderNbrWords.Name = "cbAtLeastUnderNbrWords";
-            this.cbAtLeastUnderNbrWords.Size = new System.Drawing.Size(45, 23);
+            this.cbAtLeastUnderNbrWords.Size = new System.Drawing.Size(63, 33);
             this.cbAtLeastUnderNbrWords.TabIndex = 87;
             // 
             // lblAtLeastUnder
             // 
             this.lblAtLeastUnder.AutoSize = true;
-            this.lblAtLeastUnder.Location = new System.Drawing.Point(188, 104);
+            this.lblAtLeastUnder.Location = new System.Drawing.Point(269, 173);
+            this.lblAtLeastUnder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAtLeastUnder.Name = "lblAtLeastUnder";
-            this.lblAtLeastUnder.Size = new System.Drawing.Size(114, 15);
+            this.lblAtLeastUnder.Size = new System.Drawing.Size(168, 25);
             this.lblAtLeastUnder.TabIndex = 90;
-            this.lblAtLeastUnder.Text = "At least                    ≤";
+            this.lblAtLeastUnder.Text = "At least                 ≤";
             // 
             // cbAtLeastAboveNbrChars
             // 
             this.cbAtLeastAboveNbrChars.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtLeastAboveNbrChars.DropDownWidth = 90;
+            this.cbAtLeastAboveNbrChars.DropDownWidth = 110;
             this.cbAtLeastAboveNbrChars.FormattingEnabled = true;
             this.cbAtLeastAboveNbrChars.Items.AddRange(new object[] {
             "0 character",
@@ -820,15 +855,16 @@ namespace BruteForceHash.GUI
             "8 characters",
             "9 characters",
             "10 characters"});
-            this.cbAtLeastAboveNbrChars.Location = new System.Drawing.Point(306, 75);
+            this.cbAtLeastAboveNbrChars.Location = new System.Drawing.Point(437, 125);
+            this.cbAtLeastAboveNbrChars.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtLeastAboveNbrChars.Name = "cbAtLeastAboveNbrChars";
-            this.cbAtLeastAboveNbrChars.Size = new System.Drawing.Size(45, 23);
+            this.cbAtLeastAboveNbrChars.Size = new System.Drawing.Size(63, 33);
             this.cbAtLeastAboveNbrChars.TabIndex = 89;
             // 
             // cbAtLeastAboveNbrWords
             // 
             this.cbAtLeastAboveNbrWords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAtLeastAboveNbrWords.DropDownWidth = 70;
+            this.cbAtLeastAboveNbrWords.DropDownWidth = 80;
             this.cbAtLeastAboveNbrWords.FormattingEnabled = true;
             this.cbAtLeastAboveNbrWords.Items.AddRange(new object[] {
             "0 word",
@@ -842,19 +878,21 @@ namespace BruteForceHash.GUI
             "8 words",
             "9 words",
             "10 words"});
-            this.cbAtLeastAboveNbrWords.Location = new System.Drawing.Point(237, 75);
+            this.cbAtLeastAboveNbrWords.Location = new System.Drawing.Point(345, 125);
+            this.cbAtLeastAboveNbrWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbAtLeastAboveNbrWords.Name = "cbAtLeastAboveNbrWords";
-            this.cbAtLeastAboveNbrWords.Size = new System.Drawing.Size(45, 23);
+            this.cbAtLeastAboveNbrWords.Size = new System.Drawing.Size(63, 33);
             this.cbAtLeastAboveNbrWords.TabIndex = 86;
             // 
             // lblAtLeastAbove
             // 
             this.lblAtLeastAbove.AutoSize = true;
-            this.lblAtLeastAbove.Location = new System.Drawing.Point(188, 78);
+            this.lblAtLeastAbove.Location = new System.Drawing.Point(269, 130);
+            this.lblAtLeastAbove.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAtLeastAbove.Name = "lblAtLeastAbove";
-            this.lblAtLeastAbove.Size = new System.Drawing.Size(114, 15);
+            this.lblAtLeastAbove.Size = new System.Drawing.Size(168, 25);
             this.lblAtLeastAbove.TabIndex = 85;
-            this.lblAtLeastAbove.Text = "At least                    ≥";
+            this.lblAtLeastAbove.Text = "At least                 ≥";
             // 
             // cbMinFours
             // 
@@ -872,17 +910,19 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinFours.Location = new System.Drawing.Point(79, 153);
+            this.cbMinFours.Location = new System.Drawing.Point(113, 255);
+            this.cbMinFours.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinFours.Name = "cbMinFours";
-            this.cbMinFours.Size = new System.Drawing.Size(38, 23);
+            this.cbMinFours.Size = new System.Drawing.Size(53, 33);
             this.cbMinFours.TabIndex = 84;
             // 
             // lblToFours
             // 
             this.lblToFours.AutoSize = true;
-            this.lblToFours.Location = new System.Drawing.Point(118, 157);
+            this.lblToFours.Location = new System.Drawing.Point(169, 262);
+            this.lblToFours.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblToFours.Name = "lblToFours";
-            this.lblToFours.Size = new System.Drawing.Size(18, 15);
+            this.lblToFours.Size = new System.Drawing.Size(29, 25);
             this.lblToFours.TabIndex = 83;
             this.lblToFours.Text = "to";
             // 
@@ -902,17 +942,19 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxFours.Location = new System.Drawing.Point(137, 153);
+            this.cbMaxFours.Location = new System.Drawing.Point(196, 255);
+            this.cbMaxFours.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxFours.Name = "cbMaxFours";
-            this.cbMaxFours.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxFours.Size = new System.Drawing.Size(53, 33);
             this.cbMaxFours.TabIndex = 82;
             // 
             // lblFours
             // 
             this.lblFours.AutoSize = true;
-            this.lblFours.Location = new System.Drawing.Point(13, 156);
+            this.lblFours.Location = new System.Drawing.Point(19, 260);
+            this.lblFours.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFours.Name = "lblFours";
-            this.lblFours.Size = new System.Drawing.Size(42, 15);
+            this.lblFours.Size = new System.Drawing.Size(65, 25);
             this.lblFours.TabIndex = 81;
             this.lblFours.Text = "Fours :";
             // 
@@ -932,17 +974,19 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinThrees.Location = new System.Drawing.Point(79, 127);
+            this.cbMinThrees.Location = new System.Drawing.Point(113, 212);
+            this.cbMinThrees.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinThrees.Name = "cbMinThrees";
-            this.cbMinThrees.Size = new System.Drawing.Size(38, 23);
+            this.cbMinThrees.Size = new System.Drawing.Size(53, 33);
             this.cbMinThrees.TabIndex = 80;
             // 
             // lblToThrees
             // 
             this.lblToThrees.AutoSize = true;
-            this.lblToThrees.Location = new System.Drawing.Point(118, 131);
+            this.lblToThrees.Location = new System.Drawing.Point(169, 218);
+            this.lblToThrees.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblToThrees.Name = "lblToThrees";
-            this.lblToThrees.Size = new System.Drawing.Size(18, 15);
+            this.lblToThrees.Size = new System.Drawing.Size(29, 25);
             this.lblToThrees.TabIndex = 79;
             this.lblToThrees.Text = "to";
             // 
@@ -962,17 +1006,19 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxThrees.Location = new System.Drawing.Point(137, 127);
+            this.cbMaxThrees.Location = new System.Drawing.Point(196, 212);
+            this.cbMaxThrees.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxThrees.Name = "cbMaxThrees";
-            this.cbMaxThrees.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxThrees.Size = new System.Drawing.Size(53, 33);
             this.cbMaxThrees.TabIndex = 78;
             // 
             // lblThrees
             // 
             this.lblThrees.AutoSize = true;
-            this.lblThrees.Location = new System.Drawing.Point(13, 130);
+            this.lblThrees.Location = new System.Drawing.Point(19, 217);
+            this.lblThrees.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblThrees.Name = "lblThrees";
-            this.lblThrees.Size = new System.Drawing.Size(47, 15);
+            this.lblThrees.Size = new System.Drawing.Size(72, 25);
             this.lblThrees.TabIndex = 77;
             this.lblThrees.Text = "Threes :";
             // 
@@ -992,17 +1038,19 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinTwos.Location = new System.Drawing.Point(79, 101);
+            this.cbMinTwos.Location = new System.Drawing.Point(113, 168);
+            this.cbMinTwos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinTwos.Name = "cbMinTwos";
-            this.cbMinTwos.Size = new System.Drawing.Size(38, 23);
+            this.cbMinTwos.Size = new System.Drawing.Size(53, 33);
             this.cbMinTwos.TabIndex = 76;
             // 
             // lblToTwos
             // 
             this.lblToTwos.AutoSize = true;
-            this.lblToTwos.Location = new System.Drawing.Point(118, 104);
+            this.lblToTwos.Location = new System.Drawing.Point(169, 173);
+            this.lblToTwos.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblToTwos.Name = "lblToTwos";
-            this.lblToTwos.Size = new System.Drawing.Size(18, 15);
+            this.lblToTwos.Size = new System.Drawing.Size(29, 25);
             this.lblToTwos.TabIndex = 75;
             this.lblToTwos.Text = "to";
             // 
@@ -1022,35 +1070,39 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxTwos.Location = new System.Drawing.Point(137, 101);
+            this.cbMaxTwos.Location = new System.Drawing.Point(196, 168);
+            this.cbMaxTwos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxTwos.Name = "cbMaxTwos";
-            this.cbMaxTwos.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxTwos.Size = new System.Drawing.Size(53, 33);
             this.cbMaxTwos.TabIndex = 74;
             // 
             // lblTwos
             // 
             this.lblTwos.AutoSize = true;
-            this.lblTwos.Location = new System.Drawing.Point(13, 103);
+            this.lblTwos.Location = new System.Drawing.Point(19, 172);
+            this.lblTwos.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTwos.Name = "lblTwos";
-            this.lblTwos.Size = new System.Drawing.Size(39, 15);
+            this.lblTwos.Size = new System.Drawing.Size(61, 25);
             this.lblTwos.TabIndex = 73;
             this.lblTwos.Text = "Twos :";
             // 
             // lblMaxDelim
             // 
             this.lblMaxDelim.AutoSize = true;
-            this.lblMaxDelim.Location = new System.Drawing.Point(13, 24);
+            this.lblMaxDelim.Location = new System.Drawing.Point(19, 40);
+            this.lblMaxDelim.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMaxDelim.Name = "lblMaxDelim";
-            this.lblMaxDelim.Size = new System.Drawing.Size(89, 15);
+            this.lblMaxDelim.Size = new System.Drawing.Size(133, 25);
             this.lblMaxDelim.TabIndex = 57;
             this.lblMaxDelim.Text = "Max Delimiters:";
             // 
             // lblOnes
             // 
             this.lblOnes.AutoSize = true;
-            this.lblOnes.Location = new System.Drawing.Point(13, 78);
+            this.lblOnes.Location = new System.Drawing.Point(19, 130);
+            this.lblOnes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblOnes.Name = "lblOnes";
-            this.lblOnes.Size = new System.Drawing.Size(40, 15);
+            this.lblOnes.Size = new System.Drawing.Size(62, 25);
             this.lblOnes.TabIndex = 69;
             this.lblOnes.Text = "Ones :";
             // 
@@ -1069,9 +1121,10 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinWordLength.Location = new System.Drawing.Point(313, 47);
+            this.cbMinWordLength.Location = new System.Drawing.Point(447, 78);
+            this.cbMinWordLength.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinWordLength.Name = "cbMinWordLength";
-            this.cbMinWordLength.Size = new System.Drawing.Size(38, 23);
+            this.cbMinWordLength.Size = new System.Drawing.Size(53, 33);
             this.cbMinWordLength.TabIndex = 68;
             // 
             // cbMaxOnes
@@ -1090,26 +1143,29 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxOnes.Location = new System.Drawing.Point(137, 75);
+            this.cbMaxOnes.Location = new System.Drawing.Point(196, 125);
+            this.cbMaxOnes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxOnes.Name = "cbMaxOnes";
-            this.cbMaxOnes.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxOnes.Size = new System.Drawing.Size(53, 33);
             this.cbMaxOnes.TabIndex = 70;
             // 
             // lblMinWordLength
             // 
             this.lblMinWordLength.AutoSize = true;
-            this.lblMinWordLength.Location = new System.Drawing.Point(188, 50);
+            this.lblMinWordLength.Location = new System.Drawing.Point(269, 83);
+            this.lblMinWordLength.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMinWordLength.Name = "lblMinWordLength";
-            this.lblMinWordLength.Size = new System.Drawing.Size(106, 15);
+            this.lblMinWordLength.Size = new System.Drawing.Size(159, 25);
             this.lblMinWordLength.TabIndex = 67;
             this.lblMinWordLength.Text = "Min Word Length :";
             // 
             // lblToOnes
             // 
             this.lblToOnes.AutoSize = true;
-            this.lblToOnes.Location = new System.Drawing.Point(118, 78);
+            this.lblToOnes.Location = new System.Drawing.Point(169, 130);
+            this.lblToOnes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblToOnes.Name = "lblToOnes";
-            this.lblToOnes.Size = new System.Drawing.Size(18, 15);
+            this.lblToOnes.Size = new System.Drawing.Size(29, 25);
             this.lblToOnes.TabIndex = 71;
             this.lblToOnes.Text = "to";
             // 
@@ -1168,9 +1224,10 @@ namespace BruteForceHash.GUI
             "48",
             "49",
             "50"});
-            this.cbMaxWordLength.Location = new System.Drawing.Point(137, 49);
+            this.cbMaxWordLength.Location = new System.Drawing.Point(196, 82);
+            this.cbMaxWordLength.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxWordLength.Name = "cbMaxWordLength";
-            this.cbMaxWordLength.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxWordLength.Size = new System.Drawing.Size(53, 33);
             this.cbMaxWordLength.TabIndex = 66;
             // 
             // cbMaxDelim
@@ -1190,9 +1247,10 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxDelim.Location = new System.Drawing.Point(137, 22);
+            this.cbMaxDelim.Location = new System.Drawing.Point(196, 37);
+            this.cbMaxDelim.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxDelim.Name = "cbMaxDelim";
-            this.cbMaxDelim.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxDelim.Size = new System.Drawing.Size(53, 33);
             this.cbMaxDelim.TabIndex = 58;
             // 
             // cbMinOnes
@@ -1211,26 +1269,29 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinOnes.Location = new System.Drawing.Point(79, 75);
+            this.cbMinOnes.Location = new System.Drawing.Point(113, 125);
+            this.cbMinOnes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinOnes.Name = "cbMinOnes";
-            this.cbMinOnes.Size = new System.Drawing.Size(38, 23);
+            this.cbMinOnes.Size = new System.Drawing.Size(53, 33);
             this.cbMinOnes.TabIndex = 72;
             // 
             // lblMaxWordLength
             // 
             this.lblMaxWordLength.AutoSize = true;
-            this.lblMaxWordLength.Location = new System.Drawing.Point(13, 52);
+            this.lblMaxWordLength.Location = new System.Drawing.Point(19, 87);
+            this.lblMaxWordLength.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMaxWordLength.Name = "lblMaxWordLength";
-            this.lblMaxWordLength.Size = new System.Drawing.Size(108, 15);
+            this.lblMaxWordLength.Size = new System.Drawing.Size(162, 25);
             this.lblMaxWordLength.TabIndex = 65;
             this.lblMaxWordLength.Text = "Max Word Length :";
             // 
             // lblMinDelim
             // 
             this.lblMinDelim.AutoSize = true;
-            this.lblMinDelim.Location = new System.Drawing.Point(188, 24);
+            this.lblMinDelim.Location = new System.Drawing.Point(269, 40);
+            this.lblMinDelim.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMinDelim.Name = "lblMinDelim";
-            this.lblMinDelim.Size = new System.Drawing.Size(87, 15);
+            this.lblMinDelim.Size = new System.Drawing.Size(130, 25);
             this.lblMinDelim.TabIndex = 59;
             this.lblMinDelim.Text = "Min Delimiters:";
             // 
@@ -1251,9 +1312,10 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinDelim.Location = new System.Drawing.Point(313, 21);
+            this.cbMinDelim.Location = new System.Drawing.Point(447, 35);
+            this.cbMinDelim.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinDelim.Name = "cbMinDelim";
-            this.cbMinDelim.Size = new System.Drawing.Size(38, 23);
+            this.cbMinDelim.Size = new System.Drawing.Size(53, 33);
             this.cbMinDelim.TabIndex = 60;
             // 
             // grpWordFiltering
@@ -1272,11 +1334,9 @@ namespace BruteForceHash.GUI
             this.grpWordFiltering.Controls.Add(this.lblWordsLimit);
             this.grpWordFiltering.Controls.Add(this.chkIncludeWordNotFirst);
             this.grpWordFiltering.Controls.Add(this.txtIncludeWord);
-            this.grpWordFiltering.Location = new System.Drawing.Point(7, 4);
-            this.grpWordFiltering.Margin = new System.Windows.Forms.Padding(2);
+            this.grpWordFiltering.Location = new System.Drawing.Point(10, 7);
             this.grpWordFiltering.Name = "grpWordFiltering";
-            this.grpWordFiltering.Padding = new System.Windows.Forms.Padding(2);
-            this.grpWordFiltering.Size = new System.Drawing.Size(364, 155);
+            this.grpWordFiltering.Size = new System.Drawing.Size(520, 258);
             this.grpWordFiltering.TabIndex = 85;
             this.grpWordFiltering.TabStop = false;
             this.grpWordFiltering.Text = "Word Filtering";
@@ -1286,9 +1346,10 @@ namespace BruteForceHash.GUI
             this.cbIncludePatternsSamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbIncludePatternsSamples.DropDownWidth = 500;
             this.cbIncludePatternsSamples.FormattingEnabled = true;
-            this.cbIncludePatternsSamples.Location = new System.Drawing.Point(314, 49);
+            this.cbIncludePatternsSamples.Location = new System.Drawing.Point(449, 82);
+            this.cbIncludePatternsSamples.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbIncludePatternsSamples.Name = "cbIncludePatternsSamples";
-            this.cbIncludePatternsSamples.Size = new System.Drawing.Size(38, 23);
+            this.cbIncludePatternsSamples.Size = new System.Drawing.Size(53, 33);
             this.cbIncludePatternsSamples.TabIndex = 57;
             this.cbIncludePatternsSamples.SelectedIndexChanged += new System.EventHandler(this.cbIncludePatternsSamples_SelectedIndexChanged);
             // 
@@ -1297,9 +1358,10 @@ namespace BruteForceHash.GUI
             this.cbExcludePatternsSamples.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbExcludePatternsSamples.DropDownWidth = 500;
             this.cbExcludePatternsSamples.FormattingEnabled = true;
-            this.cbExcludePatternsSamples.Location = new System.Drawing.Point(314, 20);
+            this.cbExcludePatternsSamples.Location = new System.Drawing.Point(449, 33);
+            this.cbExcludePatternsSamples.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbExcludePatternsSamples.Name = "cbExcludePatternsSamples";
-            this.cbExcludePatternsSamples.Size = new System.Drawing.Size(38, 23);
+            this.cbExcludePatternsSamples.Size = new System.Drawing.Size(53, 33);
             this.cbExcludePatternsSamples.TabIndex = 56;
             this.cbExcludePatternsSamples.SelectedIndexChanged += new System.EventHandler(this.cbExcludePatternsSamples_SelectedIndexChanged);
             // 
@@ -1314,18 +1376,20 @@ namespace BruteForceHash.GUI
             "Fewer/longer words first",
             "Greater/shorter words first",
             "Greater/longer words first"});
-            this.cbCombinationOrder.Location = new System.Drawing.Point(121, 122);
+            this.cbCombinationOrder.Location = new System.Drawing.Point(173, 203);
+            this.cbCombinationOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbCombinationOrder.Name = "cbCombinationOrder";
-            this.cbCombinationOrder.Size = new System.Drawing.Size(112, 23);
+            this.cbCombinationOrder.Size = new System.Drawing.Size(158, 33);
             this.cbCombinationOrder.TabIndex = 30;
             // 
             // chkIncludeWordNotLast
             // 
             this.chkIncludeWordNotLast.AutoSize = true;
-            this.chkIncludeWordNotLast.Location = new System.Drawing.Point(250, 97);
+            this.chkIncludeWordNotLast.Location = new System.Drawing.Point(357, 162);
+            this.chkIncludeWordNotLast.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkIncludeWordNotLast.Name = "chkIncludeWordNotLast";
             this.chkIncludeWordNotLast.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.chkIncludeWordNotLast.Size = new System.Drawing.Size(97, 19);
+            this.chkIncludeWordNotLast.Size = new System.Drawing.Size(146, 29);
             this.chkIncludeWordNotLast.TabIndex = 55;
             this.chkIncludeWordNotLast.Text = "Not last word";
             this.chkIncludeWordNotLast.UseVisualStyleBackColor = true;
@@ -1333,10 +1397,11 @@ namespace BruteForceHash.GUI
             // chkIncludeWordNotFirst
             // 
             this.chkIncludeWordNotFirst.AutoSize = true;
-            this.chkIncludeWordNotFirst.Location = new System.Drawing.Point(253, 74);
+            this.chkIncludeWordNotFirst.Location = new System.Drawing.Point(361, 123);
+            this.chkIncludeWordNotFirst.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkIncludeWordNotFirst.Name = "chkIncludeWordNotFirst";
             this.chkIncludeWordNotFirst.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.chkIncludeWordNotFirst.Size = new System.Drawing.Size(94, 19);
+            this.chkIncludeWordNotFirst.Size = new System.Drawing.Size(143, 29);
             this.chkIncludeWordNotFirst.TabIndex = 37;
             this.chkIncludeWordNotFirst.Text = "Not 1st word";
             this.chkIncludeWordNotFirst.UseVisualStyleBackColor = true;
@@ -1360,9 +1425,11 @@ namespace BruteForceHash.GUI
             this.grpAdvanced.Controls.Add(this.cbMaxConsecutiveOnes);
             this.grpAdvanced.Controls.Add(this.cbMinConsecutiveConcat);
             this.grpAdvanced.Controls.Add(this.lblMaxConsecutiveOnes);
-            this.grpAdvanced.Location = new System.Drawing.Point(7, 351);
+            this.grpAdvanced.Location = new System.Drawing.Point(10, 585);
+            this.grpAdvanced.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpAdvanced.Name = "grpAdvanced";
-            this.grpAdvanced.Size = new System.Drawing.Size(364, 131);
+            this.grpAdvanced.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpAdvanced.Size = new System.Drawing.Size(520, 218);
             this.grpAdvanced.TabIndex = 81;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "      Advanced Attack";
@@ -1383,9 +1450,10 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinConcatWords.Location = new System.Drawing.Point(312, 23);
+            this.cbMinConcatWords.Location = new System.Drawing.Point(446, 38);
+            this.cbMinConcatWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinConcatWords.Name = "cbMinConcatWords";
-            this.cbMinConcatWords.Size = new System.Drawing.Size(38, 23);
+            this.cbMinConcatWords.Size = new System.Drawing.Size(53, 33);
             this.cbMinConcatWords.TabIndex = 82;
             // 
             // cbMaxConcatWords
@@ -1404,35 +1472,39 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxConcatWords.Location = new System.Drawing.Point(128, 23);
+            this.cbMaxConcatWords.Location = new System.Drawing.Point(183, 38);
+            this.cbMaxConcatWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxConcatWords.Name = "cbMaxConcatWords";
-            this.cbMaxConcatWords.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxConcatWords.Size = new System.Drawing.Size(53, 33);
             this.cbMaxConcatWords.TabIndex = 81;
             // 
             // lblMinConcatWords
             // 
             this.lblMinConcatWords.AutoSize = true;
-            this.lblMinConcatWords.Location = new System.Drawing.Point(194, 25);
+            this.lblMinConcatWords.Location = new System.Drawing.Point(277, 42);
+            this.lblMinConcatWords.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMinConcatWords.Name = "lblMinConcatWords";
-            this.lblMinConcatWords.Size = new System.Drawing.Size(112, 15);
+            this.lblMinConcatWords.Size = new System.Drawing.Size(167, 25);
             this.lblMinConcatWords.TabIndex = 80;
             this.lblMinConcatWords.Text = "Min Concat. Words:";
             // 
             // lblMaxConcatWords
             // 
             this.lblMaxConcatWords.AutoSize = true;
-            this.lblMaxConcatWords.Location = new System.Drawing.Point(4, 25);
+            this.lblMaxConcatWords.Location = new System.Drawing.Point(6, 42);
+            this.lblMaxConcatWords.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMaxConcatWords.Name = "lblMaxConcatWords";
-            this.lblMaxConcatWords.Size = new System.Drawing.Size(114, 15);
+            this.lblMaxConcatWords.Size = new System.Drawing.Size(170, 25);
             this.lblMaxConcatWords.TabIndex = 79;
             this.lblMaxConcatWords.Text = "Max Concat. Words:";
             // 
             // chkDictionaryAdvanced
             // 
             this.chkDictionaryAdvanced.AutoSize = true;
-            this.chkDictionaryAdvanced.Location = new System.Drawing.Point(9, 1);
+            this.chkDictionaryAdvanced.Location = new System.Drawing.Point(13, 2);
+            this.chkDictionaryAdvanced.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionaryAdvanced.Name = "chkDictionaryAdvanced";
-            this.chkDictionaryAdvanced.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionaryAdvanced.Size = new System.Drawing.Size(22, 21);
             this.chkDictionaryAdvanced.TabIndex = 56;
             this.chkDictionaryAdvanced.UseVisualStyleBackColor = true;
             this.chkDictionaryAdvanced.CheckedChanged += new System.EventHandler(this.OnDictionaryAdvancedCheckedChanged);
@@ -1440,9 +1512,10 @@ namespace BruteForceHash.GUI
             // lblOnlyLastTwoWordsConcat
             // 
             this.lblOnlyLastTwoWordsConcat.AutoSize = true;
-            this.lblOnlyLastTwoWordsConcat.Location = new System.Drawing.Point(193, 106);
+            this.lblOnlyLastTwoWordsConcat.Location = new System.Drawing.Point(276, 177);
+            this.lblOnlyLastTwoWordsConcat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblOnlyLastTwoWordsConcat.Name = "lblOnlyLastTwoWordsConcat";
-            this.lblOnlyLastTwoWordsConcat.Size = new System.Drawing.Size(124, 15);
+            this.lblOnlyLastTwoWordsConcat.Size = new System.Drawing.Size(188, 25);
             this.lblOnlyLastTwoWordsConcat.TabIndex = 78;
             this.lblOnlyLastTwoWordsConcat.Text = "Last 2 Words Concat. :";
             // 
@@ -1451,18 +1524,20 @@ namespace BruteForceHash.GUI
             this.chkOnlyLastTwoWordsConcat.AutoSize = true;
             this.chkOnlyLastTwoWordsConcat.Checked = true;
             this.chkOnlyLastTwoWordsConcat.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkOnlyLastTwoWordsConcat.Location = new System.Drawing.Point(335, 107);
+            this.chkOnlyLastTwoWordsConcat.Location = new System.Drawing.Point(479, 178);
+            this.chkOnlyLastTwoWordsConcat.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkOnlyLastTwoWordsConcat.Name = "chkOnlyLastTwoWordsConcat";
-            this.chkOnlyLastTwoWordsConcat.Size = new System.Drawing.Size(15, 14);
+            this.chkOnlyLastTwoWordsConcat.Size = new System.Drawing.Size(22, 21);
             this.chkOnlyLastTwoWordsConcat.TabIndex = 77;
             this.chkOnlyLastTwoWordsConcat.UseVisualStyleBackColor = true;
             // 
             // lblOnlyFirstTwoWordsConcat
             // 
             this.lblOnlyFirstTwoWordsConcat.AutoSize = true;
-            this.lblOnlyFirstTwoWordsConcat.Location = new System.Drawing.Point(4, 106);
+            this.lblOnlyFirstTwoWordsConcat.Location = new System.Drawing.Point(6, 177);
+            this.lblOnlyFirstTwoWordsConcat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblOnlyFirstTwoWordsConcat.Name = "lblOnlyFirstTwoWordsConcat";
-            this.lblOnlyFirstTwoWordsConcat.Size = new System.Drawing.Size(125, 15);
+            this.lblOnlyFirstTwoWordsConcat.Size = new System.Drawing.Size(190, 25);
             this.lblOnlyFirstTwoWordsConcat.TabIndex = 38;
             this.lblOnlyFirstTwoWordsConcat.Text = "First 2 Words Concat. :";
             // 
@@ -1471,18 +1546,20 @@ namespace BruteForceHash.GUI
             this.chkOnlyFirstTwoWordsConcat.AutoSize = true;
             this.chkOnlyFirstTwoWordsConcat.Checked = true;
             this.chkOnlyFirstTwoWordsConcat.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkOnlyFirstTwoWordsConcat.Location = new System.Drawing.Point(151, 107);
+            this.chkOnlyFirstTwoWordsConcat.Location = new System.Drawing.Point(216, 178);
+            this.chkOnlyFirstTwoWordsConcat.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkOnlyFirstTwoWordsConcat.Name = "chkOnlyFirstTwoWordsConcat";
-            this.chkOnlyFirstTwoWordsConcat.Size = new System.Drawing.Size(15, 14);
+            this.chkOnlyFirstTwoWordsConcat.Size = new System.Drawing.Size(22, 21);
             this.chkOnlyFirstTwoWordsConcat.TabIndex = 37;
             this.chkOnlyFirstTwoWordsConcat.UseVisualStyleBackColor = true;
             // 
             // lblMaxConsecutiveConcat
             // 
             this.lblMaxConsecutiveConcat.AutoSize = true;
-            this.lblMaxConsecutiveConcat.Location = new System.Drawing.Point(4, 51);
+            this.lblMaxConsecutiveConcat.Location = new System.Drawing.Point(6, 85);
+            this.lblMaxConsecutiveConcat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMaxConsecutiveConcat.Name = "lblMaxConsecutiveConcat";
-            this.lblMaxConsecutiveConcat.Size = new System.Drawing.Size(113, 15);
+            this.lblMaxConsecutiveConcat.Size = new System.Drawing.Size(167, 25);
             this.lblMaxConsecutiveConcat.TabIndex = 61;
             this.lblMaxConsecutiveConcat.Text = "Max Cons. Concat. :";
             // 
@@ -1501,9 +1578,10 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinWordsLimit.Location = new System.Drawing.Point(312, 76);
+            this.cbMinWordsLimit.Location = new System.Drawing.Point(446, 127);
+            this.cbMinWordsLimit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinWordsLimit.Name = "cbMinWordsLimit";
-            this.cbMinWordsLimit.Size = new System.Drawing.Size(38, 23);
+            this.cbMinWordsLimit.Size = new System.Drawing.Size(53, 33);
             this.cbMinWordsLimit.TabIndex = 76;
             // 
             // cbMaxConsecutiveConcat
@@ -1521,26 +1599,29 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxConsecutiveConcat.Location = new System.Drawing.Point(128, 50);
+            this.cbMaxConsecutiveConcat.Location = new System.Drawing.Point(183, 83);
+            this.cbMaxConsecutiveConcat.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxConsecutiveConcat.Name = "cbMaxConsecutiveConcat";
-            this.cbMaxConsecutiveConcat.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxConsecutiveConcat.Size = new System.Drawing.Size(53, 33);
             this.cbMaxConsecutiveConcat.TabIndex = 62;
             // 
             // lblMinWordsLimit
             // 
             this.lblMinWordsLimit.AutoSize = true;
-            this.lblMinWordsLimit.Location = new System.Drawing.Point(194, 79);
+            this.lblMinWordsLimit.Location = new System.Drawing.Point(277, 132);
+            this.lblMinWordsLimit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMinWordsLimit.Name = "lblMinWordsLimit";
-            this.lblMinWordsLimit.Size = new System.Drawing.Size(98, 15);
+            this.lblMinWordsLimit.Size = new System.Drawing.Size(146, 25);
             this.lblMinWordsLimit.TabIndex = 75;
             this.lblMinWordsLimit.Text = "Min Words Limit:";
             // 
             // lblMinConsecutiveConcat
             // 
             this.lblMinConsecutiveConcat.AutoSize = true;
-            this.lblMinConsecutiveConcat.Location = new System.Drawing.Point(194, 51);
+            this.lblMinConsecutiveConcat.Location = new System.Drawing.Point(277, 85);
+            this.lblMinConsecutiveConcat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMinConsecutiveConcat.Name = "lblMinConsecutiveConcat";
-            this.lblMinConsecutiveConcat.Size = new System.Drawing.Size(111, 15);
+            this.lblMinConsecutiveConcat.Size = new System.Drawing.Size(164, 25);
             this.lblMinConsecutiveConcat.TabIndex = 63;
             this.lblMinConsecutiveConcat.Text = "Min Cons. Concat. :";
             // 
@@ -1559,9 +1640,10 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMaxConsecutiveOnes.Location = new System.Drawing.Point(128, 76);
+            this.cbMaxConsecutiveOnes.Location = new System.Drawing.Point(183, 127);
+            this.cbMaxConsecutiveOnes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMaxConsecutiveOnes.Name = "cbMaxConsecutiveOnes";
-            this.cbMaxConsecutiveOnes.Size = new System.Drawing.Size(38, 23);
+            this.cbMaxConsecutiveOnes.Size = new System.Drawing.Size(53, 33);
             this.cbMaxConsecutiveOnes.TabIndex = 74;
             // 
             // cbMinConsecutiveConcat
@@ -1579,17 +1661,19 @@ namespace BruteForceHash.GUI
             "8",
             "9",
             "10"});
-            this.cbMinConsecutiveConcat.Location = new System.Drawing.Point(312, 50);
+            this.cbMinConsecutiveConcat.Location = new System.Drawing.Point(446, 83);
+            this.cbMinConsecutiveConcat.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbMinConsecutiveConcat.Name = "cbMinConsecutiveConcat";
-            this.cbMinConsecutiveConcat.Size = new System.Drawing.Size(38, 23);
+            this.cbMinConsecutiveConcat.Size = new System.Drawing.Size(53, 33);
             this.cbMinConsecutiveConcat.TabIndex = 64;
             // 
             // lblMaxConsecutiveOnes
             // 
             this.lblMaxConsecutiveOnes.AutoSize = true;
-            this.lblMaxConsecutiveOnes.Location = new System.Drawing.Point(4, 79);
+            this.lblMaxConsecutiveOnes.Location = new System.Drawing.Point(6, 132);
+            this.lblMaxConsecutiveOnes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMaxConsecutiveOnes.Name = "lblMaxConsecutiveOnes";
-            this.lblMaxConsecutiveOnes.Size = new System.Drawing.Size(99, 15);
+            this.lblMaxConsecutiveOnes.Size = new System.Drawing.Size(149, 25);
             this.lblMaxConsecutiveOnes.TabIndex = 73;
             this.lblMaxConsecutiveOnes.Text = "Max Cons. Ones :";
             // 
@@ -1605,44 +1689,50 @@ namespace BruteForceHash.GUI
             this.grpTypos.Controls.Add(this.chkTyposDoubleLetter);
             this.grpTypos.Controls.Add(this.chkTyposSkipLetter);
             this.grpTypos.Controls.Add(this.chkTyposSkipDoubleLetter);
-            this.grpTypos.Location = new System.Drawing.Point(7, 487);
+            this.grpTypos.Location = new System.Drawing.Point(10, 812);
+            this.grpTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpTypos.Name = "grpTypos";
-            this.grpTypos.Size = new System.Drawing.Size(363, 95);
+            this.grpTypos.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpTypos.Size = new System.Drawing.Size(519, 158);
             this.grpTypos.TabIndex = 80;
             this.grpTypos.TabStop = false;
             this.grpTypos.Text = "Typos";
             // 
             // txtTyposAppendLetters
             // 
-            this.txtTyposAppendLetters.Location = new System.Drawing.Point(274, 66);
+            this.txtTyposAppendLetters.Location = new System.Drawing.Point(391, 110);
+            this.txtTyposAppendLetters.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtTyposAppendLetters.Name = "txtTyposAppendLetters";
             this.txtTyposAppendLetters.PlaceholderText = "s,ed";
-            this.txtTyposAppendLetters.Size = new System.Drawing.Size(77, 23);
+            this.txtTyposAppendLetters.Size = new System.Drawing.Size(108, 31);
             this.txtTyposAppendLetters.TabIndex = 88;
             // 
             // lblTyposAppendLetters
             // 
             this.lblTyposAppendLetters.AutoSize = true;
-            this.lblTyposAppendLetters.Location = new System.Drawing.Point(183, 70);
+            this.lblTyposAppendLetters.Location = new System.Drawing.Point(261, 117);
+            this.lblTyposAppendLetters.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTyposAppendLetters.Name = "lblTyposAppendLetters";
-            this.lblTyposAppendLetters.Size = new System.Drawing.Size(85, 15);
+            this.lblTyposAppendLetters.Size = new System.Drawing.Size(129, 25);
             this.lblTyposAppendLetters.TabIndex = 87;
             this.lblTyposAppendLetters.Text = "Append Letter:";
             // 
             // txtTyposSwapLetters
             // 
-            this.txtTyposSwapLetters.Location = new System.Drawing.Point(88, 67);
+            this.txtTyposSwapLetters.Location = new System.Drawing.Point(126, 112);
+            this.txtTyposSwapLetters.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtTyposSwapLetters.Name = "txtTyposSwapLetters";
             this.txtTyposSwapLetters.PlaceholderText = "l-r,a-e,i-y";
-            this.txtTyposSwapLetters.Size = new System.Drawing.Size(77, 23);
+            this.txtTyposSwapLetters.Size = new System.Drawing.Size(108, 31);
             this.txtTyposSwapLetters.TabIndex = 86;
             // 
             // lblTyposSwapLetters
             // 
             this.lblTyposSwapLetters.AutoSize = true;
-            this.lblTyposSwapLetters.Location = new System.Drawing.Point(12, 70);
+            this.lblTyposSwapLetters.Location = new System.Drawing.Point(17, 117);
+            this.lblTyposSwapLetters.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTyposSwapLetters.Name = "lblTyposSwapLetters";
-            this.lblTyposSwapLetters.Size = new System.Drawing.Size(70, 15);
+            this.lblTyposSwapLetters.Size = new System.Drawing.Size(106, 25);
             this.lblTyposSwapLetters.TabIndex = 85;
             this.lblTyposSwapLetters.Text = "Letter swap:";
             // 
@@ -1651,9 +1741,10 @@ namespace BruteForceHash.GUI
             this.chkTyposReverseLetter.AutoSize = true;
             this.chkTyposReverseLetter.Checked = true;
             this.chkTyposReverseLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposReverseLetter.Location = new System.Drawing.Point(121, 21);
+            this.chkTyposReverseLetter.Location = new System.Drawing.Point(173, 35);
+            this.chkTyposReverseLetter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkTyposReverseLetter.Name = "chkTyposReverseLetter";
-            this.chkTyposReverseLetter.Size = new System.Drawing.Size(99, 19);
+            this.chkTyposReverseLetter.Size = new System.Drawing.Size(147, 29);
             this.chkTyposReverseLetter.TabIndex = 84;
             this.chkTyposReverseLetter.Text = "Reverse Letter";
             this.chkTyposReverseLetter.UseVisualStyleBackColor = true;
@@ -1663,9 +1754,10 @@ namespace BruteForceHash.GUI
             this.chkTyposWrongLetter.AutoSize = true;
             this.chkTyposWrongLetter.Checked = true;
             this.chkTyposWrongLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposWrongLetter.Location = new System.Drawing.Point(121, 46);
+            this.chkTyposWrongLetter.Location = new System.Drawing.Point(173, 77);
+            this.chkTyposWrongLetter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkTyposWrongLetter.Name = "chkTyposWrongLetter";
-            this.chkTyposWrongLetter.Size = new System.Drawing.Size(95, 19);
+            this.chkTyposWrongLetter.Size = new System.Drawing.Size(142, 29);
             this.chkTyposWrongLetter.TabIndex = 83;
             this.chkTyposWrongLetter.Text = "Wrong Letter";
             this.chkTyposWrongLetter.UseVisualStyleBackColor = true;
@@ -1675,9 +1767,10 @@ namespace BruteForceHash.GUI
             this.chkTyposExtraLetter.AutoSize = true;
             this.chkTyposExtraLetter.Checked = true;
             this.chkTyposExtraLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposExtraLetter.Location = new System.Drawing.Point(12, 21);
+            this.chkTyposExtraLetter.Location = new System.Drawing.Point(17, 35);
+            this.chkTyposExtraLetter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkTyposExtraLetter.Name = "chkTyposExtraLetter";
-            this.chkTyposExtraLetter.Size = new System.Drawing.Size(85, 19);
+            this.chkTyposExtraLetter.Size = new System.Drawing.Size(125, 29);
             this.chkTyposExtraLetter.TabIndex = 82;
             this.chkTyposExtraLetter.Text = "Extra Letter";
             this.chkTyposExtraLetter.UseVisualStyleBackColor = true;
@@ -1687,9 +1780,10 @@ namespace BruteForceHash.GUI
             this.chkTyposDoubleLetter.AutoSize = true;
             this.chkTyposDoubleLetter.Checked = true;
             this.chkTyposDoubleLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposDoubleLetter.Location = new System.Drawing.Point(236, 21);
+            this.chkTyposDoubleLetter.Location = new System.Drawing.Point(337, 35);
+            this.chkTyposDoubleLetter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkTyposDoubleLetter.Name = "chkTyposDoubleLetter";
-            this.chkTyposDoubleLetter.Size = new System.Drawing.Size(97, 19);
+            this.chkTyposDoubleLetter.Size = new System.Drawing.Size(145, 29);
             this.chkTyposDoubleLetter.TabIndex = 81;
             this.chkTyposDoubleLetter.Text = "Double Letter";
             this.chkTyposDoubleLetter.UseVisualStyleBackColor = true;
@@ -1699,9 +1793,10 @@ namespace BruteForceHash.GUI
             this.chkTyposSkipLetter.AutoSize = true;
             this.chkTyposSkipLetter.Checked = true;
             this.chkTyposSkipLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposSkipLetter.Location = new System.Drawing.Point(12, 46);
+            this.chkTyposSkipLetter.Location = new System.Drawing.Point(17, 77);
+            this.chkTyposSkipLetter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkTyposSkipLetter.Name = "chkTyposSkipLetter";
-            this.chkTyposSkipLetter.Size = new System.Drawing.Size(81, 19);
+            this.chkTyposSkipLetter.Size = new System.Drawing.Size(121, 29);
             this.chkTyposSkipLetter.TabIndex = 80;
             this.chkTyposSkipLetter.Text = "Skip Letter";
             this.chkTyposSkipLetter.UseVisualStyleBackColor = true;
@@ -1711,9 +1806,10 @@ namespace BruteForceHash.GUI
             this.chkTyposSkipDoubleLetter.AutoSize = true;
             this.chkTyposSkipDoubleLetter.Checked = true;
             this.chkTyposSkipDoubleLetter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTyposSkipDoubleLetter.Location = new System.Drawing.Point(236, 46);
+            this.chkTyposSkipDoubleLetter.Location = new System.Drawing.Point(337, 77);
+            this.chkTyposSkipDoubleLetter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkTyposSkipDoubleLetter.Name = "chkTyposSkipDoubleLetter";
-            this.chkTyposSkipDoubleLetter.Size = new System.Drawing.Size(122, 19);
+            this.chkTyposSkipDoubleLetter.Size = new System.Drawing.Size(184, 29);
             this.chkTyposSkipDoubleLetter.TabIndex = 79;
             this.chkTyposSkipDoubleLetter.Text = "Skip Double Letter";
             this.chkTyposSkipDoubleLetter.UseVisualStyleBackColor = true;
@@ -1721,9 +1817,10 @@ namespace BruteForceHash.GUI
             // pnlDictBruteforce
             // 
             this.pnlDictBruteforce.Controls.Add(this.tabControl);
-            this.pnlDictBruteforce.Location = new System.Drawing.Point(372, 1);
+            this.pnlDictBruteforce.Location = new System.Drawing.Point(531, 2);
+            this.pnlDictBruteforce.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnlDictBruteforce.Name = "pnlDictBruteforce";
-            this.pnlDictBruteforce.Size = new System.Drawing.Size(455, 586);
+            this.pnlDictBruteforce.Size = new System.Drawing.Size(650, 977);
             this.pnlDictBruteforce.TabIndex = 87;
             // 
             // tabControl
@@ -1731,22 +1828,20 @@ namespace BruteForceHash.GUI
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
-            this.tabControl.Location = new System.Drawing.Point(5, 11);
-            this.tabControl.Margin = new System.Windows.Forms.Padding(2);
+            this.tabControl.Location = new System.Drawing.Point(7, 18);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(444, 578);
+            this.tabControl.Size = new System.Drawing.Size(634, 963);
             this.tabControl.TabIndex = 84;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.tabMainDictionaries);
             this.tabPage1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabPage1.Location = new System.Drawing.Point(4, 24);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Location = new System.Drawing.Point(4, 34);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(436, 550);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(626, 925);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main Dictionary";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1757,9 +1852,10 @@ namespace BruteForceHash.GUI
             this.tabMainDictionaries.Controls.Add(this.tabMainDictionariesCustom);
             this.tabMainDictionaries.Controls.Add(this.tabMainDictionariesExcludeWords);
             this.tabMainDictionaries.Location = new System.Drawing.Point(0, 0);
+            this.tabMainDictionaries.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabMainDictionaries.Name = "tabMainDictionaries";
             this.tabMainDictionaries.SelectedIndex = 0;
-            this.tabMainDictionaries.Size = new System.Drawing.Size(436, 550);
+            this.tabMainDictionaries.Size = new System.Drawing.Size(623, 917);
             this.tabMainDictionaries.TabIndex = 85;
             // 
             // tabMainDictionariesCommon
@@ -1777,37 +1873,41 @@ namespace BruteForceHash.GUI
             this.tabMainDictionariesCommon.Controls.Add(this.lblDictionaryFilterFirstFrom);
             this.tabMainDictionariesCommon.Controls.Add(this.chkDictSkipSpecials);
             this.tabMainDictionariesCommon.Controls.Add(this.chkDictSkipDigits);
-            this.tabMainDictionariesCommon.Location = new System.Drawing.Point(4, 22);
+            this.tabMainDictionariesCommon.Location = new System.Drawing.Point(4, 32);
+            this.tabMainDictionariesCommon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabMainDictionariesCommon.Name = "tabMainDictionariesCommon";
-            this.tabMainDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMainDictionariesCommon.Size = new System.Drawing.Size(428, 524);
+            this.tabMainDictionariesCommon.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabMainDictionariesCommon.Size = new System.Drawing.Size(615, 881);
             this.tabMainDictionariesCommon.TabIndex = 0;
             this.tabMainDictionariesCommon.Text = "Common Dictionaries";
             this.tabMainDictionariesCommon.UseVisualStyleBackColor = true;
             // 
             // txtDictionaryFilterFirstTo
             // 
-            this.txtDictionaryFilterFirstTo.Location = new System.Drawing.Point(6, 205);
+            this.txtDictionaryFilterFirstTo.Location = new System.Drawing.Point(9, 342);
+            this.txtDictionaryFilterFirstTo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtDictionaryFilterFirstTo.Name = "txtDictionaryFilterFirstTo";
             this.txtDictionaryFilterFirstTo.PlaceholderText = "zelda";
-            this.txtDictionaryFilterFirstTo.Size = new System.Drawing.Size(98, 22);
+            this.txtDictionaryFilterFirstTo.Size = new System.Drawing.Size(138, 29);
             this.txtDictionaryFilterFirstTo.TabIndex = 95;
             // 
             // lblDictionaryFilterFirstTo
             // 
             this.lblDictionaryFilterFirstTo.AutoSize = true;
-            this.lblDictionaryFilterFirstTo.Location = new System.Drawing.Point(9, 188);
+            this.lblDictionaryFilterFirstTo.Location = new System.Drawing.Point(13, 313);
+            this.lblDictionaryFilterFirstTo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionaryFilterFirstTo.Name = "lblDictionaryFilterFirstTo";
-            this.lblDictionaryFilterFirstTo.Size = new System.Drawing.Size(21, 13);
+            this.lblDictionaryFilterFirstTo.Size = new System.Drawing.Size(30, 23);
             this.lblDictionaryFilterFirstTo.TabIndex = 94;
             this.lblDictionaryFilterFirstTo.Text = "to:";
             // 
             // chkDictionariesUse
             // 
             this.chkDictionariesUse.AutoSize = true;
-            this.chkDictionariesUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesUse.Location = new System.Drawing.Point(114, 13);
+            this.chkDictionariesUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionariesUse.Name = "chkDictionariesUse";
-            this.chkDictionariesUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesUse.Size = new System.Drawing.Size(22, 21);
             this.chkDictionariesUse.TabIndex = 93;
             this.chkDictionariesUse.UseVisualStyleBackColor = true;
             this.chkDictionariesUse.CheckedChanged += new System.EventHandler(this.chkDictionariesUse_CheckedChanged);
@@ -1815,18 +1915,18 @@ namespace BruteForceHash.GUI
             // lblDictionariesUse
             // 
             this.lblDictionariesUse.AutoSize = true;
-            this.lblDictionariesUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesUse.Name = "lblDictionariesUse";
-            this.lblDictionariesUse.Size = new System.Drawing.Size(29, 13);
+            this.lblDictionariesUse.Size = new System.Drawing.Size(42, 23);
             this.lblDictionariesUse.TabIndex = 22;
             this.lblDictionariesUse.Text = "Use:";
             // 
             // btnDictUnselected
             // 
-            this.btnDictUnselected.Location = new System.Drawing.Point(4, 497);
-            this.btnDictUnselected.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDictUnselected.Location = new System.Drawing.Point(6, 828);
             this.btnDictUnselected.Name = "btnDictUnselected";
-            this.btnDictUnselected.Size = new System.Drawing.Size(102, 22);
+            this.btnDictUnselected.Size = new System.Drawing.Size(146, 37);
             this.btnDictUnselected.TabIndex = 55;
             this.btnDictUnselected.Text = "Unselect All";
             this.btnDictUnselected.UseVisualStyleBackColor = true;
@@ -1834,19 +1934,19 @@ namespace BruteForceHash.GUI
             // 
             // tvDictMain
             // 
-            this.tvDictMain.Location = new System.Drawing.Point(109, 2);
-            this.tvDictMain.Margin = new System.Windows.Forms.Padding(2);
+            this.tvDictMain.Location = new System.Drawing.Point(156, 3);
             this.tvDictMain.Name = "tvDictMain";
-            this.tvDictMain.Size = new System.Drawing.Size(317, 520);
+            this.tvDictMain.Size = new System.Drawing.Size(451, 864);
             this.tvDictMain.TabIndex = 84;
             this.tvDictMain.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
             // 
             // chkDictReverseOrder
             // 
             this.chkDictReverseOrder.AutoSize = true;
-            this.chkDictReverseOrder.Location = new System.Drawing.Point(6, 120);
+            this.chkDictReverseOrder.Location = new System.Drawing.Point(9, 200);
+            this.chkDictReverseOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictReverseOrder.Name = "chkDictReverseOrder";
-            this.chkDictReverseOrder.Size = new System.Drawing.Size(98, 17);
+            this.chkDictReverseOrder.Size = new System.Drawing.Size(143, 27);
             this.chkDictReverseOrder.TabIndex = 54;
             this.chkDictReverseOrder.Text = "Reverse Order";
             this.chkDictReverseOrder.UseVisualStyleBackColor = true;
@@ -1854,19 +1954,21 @@ namespace BruteForceHash.GUI
             // chkDictAddTypos
             // 
             this.chkDictAddTypos.AutoSize = true;
-            this.chkDictAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictAddTypos.Location = new System.Drawing.Point(9, 162);
+            this.chkDictAddTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictAddTypos.Name = "chkDictAddTypos";
-            this.chkDictAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictAddTypos.Size = new System.Drawing.Size(115, 27);
             this.chkDictAddTypos.TabIndex = 53;
             this.chkDictAddTypos.Text = "Add Typos";
             this.chkDictAddTypos.UseVisualStyleBackColor = true;
             // 
             // txtDictionaryFilterFirstFrom
             // 
-            this.txtDictionaryFilterFirstFrom.Location = new System.Drawing.Point(6, 162);
+            this.txtDictionaryFilterFirstFrom.Location = new System.Drawing.Point(9, 270);
+            this.txtDictionaryFilterFirstFrom.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtDictionaryFilterFirstFrom.Name = "txtDictionaryFilterFirstFrom";
             this.txtDictionaryFilterFirstFrom.PlaceholderText = "alucard";
-            this.txtDictionaryFilterFirstFrom.Size = new System.Drawing.Size(98, 22);
+            this.txtDictionaryFilterFirstFrom.Size = new System.Drawing.Size(138, 29);
             this.txtDictionaryFilterFirstFrom.TabIndex = 82;
             // 
             // chkDictForceLowercase
@@ -1874,10 +1976,10 @@ namespace BruteForceHash.GUI
             this.chkDictForceLowercase.AutoSize = true;
             this.chkDictForceLowercase.Checked = true;
             this.chkDictForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictForceLowercase.Location = new System.Drawing.Point(6, 74);
-            this.chkDictForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictForceLowercase.Location = new System.Drawing.Point(9, 123);
+            this.chkDictForceLowercase.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictForceLowercase.Name = "chkDictForceLowercase";
-            this.chkDictForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictForceLowercase.Size = new System.Drawing.Size(114, 27);
             this.chkDictForceLowercase.TabIndex = 52;
             this.chkDictForceLowercase.Text = "Lowercase";
             this.chkDictForceLowercase.UseVisualStyleBackColor = true;
@@ -1885,9 +1987,10 @@ namespace BruteForceHash.GUI
             // lblDictionaryFilterFirstFrom
             // 
             this.lblDictionaryFilterFirstFrom.AutoSize = true;
-            this.lblDictionaryFilterFirstFrom.Location = new System.Drawing.Point(6, 145);
+            this.lblDictionaryFilterFirstFrom.Location = new System.Drawing.Point(9, 242);
+            this.lblDictionaryFilterFirstFrom.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionaryFilterFirstFrom.Name = "lblDictionaryFilterFirstFrom";
-            this.lblDictionaryFilterFirstFrom.Size = new System.Drawing.Size(91, 13);
+            this.lblDictionaryFilterFirstFrom.Size = new System.Drawing.Size(132, 23);
             this.lblDictionaryFilterFirstFrom.TabIndex = 83;
             this.lblDictionaryFilterFirstFrom.Text = "First Word from:";
             // 
@@ -1896,10 +1999,10 @@ namespace BruteForceHash.GUI
             this.chkDictSkipSpecials.AutoSize = true;
             this.chkDictSkipSpecials.Checked = true;
             this.chkDictSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictSkipSpecials.Location = new System.Drawing.Point(6, 51);
-            this.chkDictSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictSkipSpecials.Location = new System.Drawing.Point(9, 85);
+            this.chkDictSkipSpecials.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictSkipSpecials.Name = "chkDictSkipSpecials";
-            this.chkDictSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictSkipSpecials.Size = new System.Drawing.Size(132, 27);
             this.chkDictSkipSpecials.TabIndex = 51;
             this.chkDictSkipSpecials.Text = "Skip Specials";
             this.chkDictSkipSpecials.UseVisualStyleBackColor = true;
@@ -1907,9 +2010,10 @@ namespace BruteForceHash.GUI
             // chkDictSkipDigits
             // 
             this.chkDictSkipDigits.AutoSize = true;
-            this.chkDictSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictSkipDigits.Location = new System.Drawing.Point(9, 47);
+            this.chkDictSkipDigits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictSkipDigits.Name = "chkDictSkipDigits";
-            this.chkDictSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictSkipDigits.Size = new System.Drawing.Size(115, 27);
             this.chkDictSkipDigits.TabIndex = 50;
             this.chkDictSkipDigits.Text = "Skip Digits";
             this.chkDictSkipDigits.UseVisualStyleBackColor = true;
@@ -1927,10 +2031,11 @@ namespace BruteForceHash.GUI
             this.tabMainDictionariesCustom.Controls.Add(this.chkDictCustomWordsSkipSpecials);
             this.tabMainDictionariesCustom.Controls.Add(this.chkDictCustomWordsSkipDigits);
             this.tabMainDictionariesCustom.Controls.Add(this.txtDictCustWords);
-            this.tabMainDictionariesCustom.Location = new System.Drawing.Point(4, 22);
+            this.tabMainDictionariesCustom.Location = new System.Drawing.Point(4, 32);
+            this.tabMainDictionariesCustom.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabMainDictionariesCustom.Name = "tabMainDictionariesCustom";
-            this.tabMainDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMainDictionariesCustom.Size = new System.Drawing.Size(428, 524);
+            this.tabMainDictionariesCustom.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabMainDictionariesCustom.Size = new System.Drawing.Size(615, 881);
             this.tabMainDictionariesCustom.TabIndex = 1;
             this.tabMainDictionariesCustom.Text = "Custom Words";
             this.tabMainDictionariesCustom.UseVisualStyleBackColor = true;
@@ -1938,9 +2043,10 @@ namespace BruteForceHash.GUI
             // chkDictionariesCustomWordsUse
             // 
             this.chkDictionariesCustomWordsUse.AutoSize = true;
-            this.chkDictionariesCustomWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesCustomWordsUse.Location = new System.Drawing.Point(114, 13);
+            this.chkDictionariesCustomWordsUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionariesCustomWordsUse.Name = "chkDictionariesCustomWordsUse";
-            this.chkDictionariesCustomWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesCustomWordsUse.Size = new System.Drawing.Size(22, 21);
             this.chkDictionariesCustomWordsUse.TabIndex = 92;
             this.chkDictionariesCustomWordsUse.UseVisualStyleBackColor = true;
             this.chkDictionariesCustomWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesCustomWordsUse_CheckedChanged);
@@ -1948,27 +2054,30 @@ namespace BruteForceHash.GUI
             // lblDictionariesCustomWordsUse
             // 
             this.lblDictionariesCustomWordsUse.AutoSize = true;
-            this.lblDictionariesCustomWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesCustomWordsUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesCustomWordsUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesCustomWordsUse.Name = "lblDictionariesCustomWordsUse";
-            this.lblDictionariesCustomWordsUse.Size = new System.Drawing.Size(29, 13);
+            this.lblDictionariesCustomWordsUse.Size = new System.Drawing.Size(42, 23);
             this.lblDictionariesCustomWordsUse.TabIndex = 91;
             this.lblDictionariesCustomWordsUse.Text = "Use:";
             // 
             // lblDictionariesCustomWordsAtLeast
             // 
             this.lblDictionariesCustomWordsAtLeast.AutoSize = true;
-            this.lblDictionariesCustomWordsAtLeast.Location = new System.Drawing.Point(9, 147);
+            this.lblDictionariesCustomWordsAtLeast.Location = new System.Drawing.Point(13, 245);
+            this.lblDictionariesCustomWordsAtLeast.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesCustomWordsAtLeast.Name = "lblDictionariesCustomWordsAtLeast";
-            this.lblDictionariesCustomWordsAtLeast.Size = new System.Drawing.Size(45, 13);
+            this.lblDictionariesCustomWordsAtLeast.Size = new System.Drawing.Size(67, 23);
             this.lblDictionariesCustomWordsAtLeast.TabIndex = 89;
             this.lblDictionariesCustomWordsAtLeast.Text = "At least";
             // 
             // lblDictionariesCustomWordsHash
             // 
             this.lblDictionariesCustomWordsHash.AutoSize = true;
-            this.lblDictionariesCustomWordsHash.Location = new System.Drawing.Point(9, 166);
+            this.lblDictionariesCustomWordsHash.Location = new System.Drawing.Point(13, 277);
+            this.lblDictionariesCustomWordsHash.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesCustomWordsHash.Name = "lblDictionariesCustomWordsHash";
-            this.lblDictionariesCustomWordsHash.Size = new System.Drawing.Size(86, 13);
+            this.lblDictionariesCustomWordsHash.Size = new System.Drawing.Size(125, 23);
             this.lblDictionariesCustomWordsHash.TabIndex = 88;
             this.lblDictionariesCustomWordsHash.Text = "word(s) in hash";
             // 
@@ -1981,26 +2090,29 @@ namespace BruteForceHash.GUI
             "1",
             "2",
             "3"});
-            this.cbDictionariesCustomWordsMinimumInHash.Location = new System.Drawing.Point(57, 143);
+            this.cbDictionariesCustomWordsMinimumInHash.Location = new System.Drawing.Point(81, 238);
+            this.cbDictionariesCustomWordsMinimumInHash.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbDictionariesCustomWordsMinimumInHash.Name = "cbDictionariesCustomWordsMinimumInHash";
-            this.cbDictionariesCustomWordsMinimumInHash.Size = new System.Drawing.Size(38, 21);
+            this.cbDictionariesCustomWordsMinimumInHash.Size = new System.Drawing.Size(53, 31);
             this.cbDictionariesCustomWordsMinimumInHash.TabIndex = 87;
             // 
             // lblDictionariesCustomWordsFiltering
             // 
             this.lblDictionariesCustomWordsFiltering.AutoSize = true;
-            this.lblDictionariesCustomWordsFiltering.Location = new System.Drawing.Point(6, 122);
+            this.lblDictionariesCustomWordsFiltering.Location = new System.Drawing.Point(9, 203);
+            this.lblDictionariesCustomWordsFiltering.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesCustomWordsFiltering.Name = "lblDictionariesCustomWordsFiltering";
-            this.lblDictionariesCustomWordsFiltering.Size = new System.Drawing.Size(86, 13);
+            this.lblDictionariesCustomWordsFiltering.Size = new System.Drawing.Size(123, 23);
             this.lblDictionariesCustomWordsFiltering.TabIndex = 86;
             this.lblDictionariesCustomWordsFiltering.Text = "Filtering (slow):";
             // 
             // chkDictCustomWordsAddTypos
             // 
             this.chkDictCustomWordsAddTypos.AutoSize = true;
-            this.chkDictCustomWordsAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictCustomWordsAddTypos.Location = new System.Drawing.Point(9, 162);
+            this.chkDictCustomWordsAddTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictCustomWordsAddTypos.Name = "chkDictCustomWordsAddTypos";
-            this.chkDictCustomWordsAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictCustomWordsAddTypos.Size = new System.Drawing.Size(115, 27);
             this.chkDictCustomWordsAddTypos.TabIndex = 58;
             this.chkDictCustomWordsAddTypos.Text = "Add Typos";
             this.chkDictCustomWordsAddTypos.UseVisualStyleBackColor = true;
@@ -2010,10 +2122,10 @@ namespace BruteForceHash.GUI
             this.chkDictCustomWordsForceLowercase.AutoSize = true;
             this.chkDictCustomWordsForceLowercase.Checked = true;
             this.chkDictCustomWordsForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictCustomWordsForceLowercase.Location = new System.Drawing.Point(6, 74);
-            this.chkDictCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictCustomWordsForceLowercase.Location = new System.Drawing.Point(9, 123);
+            this.chkDictCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictCustomWordsForceLowercase.Name = "chkDictCustomWordsForceLowercase";
-            this.chkDictCustomWordsForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictCustomWordsForceLowercase.Size = new System.Drawing.Size(114, 27);
             this.chkDictCustomWordsForceLowercase.TabIndex = 57;
             this.chkDictCustomWordsForceLowercase.Text = "Lowercase";
             this.chkDictCustomWordsForceLowercase.UseVisualStyleBackColor = true;
@@ -2023,10 +2135,10 @@ namespace BruteForceHash.GUI
             this.chkDictCustomWordsSkipSpecials.AutoSize = true;
             this.chkDictCustomWordsSkipSpecials.Checked = true;
             this.chkDictCustomWordsSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictCustomWordsSkipSpecials.Location = new System.Drawing.Point(6, 51);
-            this.chkDictCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictCustomWordsSkipSpecials.Location = new System.Drawing.Point(9, 85);
+            this.chkDictCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictCustomWordsSkipSpecials.Name = "chkDictCustomWordsSkipSpecials";
-            this.chkDictCustomWordsSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictCustomWordsSkipSpecials.Size = new System.Drawing.Size(132, 27);
             this.chkDictCustomWordsSkipSpecials.TabIndex = 56;
             this.chkDictCustomWordsSkipSpecials.Text = "Skip Specials";
             this.chkDictCustomWordsSkipSpecials.UseVisualStyleBackColor = true;
@@ -2034,20 +2146,20 @@ namespace BruteForceHash.GUI
             // chkDictCustomWordsSkipDigits
             // 
             this.chkDictCustomWordsSkipDigits.AutoSize = true;
-            this.chkDictCustomWordsSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictCustomWordsSkipDigits.Location = new System.Drawing.Point(9, 47);
+            this.chkDictCustomWordsSkipDigits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictCustomWordsSkipDigits.Name = "chkDictCustomWordsSkipDigits";
-            this.chkDictCustomWordsSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictCustomWordsSkipDigits.Size = new System.Drawing.Size(115, 27);
             this.chkDictCustomWordsSkipDigits.TabIndex = 55;
             this.chkDictCustomWordsSkipDigits.Text = "Skip Digits";
             this.chkDictCustomWordsSkipDigits.UseVisualStyleBackColor = true;
             // 
             // txtDictCustWords
             // 
-            this.txtDictCustWords.Location = new System.Drawing.Point(109, 2);
-            this.txtDictCustWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictCustWords.Location = new System.Drawing.Point(156, 3);
             this.txtDictCustWords.Multiline = true;
             this.txtDictCustWords.Name = "txtDictCustWords";
-            this.txtDictCustWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictCustWords.Size = new System.Drawing.Size(451, 864);
             this.txtDictCustWords.TabIndex = 0;
             // 
             // tabMainDictionariesExcludeWords
@@ -2056,9 +2168,10 @@ namespace BruteForceHash.GUI
             this.tabMainDictionariesExcludeWords.Controls.Add(this.chkDictionariesExcludeWordsUse);
             this.tabMainDictionariesExcludeWords.Controls.Add(this.lblDictionariesExcludeWordsUse);
             this.tabMainDictionariesExcludeWords.Controls.Add(this.txtDictExcludeWords);
-            this.tabMainDictionariesExcludeWords.Location = new System.Drawing.Point(4, 22);
+            this.tabMainDictionariesExcludeWords.Location = new System.Drawing.Point(4, 32);
+            this.tabMainDictionariesExcludeWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabMainDictionariesExcludeWords.Name = "tabMainDictionariesExcludeWords";
-            this.tabMainDictionariesExcludeWords.Size = new System.Drawing.Size(428, 524);
+            this.tabMainDictionariesExcludeWords.Size = new System.Drawing.Size(615, 881);
             this.tabMainDictionariesExcludeWords.TabIndex = 2;
             this.tabMainDictionariesExcludeWords.Text = "Exclude Words";
             this.tabMainDictionariesExcludeWords.UseVisualStyleBackColor = true;
@@ -2066,9 +2179,10 @@ namespace BruteForceHash.GUI
             // chkDictExcludePartialWords
             // 
             this.chkDictExcludePartialWords.AutoSize = true;
-            this.chkDictExcludePartialWords.Location = new System.Drawing.Point(6, 28);
+            this.chkDictExcludePartialWords.Location = new System.Drawing.Point(9, 47);
+            this.chkDictExcludePartialWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictExcludePartialWords.Name = "chkDictExcludePartialWords";
-            this.chkDictExcludePartialWords.Size = new System.Drawing.Size(93, 17);
+            this.chkDictExcludePartialWords.Size = new System.Drawing.Size(133, 27);
             this.chkDictExcludePartialWords.TabIndex = 93;
             this.chkDictExcludePartialWords.Text = "Partial words";
             this.chkDictExcludePartialWords.UseVisualStyleBackColor = true;
@@ -2076,9 +2190,10 @@ namespace BruteForceHash.GUI
             // chkDictionariesExcludeWordsUse
             // 
             this.chkDictionariesExcludeWordsUse.AutoSize = true;
-            this.chkDictionariesExcludeWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesExcludeWordsUse.Location = new System.Drawing.Point(114, 13);
+            this.chkDictionariesExcludeWordsUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionariesExcludeWordsUse.Name = "chkDictionariesExcludeWordsUse";
-            this.chkDictionariesExcludeWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesExcludeWordsUse.Size = new System.Drawing.Size(22, 21);
             this.chkDictionariesExcludeWordsUse.TabIndex = 92;
             this.chkDictionariesExcludeWordsUse.UseVisualStyleBackColor = true;
             this.chkDictionariesExcludeWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesExcludeWordsUse_CheckedChanged);
@@ -2086,30 +2201,29 @@ namespace BruteForceHash.GUI
             // lblDictionariesExcludeWordsUse
             // 
             this.lblDictionariesExcludeWordsUse.AutoSize = true;
-            this.lblDictionariesExcludeWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesExcludeWordsUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesExcludeWordsUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesExcludeWordsUse.Name = "lblDictionariesExcludeWordsUse";
-            this.lblDictionariesExcludeWordsUse.Size = new System.Drawing.Size(29, 13);
+            this.lblDictionariesExcludeWordsUse.Size = new System.Drawing.Size(42, 23);
             this.lblDictionariesExcludeWordsUse.TabIndex = 91;
             this.lblDictionariesExcludeWordsUse.Text = "Use:";
             // 
             // txtDictExcludeWords
             // 
-            this.txtDictExcludeWords.Location = new System.Drawing.Point(109, 2);
-            this.txtDictExcludeWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictExcludeWords.Location = new System.Drawing.Point(156, 3);
             this.txtDictExcludeWords.Multiline = true;
             this.txtDictExcludeWords.Name = "txtDictExcludeWords";
-            this.txtDictExcludeWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictExcludeWords.Size = new System.Drawing.Size(451, 864);
             this.txtDictExcludeWords.TabIndex = 1;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.tabFirstWordDictionaries);
             this.tabPage2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabPage2.Location = new System.Drawing.Point(4, 24);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPage2.Location = new System.Drawing.Point(4, 34);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage2.Size = new System.Drawing.Size(436, 550);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(626, 925);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "First Word Overrides";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -2120,9 +2234,10 @@ namespace BruteForceHash.GUI
             this.tabFirstWordDictionaries.Controls.Add(this.tabFirstWordDictionariesCustom);
             this.tabFirstWordDictionaries.Controls.Add(this.tabFirstWordDictionariesExcludeWords);
             this.tabFirstWordDictionaries.Location = new System.Drawing.Point(0, 0);
+            this.tabFirstWordDictionaries.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabFirstWordDictionaries.Name = "tabFirstWordDictionaries";
             this.tabFirstWordDictionaries.SelectedIndex = 0;
-            this.tabFirstWordDictionaries.Size = new System.Drawing.Size(436, 550);
+            this.tabFirstWordDictionaries.Size = new System.Drawing.Size(623, 917);
             this.tabFirstWordDictionaries.TabIndex = 86;
             // 
             // tabFirstWordDictionariesCommon
@@ -2137,10 +2252,11 @@ namespace BruteForceHash.GUI
             this.tabFirstWordDictionariesCommon.Controls.Add(this.chkDictFirstSkipSpecials);
             this.tabFirstWordDictionariesCommon.Controls.Add(this.chkUseDictFirst);
             this.tabFirstWordDictionariesCommon.Controls.Add(this.chkDictFirstSkipDigits);
-            this.tabFirstWordDictionariesCommon.Location = new System.Drawing.Point(4, 22);
+            this.tabFirstWordDictionariesCommon.Location = new System.Drawing.Point(4, 32);
+            this.tabFirstWordDictionariesCommon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabFirstWordDictionariesCommon.Name = "tabFirstWordDictionariesCommon";
-            this.tabFirstWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFirstWordDictionariesCommon.Size = new System.Drawing.Size(428, 524);
+            this.tabFirstWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabFirstWordDictionariesCommon.Size = new System.Drawing.Size(615, 881);
             this.tabFirstWordDictionariesCommon.TabIndex = 0;
             this.tabFirstWordDictionariesCommon.Text = "Common Dictionaries";
             this.tabFirstWordDictionariesCommon.UseVisualStyleBackColor = true;
@@ -2148,37 +2264,37 @@ namespace BruteForceHash.GUI
             // lblDictionariesFirstWordUse
             // 
             this.lblDictionariesFirstWordUse.AutoSize = true;
-            this.lblDictionariesFirstWordUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesFirstWordUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesFirstWordUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesFirstWordUse.Name = "lblDictionariesFirstWordUse";
-            this.lblDictionariesFirstWordUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesFirstWordUse.Size = new System.Drawing.Size(79, 23);
             this.lblDictionariesFirstWordUse.TabIndex = 33;
             this.lblDictionariesFirstWordUse.Text = "Override:";
             // 
             // tvDictFirstWord
             // 
-            this.tvDictFirstWord.Location = new System.Drawing.Point(109, 2);
-            this.tvDictFirstWord.Margin = new System.Windows.Forms.Padding(2);
+            this.tvDictFirstWord.Location = new System.Drawing.Point(156, 3);
             this.tvDictFirstWord.Name = "tvDictFirstWord";
-            this.tvDictFirstWord.Size = new System.Drawing.Size(317, 520);
+            this.tvDictFirstWord.Size = new System.Drawing.Size(451, 864);
             this.tvDictFirstWord.TabIndex = 58;
             this.tvDictFirstWord.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
             // 
             // chkDictFirstReverseOrder
             // 
             this.chkDictFirstReverseOrder.AutoSize = true;
-            this.chkDictFirstReverseOrder.Location = new System.Drawing.Point(6, 120);
+            this.chkDictFirstReverseOrder.Location = new System.Drawing.Point(9, 200);
+            this.chkDictFirstReverseOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstReverseOrder.Name = "chkDictFirstReverseOrder";
-            this.chkDictFirstReverseOrder.Size = new System.Drawing.Size(98, 17);
+            this.chkDictFirstReverseOrder.Size = new System.Drawing.Size(143, 27);
             this.chkDictFirstReverseOrder.TabIndex = 44;
             this.chkDictFirstReverseOrder.Text = "Reverse Order";
             this.chkDictFirstReverseOrder.UseVisualStyleBackColor = true;
             // 
             // btnCopyToDictFirst
             // 
-            this.btnCopyToDictFirst.Location = new System.Drawing.Point(4, 471);
-            this.btnCopyToDictFirst.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictFirst.Location = new System.Drawing.Point(6, 785);
             this.btnCopyToDictFirst.Name = "btnCopyToDictFirst";
-            this.btnCopyToDictFirst.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictFirst.Size = new System.Drawing.Size(146, 37);
             this.btnCopyToDictFirst.TabIndex = 57;
             this.btnCopyToDictFirst.Text = "Copy from Main";
             this.btnCopyToDictFirst.UseVisualStyleBackColor = true;
@@ -2186,10 +2302,9 @@ namespace BruteForceHash.GUI
             // 
             // btnDictFirstUnselected
             // 
-            this.btnDictFirstUnselected.Location = new System.Drawing.Point(4, 497);
-            this.btnDictFirstUnselected.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDictFirstUnselected.Location = new System.Drawing.Point(6, 828);
             this.btnDictFirstUnselected.Name = "btnDictFirstUnselected";
-            this.btnDictFirstUnselected.Size = new System.Drawing.Size(102, 22);
+            this.btnDictFirstUnselected.Size = new System.Drawing.Size(146, 37);
             this.btnDictFirstUnselected.TabIndex = 56;
             this.btnDictFirstUnselected.Text = "Unselect All";
             this.btnDictFirstUnselected.UseVisualStyleBackColor = true;
@@ -2198,9 +2313,10 @@ namespace BruteForceHash.GUI
             // chkDictFirstAddTypos
             // 
             this.chkDictFirstAddTypos.AutoSize = true;
-            this.chkDictFirstAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictFirstAddTypos.Location = new System.Drawing.Point(9, 162);
+            this.chkDictFirstAddTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstAddTypos.Name = "chkDictFirstAddTypos";
-            this.chkDictFirstAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstAddTypos.Size = new System.Drawing.Size(115, 27);
             this.chkDictFirstAddTypos.TabIndex = 43;
             this.chkDictFirstAddTypos.Text = "Add Typos";
             this.chkDictFirstAddTypos.UseVisualStyleBackColor = true;
@@ -2208,9 +2324,10 @@ namespace BruteForceHash.GUI
             // chkDictFirstForceLowercase
             // 
             this.chkDictFirstForceLowercase.AutoSize = true;
-            this.chkDictFirstForceLowercase.Location = new System.Drawing.Point(6, 74);
+            this.chkDictFirstForceLowercase.Location = new System.Drawing.Point(9, 123);
+            this.chkDictFirstForceLowercase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstForceLowercase.Name = "chkDictFirstForceLowercase";
-            this.chkDictFirstForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstForceLowercase.Size = new System.Drawing.Size(114, 27);
             this.chkDictFirstForceLowercase.TabIndex = 42;
             this.chkDictFirstForceLowercase.Text = "Lowercase";
             this.chkDictFirstForceLowercase.UseVisualStyleBackColor = true;
@@ -2218,9 +2335,10 @@ namespace BruteForceHash.GUI
             // chkDictFirstSkipSpecials
             // 
             this.chkDictFirstSkipSpecials.AutoSize = true;
-            this.chkDictFirstSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictFirstSkipSpecials.Location = new System.Drawing.Point(9, 85);
+            this.chkDictFirstSkipSpecials.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstSkipSpecials.Name = "chkDictFirstSkipSpecials";
-            this.chkDictFirstSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictFirstSkipSpecials.Size = new System.Drawing.Size(132, 27);
             this.chkDictFirstSkipSpecials.TabIndex = 41;
             this.chkDictFirstSkipSpecials.Text = "Skip Specials";
             this.chkDictFirstSkipSpecials.UseVisualStyleBackColor = true;
@@ -2228,9 +2346,10 @@ namespace BruteForceHash.GUI
             // chkUseDictFirst
             // 
             this.chkUseDictFirst.AutoSize = true;
-            this.chkUseDictFirst.Location = new System.Drawing.Point(80, 8);
+            this.chkUseDictFirst.Location = new System.Drawing.Point(114, 13);
+            this.chkUseDictFirst.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkUseDictFirst.Name = "chkUseDictFirst";
-            this.chkUseDictFirst.Size = new System.Drawing.Size(15, 14);
+            this.chkUseDictFirst.Size = new System.Drawing.Size(22, 21);
             this.chkUseDictFirst.TabIndex = 38;
             this.chkUseDictFirst.UseVisualStyleBackColor = true;
             this.chkUseDictFirst.CheckedChanged += new System.EventHandler(this.OnCustomDictFirstCheckedChanged);
@@ -2238,9 +2357,10 @@ namespace BruteForceHash.GUI
             // chkDictFirstSkipDigits
             // 
             this.chkDictFirstSkipDigits.AutoSize = true;
-            this.chkDictFirstSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictFirstSkipDigits.Location = new System.Drawing.Point(9, 47);
+            this.chkDictFirstSkipDigits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstSkipDigits.Name = "chkDictFirstSkipDigits";
-            this.chkDictFirstSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictFirstSkipDigits.Size = new System.Drawing.Size(115, 27);
             this.chkDictFirstSkipDigits.TabIndex = 40;
             this.chkDictFirstSkipDigits.Text = "Skip Digits";
             this.chkDictFirstSkipDigits.UseVisualStyleBackColor = true;
@@ -2255,20 +2375,20 @@ namespace BruteForceHash.GUI
             this.tabFirstWordDictionariesCustom.Controls.Add(this.chkDictFirstWordCustomWordsSkipSpecials);
             this.tabFirstWordDictionariesCustom.Controls.Add(this.chkDictFirstWordCustomWordsSkipDigits);
             this.tabFirstWordDictionariesCustom.Controls.Add(this.txtDictFirstCustWords);
-            this.tabFirstWordDictionariesCustom.Location = new System.Drawing.Point(4, 22);
+            this.tabFirstWordDictionariesCustom.Location = new System.Drawing.Point(4, 32);
+            this.tabFirstWordDictionariesCustom.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabFirstWordDictionariesCustom.Name = "tabFirstWordDictionariesCustom";
-            this.tabFirstWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFirstWordDictionariesCustom.Size = new System.Drawing.Size(428, 524);
+            this.tabFirstWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabFirstWordDictionariesCustom.Size = new System.Drawing.Size(615, 881);
             this.tabFirstWordDictionariesCustom.TabIndex = 1;
             this.tabFirstWordDictionariesCustom.Text = "Custom Words";
             this.tabFirstWordDictionariesCustom.UseVisualStyleBackColor = true;
             // 
             // btnCopyToDictCustomFirst
             // 
-            this.btnCopyToDictCustomFirst.Location = new System.Drawing.Point(4, 497);
-            this.btnCopyToDictCustomFirst.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictCustomFirst.Location = new System.Drawing.Point(6, 828);
             this.btnCopyToDictCustomFirst.Name = "btnCopyToDictCustomFirst";
-            this.btnCopyToDictCustomFirst.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictCustomFirst.Size = new System.Drawing.Size(146, 37);
             this.btnCopyToDictCustomFirst.TabIndex = 106;
             this.btnCopyToDictCustomFirst.Text = "Copy from Main";
             this.btnCopyToDictCustomFirst.UseVisualStyleBackColor = true;
@@ -2277,9 +2397,10 @@ namespace BruteForceHash.GUI
             // chkDictionariesFirstWordCustomWordsUse
             // 
             this.chkDictionariesFirstWordCustomWordsUse.AutoSize = true;
-            this.chkDictionariesFirstWordCustomWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesFirstWordCustomWordsUse.Location = new System.Drawing.Point(114, 13);
+            this.chkDictionariesFirstWordCustomWordsUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionariesFirstWordCustomWordsUse.Name = "chkDictionariesFirstWordCustomWordsUse";
-            this.chkDictionariesFirstWordCustomWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesFirstWordCustomWordsUse.Size = new System.Drawing.Size(22, 21);
             this.chkDictionariesFirstWordCustomWordsUse.TabIndex = 105;
             this.chkDictionariesFirstWordCustomWordsUse.UseVisualStyleBackColor = true;
             this.chkDictionariesFirstWordCustomWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesFirstWordCustomWordsUse_CheckedChanged);
@@ -2287,18 +2408,20 @@ namespace BruteForceHash.GUI
             // lblDictionariesFirstWordCustomWordsUse
             // 
             this.lblDictionariesFirstWordCustomWordsUse.AutoSize = true;
-            this.lblDictionariesFirstWordCustomWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesFirstWordCustomWordsUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesFirstWordCustomWordsUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesFirstWordCustomWordsUse.Name = "lblDictionariesFirstWordCustomWordsUse";
-            this.lblDictionariesFirstWordCustomWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesFirstWordCustomWordsUse.Size = new System.Drawing.Size(79, 23);
             this.lblDictionariesFirstWordCustomWordsUse.TabIndex = 104;
             this.lblDictionariesFirstWordCustomWordsUse.Text = "Override:";
             // 
             // chkDictFirstWordCustomWordsAddTypos
             // 
             this.chkDictFirstWordCustomWordsAddTypos.AutoSize = true;
-            this.chkDictFirstWordCustomWordsAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictFirstWordCustomWordsAddTypos.Location = new System.Drawing.Point(9, 162);
+            this.chkDictFirstWordCustomWordsAddTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstWordCustomWordsAddTypos.Name = "chkDictFirstWordCustomWordsAddTypos";
-            this.chkDictFirstWordCustomWordsAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstWordCustomWordsAddTypos.Size = new System.Drawing.Size(115, 27);
             this.chkDictFirstWordCustomWordsAddTypos.TabIndex = 98;
             this.chkDictFirstWordCustomWordsAddTypos.Text = "Add Typos";
             this.chkDictFirstWordCustomWordsAddTypos.UseVisualStyleBackColor = true;
@@ -2308,10 +2431,10 @@ namespace BruteForceHash.GUI
             this.chkDictFirstWordCustomWordsForceLowercase.AutoSize = true;
             this.chkDictFirstWordCustomWordsForceLowercase.Checked = true;
             this.chkDictFirstWordCustomWordsForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictFirstWordCustomWordsForceLowercase.Location = new System.Drawing.Point(6, 74);
-            this.chkDictFirstWordCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictFirstWordCustomWordsForceLowercase.Location = new System.Drawing.Point(9, 123);
+            this.chkDictFirstWordCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictFirstWordCustomWordsForceLowercase.Name = "chkDictFirstWordCustomWordsForceLowercase";
-            this.chkDictFirstWordCustomWordsForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictFirstWordCustomWordsForceLowercase.Size = new System.Drawing.Size(114, 27);
             this.chkDictFirstWordCustomWordsForceLowercase.TabIndex = 97;
             this.chkDictFirstWordCustomWordsForceLowercase.Text = "Lowercase";
             this.chkDictFirstWordCustomWordsForceLowercase.UseVisualStyleBackColor = true;
@@ -2321,10 +2444,10 @@ namespace BruteForceHash.GUI
             this.chkDictFirstWordCustomWordsSkipSpecials.AutoSize = true;
             this.chkDictFirstWordCustomWordsSkipSpecials.Checked = true;
             this.chkDictFirstWordCustomWordsSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictFirstWordCustomWordsSkipSpecials.Location = new System.Drawing.Point(6, 51);
-            this.chkDictFirstWordCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictFirstWordCustomWordsSkipSpecials.Location = new System.Drawing.Point(9, 85);
+            this.chkDictFirstWordCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictFirstWordCustomWordsSkipSpecials.Name = "chkDictFirstWordCustomWordsSkipSpecials";
-            this.chkDictFirstWordCustomWordsSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictFirstWordCustomWordsSkipSpecials.Size = new System.Drawing.Size(132, 27);
             this.chkDictFirstWordCustomWordsSkipSpecials.TabIndex = 96;
             this.chkDictFirstWordCustomWordsSkipSpecials.Text = "Skip Specials";
             this.chkDictFirstWordCustomWordsSkipSpecials.UseVisualStyleBackColor = true;
@@ -2332,20 +2455,20 @@ namespace BruteForceHash.GUI
             // chkDictFirstWordCustomWordsSkipDigits
             // 
             this.chkDictFirstWordCustomWordsSkipDigits.AutoSize = true;
-            this.chkDictFirstWordCustomWordsSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictFirstWordCustomWordsSkipDigits.Location = new System.Drawing.Point(9, 47);
+            this.chkDictFirstWordCustomWordsSkipDigits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstWordCustomWordsSkipDigits.Name = "chkDictFirstWordCustomWordsSkipDigits";
-            this.chkDictFirstWordCustomWordsSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictFirstWordCustomWordsSkipDigits.Size = new System.Drawing.Size(115, 27);
             this.chkDictFirstWordCustomWordsSkipDigits.TabIndex = 95;
             this.chkDictFirstWordCustomWordsSkipDigits.Text = "Skip Digits";
             this.chkDictFirstWordCustomWordsSkipDigits.UseVisualStyleBackColor = true;
             // 
             // txtDictFirstCustWords
             // 
-            this.txtDictFirstCustWords.Location = new System.Drawing.Point(109, 2);
-            this.txtDictFirstCustWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictFirstCustWords.Location = new System.Drawing.Point(156, 3);
             this.txtDictFirstCustWords.Multiline = true;
             this.txtDictFirstCustWords.Name = "txtDictFirstCustWords";
-            this.txtDictFirstCustWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictFirstCustWords.Size = new System.Drawing.Size(451, 864);
             this.txtDictFirstCustWords.TabIndex = 0;
             // 
             // tabFirstWordDictionariesExcludeWords
@@ -2355,19 +2478,19 @@ namespace BruteForceHash.GUI
             this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.chkDictFirstWordExcludePartialWords);
             this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.chkDictionariesFirstWordExcludeWordsUse);
             this.tabFirstWordDictionariesExcludeWords.Controls.Add(this.lblDictionariesFirstWordExcludeWordsUse);
-            this.tabFirstWordDictionariesExcludeWords.Location = new System.Drawing.Point(4, 22);
+            this.tabFirstWordDictionariesExcludeWords.Location = new System.Drawing.Point(4, 32);
+            this.tabFirstWordDictionariesExcludeWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabFirstWordDictionariesExcludeWords.Name = "tabFirstWordDictionariesExcludeWords";
-            this.tabFirstWordDictionariesExcludeWords.Size = new System.Drawing.Size(428, 524);
+            this.tabFirstWordDictionariesExcludeWords.Size = new System.Drawing.Size(615, 881);
             this.tabFirstWordDictionariesExcludeWords.TabIndex = 2;
             this.tabFirstWordDictionariesExcludeWords.Text = "Exclude Words";
             this.tabFirstWordDictionariesExcludeWords.UseVisualStyleBackColor = true;
             // 
             // btnCopyToDictExcludeFirst
             // 
-            this.btnCopyToDictExcludeFirst.Location = new System.Drawing.Point(4, 497);
-            this.btnCopyToDictExcludeFirst.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictExcludeFirst.Location = new System.Drawing.Point(6, 828);
             this.btnCopyToDictExcludeFirst.Name = "btnCopyToDictExcludeFirst";
-            this.btnCopyToDictExcludeFirst.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictExcludeFirst.Size = new System.Drawing.Size(146, 37);
             this.btnCopyToDictExcludeFirst.TabIndex = 98;
             this.btnCopyToDictExcludeFirst.Text = "Copy from Main";
             this.btnCopyToDictExcludeFirst.UseVisualStyleBackColor = true;
@@ -2375,19 +2498,19 @@ namespace BruteForceHash.GUI
             // 
             // txtDictFirstWordExcludeWords
             // 
-            this.txtDictFirstWordExcludeWords.Location = new System.Drawing.Point(109, 2);
-            this.txtDictFirstWordExcludeWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictFirstWordExcludeWords.Location = new System.Drawing.Point(156, 3);
             this.txtDictFirstWordExcludeWords.Multiline = true;
             this.txtDictFirstWordExcludeWords.Name = "txtDictFirstWordExcludeWords";
-            this.txtDictFirstWordExcludeWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictFirstWordExcludeWords.Size = new System.Drawing.Size(451, 864);
             this.txtDictFirstWordExcludeWords.TabIndex = 97;
             // 
             // chkDictFirstWordExcludePartialWords
             // 
             this.chkDictFirstWordExcludePartialWords.AutoSize = true;
-            this.chkDictFirstWordExcludePartialWords.Location = new System.Drawing.Point(6, 28);
+            this.chkDictFirstWordExcludePartialWords.Location = new System.Drawing.Point(9, 47);
+            this.chkDictFirstWordExcludePartialWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictFirstWordExcludePartialWords.Name = "chkDictFirstWordExcludePartialWords";
-            this.chkDictFirstWordExcludePartialWords.Size = new System.Drawing.Size(93, 17);
+            this.chkDictFirstWordExcludePartialWords.Size = new System.Drawing.Size(133, 27);
             this.chkDictFirstWordExcludePartialWords.TabIndex = 96;
             this.chkDictFirstWordExcludePartialWords.Text = "Partial words";
             this.chkDictFirstWordExcludePartialWords.UseVisualStyleBackColor = true;
@@ -2395,9 +2518,10 @@ namespace BruteForceHash.GUI
             // chkDictionariesFirstWordExcludeWordsUse
             // 
             this.chkDictionariesFirstWordExcludeWordsUse.AutoSize = true;
-            this.chkDictionariesFirstWordExcludeWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesFirstWordExcludeWordsUse.Location = new System.Drawing.Point(114, 13);
+            this.chkDictionariesFirstWordExcludeWordsUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionariesFirstWordExcludeWordsUse.Name = "chkDictionariesFirstWordExcludeWordsUse";
-            this.chkDictionariesFirstWordExcludeWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesFirstWordExcludeWordsUse.Size = new System.Drawing.Size(22, 21);
             this.chkDictionariesFirstWordExcludeWordsUse.TabIndex = 95;
             this.chkDictionariesFirstWordExcludeWordsUse.UseVisualStyleBackColor = true;
             this.chkDictionariesFirstWordExcludeWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesFirstWordExcludeWordsUse_CheckedChanged);
@@ -2405,9 +2529,10 @@ namespace BruteForceHash.GUI
             // lblDictionariesFirstWordExcludeWordsUse
             // 
             this.lblDictionariesFirstWordExcludeWordsUse.AutoSize = true;
-            this.lblDictionariesFirstWordExcludeWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesFirstWordExcludeWordsUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesFirstWordExcludeWordsUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesFirstWordExcludeWordsUse.Name = "lblDictionariesFirstWordExcludeWordsUse";
-            this.lblDictionariesFirstWordExcludeWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesFirstWordExcludeWordsUse.Size = new System.Drawing.Size(79, 23);
             this.lblDictionariesFirstWordExcludeWordsUse.TabIndex = 94;
             this.lblDictionariesFirstWordExcludeWordsUse.Text = "Override:";
             // 
@@ -2415,10 +2540,9 @@ namespace BruteForceHash.GUI
             // 
             this.tabPage3.Controls.Add(this.tabLastWordDictionaries);
             this.tabPage3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.tabPage3.Location = new System.Drawing.Point(4, 24);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPage3.Location = new System.Drawing.Point(4, 34);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(436, 550);
+            this.tabPage3.Size = new System.Drawing.Size(626, 925);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Last Word Overrides";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -2429,9 +2553,10 @@ namespace BruteForceHash.GUI
             this.tabLastWordDictionaries.Controls.Add(this.tabLastWordDictionariesCustom);
             this.tabLastWordDictionaries.Controls.Add(this.tabLastWordDictionariesExcludeWords);
             this.tabLastWordDictionaries.Location = new System.Drawing.Point(0, 0);
+            this.tabLastWordDictionaries.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabLastWordDictionaries.Name = "tabLastWordDictionaries";
             this.tabLastWordDictionaries.SelectedIndex = 0;
-            this.tabLastWordDictionaries.Size = new System.Drawing.Size(436, 550);
+            this.tabLastWordDictionaries.Size = new System.Drawing.Size(623, 917);
             this.tabLastWordDictionaries.TabIndex = 87;
             // 
             // tabLastWordDictionariesCommon
@@ -2446,10 +2571,11 @@ namespace BruteForceHash.GUI
             this.tabLastWordDictionariesCommon.Controls.Add(this.chkDictLastSkipDigits);
             this.tabLastWordDictionariesCommon.Controls.Add(this.chkUseDictLast);
             this.tabLastWordDictionariesCommon.Controls.Add(this.chkDictLastReverseOrder);
-            this.tabLastWordDictionariesCommon.Location = new System.Drawing.Point(4, 22);
+            this.tabLastWordDictionariesCommon.Location = new System.Drawing.Point(4, 32);
+            this.tabLastWordDictionariesCommon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabLastWordDictionariesCommon.Name = "tabLastWordDictionariesCommon";
-            this.tabLastWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLastWordDictionariesCommon.Size = new System.Drawing.Size(428, 524);
+            this.tabLastWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabLastWordDictionariesCommon.Size = new System.Drawing.Size(615, 881);
             this.tabLastWordDictionariesCommon.TabIndex = 0;
             this.tabLastWordDictionariesCommon.Text = "Common Dictionaries";
             this.tabLastWordDictionariesCommon.UseVisualStyleBackColor = true;
@@ -2457,37 +2583,37 @@ namespace BruteForceHash.GUI
             // lblDictionaryLastWordUse
             // 
             this.lblDictionaryLastWordUse.AutoSize = true;
-            this.lblDictionaryLastWordUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionaryLastWordUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionaryLastWordUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionaryLastWordUse.Name = "lblDictionaryLastWordUse";
-            this.lblDictionaryLastWordUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionaryLastWordUse.Size = new System.Drawing.Size(79, 23);
             this.lblDictionaryLastWordUse.TabIndex = 31;
             this.lblDictionaryLastWordUse.Text = "Override:";
             // 
             // tvDictLastWord
             // 
-            this.tvDictLastWord.Location = new System.Drawing.Point(109, 2);
-            this.tvDictLastWord.Margin = new System.Windows.Forms.Padding(2);
+            this.tvDictLastWord.Location = new System.Drawing.Point(156, 3);
             this.tvDictLastWord.Name = "tvDictLastWord";
-            this.tvDictLastWord.Size = new System.Drawing.Size(317, 520);
+            this.tvDictLastWord.Size = new System.Drawing.Size(451, 864);
             this.tvDictLastWord.TabIndex = 59;
             this.tvDictLastWord.TriStateStyleProperty = RikTheVeggie.TriStateTreeView.TriStateStyles.Standard;
             // 
             // chkDictLastForceLowercase
             // 
             this.chkDictLastForceLowercase.AutoSize = true;
-            this.chkDictLastForceLowercase.Location = new System.Drawing.Point(6, 74);
+            this.chkDictLastForceLowercase.Location = new System.Drawing.Point(9, 123);
+            this.chkDictLastForceLowercase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastForceLowercase.Name = "chkDictLastForceLowercase";
-            this.chkDictLastForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictLastForceLowercase.Size = new System.Drawing.Size(114, 27);
             this.chkDictLastForceLowercase.TabIndex = 47;
             this.chkDictLastForceLowercase.Text = "Lowercase";
             this.chkDictLastForceLowercase.UseVisualStyleBackColor = true;
             // 
             // btnCopyToDictLast
             // 
-            this.btnCopyToDictLast.Location = new System.Drawing.Point(4, 471);
-            this.btnCopyToDictLast.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictLast.Location = new System.Drawing.Point(6, 785);
             this.btnCopyToDictLast.Name = "btnCopyToDictLast";
-            this.btnCopyToDictLast.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictLast.Size = new System.Drawing.Size(146, 37);
             this.btnCopyToDictLast.TabIndex = 58;
             this.btnCopyToDictLast.Text = "Copy from Main";
             this.btnCopyToDictLast.UseVisualStyleBackColor = true;
@@ -2495,10 +2621,9 @@ namespace BruteForceHash.GUI
             // 
             // btnDictLastUnselected
             // 
-            this.btnDictLastUnselected.Location = new System.Drawing.Point(4, 497);
-            this.btnDictLastUnselected.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDictLastUnselected.Location = new System.Drawing.Point(6, 828);
             this.btnDictLastUnselected.Name = "btnDictLastUnselected";
-            this.btnDictLastUnselected.Size = new System.Drawing.Size(102, 22);
+            this.btnDictLastUnselected.Size = new System.Drawing.Size(146, 37);
             this.btnDictLastUnselected.TabIndex = 57;
             this.btnDictLastUnselected.Text = "Unselect All";
             this.btnDictLastUnselected.UseVisualStyleBackColor = true;
@@ -2507,9 +2632,10 @@ namespace BruteForceHash.GUI
             // chkDictLastSkipSpecials
             // 
             this.chkDictLastSkipSpecials.AutoSize = true;
-            this.chkDictLastSkipSpecials.Location = new System.Drawing.Point(6, 51);
+            this.chkDictLastSkipSpecials.Location = new System.Drawing.Point(9, 85);
+            this.chkDictLastSkipSpecials.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastSkipSpecials.Name = "chkDictLastSkipSpecials";
-            this.chkDictLastSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictLastSkipSpecials.Size = new System.Drawing.Size(132, 27);
             this.chkDictLastSkipSpecials.TabIndex = 46;
             this.chkDictLastSkipSpecials.Text = "Skip Specials";
             this.chkDictLastSkipSpecials.UseVisualStyleBackColor = true;
@@ -2517,9 +2643,10 @@ namespace BruteForceHash.GUI
             // chkDictLastAddTypos
             // 
             this.chkDictLastAddTypos.AutoSize = true;
-            this.chkDictLastAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictLastAddTypos.Location = new System.Drawing.Point(9, 162);
+            this.chkDictLastAddTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastAddTypos.Name = "chkDictLastAddTypos";
-            this.chkDictLastAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictLastAddTypos.Size = new System.Drawing.Size(115, 27);
             this.chkDictLastAddTypos.TabIndex = 48;
             this.chkDictLastAddTypos.Text = "Add Typos";
             this.chkDictLastAddTypos.UseVisualStyleBackColor = true;
@@ -2527,9 +2654,10 @@ namespace BruteForceHash.GUI
             // chkDictLastSkipDigits
             // 
             this.chkDictLastSkipDigits.AutoSize = true;
-            this.chkDictLastSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictLastSkipDigits.Location = new System.Drawing.Point(9, 47);
+            this.chkDictLastSkipDigits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastSkipDigits.Name = "chkDictLastSkipDigits";
-            this.chkDictLastSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictLastSkipDigits.Size = new System.Drawing.Size(115, 27);
             this.chkDictLastSkipDigits.TabIndex = 45;
             this.chkDictLastSkipDigits.Text = "Skip Digits";
             this.chkDictLastSkipDigits.UseVisualStyleBackColor = true;
@@ -2537,9 +2665,10 @@ namespace BruteForceHash.GUI
             // chkUseDictLast
             // 
             this.chkUseDictLast.AutoSize = true;
-            this.chkUseDictLast.Location = new System.Drawing.Point(80, 8);
+            this.chkUseDictLast.Location = new System.Drawing.Point(114, 13);
+            this.chkUseDictLast.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkUseDictLast.Name = "chkUseDictLast";
-            this.chkUseDictLast.Size = new System.Drawing.Size(15, 14);
+            this.chkUseDictLast.Size = new System.Drawing.Size(22, 21);
             this.chkUseDictLast.TabIndex = 39;
             this.chkUseDictLast.UseVisualStyleBackColor = true;
             this.chkUseDictLast.CheckedChanged += new System.EventHandler(this.OnCustomDictLastCheckedChanged);
@@ -2547,9 +2676,10 @@ namespace BruteForceHash.GUI
             // chkDictLastReverseOrder
             // 
             this.chkDictLastReverseOrder.AutoSize = true;
-            this.chkDictLastReverseOrder.Location = new System.Drawing.Point(6, 120);
+            this.chkDictLastReverseOrder.Location = new System.Drawing.Point(9, 200);
+            this.chkDictLastReverseOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastReverseOrder.Name = "chkDictLastReverseOrder";
-            this.chkDictLastReverseOrder.Size = new System.Drawing.Size(98, 17);
+            this.chkDictLastReverseOrder.Size = new System.Drawing.Size(143, 27);
             this.chkDictLastReverseOrder.TabIndex = 49;
             this.chkDictLastReverseOrder.Text = "Reverse Order";
             this.chkDictLastReverseOrder.UseVisualStyleBackColor = true;
@@ -2564,20 +2694,20 @@ namespace BruteForceHash.GUI
             this.tabLastWordDictionariesCustom.Controls.Add(this.chkDictLastWordCustomWordsSkipSpecials);
             this.tabLastWordDictionariesCustom.Controls.Add(this.chkDictLastWordCustomWordsSkipDigits);
             this.tabLastWordDictionariesCustom.Controls.Add(this.txtDictLastCustWords);
-            this.tabLastWordDictionariesCustom.Location = new System.Drawing.Point(4, 22);
+            this.tabLastWordDictionariesCustom.Location = new System.Drawing.Point(4, 32);
+            this.tabLastWordDictionariesCustom.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabLastWordDictionariesCustom.Name = "tabLastWordDictionariesCustom";
-            this.tabLastWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLastWordDictionariesCustom.Size = new System.Drawing.Size(428, 524);
+            this.tabLastWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabLastWordDictionariesCustom.Size = new System.Drawing.Size(615, 881);
             this.tabLastWordDictionariesCustom.TabIndex = 1;
             this.tabLastWordDictionariesCustom.Text = "Custom Words";
             this.tabLastWordDictionariesCustom.UseVisualStyleBackColor = true;
             // 
             // btnCopyToDictCustomLast
             // 
-            this.btnCopyToDictCustomLast.Location = new System.Drawing.Point(4, 497);
-            this.btnCopyToDictCustomLast.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictCustomLast.Location = new System.Drawing.Point(6, 828);
             this.btnCopyToDictCustomLast.Name = "btnCopyToDictCustomLast";
-            this.btnCopyToDictCustomLast.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictCustomLast.Size = new System.Drawing.Size(146, 37);
             this.btnCopyToDictCustomLast.TabIndex = 106;
             this.btnCopyToDictCustomLast.Text = "Copy from Main";
             this.btnCopyToDictCustomLast.UseVisualStyleBackColor = true;
@@ -2586,9 +2716,10 @@ namespace BruteForceHash.GUI
             // chkDictionariesLastWordCustomWordsUse
             // 
             this.chkDictionariesLastWordCustomWordsUse.AutoSize = true;
-            this.chkDictionariesLastWordCustomWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesLastWordCustomWordsUse.Location = new System.Drawing.Point(114, 13);
+            this.chkDictionariesLastWordCustomWordsUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionariesLastWordCustomWordsUse.Name = "chkDictionariesLastWordCustomWordsUse";
-            this.chkDictionariesLastWordCustomWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesLastWordCustomWordsUse.Size = new System.Drawing.Size(22, 21);
             this.chkDictionariesLastWordCustomWordsUse.TabIndex = 105;
             this.chkDictionariesLastWordCustomWordsUse.UseVisualStyleBackColor = true;
             this.chkDictionariesLastWordCustomWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesLastWordCustomWordsUse_CheckedChanged);
@@ -2596,18 +2727,20 @@ namespace BruteForceHash.GUI
             // lblDictionariesLastWordCustomWordsUse
             // 
             this.lblDictionariesLastWordCustomWordsUse.AutoSize = true;
-            this.lblDictionariesLastWordCustomWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesLastWordCustomWordsUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesLastWordCustomWordsUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesLastWordCustomWordsUse.Name = "lblDictionariesLastWordCustomWordsUse";
-            this.lblDictionariesLastWordCustomWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesLastWordCustomWordsUse.Size = new System.Drawing.Size(79, 23);
             this.lblDictionariesLastWordCustomWordsUse.TabIndex = 104;
             this.lblDictionariesLastWordCustomWordsUse.Text = "Override:";
             // 
             // chkDictLastWordCustomWordsAddTypos
             // 
             this.chkDictLastWordCustomWordsAddTypos.AutoSize = true;
-            this.chkDictLastWordCustomWordsAddTypos.Location = new System.Drawing.Point(6, 97);
+            this.chkDictLastWordCustomWordsAddTypos.Location = new System.Drawing.Point(9, 162);
+            this.chkDictLastWordCustomWordsAddTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastWordCustomWordsAddTypos.Name = "chkDictLastWordCustomWordsAddTypos";
-            this.chkDictLastWordCustomWordsAddTypos.Size = new System.Drawing.Size(79, 17);
+            this.chkDictLastWordCustomWordsAddTypos.Size = new System.Drawing.Size(115, 27);
             this.chkDictLastWordCustomWordsAddTypos.TabIndex = 98;
             this.chkDictLastWordCustomWordsAddTypos.Text = "Add Typos";
             this.chkDictLastWordCustomWordsAddTypos.UseVisualStyleBackColor = true;
@@ -2617,10 +2750,10 @@ namespace BruteForceHash.GUI
             this.chkDictLastWordCustomWordsForceLowercase.AutoSize = true;
             this.chkDictLastWordCustomWordsForceLowercase.Checked = true;
             this.chkDictLastWordCustomWordsForceLowercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictLastWordCustomWordsForceLowercase.Location = new System.Drawing.Point(6, 74);
-            this.chkDictLastWordCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictLastWordCustomWordsForceLowercase.Location = new System.Drawing.Point(9, 123);
+            this.chkDictLastWordCustomWordsForceLowercase.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictLastWordCustomWordsForceLowercase.Name = "chkDictLastWordCustomWordsForceLowercase";
-            this.chkDictLastWordCustomWordsForceLowercase.Size = new System.Drawing.Size(79, 17);
+            this.chkDictLastWordCustomWordsForceLowercase.Size = new System.Drawing.Size(114, 27);
             this.chkDictLastWordCustomWordsForceLowercase.TabIndex = 97;
             this.chkDictLastWordCustomWordsForceLowercase.Text = "Lowercase";
             this.chkDictLastWordCustomWordsForceLowercase.UseVisualStyleBackColor = true;
@@ -2630,10 +2763,10 @@ namespace BruteForceHash.GUI
             this.chkDictLastWordCustomWordsSkipSpecials.AutoSize = true;
             this.chkDictLastWordCustomWordsSkipSpecials.Checked = true;
             this.chkDictLastWordCustomWordsSkipSpecials.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDictLastWordCustomWordsSkipSpecials.Location = new System.Drawing.Point(6, 51);
-            this.chkDictLastWordCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
+            this.chkDictLastWordCustomWordsSkipSpecials.Location = new System.Drawing.Point(9, 85);
+            this.chkDictLastWordCustomWordsSkipSpecials.Margin = new System.Windows.Forms.Padding(4, 5, 0, 5);
             this.chkDictLastWordCustomWordsSkipSpecials.Name = "chkDictLastWordCustomWordsSkipSpecials";
-            this.chkDictLastWordCustomWordsSkipSpecials.Size = new System.Drawing.Size(92, 17);
+            this.chkDictLastWordCustomWordsSkipSpecials.Size = new System.Drawing.Size(132, 27);
             this.chkDictLastWordCustomWordsSkipSpecials.TabIndex = 96;
             this.chkDictLastWordCustomWordsSkipSpecials.Text = "Skip Specials";
             this.chkDictLastWordCustomWordsSkipSpecials.UseVisualStyleBackColor = true;
@@ -2641,20 +2774,20 @@ namespace BruteForceHash.GUI
             // chkDictLastWordCustomWordsSkipDigits
             // 
             this.chkDictLastWordCustomWordsSkipDigits.AutoSize = true;
-            this.chkDictLastWordCustomWordsSkipDigits.Location = new System.Drawing.Point(6, 28);
+            this.chkDictLastWordCustomWordsSkipDigits.Location = new System.Drawing.Point(9, 47);
+            this.chkDictLastWordCustomWordsSkipDigits.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastWordCustomWordsSkipDigits.Name = "chkDictLastWordCustomWordsSkipDigits";
-            this.chkDictLastWordCustomWordsSkipDigits.Size = new System.Drawing.Size(81, 17);
+            this.chkDictLastWordCustomWordsSkipDigits.Size = new System.Drawing.Size(115, 27);
             this.chkDictLastWordCustomWordsSkipDigits.TabIndex = 95;
             this.chkDictLastWordCustomWordsSkipDigits.Text = "Skip Digits";
             this.chkDictLastWordCustomWordsSkipDigits.UseVisualStyleBackColor = true;
             // 
             // txtDictLastCustWords
             // 
-            this.txtDictLastCustWords.Location = new System.Drawing.Point(109, 2);
-            this.txtDictLastCustWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictLastCustWords.Location = new System.Drawing.Point(156, 3);
             this.txtDictLastCustWords.Multiline = true;
             this.txtDictLastCustWords.Name = "txtDictLastCustWords";
-            this.txtDictLastCustWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictLastCustWords.Size = new System.Drawing.Size(451, 864);
             this.txtDictLastCustWords.TabIndex = 0;
             // 
             // tabLastWordDictionariesExcludeWords
@@ -2664,19 +2797,19 @@ namespace BruteForceHash.GUI
             this.tabLastWordDictionariesExcludeWords.Controls.Add(this.chkDictLastWordExcludePartialWords);
             this.tabLastWordDictionariesExcludeWords.Controls.Add(this.chkDictionariesLastWordExcludeWordsUse);
             this.tabLastWordDictionariesExcludeWords.Controls.Add(this.lblDictionariesLastWordExcludeWordsUse);
-            this.tabLastWordDictionariesExcludeWords.Location = new System.Drawing.Point(4, 22);
+            this.tabLastWordDictionariesExcludeWords.Location = new System.Drawing.Point(4, 32);
+            this.tabLastWordDictionariesExcludeWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabLastWordDictionariesExcludeWords.Name = "tabLastWordDictionariesExcludeWords";
-            this.tabLastWordDictionariesExcludeWords.Size = new System.Drawing.Size(428, 524);
+            this.tabLastWordDictionariesExcludeWords.Size = new System.Drawing.Size(615, 881);
             this.tabLastWordDictionariesExcludeWords.TabIndex = 2;
             this.tabLastWordDictionariesExcludeWords.Text = "Exclude Words";
             this.tabLastWordDictionariesExcludeWords.UseVisualStyleBackColor = true;
             // 
             // btnCopyToDictExcludeLast
             // 
-            this.btnCopyToDictExcludeLast.Location = new System.Drawing.Point(4, 497);
-            this.btnCopyToDictExcludeLast.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCopyToDictExcludeLast.Location = new System.Drawing.Point(6, 828);
             this.btnCopyToDictExcludeLast.Name = "btnCopyToDictExcludeLast";
-            this.btnCopyToDictExcludeLast.Size = new System.Drawing.Size(102, 22);
+            this.btnCopyToDictExcludeLast.Size = new System.Drawing.Size(146, 37);
             this.btnCopyToDictExcludeLast.TabIndex = 98;
             this.btnCopyToDictExcludeLast.Text = "Copy from Main";
             this.btnCopyToDictExcludeLast.UseVisualStyleBackColor = true;
@@ -2684,19 +2817,19 @@ namespace BruteForceHash.GUI
             // 
             // txtDictLastWordExcludeWords
             // 
-            this.txtDictLastWordExcludeWords.Location = new System.Drawing.Point(109, 2);
-            this.txtDictLastWordExcludeWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDictLastWordExcludeWords.Location = new System.Drawing.Point(156, 3);
             this.txtDictLastWordExcludeWords.Multiline = true;
             this.txtDictLastWordExcludeWords.Name = "txtDictLastWordExcludeWords";
-            this.txtDictLastWordExcludeWords.Size = new System.Drawing.Size(317, 520);
+            this.txtDictLastWordExcludeWords.Size = new System.Drawing.Size(451, 864);
             this.txtDictLastWordExcludeWords.TabIndex = 97;
             // 
             // chkDictLastWordExcludePartialWords
             // 
             this.chkDictLastWordExcludePartialWords.AutoSize = true;
-            this.chkDictLastWordExcludePartialWords.Location = new System.Drawing.Point(6, 28);
+            this.chkDictLastWordExcludePartialWords.Location = new System.Drawing.Point(9, 47);
+            this.chkDictLastWordExcludePartialWords.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictLastWordExcludePartialWords.Name = "chkDictLastWordExcludePartialWords";
-            this.chkDictLastWordExcludePartialWords.Size = new System.Drawing.Size(93, 17);
+            this.chkDictLastWordExcludePartialWords.Size = new System.Drawing.Size(133, 27);
             this.chkDictLastWordExcludePartialWords.TabIndex = 96;
             this.chkDictLastWordExcludePartialWords.Text = "Partial words";
             this.chkDictLastWordExcludePartialWords.UseVisualStyleBackColor = true;
@@ -2704,9 +2837,10 @@ namespace BruteForceHash.GUI
             // chkDictionariesLastWordExcludeWordsUse
             // 
             this.chkDictionariesLastWordExcludeWordsUse.AutoSize = true;
-            this.chkDictionariesLastWordExcludeWordsUse.Location = new System.Drawing.Point(80, 8);
+            this.chkDictionariesLastWordExcludeWordsUse.Location = new System.Drawing.Point(114, 13);
+            this.chkDictionariesLastWordExcludeWordsUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkDictionariesLastWordExcludeWordsUse.Name = "chkDictionariesLastWordExcludeWordsUse";
-            this.chkDictionariesLastWordExcludeWordsUse.Size = new System.Drawing.Size(15, 14);
+            this.chkDictionariesLastWordExcludeWordsUse.Size = new System.Drawing.Size(22, 21);
             this.chkDictionariesLastWordExcludeWordsUse.TabIndex = 95;
             this.chkDictionariesLastWordExcludeWordsUse.UseVisualStyleBackColor = true;
             this.chkDictionariesLastWordExcludeWordsUse.CheckedChanged += new System.EventHandler(this.chkDictionariesLastWordExcludeWordsUse_CheckedChanged);
@@ -2714,9 +2848,10 @@ namespace BruteForceHash.GUI
             // lblDictionariesLastWordExcludeWordsUse
             // 
             this.lblDictionariesLastWordExcludeWordsUse.AutoSize = true;
-            this.lblDictionariesLastWordExcludeWordsUse.Location = new System.Drawing.Point(6, 7);
+            this.lblDictionariesLastWordExcludeWordsUse.Location = new System.Drawing.Point(9, 12);
+            this.lblDictionariesLastWordExcludeWordsUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesLastWordExcludeWordsUse.Name = "lblDictionariesLastWordExcludeWordsUse";
-            this.lblDictionariesLastWordExcludeWordsUse.Size = new System.Drawing.Size(54, 13);
+            this.lblDictionariesLastWordExcludeWordsUse.Size = new System.Drawing.Size(79, 23);
             this.lblDictionariesLastWordExcludeWordsUse.TabIndex = 94;
             this.lblDictionariesLastWordExcludeWordsUse.Text = "Override:";
             // 
@@ -2725,9 +2860,10 @@ namespace BruteForceHash.GUI
             this.chkVerbose.AutoSize = true;
             this.chkVerbose.Checked = true;
             this.chkVerbose.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkVerbose.Location = new System.Drawing.Point(822, 38);
+            this.chkVerbose.Location = new System.Drawing.Point(1174, 63);
+            this.chkVerbose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkVerbose.Name = "chkVerbose";
-            this.chkVerbose.Size = new System.Drawing.Size(15, 14);
+            this.chkVerbose.Size = new System.Drawing.Size(22, 21);
             this.chkVerbose.TabIndex = 33;
             this.chkVerbose.UseVisualStyleBackColor = true;
             // 
@@ -2739,7 +2875,8 @@ namespace BruteForceHash.GUI
             this.toolsToolStripMenuItem});
             this.mnStrip.Location = new System.Drawing.Point(0, 0);
             this.mnStrip.Name = "mnStrip";
-            this.mnStrip.Size = new System.Drawing.Size(848, 24);
+            this.mnStrip.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
+            this.mnStrip.Size = new System.Drawing.Size(1211, 35);
             this.mnStrip.TabIndex = 34;
             // 
             // mnFile
@@ -2756,64 +2893,64 @@ namespace BruteForceHash.GUI
             this.mnLoad,
             this.mnSave});
             this.mnFile.Name = "mnFile";
-            this.mnFile.Size = new System.Drawing.Size(37, 20);
+            this.mnFile.Size = new System.Drawing.Size(54, 29);
             this.mnFile.Text = "File";
             // 
             // mnNew
             // 
             this.mnNew.Name = "mnNew";
-            this.mnNew.Size = new System.Drawing.Size(138, 22);
+            this.mnNew.Size = new System.Drawing.Size(207, 34);
             this.mnNew.Text = "New";
             // 
             // mnSeparator
             // 
             this.mnSeparator.Name = "mnSeparator";
-            this.mnSeparator.Size = new System.Drawing.Size(135, 6);
+            this.mnSeparator.Size = new System.Drawing.Size(204, 6);
             // 
             // mnRefresh
             // 
             this.mnRefresh.Name = "mnRefresh";
-            this.mnRefresh.Size = new System.Drawing.Size(138, 22);
+            this.mnRefresh.Size = new System.Drawing.Size(207, 34);
             this.mnRefresh.Text = "Refresh";
             // 
             // mnSeparator2
             // 
             this.mnSeparator2.Name = "mnSeparator2";
-            this.mnSeparator2.Size = new System.Drawing.Size(135, 6);
+            this.mnSeparator2.Size = new System.Drawing.Size(204, 6);
             // 
             // mnQuickLoad
             // 
             this.mnQuickLoad.Name = "mnQuickLoad";
-            this.mnQuickLoad.Size = new System.Drawing.Size(138, 22);
+            this.mnQuickLoad.Size = new System.Drawing.Size(207, 34);
             this.mnQuickLoad.Text = "Quick Load";
             // 
             // mnQuickSave
             // 
             this.mnQuickSave.Name = "mnQuickSave";
-            this.mnQuickSave.Size = new System.Drawing.Size(138, 22);
+            this.mnQuickSave.Size = new System.Drawing.Size(207, 34);
             this.mnQuickSave.Text = "Quick Save";
             // 
             // mnQuickClean
             // 
             this.mnQuickClean.Name = "mnQuickClean";
-            this.mnQuickClean.Size = new System.Drawing.Size(138, 22);
+            this.mnQuickClean.Size = new System.Drawing.Size(207, 34);
             this.mnQuickClean.Text = "Quick Clean";
             // 
             // mnSeparator3
             // 
             this.mnSeparator3.Name = "mnSeparator3";
-            this.mnSeparator3.Size = new System.Drawing.Size(135, 6);
+            this.mnSeparator3.Size = new System.Drawing.Size(204, 6);
             // 
             // mnLoad
             // 
             this.mnLoad.Name = "mnLoad";
-            this.mnLoad.Size = new System.Drawing.Size(138, 22);
+            this.mnLoad.Size = new System.Drawing.Size(207, 34);
             this.mnLoad.Text = "Load...";
             // 
             // mnSave
             // 
             this.mnSave.Name = "mnSave";
-            this.mnSave.Size = new System.Drawing.Size(138, 22);
+            this.mnSave.Size = new System.Drawing.Size(207, 34);
             this.mnSave.Text = "Save...";
             // 
             // toolsToolStripMenuItem
@@ -2821,13 +2958,13 @@ namespace BruteForceHash.GUI
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.printLatestCommandToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // printLatestCommandToolStripMenuItem
             // 
             this.printLatestCommandToolStripMenuItem.Name = "printLatestCommandToolStripMenuItem";
-            this.printLatestCommandToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.printLatestCommandToolStripMenuItem.Size = new System.Drawing.Size(283, 34);
             this.printLatestCommandToolStripMenuItem.Text = "Print latest command";
             this.printLatestCommandToolStripMenuItem.Click += new System.EventHandler(this.printLatestCommandToolStripMenuItem_Click);
             // 
@@ -2842,17 +2979,19 @@ namespace BruteForceHash.GUI
             // lblVerbose
             // 
             this.lblVerbose.AutoSize = true;
-            this.lblVerbose.Location = new System.Drawing.Point(748, 36);
+            this.lblVerbose.Location = new System.Drawing.Point(1069, 60);
+            this.lblVerbose.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblVerbose.Name = "lblVerbose";
-            this.lblVerbose.Size = new System.Drawing.Size(51, 15);
+            this.lblVerbose.Size = new System.Drawing.Size(80, 25);
             this.lblVerbose.TabIndex = 35;
             this.lblVerbose.Text = "Verbose:";
             // 
             // btnStartHashCat
             // 
-            this.btnStartHashCat.Location = new System.Drawing.Point(409, 694);
+            this.btnStartHashCat.Location = new System.Drawing.Point(584, 1157);
+            this.btnStartHashCat.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnStartHashCat.Name = "btnStartHashCat";
-            this.btnStartHashCat.Size = new System.Drawing.Size(213, 22);
+            this.btnStartHashCat.Size = new System.Drawing.Size(304, 37);
             this.btnStartHashCat.TabIndex = 36;
             this.btnStartHashCat.Text = "START (HashCat)";
             this.btnStartHashCat.UseVisualStyleBackColor = true;
@@ -2860,20 +2999,18 @@ namespace BruteForceHash.GUI
             // 
             // btnQuickSave
             // 
-            this.btnQuickSave.Location = new System.Drawing.Point(284, 73);
-            this.btnQuickSave.Margin = new System.Windows.Forms.Padding(2);
+            this.btnQuickSave.Location = new System.Drawing.Point(406, 122);
             this.btnQuickSave.Name = "btnQuickSave";
-            this.btnQuickSave.Size = new System.Drawing.Size(46, 20);
+            this.btnQuickSave.Size = new System.Drawing.Size(66, 33);
             this.btnQuickSave.TabIndex = 37;
             this.btnQuickSave.Text = "Save";
             this.btnQuickSave.UseVisualStyleBackColor = true;
             // 
             // btnQuickLoad
             // 
-            this.btnQuickLoad.Location = new System.Drawing.Point(330, 73);
-            this.btnQuickLoad.Margin = new System.Windows.Forms.Padding(2);
+            this.btnQuickLoad.Location = new System.Drawing.Point(471, 122);
             this.btnQuickLoad.Name = "btnQuickLoad";
-            this.btnQuickLoad.Size = new System.Drawing.Size(47, 20);
+            this.btnQuickLoad.Size = new System.Drawing.Size(67, 33);
             this.btnQuickLoad.TabIndex = 38;
             this.btnQuickLoad.Text = "Load";
             this.btnQuickLoad.UseVisualStyleBackColor = true;
@@ -2882,9 +3019,10 @@ namespace BruteForceHash.GUI
             // 
             this.pnlCharBruteforce.Controls.Add(this.tbCharBruteforce);
             this.pnlCharBruteforce.Controls.Add(this.grpGeneral);
-            this.pnlCharBruteforce.Location = new System.Drawing.Point(384, 104);
+            this.pnlCharBruteforce.Location = new System.Drawing.Point(549, 173);
+            this.pnlCharBruteforce.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnlCharBruteforce.Name = "pnlCharBruteforce";
-            this.pnlCharBruteforce.Size = new System.Drawing.Size(455, 586);
+            this.pnlCharBruteforce.Size = new System.Drawing.Size(650, 977);
             this.pnlCharBruteforce.TabIndex = 32;
             // 
             // tbCharBruteforce
@@ -2893,20 +3031,22 @@ namespace BruteForceHash.GUI
             this.tbCharBruteforce.Controls.Add(this.tabBruteforceDict);
             this.tbCharBruteforce.Controls.Add(this.tabBruteforceDictFirstWord);
             this.tbCharBruteforce.Controls.Add(this.tabBruteforceDictLastWord);
-            this.tbCharBruteforce.Location = new System.Drawing.Point(6, 150);
+            this.tbCharBruteforce.Location = new System.Drawing.Point(9, 250);
+            this.tbCharBruteforce.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tbCharBruteforce.Name = "tbCharBruteforce";
             this.tbCharBruteforce.SelectedIndex = 0;
-            this.tbCharBruteforce.Size = new System.Drawing.Size(446, 432);
+            this.tbCharBruteforce.Size = new System.Drawing.Size(637, 720);
             this.tbCharBruteforce.TabIndex = 44;
             // 
             // tabBruteforceMain
             // 
             this.tabBruteforceMain.Controls.Add(this.grpSpecials);
             this.tabBruteforceMain.Controls.Add(this.grpCharsetPreview);
-            this.tabBruteforceMain.Location = new System.Drawing.Point(4, 24);
+            this.tabBruteforceMain.Location = new System.Drawing.Point(4, 34);
+            this.tabBruteforceMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabBruteforceMain.Name = "tabBruteforceMain";
-            this.tabBruteforceMain.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBruteforceMain.Size = new System.Drawing.Size(438, 404);
+            this.tabBruteforceMain.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabBruteforceMain.Size = new System.Drawing.Size(629, 682);
             this.tabBruteforceMain.TabIndex = 0;
             this.tabBruteforceMain.Text = "Bruteforce Characters";
             this.tabBruteforceMain.UseVisualStyleBackColor = true;
@@ -2914,9 +3054,11 @@ namespace BruteForceHash.GUI
             // grpSpecials
             // 
             this.grpSpecials.Controls.Add(this.chklCharsets);
-            this.grpSpecials.Location = new System.Drawing.Point(0, 4);
+            this.grpSpecials.Location = new System.Drawing.Point(0, 7);
+            this.grpSpecials.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpSpecials.Name = "grpSpecials";
-            this.grpSpecials.Size = new System.Drawing.Size(215, 400);
+            this.grpSpecials.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpSpecials.Size = new System.Drawing.Size(307, 667);
             this.grpSpecials.TabIndex = 41;
             this.grpSpecials.TabStop = false;
             this.grpSpecials.Text = "Special charsets";
@@ -2924,9 +3066,10 @@ namespace BruteForceHash.GUI
             // chklCharsets
             // 
             this.chklCharsets.FormattingEnabled = true;
-            this.chklCharsets.Location = new System.Drawing.Point(7, 22);
+            this.chklCharsets.Location = new System.Drawing.Point(10, 37);
+            this.chklCharsets.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chklCharsets.Name = "chklCharsets";
-            this.chklCharsets.Size = new System.Drawing.Size(202, 364);
+            this.chklCharsets.Size = new System.Drawing.Size(287, 592);
             this.chklCharsets.TabIndex = 0;
             this.chklCharsets.SelectedIndexChanged += new System.EventHandler(this.ChklCharsetsSelectedIndexChanged);
             this.chklCharsets.SelectedValueChanged += new System.EventHandler(this.ChklCharsetsSelectedValueChanged);
@@ -2937,9 +3080,11 @@ namespace BruteForceHash.GUI
             this.grpCharsetPreview.Controls.Add(this.txtStartingValidCharsPreview);
             this.grpCharsetPreview.Controls.Add(this.lblValidCharsPreview);
             this.grpCharsetPreview.Controls.Add(this.txtValidCharsPreview);
-            this.grpCharsetPreview.Location = new System.Drawing.Point(221, 4);
+            this.grpCharsetPreview.Location = new System.Drawing.Point(316, 7);
+            this.grpCharsetPreview.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpCharsetPreview.Name = "grpCharsetPreview";
-            this.grpCharsetPreview.Size = new System.Drawing.Size(207, 401);
+            this.grpCharsetPreview.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpCharsetPreview.Size = new System.Drawing.Size(296, 668);
             this.grpCharsetPreview.TabIndex = 43;
             this.grpCharsetPreview.TabStop = false;
             this.grpCharsetPreview.Text = "Charset Previews";
@@ -2947,87 +3092,127 @@ namespace BruteForceHash.GUI
             // lblStartingValidCharsPreview
             // 
             this.lblStartingValidCharsPreview.AutoSize = true;
-            this.lblStartingValidCharsPreview.Location = new System.Drawing.Point(9, 215);
+            this.lblStartingValidCharsPreview.Location = new System.Drawing.Point(13, 358);
+            this.lblStartingValidCharsPreview.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStartingValidCharsPreview.Name = "lblStartingValidCharsPreview";
-            this.lblStartingValidCharsPreview.Size = new System.Drawing.Size(84, 15);
+            this.lblStartingValidCharsPreview.Size = new System.Drawing.Size(126, 25);
             this.lblStartingValidCharsPreview.TabIndex = 43;
             this.lblStartingValidCharsPreview.Text = "Starting Chars:";
             // 
             // txtStartingValidCharsPreview
             // 
-            this.txtStartingValidCharsPreview.Location = new System.Drawing.Point(9, 236);
+            this.txtStartingValidCharsPreview.Location = new System.Drawing.Point(13, 393);
+            this.txtStartingValidCharsPreview.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStartingValidCharsPreview.Multiline = true;
             this.txtStartingValidCharsPreview.Name = "txtStartingValidCharsPreview";
             this.txtStartingValidCharsPreview.ReadOnly = true;
-            this.txtStartingValidCharsPreview.Size = new System.Drawing.Size(190, 150);
+            this.txtStartingValidCharsPreview.Size = new System.Drawing.Size(270, 247);
             this.txtStartingValidCharsPreview.TabIndex = 42;
             // 
             // lblValidCharsPreview
             // 
             this.lblValidCharsPreview.AutoSize = true;
-            this.lblValidCharsPreview.Location = new System.Drawing.Point(9, 21);
+            this.lblValidCharsPreview.Location = new System.Drawing.Point(13, 35);
+            this.lblValidCharsPreview.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblValidCharsPreview.Name = "lblValidCharsPreview";
-            this.lblValidCharsPreview.Size = new System.Drawing.Size(68, 15);
+            this.lblValidCharsPreview.Size = new System.Drawing.Size(103, 25);
             this.lblValidCharsPreview.TabIndex = 41;
             this.lblValidCharsPreview.Text = "Valid Chars:";
             // 
             // txtValidCharsPreview
             // 
-            this.txtValidCharsPreview.Location = new System.Drawing.Point(9, 43);
+            this.txtValidCharsPreview.Location = new System.Drawing.Point(13, 72);
+            this.txtValidCharsPreview.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtValidCharsPreview.Multiline = true;
             this.txtValidCharsPreview.Name = "txtValidCharsPreview";
             this.txtValidCharsPreview.ReadOnly = true;
-            this.txtValidCharsPreview.Size = new System.Drawing.Size(190, 150);
+            this.txtValidCharsPreview.Size = new System.Drawing.Size(270, 247);
             this.txtValidCharsPreview.TabIndex = 0;
             // 
             // tabBruteforceDict
             // 
             this.tabBruteforceDict.Controls.Add(this.pnlHybridDict);
-            this.tabBruteforceDict.Location = new System.Drawing.Point(4, 24);
+            this.tabBruteforceDict.Location = new System.Drawing.Point(4, 34);
+            this.tabBruteforceDict.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabBruteforceDict.Name = "tabBruteforceDict";
-            this.tabBruteforceDict.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBruteforceDict.Size = new System.Drawing.Size(438, 404);
+            this.tabBruteforceDict.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabBruteforceDict.Size = new System.Drawing.Size(629, 682);
             this.tabBruteforceDict.TabIndex = 1;
             this.tabBruteforceDict.Text = "Dictionnary";
             this.tabBruteforceDict.UseVisualStyleBackColor = true;
             // 
             // pnlHybridDict
             // 
-            this.pnlHybridDict.Controls.Add(this.lblHybridDictUse);
-            this.pnlHybridDict.Controls.Add(this.lblHybridBruteForce2);
-            this.pnlHybridDict.Controls.Add(this.chkHybridDictUse);
             this.pnlHybridDict.Controls.Add(this.cbHybridBruteForceMaxCharacters);
+            this.pnlHybridDict.Controls.Add(this.cbHybridBruteForceMinCharacters);
+            this.pnlHybridDict.Controls.Add(this.lblHybridBruteForceFrom);
+            this.pnlHybridDict.Controls.Add(this.lblHybridBruteForceUpTo);
+            this.pnlHybridDict.Controls.Add(this.lblHybridWordsInHash);
+            this.pnlHybridDict.Controls.Add(this.cbHybridWordsInHash);
+            this.pnlHybridDict.Controls.Add(this.lblHybridCombination);
+            this.pnlHybridDict.Controls.Add(this.lblHybridDictUse);
+            this.pnlHybridDict.Controls.Add(this.chkHybridDictUse);
             this.pnlHybridDict.Controls.Add(this.txtHybridDictWords);
             this.pnlHybridDict.Controls.Add(this.lblHybridBruteForce);
             this.pnlHybridDict.Location = new System.Drawing.Point(0, 0);
+            this.pnlHybridDict.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pnlHybridDict.Name = "pnlHybridDict";
-            this.pnlHybridDict.Size = new System.Drawing.Size(435, 404);
+            this.pnlHybridDict.Size = new System.Drawing.Size(621, 673);
             this.pnlHybridDict.TabIndex = 101;
+            // 
+            // lblHybridWordsInHash
+            // 
+            this.lblHybridWordsInHash.AutoSize = true;
+            this.lblHybridWordsInHash.Location = new System.Drawing.Point(74, 236);
+            this.lblHybridWordsInHash.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblHybridWordsInHash.Name = "lblHybridWordsInHash";
+            this.lblHybridWordsInHash.Size = new System.Drawing.Size(68, 25);
+            this.lblHybridWordsInHash.TabIndex = 103;
+            this.lblHybridWordsInHash.Text = "in hash";
+            // 
+            // cbHybridWordsInHash
+            // 
+            this.cbHybridWordsInHash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbHybridWordsInHash.DropDownWidth = 80;
+            this.cbHybridWordsInHash.FormattingEnabled = true;
+            this.cbHybridWordsInHash.Items.AddRange(new object[] {
+            "1 word",
+            "2 words",
+            "3 words",
+            "4 words"});
+            this.cbHybridWordsInHash.Location = new System.Drawing.Point(11, 231);
+            this.cbHybridWordsInHash.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.cbHybridWordsInHash.Name = "cbHybridWordsInHash";
+            this.cbHybridWordsInHash.Size = new System.Drawing.Size(53, 33);
+            this.cbHybridWordsInHash.TabIndex = 102;
+            // 
+            // lblHybridCombination
+            // 
+            this.lblHybridCombination.AutoSize = true;
+            this.lblHybridCombination.Location = new System.Drawing.Point(9, 197);
+            this.lblHybridCombination.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblHybridCombination.Name = "lblHybridCombination";
+            this.lblHybridCombination.Size = new System.Drawing.Size(127, 25);
+            this.lblHybridCombination.TabIndex = 101;
+            this.lblHybridCombination.Text = "Combinations:";
             // 
             // lblHybridDictUse
             // 
             this.lblHybridDictUse.AutoSize = true;
-            this.lblHybridDictUse.Location = new System.Drawing.Point(6, 7);
+            this.lblHybridDictUse.Location = new System.Drawing.Point(9, 12);
+            this.lblHybridDictUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHybridDictUse.Name = "lblHybridDictUse";
-            this.lblHybridDictUse.Size = new System.Drawing.Size(29, 15);
+            this.lblHybridDictUse.Size = new System.Drawing.Size(45, 25);
             this.lblHybridDictUse.TabIndex = 94;
             this.lblHybridDictUse.Text = "Use:";
-            // 
-            // lblHybridBruteForce2
-            // 
-            this.lblHybridBruteForce2.AutoSize = true;
-            this.lblHybridBruteForce2.Location = new System.Drawing.Point(52, 62);
-            this.lblHybridBruteForce2.Name = "lblHybridBruteForce2";
-            this.lblHybridBruteForce2.Size = new System.Drawing.Size(38, 15);
-            this.lblHybridBruteForce2.TabIndex = 100;
-            this.lblHybridBruteForce2.Text = "chars.";
             // 
             // chkHybridDictUse
             // 
             this.chkHybridDictUse.AutoSize = true;
-            this.chkHybridDictUse.Location = new System.Drawing.Point(80, 8);
+            this.chkHybridDictUse.Location = new System.Drawing.Point(114, 13);
+            this.chkHybridDictUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkHybridDictUse.Name = "chkHybridDictUse";
-            this.chkHybridDictUse.Size = new System.Drawing.Size(15, 14);
+            this.chkHybridDictUse.Size = new System.Drawing.Size(22, 21);
             this.chkHybridDictUse.TabIndex = 95;
             this.chkHybridDictUse.UseVisualStyleBackColor = true;
             this.chkHybridDictUse.CheckedChanged += new System.EventHandler(this.chkHybridDictUse_CheckedChanged);
@@ -3046,104 +3231,131 @@ namespace BruteForceHash.GUI
             "7",
             "8",
             "9"});
-            this.cbHybridBruteForceMaxCharacters.Location = new System.Drawing.Point(8, 59);
+            this.cbHybridBruteForceMaxCharacters.Location = new System.Drawing.Point(67, 136);
+            this.cbHybridBruteForceMaxCharacters.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbHybridBruteForceMaxCharacters.Name = "cbHybridBruteForceMaxCharacters";
-            this.cbHybridBruteForceMaxCharacters.Size = new System.Drawing.Size(38, 23);
+            this.cbHybridBruteForceMaxCharacters.Size = new System.Drawing.Size(53, 33);
             this.cbHybridBruteForceMaxCharacters.TabIndex = 99;
             // 
             // txtHybridDictWords
             // 
-            this.txtHybridDictWords.Location = new System.Drawing.Point(108, 2);
-            this.txtHybridDictWords.Margin = new System.Windows.Forms.Padding(2);
+            this.txtHybridDictWords.Location = new System.Drawing.Point(167, 3);
             this.txtHybridDictWords.Multiline = true;
             this.txtHybridDictWords.Name = "txtHybridDictWords";
-            this.txtHybridDictWords.Size = new System.Drawing.Size(327, 394);
+            this.txtHybridDictWords.Size = new System.Drawing.Size(452, 654);
             this.txtHybridDictWords.TabIndex = 93;
             // 
             // lblHybridBruteForce
             // 
             this.lblHybridBruteForce.AutoSize = true;
-            this.lblHybridBruteForce.Location = new System.Drawing.Point(6, 36);
+            this.lblHybridBruteForce.Location = new System.Drawing.Point(9, 60);
+            this.lblHybridBruteForce.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHybridBruteForce.Name = "lblHybridBruteForce";
-            this.lblHybridBruteForce.Size = new System.Drawing.Size(93, 15);
+            this.lblHybridBruteForce.Size = new System.Drawing.Size(97, 25);
             this.lblHybridBruteForce.TabIndex = 96;
-            this.lblHybridBruteForce.Text = "Bruteforce up to";
+            this.lblHybridBruteForce.Text = "Bruteforce:";
             // 
             // tabBruteforceDictFirstWord
             // 
             this.tabBruteforceDictFirstWord.Controls.Add(this.pnlHybridDictFirstWord);
-            this.tabBruteforceDictFirstWord.Location = new System.Drawing.Point(4, 24);
+            this.tabBruteforceDictFirstWord.Location = new System.Drawing.Point(4, 34);
+            this.tabBruteforceDictFirstWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabBruteforceDictFirstWord.Name = "tabBruteforceDictFirstWord";
-            this.tabBruteforceDictFirstWord.Size = new System.Drawing.Size(438, 404);
+            this.tabBruteforceDictFirstWord.Size = new System.Drawing.Size(629, 682);
             this.tabBruteforceDictFirstWord.TabIndex = 2;
             this.tabBruteforceDictFirstWord.Text = "First Word Overrides";
             this.tabBruteforceDictFirstWord.UseVisualStyleBackColor = true;
             // 
-            // chkHybridDictFirstWordUse
+            // pnlHybridDictFirstWord
             // 
-            this.chkHybridDictFirstWordUse.AutoSize = true;
-            this.chkHybridDictFirstWordUse.Location = new System.Drawing.Point(80, 8);
-            this.chkHybridDictFirstWordUse.Name = "chkHybridDictFirstWordUse";
-            this.chkHybridDictFirstWordUse.Size = new System.Drawing.Size(15, 14);
-            this.chkHybridDictFirstWordUse.TabIndex = 98;
-            this.chkHybridDictFirstWordUse.UseVisualStyleBackColor = true;
-            this.chkHybridDictFirstWordUse.CheckedChanged += new System.EventHandler(this.chkHybridDictFirstWordUse_CheckedChanged);
+            this.pnlHybridDictFirstWord.Controls.Add(this.lblHybridDictFirstWordUse);
+            this.pnlHybridDictFirstWord.Controls.Add(this.txtHybridDictFirstWord);
+            this.pnlHybridDictFirstWord.Controls.Add(this.chkHybridDictFirstWordUse);
+            this.pnlHybridDictFirstWord.Location = new System.Drawing.Point(0, 0);
+            this.pnlHybridDictFirstWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnlHybridDictFirstWord.Name = "pnlHybridDictFirstWord";
+            this.pnlHybridDictFirstWord.Size = new System.Drawing.Size(621, 673);
+            this.pnlHybridDictFirstWord.TabIndex = 99;
             // 
             // lblHybridDictFirstWordUse
             // 
             this.lblHybridDictFirstWordUse.AutoSize = true;
-            this.lblHybridDictFirstWordUse.Location = new System.Drawing.Point(6, 7);
+            this.lblHybridDictFirstWordUse.Location = new System.Drawing.Point(9, 12);
+            this.lblHybridDictFirstWordUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHybridDictFirstWordUse.Name = "lblHybridDictFirstWordUse";
-            this.lblHybridDictFirstWordUse.Size = new System.Drawing.Size(29, 15);
+            this.lblHybridDictFirstWordUse.Size = new System.Drawing.Size(45, 25);
             this.lblHybridDictFirstWordUse.TabIndex = 97;
             this.lblHybridDictFirstWordUse.Text = "Use:";
             // 
             // txtHybridDictFirstWord
             // 
-            this.txtHybridDictFirstWord.Location = new System.Drawing.Point(108, 2);
-            this.txtHybridDictFirstWord.Margin = new System.Windows.Forms.Padding(2);
+            this.txtHybridDictFirstWord.Location = new System.Drawing.Point(167, 3);
             this.txtHybridDictFirstWord.Multiline = true;
             this.txtHybridDictFirstWord.Name = "txtHybridDictFirstWord";
-            this.txtHybridDictFirstWord.Size = new System.Drawing.Size(327, 394);
+            this.txtHybridDictFirstWord.Size = new System.Drawing.Size(452, 654);
             this.txtHybridDictFirstWord.TabIndex = 96;
+            // 
+            // chkHybridDictFirstWordUse
+            // 
+            this.chkHybridDictFirstWordUse.AutoSize = true;
+            this.chkHybridDictFirstWordUse.Location = new System.Drawing.Point(114, 13);
+            this.chkHybridDictFirstWordUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chkHybridDictFirstWordUse.Name = "chkHybridDictFirstWordUse";
+            this.chkHybridDictFirstWordUse.Size = new System.Drawing.Size(22, 21);
+            this.chkHybridDictFirstWordUse.TabIndex = 98;
+            this.chkHybridDictFirstWordUse.UseVisualStyleBackColor = true;
+            this.chkHybridDictFirstWordUse.CheckedChanged += new System.EventHandler(this.chkHybridDictFirstWordUse_CheckedChanged);
             // 
             // tabBruteforceDictLastWord
             // 
             this.tabBruteforceDictLastWord.Controls.Add(this.pnlHybridDictLastWord);
-            this.tabBruteforceDictLastWord.Location = new System.Drawing.Point(4, 24);
+            this.tabBruteforceDictLastWord.Location = new System.Drawing.Point(4, 34);
+            this.tabBruteforceDictLastWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabBruteforceDictLastWord.Name = "tabBruteforceDictLastWord";
-            this.tabBruteforceDictLastWord.Size = new System.Drawing.Size(438, 404);
+            this.tabBruteforceDictLastWord.Size = new System.Drawing.Size(629, 682);
             this.tabBruteforceDictLastWord.TabIndex = 3;
             this.tabBruteforceDictLastWord.Text = "Last Word Overrides";
             this.tabBruteforceDictLastWord.UseVisualStyleBackColor = true;
             // 
-            // chkHybridDictLastWordUse
+            // pnlHybridDictLastWord
             // 
-            this.chkHybridDictLastWordUse.AutoSize = true;
-            this.chkHybridDictLastWordUse.Location = new System.Drawing.Point(80, 8);
-            this.chkHybridDictLastWordUse.Name = "chkHybridDictLastWordUse";
-            this.chkHybridDictLastWordUse.Size = new System.Drawing.Size(15, 14);
-            this.chkHybridDictLastWordUse.TabIndex = 98;
-            this.chkHybridDictLastWordUse.UseVisualStyleBackColor = true;
-            this.chkHybridDictLastWordUse.CheckedChanged += new System.EventHandler(this.chkHybridDictLastWordUse_CheckedChanged);
+            this.pnlHybridDictLastWord.Controls.Add(this.lblHybridDictLastWordUse);
+            this.pnlHybridDictLastWord.Controls.Add(this.txtHybridDictLastWord);
+            this.pnlHybridDictLastWord.Controls.Add(this.chkHybridDictLastWordUse);
+            this.pnlHybridDictLastWord.Location = new System.Drawing.Point(0, 0);
+            this.pnlHybridDictLastWord.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pnlHybridDictLastWord.Name = "pnlHybridDictLastWord";
+            this.pnlHybridDictLastWord.Size = new System.Drawing.Size(621, 673);
+            this.pnlHybridDictLastWord.TabIndex = 99;
             // 
             // lblHybridDictLastWordUse
             // 
             this.lblHybridDictLastWordUse.AutoSize = true;
-            this.lblHybridDictLastWordUse.Location = new System.Drawing.Point(6, 7);
+            this.lblHybridDictLastWordUse.Location = new System.Drawing.Point(9, 12);
+            this.lblHybridDictLastWordUse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHybridDictLastWordUse.Name = "lblHybridDictLastWordUse";
-            this.lblHybridDictLastWordUse.Size = new System.Drawing.Size(29, 15);
+            this.lblHybridDictLastWordUse.Size = new System.Drawing.Size(45, 25);
             this.lblHybridDictLastWordUse.TabIndex = 97;
             this.lblHybridDictLastWordUse.Text = "Use:";
             // 
             // txtHybridDictLastWord
             // 
-            this.txtHybridDictLastWord.Location = new System.Drawing.Point(108, 2);
-            this.txtHybridDictLastWord.Margin = new System.Windows.Forms.Padding(2);
+            this.txtHybridDictLastWord.Location = new System.Drawing.Point(167, 3);
             this.txtHybridDictLastWord.Multiline = true;
             this.txtHybridDictLastWord.Name = "txtHybridDictLastWord";
-            this.txtHybridDictLastWord.Size = new System.Drawing.Size(327, 394);
+            this.txtHybridDictLastWord.Size = new System.Drawing.Size(452, 654);
             this.txtHybridDictLastWord.TabIndex = 96;
+            // 
+            // chkHybridDictLastWordUse
+            // 
+            this.chkHybridDictLastWordUse.AutoSize = true;
+            this.chkHybridDictLastWordUse.Location = new System.Drawing.Point(114, 13);
+            this.chkHybridDictLastWordUse.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chkHybridDictLastWordUse.Name = "chkHybridDictLastWordUse";
+            this.chkHybridDictLastWordUse.Size = new System.Drawing.Size(22, 21);
+            this.chkHybridDictLastWordUse.TabIndex = 98;
+            this.chkHybridDictLastWordUse.UseVisualStyleBackColor = true;
+            this.chkHybridDictLastWordUse.CheckedChanged += new System.EventHandler(this.chkHybridDictLastWordUse_CheckedChanged);
             // 
             // grpGeneral
             // 
@@ -3155,18 +3367,21 @@ namespace BruteForceHash.GUI
             this.grpGeneral.Controls.Add(this.lblStartingValidChars);
             this.grpGeneral.Controls.Add(this.chkUtf8Toggle);
             this.grpGeneral.Controls.Add(this.txtStartingValidChars);
-            this.grpGeneral.Location = new System.Drawing.Point(6, 4);
+            this.grpGeneral.Location = new System.Drawing.Point(9, 7);
+            this.grpGeneral.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.grpGeneral.Name = "grpGeneral";
-            this.grpGeneral.Size = new System.Drawing.Size(444, 140);
+            this.grpGeneral.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.grpGeneral.Size = new System.Drawing.Size(634, 233);
             this.grpGeneral.TabIndex = 42;
             this.grpGeneral.TabStop = false;
             this.grpGeneral.Text = "Bruteforce Settings";
             // 
             // txtValidChars
             // 
-            this.txtValidChars.Location = new System.Drawing.Point(120, 19);
+            this.txtValidChars.Location = new System.Drawing.Point(171, 32);
+            this.txtValidChars.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtValidChars.Name = "txtValidChars";
-            this.txtValidChars.Size = new System.Drawing.Size(317, 23);
+            this.txtValidChars.Size = new System.Drawing.Size(451, 31);
             this.txtValidChars.TabIndex = 31;
             this.txtValidChars.Text = "etainoshrdlucmfwygpbvkqjxz0123456789_";
             this.txtValidChars.TextChanged += new System.EventHandler(this.TxtValidCharsChanged);
@@ -3174,91 +3389,119 @@ namespace BruteForceHash.GUI
             // lblValidChars
             // 
             this.lblValidChars.AutoSize = true;
-            this.lblValidChars.Location = new System.Drawing.Point(12, 22);
+            this.lblValidChars.Location = new System.Drawing.Point(17, 37);
+            this.lblValidChars.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblValidChars.Name = "lblValidChars";
-            this.lblValidChars.Size = new System.Drawing.Size(68, 15);
+            this.lblValidChars.Size = new System.Drawing.Size(103, 25);
             this.lblValidChars.TabIndex = 31;
             this.lblValidChars.Text = "Valid Chars:";
             // 
             // txtHashCatPath
             // 
-            this.txtHashCatPath.Location = new System.Drawing.Point(120, 81);
+            this.txtHashCatPath.Location = new System.Drawing.Point(171, 135);
+            this.txtHashCatPath.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtHashCatPath.Name = "txtHashCatPath";
-            this.txtHashCatPath.Size = new System.Drawing.Size(317, 23);
+            this.txtHashCatPath.Size = new System.Drawing.Size(451, 31);
             this.txtHashCatPath.TabIndex = 39;
             // 
             // lblUtf8Toggle
             // 
             this.lblUtf8Toggle.AutoSize = true;
-            this.lblUtf8Toggle.Location = new System.Drawing.Point(12, 113);
+            this.lblUtf8Toggle.Location = new System.Drawing.Point(17, 188);
+            this.lblUtf8Toggle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUtf8Toggle.Name = "lblUtf8Toggle";
-            this.lblUtf8Toggle.Size = new System.Drawing.Size(74, 15);
+            this.lblUtf8Toggle.Size = new System.Drawing.Size(113, 25);
             this.lblUtf8Toggle.TabIndex = 37;
             this.lblUtf8Toggle.Text = "Enable UTF8:";
             // 
             // lblHashCat
             // 
             this.lblHashCat.AutoSize = true;
-            this.lblHashCat.Location = new System.Drawing.Point(12, 84);
+            this.lblHashCat.Location = new System.Drawing.Point(17, 140);
+            this.lblHashCat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHashCat.Name = "lblHashCat";
-            this.lblHashCat.Size = new System.Drawing.Size(80, 15);
+            this.lblHashCat.Size = new System.Drawing.Size(118, 25);
             this.lblHashCat.TabIndex = 38;
             this.lblHashCat.Text = "Hashcat Path:";
             // 
             // lblStartingValidChars
             // 
             this.lblStartingValidChars.AutoSize = true;
-            this.lblStartingValidChars.Location = new System.Drawing.Point(12, 53);
+            this.lblStartingValidChars.Location = new System.Drawing.Point(17, 88);
+            this.lblStartingValidChars.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStartingValidChars.Name = "lblStartingValidChars";
-            this.lblStartingValidChars.Size = new System.Drawing.Size(84, 15);
+            this.lblStartingValidChars.Size = new System.Drawing.Size(126, 25);
             this.lblStartingValidChars.TabIndex = 32;
             this.lblStartingValidChars.Text = "Starting Chars:";
             // 
             // chkUtf8Toggle
             // 
             this.chkUtf8Toggle.AutoSize = true;
-            this.chkUtf8Toggle.Location = new System.Drawing.Point(120, 113);
+            this.chkUtf8Toggle.Location = new System.Drawing.Point(171, 188);
+            this.chkUtf8Toggle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.chkUtf8Toggle.Name = "chkUtf8Toggle";
-            this.chkUtf8Toggle.Size = new System.Drawing.Size(15, 14);
+            this.chkUtf8Toggle.Size = new System.Drawing.Size(22, 21);
             this.chkUtf8Toggle.TabIndex = 40;
             this.chkUtf8Toggle.UseVisualStyleBackColor = true;
             this.chkUtf8Toggle.CheckedChanged += new System.EventHandler(this.Utf8ToggleCheckedChanged);
             // 
             // txtStartingValidChars
             // 
-            this.txtStartingValidChars.Location = new System.Drawing.Point(120, 50);
+            this.txtStartingValidChars.Location = new System.Drawing.Point(171, 83);
+            this.txtStartingValidChars.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtStartingValidChars.Name = "txtStartingValidChars";
-            this.txtStartingValidChars.Size = new System.Drawing.Size(317, 23);
+            this.txtStartingValidChars.Size = new System.Drawing.Size(451, 31);
             this.txtStartingValidChars.TabIndex = 33;
             this.txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
             this.txtStartingValidChars.TextChanged += new System.EventHandler(this.TxtStartingValidCharsChanged);
             // 
-            // pnlHybridDictFirstWord
+            // cbHybridBruteForceMinCharacters
             // 
-            this.pnlHybridDictFirstWord.Controls.Add(this.lblHybridDictFirstWordUse);
-            this.pnlHybridDictFirstWord.Controls.Add(this.txtHybridDictFirstWord);
-            this.pnlHybridDictFirstWord.Controls.Add(this.chkHybridDictFirstWordUse);
-            this.pnlHybridDictFirstWord.Location = new System.Drawing.Point(0, 0);
-            this.pnlHybridDictFirstWord.Name = "pnlHybridDictFirstWord";
-            this.pnlHybridDictFirstWord.Size = new System.Drawing.Size(435, 404);
-            this.pnlHybridDictFirstWord.TabIndex = 99;
+            this.cbHybridBruteForceMinCharacters.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbHybridBruteForceMinCharacters.FormattingEnabled = true;
+            this.cbHybridBruteForceMinCharacters.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"});
+            this.cbHybridBruteForceMinCharacters.Location = new System.Drawing.Point(67, 90);
+            this.cbHybridBruteForceMinCharacters.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.cbHybridBruteForceMinCharacters.Name = "cbHybridBruteForceMinCharacters";
+            this.cbHybridBruteForceMinCharacters.Size = new System.Drawing.Size(53, 33);
+            this.cbHybridBruteForceMinCharacters.TabIndex = 109;
             // 
-            // pnlHybridDictLastWord
+            // lblHybridBruteForceFrom
             // 
-            this.pnlHybridDictLastWord.Controls.Add(this.lblHybridDictLastWordUse);
-            this.pnlHybridDictLastWord.Controls.Add(this.txtHybridDictLastWord);
-            this.pnlHybridDictLastWord.Controls.Add(this.chkHybridDictLastWordUse);
-            this.pnlHybridDictLastWord.Location = new System.Drawing.Point(0, 0);
-            this.pnlHybridDictLastWord.Name = "pnlHybridDictLastWord";
-            this.pnlHybridDictLastWord.Size = new System.Drawing.Size(435, 404);
-            this.pnlHybridDictLastWord.TabIndex = 99;
+            this.lblHybridBruteForceFrom.AutoSize = true;
+            this.lblHybridBruteForceFrom.Location = new System.Drawing.Point(11, 93);
+            this.lblHybridBruteForceFrom.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblHybridBruteForceFrom.Name = "lblHybridBruteForceFrom";
+            this.lblHybridBruteForceFrom.Size = new System.Drawing.Size(153, 25);
+            this.lblHybridBruteForceFrom.TabIndex = 110;
+            this.lblHybridBruteForceFrom.Text = "from              chrs";
+            // 
+            // lblHybridBruteForceUpTo
+            // 
+            this.lblHybridBruteForceUpTo.AutoSize = true;
+            this.lblHybridBruteForceUpTo.Location = new System.Drawing.Point(13, 138);
+            this.lblHybridBruteForceUpTo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblHybridBruteForceUpTo.Name = "lblHybridBruteForceUpTo";
+            this.lblHybridBruteForceUpTo.Size = new System.Drawing.Size(152, 25);
+            this.lblHybridBruteForceUpTo.TabIndex = 108;
+            this.lblHybridBruteForceUpTo.Text = "up to             chrs";
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(848, 730);
+            this.ClientSize = new System.Drawing.Size(1211, 1217);
             this.Controls.Add(this.pnlCharBruteforce);
             this.Controls.Add(this.btnQuickLoad);
             this.Controls.Add(this.btnQuickSave);
@@ -3282,6 +3525,7 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.pnlDictionary);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.mnStrip;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "BruteForceHash";
@@ -3332,13 +3576,13 @@ namespace BruteForceHash.GUI
             this.pnlHybridDict.ResumeLayout(false);
             this.pnlHybridDict.PerformLayout();
             this.tabBruteforceDictFirstWord.ResumeLayout(false);
-            this.tabBruteforceDictLastWord.ResumeLayout(false);
-            this.grpGeneral.ResumeLayout(false);
-            this.grpGeneral.PerformLayout();
             this.pnlHybridDictFirstWord.ResumeLayout(false);
             this.pnlHybridDictFirstWord.PerformLayout();
+            this.tabBruteforceDictLastWord.ResumeLayout(false);
             this.pnlHybridDictLastWord.ResumeLayout(false);
             this.pnlHybridDictLastWord.PerformLayout();
+            this.grpGeneral.ResumeLayout(false);
+            this.grpGeneral.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3579,7 +3823,6 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblHybridDictUse;
         private System.Windows.Forms.TextBox txtHybridDictWords;
         private System.Windows.Forms.Label lblHybridBruteForce;
-        private System.Windows.Forms.Label lblHybridBruteForce2;
         private System.Windows.Forms.ComboBox cbHybridBruteForceMaxCharacters;
         private System.Windows.Forms.CheckBox chkHybridDictFirstWordUse;
         private System.Windows.Forms.Label lblHybridDictFirstWordUse;
@@ -3590,6 +3833,12 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Panel pnlHybridDict;
         private System.Windows.Forms.Panel pnlHybridDictFirstWord;
         private System.Windows.Forms.Panel pnlHybridDictLastWord;
+        private System.Windows.Forms.Label lblHybridWordsInHash;
+        private System.Windows.Forms.ComboBox cbHybridWordsInHash;
+        private System.Windows.Forms.Label lblHybridCombination;
+        private System.Windows.Forms.ComboBox cbHybridBruteForceMinCharacters;
+        private System.Windows.Forms.Label lblHybridBruteForceFrom;
+        private System.Windows.Forms.Label lblHybridBruteForceUpTo;
     }
 }
 

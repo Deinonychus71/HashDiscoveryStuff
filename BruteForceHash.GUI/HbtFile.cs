@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BruteForceHash.GUI
 {
@@ -123,7 +121,9 @@ namespace BruteForceHash.GUI
         public bool Verbose { get; set; }
         public string PathHashCat { get; set; }
         public bool UseHybridDictionaries { get; set; }
-        public int HybridDictionariesBruteforceMaxChars { get; set; }
+        public int HybridBruteforceMinChars { get; set; }
+        public int HybridBruteforceMaxChars { get; set; }
+        public int HybridWordsInHash { get; set; }
         public List<string> HybridDictionariesWords { get; set; }
         public bool UseHybridDictionariesFirstWord { get; set; }
         public List<string> HybridDictionariesFirstWords { get; set; }
