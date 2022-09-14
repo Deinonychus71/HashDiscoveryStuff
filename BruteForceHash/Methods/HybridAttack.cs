@@ -25,9 +25,9 @@ namespace BruteForceHash
         protected readonly byte[] _validBytes = null;
         protected readonly byte[] _validStartBytes = null;
 
-        private readonly byte _nullByte = 0x00;
-        private readonly int _stringLength;
-        private readonly string _delimiter;
+        protected readonly byte _nullByte = 0x00;
+        protected readonly int _stringLength;
+        protected readonly string _delimiter;
         
         private int _foundResult = 0;
 
@@ -143,65 +143,14 @@ namespace BruteForceHash
         }
 
         #region Run Attack
-        public void Run()
+        public virtual void Run()
         {
-            //Run
-            var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads);
-            var tasks = new List<Task>();
-
-            // Create a TaskFactory and pass it our custom scheduler.
-            TaskFactory factory = new TaskFactory(taskScheduler);
-            _cancellationTokenSource = new CancellationTokenSource();
-
             PrintHeaders();
 
-            foreach (var combinationPattern in _combinationPatterns)
-            {
-                var task = factory.StartNew(() =>
-                {
-                    if (_cancellationTokenSource.Token.IsCancellationRequested)
-                        return;
+            var taskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads));
+            var tasks = new List<Task>();
+            RunAttackTasks(taskFactory, tasks, _combinationPatterns, true, true);
 
-                    var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
-
-                    //Optimize Prefix/Suffix
-                    var prefixByteSize = Array.IndexOf(compiledCombination, _nullByte);
-                    var prefixByteStr = Encoding.UTF8.GetString(compiledCombination, 0, prefixByteSize);
-                    var suffixByteOffset = Array.LastIndexOf(compiledCombination, _nullByte);
-                    if (suffixByteOffset != -1)
-                        suffixByteOffset += 2;
-                    var suffixByteSize = compiledCombination.Length - suffixByteOffset;
-                    var suffixByteStr = Encoding.UTF8.GetString(compiledCombination, suffixByteOffset, suffixByteSize);
-
-                    var newCompiledCombination = new byte[compiledCombination.Length - prefixByteSize - suffixByteSize];
-                    Buffer.BlockCopy(compiledCombination, prefixByteSize, newCompiledCombination, 0, compiledCombination.Length - prefixByteSize - suffixByteSize);
-                    compiledCombination = newCompiledCombination;
-                    //End Optimize
-
-                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, _options.Suffix + suffixByteStr, true);
-                    if (_options.Verbose)
-                        _logger.Log($"Running Pattern: {combinationPattern}", false);
-
-                    RunHybridAttack(strBuilder, compiledCombination, _validStartBytes, 0, 0, _cancellationTokenSource.Token);
-
-                });
-                tasks.Add(task);
-            }
-
-            Wait(tasks.ToArray(), _cancellationTokenSource.Token);
-
-            End();
-
-            //_cancellationTokenSource.Dispose(); //For Hashcat
-        }
-
-        protected virtual void Wait(Task[] tasks, CancellationToken cancellationToken)
-        {
-            Task.WaitAll(tasks, cancellationToken);
-        }
-
-        protected virtual void End()
-        {
             _logger.Log("-----------------------------------------");
             if (_foundResult > 0)
             {
@@ -212,10 +161,59 @@ namespace BruteForceHash
                 _logger.Log($"Nothing :(");
             }
         }
+
+        protected void RunAttackTasks(TaskFactory taskFactory, List<Task> tasks, IEnumerable<string> combinationPatterns, bool optimizePrefixesAndSuffixes = false, bool verbose = false)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            foreach (var combinationPattern in combinationPatterns)
+            {
+                var task = taskFactory.StartNew(() =>
+                {
+                    if (_cancellationTokenSource.Token.IsCancellationRequested)
+                        return;
+
+                    var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
+
+                    //Optimize Prefix/Suffix
+                    var prefixByteStr = string.Empty;
+                    var suffixByteStr = string.Empty;
+                    if (optimizePrefixesAndSuffixes)
+                    {
+                        var prefixByteSize = Array.IndexOf(compiledCombination, _nullByte);
+                        prefixByteStr = Encoding.UTF8.GetString(compiledCombination, 0, prefixByteSize);
+                        var suffixByteOffset = Array.LastIndexOf(compiledCombination, _nullByte);
+                        if (suffixByteOffset != -1)
+                            suffixByteOffset += 2;
+                        var suffixByteSize = compiledCombination.Length - suffixByteOffset;
+                        suffixByteStr = Encoding.UTF8.GetString(compiledCombination, suffixByteOffset, suffixByteSize);
+
+                        var newCompiledCombination = new byte[compiledCombination.Length - prefixByteSize - suffixByteSize];
+                        Buffer.BlockCopy(compiledCombination, prefixByteSize, newCompiledCombination, 0, compiledCombination.Length - prefixByteSize - suffixByteSize);
+                        compiledCombination = newCompiledCombination;
+                    }
+                    //End Optimize
+
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, _options.Suffix + suffixByteStr, false);
+                    if (_options.Verbose && verbose)
+                        _logger.Log($"Running Pattern: {combinationPattern}", false);
+
+                    RunHybridAttack(strBuilder, compiledCombination, _validStartBytes, 0, 0, _cancellationTokenSource.Token);
+
+                });
+                tasks.Add(task);
+            }
+
+            try
+            {
+                Task.WaitAll(tasks.ToArray(), _cancellationTokenSource.Token);
+            }
+            catch { }
+        }
         #endregion
 
         #region Run Attack - Per Combination
-        private void RunHybridAttack(ByteString candidate, byte[] combinationPattern, byte[] validBytes, int combinationCursor, int searchSizeRemaining, CancellationToken cancellationToken)
+        protected void RunHybridAttack(ByteString candidate, byte[] combinationPattern, byte[] validBytes, int combinationCursor, int searchSizeRemaining, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
                 return;

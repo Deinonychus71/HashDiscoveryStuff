@@ -1,11 +1,8 @@
-﻿using BruteForceHash.CombinationGenerator;
-using BruteForceHash.Helpers;
-using System;
+﻿using BruteForceHash.Helpers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BruteForceHash
@@ -13,22 +10,27 @@ namespace BruteForceHash
     public class HybridAttackHashCat : HybridAttack
     {
         private uint _hexExtract;
+        private bool _started = false;
 
         public HybridAttackHashCat(Logger logger, Options options, int stringLength, uint hexValue) :
             base(logger, options, stringLength, hexValue)
         {
         }
 
-        protected override void Wait(Task[] tasks, CancellationToken cancellationToken)
+        public override void Run()
         {
+            PrintHeaders();
+
+            var taskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads));
+
+            //Find false positive if needed
             if (!string.IsNullOrEmpty(_options.Prefix) || !string.IsNullOrEmpty(_options.Suffix))
             {
                 _logger.Log($"Finding false positive...", false);
-                try
-                {
-                    Task.WaitAll(tasks, cancellationToken);
-                }
-                catch { }
+
+                var tasks = new List<Task>();
+                RunAttackTasks(taskFactory, tasks, _combinationPatterns, false, false);
+                _cancellationTokenSource.Dispose();
 
                 if (_hexExtract == 0)
                 {
@@ -39,8 +41,9 @@ namespace BruteForceHash
             else
             {
                 _hexExtract = _hexValue;
-                _cancellationTokenSource.Cancel();
             }
+
+            _started = true;
 
             if (_combinationPatterns.Count() == 0)
             {
@@ -54,13 +57,19 @@ namespace BruteForceHash
                 return;
             }
 
-            //_cancellationTokenSource.Dispose(); //For Hashcat
-
             // Launch HashCat
             var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
 
+            var compiledCombinations = _combinationPatterns.Select(p => _combinationGeneration.CompileCombination(p));
+            var hashCatCompiledCombinations = compiledCombinations.Where(p => p[0] == _nullByte);
+            var cpuCombinations = _combinationPatterns.Where(p => p[0] != '{');
+
+            _logger.Log($"Hashcat Combinations: {hashCatCompiledCombinations.Count()}");
+            _logger.Log($"CPU Combinations: {cpuCombinations.Count()}");
+            _logger.Log("-----------------------------------------");
+
             var maskFile = "smash5bruteforce.hcmask";
-            var masks = GenerateHashCatMasks();
+            var masks = GenerateHashCatMasks(hashCatCompiledCombinations);
             var maskPath = Path.Combine(Path.GetDirectoryName(_options.PathHashCat), "masks", maskFile);
             File.WriteAllLines(maskPath, masks.ToArray());
 
@@ -68,31 +77,45 @@ namespace BruteForceHash
             if (!_options.Verbose)
                 quiet = " --quiet";
             string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 masks/{maskFile} --outfile \"{output}\" --keep-guessing -w 3{quiet}";
-            new HashcatTask(_logger, _options).Run(args, _options.Verbose);
 
+            //Run Threaded Hybrid CPU / GPU attack
+            //CPU will focus on combinations beginning with a known word as Hashcat is much slower dealing with these
+            var tasksCrack = new List<Task>
+            {
+                taskFactory.StartNew(() =>
+                {
+                    new HashcatTask(_logger, _options).Run(args, _options.Verbose);
+                })
+            };
+
+            RunAttackTasks(taskFactory, tasksCrack, cpuCombinations, true, false);
 
             _logger.Log("-----------------------------------------");
             _logger.Log($"Done");
         }
 
-        protected override void End() { }
-
         protected override void TestCandidate(ByteString candidate)
         {
             if (candidate.CRC32Check())
             {
-                _logger.LogResult($"False positive found: 0x{candidate.HexSearchValue:x}.");
-                _hexExtract = candidate.HexSearchValue;
-                _cancellationTokenSource.Cancel();
+                if (!_started)
+                {
+                    _logger.LogResult($"False positive found: 0x{candidate.HexSearchValue:x}.");
+                    _hexExtract = candidate.HexSearchValue;
+                    _cancellationTokenSource.Cancel();
+                }
+                else
+                {
+                    _logger.LogResult(candidate.ToString());
+                }
             }
         }
 
-        private List<string> GenerateHashCatMasks()
+        private List<string> GenerateHashCatMasks(IEnumerable<byte[]> compiledCombinationPatterns)
         {
             var output = new List<string>();
-            foreach (var combination in _combinationPatterns)
+            foreach (var compiledCombination in compiledCombinationPatterns)
             {
-                var compiledCombination = _combinationGeneration.CompileCombination(combination);
                 var mask = new StringBuilder();
                 var first = true;
                 var inclFirst = false;
