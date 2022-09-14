@@ -24,7 +24,11 @@ namespace BruteForceHash
             if (!string.IsNullOrEmpty(_options.Prefix) || !string.IsNullOrEmpty(_options.Suffix))
             {
                 _logger.Log($"Finding false positive...", false);
-                Task.WaitAll(tasks, cancellationToken);
+                try
+                {
+                    Task.WaitAll(tasks, cancellationToken);
+                }
+                catch { }
 
                 if (_hexExtract == 0)
                 {
@@ -38,13 +42,13 @@ namespace BruteForceHash
                 _cancellationTokenSource.Cancel();
             }
 
-            if(_combinationPatterns.Count() == 0)
+            if (_combinationPatterns.Count() == 0)
             {
                 _logger.Log($"No pattern found. Aborting operation.");
                 return;
             }
 
-            if(!File.Exists(_options.PathHashCat))
+            if (!File.Exists(_options.PathHashCat))
             {
                 _logger.Log($"Hashcat not found. Aborting operation.");
                 return;
@@ -65,6 +69,10 @@ namespace BruteForceHash
                 quiet = " --quiet";
             string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 masks/{maskFile} --outfile \"{output}\" --keep-guessing -w 3{quiet}";
             new HashcatTask(_logger, _options).Run(args, _options.Verbose);
+
+
+            _logger.Log("-----------------------------------------");
+            _logger.Log($"Done");
         }
 
         protected override void End() { }
@@ -89,14 +97,14 @@ namespace BruteForceHash
                 var first = true;
                 var inclFirst = false;
 
-                for(int i = 0; i < compiledCombination.Length; i++)
+                for (int i = 0; i < compiledCombination.Length; i++)
                 {
                     var byt = compiledCombination[i];
-                    if(byt == 0)
+                    if (byt == 0)
                     {
                         i++;
                         var length = compiledCombination[i];
-                        for(int j = 0; j < length; j++)
+                        for (int j = 0; j < length; j++)
                         {
                             if (first)
                             {

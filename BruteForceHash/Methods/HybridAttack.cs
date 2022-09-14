@@ -162,11 +162,26 @@ namespace BruteForceHash
                     if (_cancellationTokenSource.Token.IsCancellationRequested)
                         return;
 
-                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix, _options.Suffix, true);
+                    var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
+
+                    //Optimize Prefix/Suffix
+                    var prefixByteSize = Array.IndexOf(compiledCombination, _nullByte);
+                    var prefixByteStr = Encoding.UTF8.GetString(compiledCombination, 0, prefixByteSize);
+                    var suffixByteOffset = Array.LastIndexOf(compiledCombination, _nullByte);
+                    if (suffixByteOffset != -1)
+                        suffixByteOffset += 2;
+                    var suffixByteSize = compiledCombination.Length - suffixByteOffset;
+                    var suffixByteStr = Encoding.UTF8.GetString(compiledCombination, suffixByteOffset, suffixByteSize);
+
+                    var newCompiledCombination = new byte[compiledCombination.Length - prefixByteSize - suffixByteSize];
+                    Buffer.BlockCopy(compiledCombination, prefixByteSize, newCompiledCombination, 0, compiledCombination.Length - prefixByteSize - suffixByteSize);
+                    compiledCombination = newCompiledCombination;
+                    //End Optimize
+
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, _options.Suffix + suffixByteStr, true);
                     if (_options.Verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
 
-                    var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
                     RunHybridAttack(strBuilder, compiledCombination, _validStartBytes, 0, 0, _cancellationTokenSource.Token);
 
                 });
@@ -238,12 +253,13 @@ namespace BruteForceHash
                     TestCandidate(candidate);
                     return;
                 }
+                validBytes = _validBytes;
             }
 
             searchLength = combinationPattern[combinationCursor + 1];
             combinationCursor += 2;
 
-            RunHybridAttack(candidate, combinationPattern, _validBytes, combinationCursor, searchLength, cancellationToken);
+            RunHybridAttack(candidate, combinationPattern, validBytes, combinationCursor, searchLength, cancellationToken);
 
             candidate.Cursor -= preWordSize;
         }

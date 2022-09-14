@@ -172,7 +172,7 @@ namespace BruteForceHash.CombinationGenerator
                                 var includeWordsAndCombination = combinationCustom.ToList();
                                 includeWordsAndCombination.AddRange(includeWords);
                                 var wordCandidates = GenerateIncludeWordCombinations(combination, includeWordsAndCombination.Distinct());
-                                if (wordCandidates != null)
+                                if (wordCandidates.Count() > 0)
                                 {
                                     output.AddRange(wordCandidates);
                                 }
@@ -180,7 +180,7 @@ namespace BruteForceHash.CombinationGenerator
                             else
                             {
                                 var wordCandidates = GenerateIncludeWordCombinations(combination, combinationCustom);
-                                if (wordCandidates != null)
+                                if (wordCandidates.Count() > 0)
                                 {
                                     output.AddRange(wordCandidates);
                                 }
@@ -237,7 +237,7 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     if (!wordCandidate.Contains(combinationMatch))
                         continue;
-                    var nbrMatch = Regex.Matches(wordCandidate, combinationRegexp).Count;
+                    var nbrMatch = Regex.Matches(wordCandidate, combinationRegexp, RegexOptions.Compiled).Count;
                     for (int i = 0; i < nbrMatch; i++)
                     {
                         tempWordCandidates.Add(ReplaceNthOccurrence(wordCandidate, combinationMatch, includeWord, i + 1));
