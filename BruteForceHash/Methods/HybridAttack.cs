@@ -194,7 +194,7 @@ namespace BruteForceHash
                     }
                     //End Optimize
 
-                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, _options.Suffix + suffixByteStr, false);
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, suffixByteStr + _options.Suffix , false);
                     if (_options.Verbose && verbose)
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
 
