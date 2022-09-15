@@ -60,16 +60,27 @@ namespace BruteForceHash
             // Launch HashCat
             var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
 
-            var compiledCombinations = _combinationPatterns.Select(p => _combinationGeneration.CompileCombination(p));
-            var hashCatCompiledCombinations = compiledCombinations.Where(p => p[0] == _nullByte);
-            var cpuCombinations = _combinationPatterns.Where(p => p[0] != '{');
+            var cpuCombinations = _combinationPatterns.Where(p =>
+            {
+                if (p[0] != '{')
+                    return true;
 
-            _logger.Log($"Hashcat Combinations: {hashCatCompiledCombinations.Count()}");
+                var totalUnknownChars = 0;
+                for (var i = 1; i <= 50; i++)
+                    totalUnknownChars += (p.Split("{" + (i) + "}").Length - 1) * i;
+                if (totalUnknownChars <= 5)
+                    return true;
+
+                return false;
+            });
+            var hashCatCombinations = _combinationPatterns.Except(cpuCombinations);
+
+            _logger.Log($"Hashcat Combinations: {hashCatCombinations.Count()}");
             _logger.Log($"CPU Combinations: {cpuCombinations.Count()}");
             _logger.Log("-----------------------------------------");
 
             var maskFile = "smash5bruteforce.hcmask";
-            var masks = GenerateHashCatMasks(hashCatCompiledCombinations);
+            var masks = GenerateHashCatMasks(hashCatCombinations.Select(p => _combinationGeneration.CompileCombination(p)));
             var maskPath = Path.Combine(Path.GetDirectoryName(_options.PathHashCat), "masks", maskFile);
             File.WriteAllLines(maskPath, masks.ToArray());
 
@@ -79,14 +90,16 @@ namespace BruteForceHash
             string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 masks/{maskFile} --outfile \"{output}\" --keep-guessing -w 3{quiet}";
 
             //Run Threaded Hybrid CPU / GPU attack
+            var tasksCrack = new List<Task>();
+
             //CPU will focus on combinations beginning with a known word as Hashcat is much slower dealing with these
-            var tasksCrack = new List<Task>
+            if (hashCatCombinations.Count() > 0)
             {
-                taskFactory.StartNew(() =>
+                tasksCrack.Add(taskFactory.StartNew(() =>
                 {
                     new HashcatTask(_logger, _options).Run(args, _options.Verbose);
-                })
-            };
+                }));
+            }
 
             RunAttackTasks(taskFactory, tasksCrack, cpuCombinations, true, false);
 

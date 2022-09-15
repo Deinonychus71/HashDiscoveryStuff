@@ -94,7 +94,7 @@ namespace BruteForceHash
 
                 Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - Done!");
                 if (o.ConfirmEnd)
-                    Console.ReadKey();
+                    Console.ReadLine();
                 else
                     await Task.Delay(2000);
             });
