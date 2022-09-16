@@ -46,6 +46,39 @@ namespace BruteForceHash
             _inputValidStartChars = _options.ValidStartingChars;
             _validStartBytes = Encoding.ASCII.GetBytes(_options.ValidStartingChars);
 
+            //Ignore Size Filters
+            if (options.HybridIgnoreSizeFilters)
+            {
+                options.MaxConcatenatedWords = 20;
+                options.MaxConsecutiveConcatenation = 20;
+                options.MaxConsecutiveOnes = 20;
+                options.MaxFours = 20;
+                options.MaxOnes = 20;
+                options.MaxThrees = 20;
+                options.MaxTwos = 20;
+                options.MaxWordLength = 50;
+                options.MaxDelimiters = 20;
+                options.MinDelimiters = 0;
+                options.MinOnes = 0;
+                options.MinTwos = 0;
+                options.MinThrees = 0;
+                options.MinFours = 0;
+                options.MinWordLength = 1;
+                options.MinConcatenatedWords = 0;
+                options.MinConsecutiveConcatenation = 1;
+                options.MinWordsLimit = 1;
+                options.ConcatenateFirstTwoWords = false;
+                options.ConcatenateLastTwoWords = false;
+                options.AtLeastAboveChars = 0;
+                options.AtLeastAboveWords = 0;
+                options.AtLeastUnderChars = 0;
+                options.AtLeastUnderWords = 0;
+                options.AtMostAboveChars = 0;
+                options.AtMostAboveWords = 0;
+                options.AtMostUnderChars = 0;
+                options.AtMostUnderWords = 0;
+            }
+
             if (_options.MaxConcatenatedWords == 0)
                 _combinationGeneration = new CombinationGeneratorSimple(options, stringLength);
             else
@@ -91,22 +124,34 @@ namespace BruteForceHash
         protected void PrintHeaders()
         {
             _logger.Log($"Delimiter: {_delimiter}");
+            if(!_options.HybridIgnoreSizeFilters)
             _logger.Log($"Delimiters: Between {_options.MinDelimiters} and {_options.MaxDelimiters}");
             _logger.Log($"Words Limit: {_options.WordsLimit}");
-            _logger.Log($"Words Length: Between {_options.MinWordLength} and {_options.MaxWordLength}");
-            _logger.Log($"Ones Limit: Between {_options.MinOnes} and {_options.MaxOnes}");
-            _logger.Log($"Twos Limit: Between {_options.MinTwos} and {_options.MaxTwos}");
-            _logger.Log($"Threes Limit: Between {_options.MinThrees} and {_options.MaxThrees}");
-            _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
+            if (!_options.HybridIgnoreSizeFilters)
+            {
+                _logger.Log($"Words Length: Between {_options.MinWordLength} and {_options.MaxWordLength}");
+                _logger.Log($"Ones Limit: Between {_options.MinOnes} and {_options.MaxOnes}");
+                _logger.Log($"Twos Limit: Between {_options.MinTwos} and {_options.MaxTwos}");
+                _logger.Log($"Threes Limit: Between {_options.MinThrees} and {_options.MaxThrees}");
+                _logger.Log($"Fours Limit: Between {_options.MinFours} and {_options.MaxFours}");
 
-            if (_options.AtLeastAboveChars > 0 && _options.AtLeastAboveWords > 0)
-                _logger.Log($"Size: At least {_options.AtLeastAboveWords} word(s) greater than/equal to {_options.AtLeastAboveChars} character(s)");
-            if (_options.AtLeastUnderChars > 0 && _options.AtLeastUnderWords > 0)
-                _logger.Log($"Size: At least {_options.AtLeastUnderWords} word(s) less than/equal to {_options.AtLeastUnderChars} character(s)");
-            if (_options.AtMostAboveChars > 0 && _options.AtMostAboveWords > 0)
-                _logger.Log($"Size: At most {_options.AtMostAboveWords} word(s) greater than/equal to {_options.AtMostAboveChars} character(s)");
-            if (_options.AtMostUnderChars > 0 && _options.AtMostUnderWords > 0)
-                _logger.Log($"Size: At most {_options.AtMostUnderWords} word(s) less than/equal to {_options.AtMostUnderChars} character(s)");
+                if (_options.AtLeastAboveChars > 0 && _options.AtLeastAboveWords > 0)
+                    _logger.Log($"Size: At least {_options.AtLeastAboveWords} word(s) greater than/equal to {_options.AtLeastAboveChars} character(s)");
+                if (_options.AtLeastUnderChars > 0 && _options.AtLeastUnderWords > 0)
+                    _logger.Log($"Size: At least {_options.AtLeastUnderWords} word(s) less than/equal to {_options.AtLeastUnderChars} character(s)");
+                if (_options.AtMostAboveChars > 0 && _options.AtMostAboveWords > 0)
+                    _logger.Log($"Size: At most {_options.AtMostAboveWords} word(s) greater than/equal to {_options.AtMostAboveChars} character(s)");
+                if (_options.AtMostUnderChars > 0 && _options.AtMostUnderWords > 0)
+                    _logger.Log($"Size: At most {_options.AtMostUnderWords} word(s) less than/equal to {_options.AtMostUnderChars} character(s)");
+            }
+            else
+            {
+                _logger.Log($"Ignore Size Filters: Yes");
+            }
+            if (_options.UseHashcat)
+            {
+                _logger.Log($"Hashcat Character Threshold: {_options.HybridMinCharHashcatThreshold} characters");
+            }
 
             if (!string.IsNullOrEmpty(_options.ExcludePatterns))
                 _logger.Log($"Exclude Patterns: {_options.ExcludePatterns}");
@@ -118,7 +163,7 @@ namespace BruteForceHash
                 _logger.Log($"Include Word - Skip first word: {_options.IncludeWordNotFirst}");
             }
 
-            if (_options.MaxConcatenatedWords > 0)
+            if (_options.MaxConcatenatedWords > 0 && !_options.HybridIgnoreSizeFilters)
             {
                 _logger.Log($"Concatenated Words: Between {_options.MinConcatenatedWords} and {_options.MaxConcatenatedWords}");
                 _logger.Log($"Consecutive Concatenation Limit: Between {_options.MinConsecutiveConcatenation} and  {_options.MaxConsecutiveConcatenation}");
@@ -149,7 +194,12 @@ namespace BruteForceHash
 
             var taskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads));
             var tasks = new List<Task>();
-            RunAttackTasks(taskFactory, tasks, _combinationPatterns, true, true);
+            var compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns);
+
+            _logger.Log($"CPU Combinations: {compiledCombinationPatterns.Count()}");
+            _logger.Log("-----------------------------------------");
+
+            RunAttackTasks(taskFactory, tasks, compiledCombinationPatterns, true, true);
 
             _logger.Log("-----------------------------------------");
             if (_foundResult > 0)
@@ -162,18 +212,18 @@ namespace BruteForceHash
             }
         }
 
-        protected void RunAttackTasks(TaskFactory taskFactory, List<Task> tasks, IEnumerable<string> combinationPatterns, bool optimizePrefixesAndSuffixes = false, bool verbose = false)
+        protected void RunAttackTasks(TaskFactory taskFactory, List<Task> tasks, IEnumerable<byte[]> compiledCombinationPatterns, bool optimizePrefixesAndSuffixes = false, bool verbose = false)
         {
             _cancellationTokenSource = new CancellationTokenSource();
 
-            foreach (var combinationPattern in combinationPatterns)
+            foreach (var combinationPattern in compiledCombinationPatterns)
             {
                 var task = taskFactory.StartNew(() =>
                 {
                     if (_cancellationTokenSource.Token.IsCancellationRequested)
                         return;
 
-                    var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
+                    var compiledCombination = combinationPattern;
 
                     //Optimize Prefix/Suffix
                     var prefixByteStr = string.Empty;
@@ -196,7 +246,7 @@ namespace BruteForceHash
 
                     var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, suffixByteStr + _options.Suffix , false);
                     if (_options.Verbose && verbose)
-                        _logger.Log($"Running Pattern: {combinationPattern}", false);
+                        _logger.Log($"Running Pattern: {_combinationGeneration.DecompileCombination(combinationPattern)}", false);
 
                     RunHybridAttack(strBuilder, compiledCombination, _validStartBytes, 0, 0, _cancellationTokenSource.Token);
 

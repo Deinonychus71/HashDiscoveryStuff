@@ -129,5 +129,7 @@ namespace BruteForceHash.GUI
         public List<string> HybridDictionariesFirstWords { get; set; }
         public bool UseHybridDictionariesLastWord { get; set; }
         public List<string> HybridDictionariesLastWords { get; set; }
+        public bool HybridIgnoreSizeFilters { get; set; }
+        public int HybridMinCharHashcatThreshold { get; set; }
     }
 }

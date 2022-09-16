@@ -100,6 +100,53 @@ namespace BruteForceHash.CombinationGenerator
             return bytes.ToArray();
         }
 
+        public override byte[] CompileCombinationJoin(string combinationPattern)
+        {
+            var bytes = new List<byte>();
+            var index = 0;
+            while (index < combinationPattern.Length)
+            {
+                var chara = combinationPattern[index];
+                if (chara == '{')
+                {
+                    while (chara == '{')
+                    {
+                        index++;
+                        var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
+                        if (bytes.Count == 0 || bytes[bytes.Count - 2] != 0)
+                        {
+                            bytes.Add(0);
+                            bytes.Add(Convert.ToByte(valueStr));
+                        }
+                        else
+                        {
+                            bytes[bytes.Count - 1] += Convert.ToByte(valueStr);
+                        }
+                        index += valueStr.Length + 1;
+                        if (index >= combinationPattern.Length)
+                            break;
+                        chara = combinationPattern[index];
+                        if (chara == '|')
+                        {
+                            index++;
+                            chara = combinationPattern[index];
+                        }
+                    }
+
+                }
+                else if (chara == '|')
+                {
+                    index++;
+                }
+                else
+                {
+                    index++;
+                    bytes.Add(Encoding.UTF8.GetBytes(new char[] { chara })[0]);
+                }
+            }
+            return bytes.ToArray();
+        }
+
         public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
         {
             //Get combinations of custom words

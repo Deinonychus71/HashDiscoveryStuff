@@ -29,7 +29,8 @@ namespace BruteForceHash
                 _logger.Log($"Finding false positive...", false);
 
                 var tasks = new List<Task>();
-                RunAttackTasks(taskFactory, tasks, _combinationPatterns, false, false);
+                var compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns);
+                RunAttackTasks(taskFactory, tasks, compiledCombinationPatterns, false, false);
                 _cancellationTokenSource.Dispose();
 
                 if (_hexExtract == 0)
@@ -68,21 +69,22 @@ namespace BruteForceHash
                 var totalUnknownChars = 0;
                 for (var i = 1; i <= 50; i++)
                     totalUnknownChars += (p.Split("{" + (i) + "}").Length - 1) * i;
-                if (totalUnknownChars <= 5)
+                if (totalUnknownChars < _options.HybridMinCharHashcatThreshold)
                     return true;
 
                 return false;
             });
             var hashCatCombinations = _combinationPatterns.Except(cpuCombinations);
-
-            _logger.Log($"Hashcat Combinations: {hashCatCombinations.Count()}");
-            _logger.Log($"CPU Combinations: {cpuCombinations.Count()}");
-            _logger.Log("-----------------------------------------");
+            var compiledCpuPatterns = _combinationGeneration.CompileCombinationsJoin(cpuCombinations); //Doing the work here, we should avoid that.
 
             var maskFile = "smash5bruteforce.hcmask";
             var masks = GenerateHashCatMasks(hashCatCombinations.Select(p => _combinationGeneration.CompileCombination(p)));
             var maskPath = Path.Combine(Path.GetDirectoryName(_options.PathHashCat), "masks", maskFile);
             File.WriteAllLines(maskPath, masks.ToArray());
+
+            _logger.Log($"Hashcat Combinations: {masks.Count()}");
+            _logger.Log($"CPU Combinations: {compiledCpuPatterns.Count()}");
+            _logger.Log("-----------------------------------------");
 
             var quiet = string.Empty;
             if (!_options.Verbose)
@@ -101,7 +103,7 @@ namespace BruteForceHash
                 }));
             }
 
-            RunAttackTasks(taskFactory, tasksCrack, cpuCombinations, true, false);
+            RunAttackTasks(taskFactory, tasksCrack, compiledCpuPatterns, true, false);
 
             _logger.Log("-----------------------------------------");
             _logger.Log($"Done");
@@ -124,7 +126,7 @@ namespace BruteForceHash
             }
         }
 
-        private List<string> GenerateHashCatMasks(IEnumerable<byte[]> compiledCombinationPatterns)
+        private IEnumerable<string> GenerateHashCatMasks(IEnumerable<byte[]> compiledCombinationPatterns)
         {
             var output = new List<string>();
             foreach (var compiledCombination in compiledCombinationPatterns)
@@ -162,7 +164,7 @@ namespace BruteForceHash
                 output.Add($"{_inputValidChars},{(inclFirst ? _inputValidStartChars + "," : "")}{mask}");
             }
 
-            return output;
+            return output.Distinct();
         }
     }
 }

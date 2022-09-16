@@ -171,9 +171,20 @@ namespace BruteForceHash.GUI
             chkHybridDictFirstWordUse_CheckedChanged(this, null);
             chkHybridDictLastWordUse_CheckedChanged(this, null);
             chkHybridDictUse_CheckedChanged(this, null);
+            cbHybridHashcatThreshold.SelectedIndex = 6;
             cbHybridBruteForceMinCharacters.SelectedIndex = 1;
             cbHybridBruteForceMaxCharacters.SelectedIndex = 6;
             cbHybridWordsInHash.SelectedIndex = 2;
+
+            txtDictCustWords.Text = string.Empty;
+            txtDictExcludeWords.Text = string.Empty;
+            txtDictFirstCustWords.Text = string.Empty;
+            txtDictFirstWordExcludeWords.Text = string.Empty;
+            txtDictLastCustWords.Text = string.Empty;
+            txtDictLastWordExcludeWords.Text = string.Empty;
+            txtHybridDictFirstWord.Text = string.Empty;
+            txtHybridDictLastWord.Text = string.Empty;
+            txtHybridDictWords.Text = string.Empty;
 
             grpTypos.Enabled = true;
             pnlDictionary.Visible = true;
@@ -509,6 +520,8 @@ namespace BruteForceHash.GUI
                 arguments += $" --hybrid_words_hash {cbHybridWordsInHash.SelectedItem} " +
                                 $"--hybrid_min_characters {cbHybridBruteForceMinCharacters.SelectedItem} " +
                                 $"--hybrid_max_characters {cbHybridBruteForceMaxCharacters.SelectedItem} " +
+                                (useHashCat ? $"--hybrid_min_char_hashcat_threshold {cbHybridHashcatThreshold.SelectedItem} " : string.Empty) +
+                                (chkHybridIgnoreSizeFilters.Checked ? $"--hybrid_ignore_size_filters " : string.Empty) +
                                 (chkHybridDictUse.Checked ? $"--hybrid_dictionary \"{dictionaryHybrid}\" " : string.Empty) +
                                 (chkHybridDictFirstWordUse.Checked ? $"--hybrid_dictionary_first_word \"{dictionaryHybridFirstWord}\" " : string.Empty) +
                                 (chkHybridDictLastWordUse.Checked ? $"--hybrid_dictionary_last_word \"{dictionaryHybridLastWord}\" " : string.Empty);
@@ -664,12 +677,14 @@ namespace BruteForceHash.GUI
                 UseHybridDictionaries = chkHybridDictUse.Checked,
                 UseHybridDictionariesFirstWord = chkHybridDictFirstWordUse.Checked,
                 UseHybridDictionariesLastWord = chkHybridDictLastWordUse.Checked,
+                HybridMinCharHashcatThreshold = Convert.ToInt32(cbHybridHashcatThreshold.SelectedItem),
                 HybridBruteforceMaxChars = Convert.ToInt32(cbHybridBruteForceMaxCharacters.SelectedItem),
                 HybridBruteforceMinChars = Convert.ToInt32(cbHybridBruteForceMinCharacters.SelectedItem),
                 HybridWordsInHash = cbHybridWordsInHash.SelectedIndex + 1,
                 HybridDictionariesWords = txtHybridDictWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 HybridDictionariesFirstWords = txtHybridDictFirstWord.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
                 HybridDictionariesLastWords = txtHybridDictLastWord.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
+                HybridIgnoreSizeFilters = chkHybridIgnoreSizeFilters.Checked,
                 PathHashCat = txtHashCatPath.Text.Trim(),
                 DictionaryFilterFirstFrom = txtDictionaryFilterFirstFrom.Text.Trim(),
                 DictionaryFilterFirstTo = txtDictionaryFilterFirstTo.Text.Trim(),
@@ -787,11 +802,13 @@ namespace BruteForceHash.GUI
             txtPrefix.Text = hbtObject.Prefix;
             txtSuffix.Text = hbtObject.Suffix;
             txtValidChars.Text = hbtObject.ValidChars;
+            chkHybridIgnoreSizeFilters.Checked = hbtObject.HybridIgnoreSizeFilters;
             chkHybridDictUse.Checked = hbtObject.UseHybridDictionaries;
             chkHybridDictFirstWordUse.Checked = hbtObject.UseHybridDictionariesFirstWord;
             chkHybridDictLastWordUse.Checked = hbtObject.UseHybridDictionariesLastWord;
             cbHybridBruteForceMinCharacters.SelectedItem = hbtObject.HybridBruteforceMinChars.ToString();
             cbHybridBruteForceMaxCharacters.SelectedItem = hbtObject.HybridBruteforceMaxChars.ToString();
+            cbHybridHashcatThreshold.SelectedItem = hbtObject.HybridMinCharHashcatThreshold.ToString();
             cbHybridWordsInHash.SelectedIndex = hbtObject.HybridWordsInHash - 1;
             txtHybridDictWords.Text = string.Join("\r\n", hbtObject.HybridDictionariesWords ?? new List<string>());
             txtHybridDictFirstWord.Text = string.Join("\r\n", hbtObject.HybridDictionariesFirstWords ?? new List<string>());

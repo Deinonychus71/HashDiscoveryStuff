@@ -24,7 +24,7 @@ namespace BruteForceHash.CombinationGenerator
         private readonly int _maxFours;
         private readonly int _minFours;
 
-        public CombinationGeneratorSimple(Options options, int stringLength) : 
+        public CombinationGeneratorSimple(Options options, int stringLength) :
             base(options, stringLength)
         {
             if (string.IsNullOrEmpty(options.Delimiter))
@@ -76,6 +76,11 @@ namespace BruteForceHash.CombinationGenerator
             return bytes.ToArray();
         }
 
+        public override byte[] CompileCombinationJoin(string combinationPattern)
+        {
+            return CompileCombination(combinationPattern);
+        }
+
         public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
         {
             //Get combinations of custom words
@@ -84,7 +89,7 @@ namespace BruteForceHash.CombinationGenerator
             {
                 var splitPaths = customWordsDictionariesPaths.Split(";", StringSplitOptions.RemoveEmptyEntries);
                 var allCustomWords = new List<string>();
-                foreach(var dictPath in splitPaths)
+                foreach (var dictPath in splitPaths)
                 {
                     if (File.Exists(dictPath))
                     {

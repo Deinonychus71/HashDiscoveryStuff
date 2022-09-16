@@ -239,13 +239,9 @@ namespace BruteForceHash
         public string HybridDictionaryFirstWord { get; set; }
         [Option('D', "hybrid_dictionary_last_word", Required = false, Default = null, HelpText = "Path of a dictionary for this hash for last word (for hybrid attack).")]
         public string HybridDictionaryLastWord { get; set; }
-
-        /*[Option('2', "skip_delimiter_in_last_position", Required = false, Default = false, HelpText = "If true, the last character check will skip the delimiter value (for character attack).")]
-        public bool SkipDelimiterInLastPosition { get; set; }
-        [Option('3', "skip_delimiter_in_first_position", Required = false, Default = false, HelpText = "If true, the first character check will skip the delimiter value (for character attack).")]
-        public bool SkipDelimiterInFirstPosition { get; set; }*/
-
-
-
+        [Option('C', "hybrid_ignore_size_filters", Required = false, Default = false, HelpText = "Ignore Size Filters to find a maximum of combinations (for hybrid attack).")]
+        public bool HybridIgnoreSizeFilters { get; set; }
+        [Option('C', "hybrid_min_char_hashcat_threshold", Required = false, Default = 6, HelpText = "Minimum number of characters needed to trigger hashcat (for hybrid attack).")]
+        public int HybridMinCharHashcatThreshold { get; set; }
     }
 }
