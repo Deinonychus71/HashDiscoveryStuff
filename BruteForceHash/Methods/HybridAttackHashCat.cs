@@ -1,4 +1,5 @@
 ﻿using BruteForceHash.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace BruteForceHash
         {
             PrintHeaders();
 
+            var compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns);
+
             var taskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads));
 
             //Find false positive if needed
@@ -29,7 +32,6 @@ namespace BruteForceHash
                 _logger.Log($"Finding false positive...", false);
 
                 var tasks = new List<Task>();
-                var compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns);
                 RunAttackTasks(taskFactory, tasks, compiledCombinationPatterns, false, false);
                 _cancellationTokenSource.Dispose();
 
@@ -52,33 +54,33 @@ namespace BruteForceHash
                 return;
             }
 
-            if (!File.Exists(_options.PathHashCat))
-            {
-                _logger.Log($"Hashcat not found. Aborting operation.");
-                return;
-            }
-
             // Launch HashCat
             var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
 
-            var cpuCombinations = _combinationPatterns.Where(p =>
+            var compiledCpuPatterns = compiledCombinationPatterns.Where(p =>
             {
-                if (p[0] != '{')
+                if (p[0] != 0)
                     return true;
 
                 var totalUnknownChars = 0;
-                for (var i = 1; i <= 50; i++)
-                    totalUnknownChars += (p.Split("{" + (i) + "}").Length - 1) * i;
+                int cursor = 0;
+                var loc = Array.IndexOf(p, _nullByte, cursor);
+                while(loc != -1)
+                {
+                    totalUnknownChars += p[loc + 1];
+                    cursor = loc + 1;
+                    loc = Array.IndexOf(p, _nullByte, cursor);
+                }
+
                 if (totalUnknownChars < _options.HybridMinCharHashcatThreshold)
                     return true;
 
                 return false;
             });
-            var hashCatCombinations = _combinationPatterns.Except(cpuCombinations);
-            var compiledCpuPatterns = _combinationGeneration.CompileCombinationsJoin(cpuCombinations); //Doing the work here, we should avoid that.
+            var compiledHashCatCombinations = compiledCombinationPatterns.Except(compiledCpuPatterns);
 
             var maskFile = "smash5bruteforce.hcmask";
-            var masks = GenerateHashCatMasks(hashCatCombinations.Select(p => _combinationGeneration.CompileCombination(p)));
+            var masks = GenerateHashCatMasks(compiledHashCatCombinations);
             var maskPath = Path.Combine(Path.GetDirectoryName(_options.PathHashCat), "masks", maskFile);
             File.WriteAllLines(maskPath, masks.ToArray());
 
@@ -95,7 +97,7 @@ namespace BruteForceHash
             var tasksCrack = new List<Task>();
 
             //CPU will focus on combinations beginning with a known word as Hashcat is much slower dealing with these
-            if (hashCatCombinations.Count() > 0)
+            if (compiledHashCatCombinations.Count() > 0)
             {
                 tasksCrack.Add(taskFactory.StartNew(() =>
                 {

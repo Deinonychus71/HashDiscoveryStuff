@@ -74,6 +74,8 @@ namespace BruteForceHash.GUI
         public bool TyposEnableReverseLetter { get; set; }
 
         public int NbrThreads { get; set; }
+        public bool CacheDynamicPrefix { get; set; }
+        public bool CacheDynamicSuffix { get; set; }
 
         public string DictionaryFilterFirstFrom { get; set; }
         public string DictionaryFilterFirstTo { get; set; }

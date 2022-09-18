@@ -1,18 +1,22 @@
 ﻿using Force.Crc32;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BruteForceHash.Helpers
 {
     public class ByteString
     {
-        public static uint OptimizedValue { get; set; }
-        public static bool IsOptimizedValue { get; set; }
+        public static ConcurrentDictionary<string, uint> _optimizedValues = new ConcurrentDictionary<string, uint>();
 
         private readonly int _leadPrefixOffset;
         private readonly int _leadSuffixOffset;
-        private readonly string _prefix;
-        private readonly string _suffix;
+        private readonly byte[] _prefix;
+        private readonly byte[] _suffix;
+        private string _prefixStr;
+        private string _suffixStr;
         private bool _canBeOptimized;
         private bool _wasOptimized;
         private uint _hexToFind;
@@ -26,31 +30,53 @@ namespace BruteForceHash.Helpers
 
         public ByteString(int length, uint hexToFind, string prefix, string suffix, bool useGlobalOptimization = false)
         {
-            _leadPrefixOffset = Encoding.UTF8.GetByteCount(prefix);
-            _leadSuffixOffset = Encoding.UTF8.GetByteCount(suffix);
+            _prefix = Encoding.UTF8.GetBytes(prefix);
+            _suffix = Encoding.UTF8.GetBytes(suffix);
+            _prefixStr = prefix;
+            _suffixStr = suffix;
+            _leadPrefixOffset = _prefix.Length;
+            _leadSuffixOffset = _suffix.Length;
+            Init(length, hexToFind, useGlobalOptimization);
+        }
+
+        public ByteString(int length, uint hexToFind, byte[] prefix, byte[] suffix, bool useGlobalOptimization = false)
+        {
             _prefix = prefix;
             _suffix = suffix;
+            _prefixStr = Encoding.UTF8.GetString(prefix);
+            _suffixStr = Encoding.UTF8.GetString(suffix);
+            _leadPrefixOffset = prefix.Length;
+            _leadSuffixOffset = suffix.Length;
+            Init(length, hexToFind, useGlobalOptimization);
+        }
+
+        private void Init(int length, uint hexToFind, bool useGlobalOptimization = false)
+        {
             _canBeOptimized = _leadPrefixOffset != 0 || _leadSuffixOffset != 0;
-            if (_canBeOptimized && useGlobalOptimization && IsOptimizedValue)
+
+            if (_canBeOptimized && useGlobalOptimization)
             {
-                _hexToFind = OptimizedValue;
-                _canBeOptimized = false;
-                _wasOptimized = true;
-                _value = new byte[length - _leadPrefixOffset - _leadSuffixOffset];
+                string key = $"{_prefixStr}||{_suffixStr}";
+                if (_optimizedValues.ContainsKey(key) && _optimizedValues.TryGetValue(key, out uint value))
+                {
+                    _hexToFind = value;
+                    _canBeOptimized = false;
+                    _wasOptimized = true;
+                    _value = new byte[length - _leadPrefixOffset - _leadSuffixOffset];
+                    return;
+                }
             }
-            else
+
+            _hexToFind = hexToFind;
+            _value = new byte[length];
+            if (_suffix != null && _suffix.Length > 0)
             {
-                _hexToFind = hexToFind; 
-                _value = new byte[length];
-                if (!string.IsNullOrEmpty(suffix))
-                {
-                    Append(suffix, length - _leadSuffixOffset);
-                    Cursor = 0;
-                }
-                if (!string.IsNullOrEmpty(prefix))
-                {
-                    Append(Encoding.UTF8.GetBytes(prefix), 0);
-                }
+                Append(_suffix, length - _leadSuffixOffset);
+                Cursor = 0;
+            }
+            if (_prefix != null && _prefix.Length > 0)
+            {
+                Append(_prefix, 0);
             }
         }
 
@@ -156,8 +182,7 @@ namespace BruteForceHash.Helpers
                     Cursor = newLength - (temp.Length - Cursor) + _leadSuffixOffset;
                     _canBeOptimized = false;
                     _wasOptimized = true;
-                    OptimizedValue = _hexToFind;
-                    IsOptimizedValue = true;
+                    _optimizedValues.TryAdd($"{_prefixStr}||{_suffixStr}", _hexToFind);
                 }
                 return true;
             }
@@ -168,18 +193,8 @@ namespace BruteForceHash.Helpers
         public override string ToString()
         {
             if (_wasOptimized)
-                return $"{_prefix}{Encoding.UTF8.GetString(_value)}{_suffix}";
+                return $"{_prefixStr}{Encoding.UTF8.GetString(_value)}{_suffixStr}";
             return Encoding.UTF8.GetString(_value);
-        }
-
-        public string ToString(bool usePrefix)
-        {
-            if (usePrefix)
-                return ToString();
-            if (_wasOptimized)
-                return Encoding.UTF8.GetString(_value);
-            else
-                return Encoding.UTF8.GetString(_value, Encoding.UTF8.GetByteCount(_prefix), _value.Length - Encoding.UTF8.GetByteCount(_prefix) - Encoding.UTF8.GetByteCount(_suffix));
         }
     }
 }

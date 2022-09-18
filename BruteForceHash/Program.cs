@@ -19,6 +19,13 @@ namespace BruteForceHash
                 o.ValidChars = string.Join(null, o.ValidChars.ToCharArray().Distinct());
                 o.ValidStartingChars = string.Join(null, o.ValidStartingChars.ToCharArray().Distinct());
 
+                //Disable Hashcat if not found
+                if (o.UseHashcat && !File.Exists(o.PathHashCat))
+                {
+                    Console.WriteLine($"Hashcat not found in '{o.PathHashCat}'. Disabling Hashcat parameter.");
+                    o.UseHashcat = false;
+                }
+
                 //Get Hex
                 if (string.IsNullOrEmpty(o.HexValue))
                 {

@@ -283,6 +283,8 @@ namespace BruteForceHash.GUI
             this.lblStartingValidChars = new System.Windows.Forms.Label();
             this.chkUtf8Toggle = new System.Windows.Forms.CheckBox();
             this.txtStartingValidChars = new System.Windows.Forms.TextBox();
+            this.chkDictCachePrefix = new System.Windows.Forms.CheckBox();
+            this.chkDictCacheSuffix = new System.Windows.Forms.CheckBox();
             this.pnlDictionary.SuspendLayout();
             this.grpSizeFiltering.SuspendLayout();
             this.grpWordFiltering.SuspendLayout();
@@ -1864,6 +1866,8 @@ namespace BruteForceHash.GUI
             // 
             // tabMainDictionariesCommon
             // 
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictCacheSuffix);
+            this.tabMainDictionariesCommon.Controls.Add(this.chkDictCachePrefix);
             this.tabMainDictionariesCommon.Controls.Add(this.txtDictionaryFilterFirstTo);
             this.tabMainDictionariesCommon.Controls.Add(this.lblDictionaryFilterFirstTo);
             this.tabMainDictionariesCommon.Controls.Add(this.chkDictionariesUse);
@@ -3557,13 +3561,34 @@ namespace BruteForceHash.GUI
             this.txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
             this.txtStartingValidChars.TextChanged += new System.EventHandler(this.TxtStartingValidCharsChanged);
             // 
+            // chkDictCachePrefix
+            // 
+            this.chkDictCachePrefix.AutoSize = true;
+            this.chkDictCachePrefix.Location = new System.Drawing.Point(9, 749);
+            this.chkDictCachePrefix.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chkDictCachePrefix.Name = "chkDictCachePrefix";
+            this.chkDictCachePrefix.Size = new System.Drawing.Size(130, 27);
+            this.chkDictCachePrefix.TabIndex = 96;
+            this.chkDictCachePrefix.Text = "Cache Prefix";
+            this.chkDictCachePrefix.UseVisualStyleBackColor = true;
+            // 
+            // chkDictCacheSuffix
+            // 
+            this.chkDictCacheSuffix.AutoSize = true;
+            this.chkDictCacheSuffix.Location = new System.Drawing.Point(9, 786);
+            this.chkDictCacheSuffix.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chkDictCacheSuffix.Name = "chkDictCacheSuffix";
+            this.chkDictCacheSuffix.Size = new System.Drawing.Size(129, 27);
+            this.chkDictCacheSuffix.TabIndex = 97;
+            this.chkDictCacheSuffix.Text = "Cache Suffix";
+            this.chkDictCacheSuffix.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1211, 1217);
-            this.Controls.Add(this.pnlCharBruteforce);
             this.Controls.Add(this.btnQuickLoad);
             this.Controls.Add(this.btnQuickSave);
             this.Controls.Add(this.btnStartHashCat);
@@ -3584,6 +3609,7 @@ namespace BruteForceHash.GUI
             this.Controls.Add(this.lblHexValues);
             this.Controls.Add(this.mnStrip);
             this.Controls.Add(this.pnlDictionary);
+            this.Controls.Add(this.pnlCharBruteforce);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.mnStrip;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -3904,6 +3930,8 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.ComboBox cbHybridHashcatThreshold;
         private System.Windows.Forms.Label lblHybridHashcatThreshold;
         private System.Windows.Forms.Label lblHybridHashcatThreshold2;
+        private System.Windows.Forms.CheckBox chkDictCacheSuffix;
+        private System.Windows.Forms.CheckBox chkDictCachePrefix;
     }
 }
 

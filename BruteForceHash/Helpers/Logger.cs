@@ -48,7 +48,7 @@ namespace BruteForceHash.Helpers
 
         public void Log(string line, bool saveInQueue = true)
         {
-            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - {line}");
+            Console.WriteLine($"{DateTime.Now} - {line}");
             if(saveInQueue)
                 _queue.Enqueue(line);
         }
@@ -56,7 +56,7 @@ namespace BruteForceHash.Helpers
         public void LogResult(string line, bool saveInQueue = true)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{DateTime.Now.ToUniversalTime()} - {line}");
+            Console.WriteLine($"{DateTime.Now} - {line}");
             Console.ForegroundColor = _defaultConsoleColor;
             if (saveInQueue)
                 _queue.Enqueue(line);

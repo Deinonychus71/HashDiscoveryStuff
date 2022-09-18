@@ -31,6 +31,10 @@ namespace BruteForceHash
         public bool ConfirmEnd { get; set; }
 
         //Patterns Generated
+        [Option('n', "enable_dynamic_prefix_cache", Required = false, Default = false, HelpText = "Disable dynamic prefix optimization.")]
+        public bool EnableDynamicPrefixCache { get; set; }
+        [Option('n', "enable_dynamic_suffix_cache", Required = false, Default = false, HelpText = "Disable dynamic suffix optimization.")]
+        public bool EnableDynamicSuffixCache { get; set; }
         [Option('n', "max_delimiters", Required = false, Default = -1, HelpText = "Maximum Number of Delimiters that can be in the target string.")]
         public int MaxDelimiters { get; set; }
         [Option('n', "min_delimiters", Required = false, Default = -1, HelpText = "Minimum Number of Delimiters that can be in the target string.")]

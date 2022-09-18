@@ -113,7 +113,7 @@ namespace BruteForceHash.CombinationGenerator
                     {
                         index++;
                         var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
-                        if (bytes.Count == 0 || bytes[bytes.Count - 2] != 0)
+                        if (bytes.Count <= 1 || bytes[bytes.Count - 2] != 0)
                         {
                             bytes.Add(0);
                             bytes.Add(Convert.ToByte(valueStr));

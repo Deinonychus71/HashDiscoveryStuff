@@ -186,6 +186,9 @@ namespace BruteForceHash.GUI
             txtHybridDictLastWord.Text = string.Empty;
             txtHybridDictWords.Text = string.Empty;
 
+            chkDictCachePrefix.Checked = true;
+            chkDictCacheSuffix.Checked = true;
+
             grpTypos.Enabled = true;
             pnlDictionary.Visible = true;
             grpWordFiltering.Enabled = true;
@@ -448,7 +451,9 @@ namespace BruteForceHash.GUI
             //Dictionary Only
             if (useMethodDictionary)
             {
-                arguments += $"{(chkDictionariesUse.Checked && chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
+                arguments += $"{(chkDictCachePrefix.Checked ? "--enable_dynamic_prefix_cache" : "")} " +
+                                $"{(chkDictCacheSuffix.Checked ? "--enable_dynamic_suffix_cache" : "")} " +
+                                $"{(chkDictionariesUse.Checked && chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
                                 $"{(chkDictionariesUse.Checked && chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
                                 $"{(chkDictionariesUse.Checked && chkDictForceLowercase.Checked ? "--dictionaries_force_lowercase" : "")} " +
                                 $"{(chkDictionariesUse.Checked && chkDictAddTypos.Checked ? "--dictionaries_add_typos" : "")} " +
@@ -688,6 +693,8 @@ namespace BruteForceHash.GUI
                 PathHashCat = txtHashCatPath.Text.Trim(),
                 DictionaryFilterFirstFrom = txtDictionaryFilterFirstFrom.Text.Trim(),
                 DictionaryFilterFirstTo = txtDictionaryFilterFirstTo.Text.Trim(),
+                CacheDynamicPrefix = chkDictCachePrefix.Checked,
+                CacheDynamicSuffix = chkDictCacheSuffix.Checked,
                 //Advanced
                 DictionaryAdvanced = chkDictionaryAdvanced.Checked,
                 ConcatenateFirstTwoWords = chkOnlyFirstTwoWordsConcat.Checked,
@@ -818,6 +825,9 @@ namespace BruteForceHash.GUI
             txtDictionaryFilterFirstTo.Text = hbtObject.DictionaryFilterFirstTo;
             txtHexValues.Text = hbtObject.HexValue;
             txtHashCatPath.Text = hbtObject.PathHashCat;
+
+            chkDictCachePrefix.Checked = hbtObject.CacheDynamicPrefix;
+            chkDictCacheSuffix.Checked = hbtObject.CacheDynamicSuffix;
 
             for (int i = 0; i < chklCharsets.Items.Count; i++)
             {
