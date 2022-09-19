@@ -1,8 +1,9 @@
 ﻿using BruteForceHash.CombinationGenerator;
 using BruteForceHash.Helpers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,8 +23,8 @@ namespace BruteForceHash.Methods
 
         private readonly IEnumerable<string> _combinationPatterns;
         private readonly Dictionary<byte, byte[][]> _dictionaries;
-        private Dictionary<byte, byte[][]> _dictionariesFirst;
-        private Dictionary<byte, byte[][]> _dictionariesLast;
+        private readonly Dictionary<byte, byte[][]> _dictionariesFirst;
+        private readonly Dictionary<byte, byte[][]> _dictionariesLast;
         private readonly byte _nullByte = 0x00;
         private readonly int _stringLength;
         private readonly string _delimiter;
@@ -312,6 +313,7 @@ namespace BruteForceHash.Methods
                     _logger.Log($"{i}-letter words: {_dictionaries[i].Length}", false);
                 }
             }
+            _logger.Log($"Optimizations: {(_options.EnableDynamicPrefixCache ? _options.EnableDynamicSuffixCache ? "Prefix/Suffix" : "Prefix" : _options.EnableDynamicSuffixCache ? "Suffix" : "No")}");
             _logger.Log($"Search on: {_combinationSize} characters");
             _logger.Log("-----------------------------------------");
         }
@@ -334,77 +336,49 @@ namespace BruteForceHash.Methods
             var prefixBytes = !string.IsNullOrEmpty(_options.Prefix) ? Encoding.UTF8.GetBytes(_options.Prefix) : new byte[0];
             var suffixBytes = !string.IsNullOrEmpty(_options.Suffix) ? Encoding.UTF8.GetBytes(_options.Suffix) : new byte[0];
 
-            var firstDict = _dictionariesFirst;
-            var lastDict = _dictionariesLast;
-            if(_options.EnableDynamicPrefixCache)
-                _dictionariesFirst = _dictionaries;
-            //if (_options.EnableDynamicSuffixCache) //TODO REMOVE WHEN SUFFIX IS IMPLEMENTED
-            //    _dictionariesLast = _dictionaries;
-
             foreach (var combinationPattern in _combinationPatterns)
             {
                 var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
+                var isFirstWordDict = compiledCombination[0] == 0;
+                var isLastWordDict = compiledCombination[compiledCombination.Length - 2] == 0;
+                var firstDict = isFirstWordDict ? _dictionariesFirst : _dictionaries;
+                var lastDict = isLastWordDict ? _dictionariesLast : _dictionaries;
 
-                if (compiledCombination.Length > 5)
+                if (_options.EnableDynamicPrefixCache || _options.EnableDynamicSuffixCache)
                 {
-                    //First word & last word optimizations
-                    if (_options.EnableDynamicPrefixCache && _options.EnableDynamicSuffixCache && true == false) //TODO REMOVE WHEN SUFFIX IS IMPLEMENTED
-                    {
+                    var numberWords = compiledCombination.Count(p => p == _nullByte);
 
-                    }
-                    //First word optimization only
-                    else if (_options.EnableDynamicPrefixCache)
+                    if (numberWords > 2)
                     {
-                        if (compiledCombination[0] == 0)
+                        //First word & last word optimizations
+                        if (_options.EnableDynamicPrefixCache && _options.EnableDynamicSuffixCache)
                         {
-                            var size = compiledCombination[1];
-                            if (firstDict[size].Length == 0)
-                                continue;
+                            var nbrFirstDictWords = firstDict.Sum(p => p.Value.Length);
+                            var nbrLastDictWords = lastDict.Sum(p => p.Value.Length);
 
-                            var nextWordEndPos = Array.IndexOf(compiledCombination, _nullByte, 2);
-                            var strippedSize = compiledCombination.Length - nextWordEndPos;
-
-                            //Build new combination
-                            var strippedCompiledCombination = new byte[strippedSize];
-                            var strippedMidWordSize = nextWordEndPos - 2;
-                            Buffer.BlockCopy(compiledCombination, nextWordEndPos, strippedCompiledCombination, 0, strippedSize);
-
-                            //Build Prefix
-                            var fullPrefix = new byte[prefixBytes.Length + size + strippedMidWordSize];
-                            Buffer.BlockCopy(prefixBytes, 0, fullPrefix, 0, prefixBytes.Length);
-                            Buffer.BlockCopy(compiledCombination, 2, fullPrefix, prefixBytes.Length + size, strippedMidWordSize);
-                            foreach (var firstWord in firstDict[size])
-                            {
-                                Buffer.BlockCopy(firstWord, 0, fullPrefix, prefixBytes.Length, size);
-                                tasks.Add(AddTaskToTaskScheduler(factory, null, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes.ToArray()));
-                            }
+                            if (nbrLastDictWords > nbrFirstDictWords)
+                                RunSuffixOptimized(factory, tasks, compiledCombination, prefixBytes, suffixBytes, firstDict, lastDict, true);
+                            else
+                                RunPrefixOptimized(factory, tasks, compiledCombination, prefixBytes, suffixBytes, firstDict, lastDict, true);
+                            continue;
                         }
-                        else
+                        //First word optimization only
+                        else if (_options.EnableDynamicPrefixCache)
                         {
-                            var nextWordEndPos = Array.IndexOf(compiledCombination, _nullByte, 0);
-                            var strippedSize = compiledCombination.Length - nextWordEndPos;
-
-                            //Build new combination
-                            var strippedCompiledCombination = new byte[strippedSize];
-                            Buffer.BlockCopy(compiledCombination, nextWordEndPos, strippedCompiledCombination, 0, strippedSize);
-
-                            //Build Prefix
-                            var fullPrefix = new byte[prefixBytes.Length + nextWordEndPos];
-                            Buffer.BlockCopy(prefixBytes, 0, fullPrefix, 0, prefixBytes.Length);
-                            Buffer.BlockCopy(compiledCombination, 0, fullPrefix, prefixBytes.Length, nextWordEndPos);
-                            tasks.Add(AddTaskToTaskScheduler(factory, null, strippedCompiledCombination, fullPrefix, suffixBytes));
+                            RunPrefixOptimized(factory, tasks, compiledCombination, prefixBytes, suffixBytes, firstDict, lastDict, false);
+                            continue;
                         }
-                        continue;
-                    }
-                    //Last word optimization only
-                    else if (_options.EnableDynamicSuffixCache)
-                    {
-
+                        //Last word optimization only
+                        else if (_options.EnableDynamicSuffixCache)
+                        {
+                            RunSuffixOptimized(factory, tasks, compiledCombination, prefixBytes, suffixBytes, firstDict, lastDict, false);
+                            continue;
+                        }
                     }
                 }
 
                 //No optimization
-                tasks.Add(AddTaskToTaskScheduler(factory, combinationPattern, compiledCombination, prefixBytes, suffixBytes));
+                tasks.Add(AddTaskToTaskScheduler(factory, combinationPattern, compiledCombination, prefixBytes, suffixBytes, firstDict, lastDict));
             }
 
             WaitForDictionariesToRun(tasks.ToArray(), _cancellationTokenSource.Token);
@@ -422,20 +396,123 @@ namespace BruteForceHash.Methods
             }
         }
 
-        private Task AddTaskToTaskScheduler(TaskFactory taskFactory, string combinationPattern, byte[] compiledCombination, byte[] prefix, byte[] suffix)
+        private void RunSuffixOptimized(TaskFactory taskFactory, List<Task> tasks, byte[] compiledCombination, byte[] prefixBytes, byte[] suffixBytes,
+            Dictionary<byte, byte[][]> firstDict, Dictionary<byte, byte[][]> lastDict, bool runPrefixOptimization)
+        {
+            if (compiledCombination[compiledCombination.Length - 2] == 0)
+            {
+                var size = compiledCombination[compiledCombination.Length - 1];
+                if (lastDict[size].Length == 0)
+                    return;
+
+                var strippedSize = Array.LastIndexOf(compiledCombination, _nullByte, compiledCombination.Length - 3) + 2;
+
+                //Build new combination
+                var strippedCompiledCombination = new byte[strippedSize];
+                var strippedMidWordSize = compiledCombination.Length - strippedSize - 2;
+                Buffer.BlockCopy(compiledCombination, 0, strippedCompiledCombination, 0, strippedSize);
+
+                //Build Prefix
+                var fullSuffix = new byte[suffixBytes.Length + size + strippedMidWordSize];
+                Buffer.BlockCopy(compiledCombination, strippedSize, fullSuffix, 0, strippedMidWordSize);
+                Buffer.BlockCopy(suffixBytes, 0, fullSuffix, strippedMidWordSize + size, suffixBytes.Length);
+                foreach (var lastWord in lastDict[size])
+                {
+                    Buffer.BlockCopy(lastWord, 0, fullSuffix, strippedMidWordSize, size);
+
+                    if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
+                        RunPrefixOptimized(taskFactory, tasks, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries, false);
+                    else
+                        tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries));
+                }
+            }
+            else
+            {
+                var strippedSize = Array.LastIndexOf(compiledCombination, _nullByte, compiledCombination.Length - 1) + 2;
+
+                //Build new combination
+                var strippedCompiledCombination = new byte[strippedSize];
+                var strippedMidWordSize = compiledCombination.Length - strippedSize;
+                Buffer.BlockCopy(compiledCombination, 0, strippedCompiledCombination, 0, strippedSize);
+
+                //Build Prefix
+                var fullSuffix = new byte[suffixBytes.Length + strippedMidWordSize];
+                Buffer.BlockCopy(compiledCombination, strippedSize, fullSuffix, 0, strippedMidWordSize);
+                Buffer.BlockCopy(suffixBytes, 0, fullSuffix, strippedMidWordSize, suffixBytes.Length);
+
+                if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
+                    RunPrefixOptimized(taskFactory, tasks, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries, false);
+                else
+                    tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries));
+            }
+        }
+
+        private void RunPrefixOptimized(TaskFactory taskFactory, List<Task> tasks, byte[] compiledCombination, byte[] prefixBytes, byte[] suffixBytes,
+            Dictionary<byte, byte[][]> firstDict, Dictionary<byte, byte[][]> lastDict, bool runPrefixOptimization)
+        {
+            if (compiledCombination[0] == 0)
+            {
+                var size = compiledCombination[1];
+                if (firstDict[size].Length == 0)
+                    return;
+
+                var nextWordEndPos = Array.IndexOf(compiledCombination, _nullByte, 2);
+                var strippedSize = compiledCombination.Length - nextWordEndPos;
+
+                //Build new combination
+                var strippedCompiledCombination = new byte[strippedSize];
+                var strippedMidWordSize = nextWordEndPos - 2;
+                Buffer.BlockCopy(compiledCombination, nextWordEndPos, strippedCompiledCombination, 0, strippedSize);
+
+                //Build Prefix
+                var fullPrefix = new byte[prefixBytes.Length + size + strippedMidWordSize];
+                Buffer.BlockCopy(prefixBytes, 0, fullPrefix, 0, prefixBytes.Length);
+                Buffer.BlockCopy(compiledCombination, 2, fullPrefix, prefixBytes.Length + size, strippedMidWordSize);
+                foreach (var firstWord in firstDict[size])
+                {
+                    Buffer.BlockCopy(firstWord, 0, fullPrefix, prefixBytes.Length, size);
+
+                    if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
+                        RunSuffixOptimized(taskFactory, tasks, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict, false);
+                    else
+                        tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict));
+                }
+            }
+            else
+            {
+                var nextWordEndPos = Array.IndexOf(compiledCombination, _nullByte, 0);
+                var strippedSize = compiledCombination.Length - nextWordEndPos;
+
+                //Build new combination
+                var strippedCompiledCombination = new byte[strippedSize];
+                Buffer.BlockCopy(compiledCombination, nextWordEndPos, strippedCompiledCombination, 0, strippedSize);
+
+                //Build Prefix
+                var fullPrefix = new byte[prefixBytes.Length + nextWordEndPos];
+                Buffer.BlockCopy(prefixBytes, 0, fullPrefix, 0, prefixBytes.Length);
+                Buffer.BlockCopy(compiledCombination, 0, fullPrefix, prefixBytes.Length, nextWordEndPos);
+
+                if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
+                    RunSuffixOptimized(taskFactory, tasks, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict, false);
+                else
+                    tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict));
+            }
+        }
+
+        private Task AddTaskToTaskScheduler(TaskFactory taskFactory, string combinationPattern, byte[] compiledCombination, byte[] prefix, byte[] suffix,
+            Dictionary<byte, byte[][]> firstDict, Dictionary<byte, byte[][]> lastDict)
         {
             return taskFactory.StartNew(() =>
             {
                 var strBuilder = new ByteString(_stringLength, _hexValue, prefix, suffix, true);
                 if (_options.Verbose)
                 {
-                    if(string.IsNullOrEmpty(combinationPattern))
+                    if (string.IsNullOrEmpty(combinationPattern))
                         _logger.Log($"Running Optimized Pattern: {_combinationGeneration.DecompileCombination(compiledCombination)}", false);
                     else
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
                 }
-                RunDictionaries(strBuilder, compiledCombination, compiledCombination[0] == 0, 0, _cancellationTokenSource.Token);
-
+                RunDictionaries(strBuilder, compiledCombination, firstDict, lastDict, 0, _cancellationTokenSource.Token);
             });
         }
 
@@ -446,7 +523,7 @@ namespace BruteForceHash.Methods
         #endregion
 
         #region Run Attack - Per Dictionary
-        protected void RunDictionaries(ByteString candidate, byte[] combinationPattern, bool firstWord, int combinationCursor, CancellationToken cancellationToken)
+        protected void RunDictionaries(ByteString candidate, byte[] combinationPattern, Dictionary<byte, byte[][]> dictWords, Dictionary<byte, byte[][]> dictLastWord, int combinationCursor, CancellationToken cancellationToken)
         {
             //For Hashcat, disabled
             //if (cancellationToken.IsCancellationRequested)
@@ -479,7 +556,7 @@ namespace BruteForceHash.Methods
 
             if (lastWord)
             {
-                words = _dictionariesLast[wordSize];
+                words = dictLastWord[wordSize];
                 foreach (var word in words)
                 {
                     candidate.Replace(word);
@@ -488,15 +565,11 @@ namespace BruteForceHash.Methods
             }
             else
             {
-                if (firstWord)
-                    words = _dictionariesFirst[wordSize];
-                else
-                    words = _dictionaries[wordSize];
-
+                words = dictWords[wordSize];
                 foreach (var word in words)
                 {
                     candidate.Append(word);
-                    RunDictionaries(candidate, combinationPattern, false, combinationCursor, cancellationToken);
+                    RunDictionaries(candidate, combinationPattern, _dictionaries, dictLastWord, combinationCursor, cancellationToken);
                     candidate.Cursor -= wordSize;
                 }
             }

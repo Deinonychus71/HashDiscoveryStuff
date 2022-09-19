@@ -1,8 +1,6 @@
 ﻿using Force.Crc32;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace BruteForceHash.Helpers
@@ -15,8 +13,8 @@ namespace BruteForceHash.Helpers
         private readonly int _leadSuffixOffset;
         private readonly byte[] _prefix;
         private readonly byte[] _suffix;
-        private string _prefixStr;
-        private string _suffixStr;
+        private readonly string _prefixStr;
+        private readonly string _suffixStr;
         private bool _canBeOptimized;
         private bool _wasOptimized;
         private uint _hexToFind;
