@@ -22,7 +22,7 @@ namespace BruteForceHash
         {
             PrintHeaders();
 
-            var compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns);
+            var compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns).ToList();
 
             var taskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads));
 
