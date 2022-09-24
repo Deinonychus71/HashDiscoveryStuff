@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BruteForceHash", "BruteForceHash\BruteForceHash.csproj", "{715D2785-D5AF-4E01-A32E-1929CC7CBAE7}"
 EndProject
@@ -31,7 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BruteforceCleanup", "Brutef
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashKeys", "Tools\Research\HashKeys\HashKeys.csproj", "{C67B3EBD-90C6-497E-8E19-455C5FE25707}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictSplit", "Tools\DictionaryGeneration\DictSplit\DictSplit.csproj", "{DA9CBB21-63F8-427D-BDD2-D984E41F2B15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictSplit", "Tools\DictionaryGeneration\DictSplit\DictSplit.csproj", "{DA9CBB21-63F8-427D-BDD2-D984E41F2B15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainExecParser", "Tools\DictionaryGeneration\MainExecParser\MainExecParser.csproj", "{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{DA9CBB21-63F8-427D-BDD2-D984E41F2B15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA9CBB21-63F8-427D-BDD2-D984E41F2B15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA9CBB21-63F8-427D-BDD2-D984E41F2B15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +106,7 @@ Global
 		{E39E25AD-143B-46F1-9306-4FB8FF88AF2B} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{C67B3EBD-90C6-497E-8E19-455C5FE25707} = {63E546C6-21E5-4790-89A7-8C510BE14860}
 		{DA9CBB21-63F8-427D-BDD2-D984E41F2B15} = {61E1588A-5C93-4929-B3CC-4DC39BF07B38}
+		{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101} = {61E1588A-5C93-4929-B3CC-4DC39BF07B38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C3FFE77-9564-4A8F-969C-773584C00F90}
