@@ -81,7 +81,7 @@ namespace BruteForceHash.CombinationGenerator
                 }
                 else
                 {
-                    combinationsCustom.Add(includeWords.ToList());
+                    combinationsCustom.Add(includeWords.Distinct().ToList());
                 }
             }
             hasCombinationsCustom = combinationsCustom.Count > 0;

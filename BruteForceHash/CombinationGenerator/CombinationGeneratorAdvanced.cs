@@ -181,10 +181,18 @@ namespace BruteForceHash.CombinationGenerator
                 }
                 else
                 {
-                    combinationsCustom.Add(includeWords.ToList());
+                    combinationsCustom.Add(includeWords.Distinct().ToList());
                 }
             }
             hasCombinationsCustom = combinationsCustom.Count > 0;
+
+            if (_options.Method == "hybrid")
+            {
+                combinationsCustom = combinationsCustom.Where(p => {
+                    var sum = stringLength - p.Sum(x => x.Length);
+                    return sum <= _options.HybridMaxCharacters && sum >= _options.HybridMinCharacters;
+                }).ToList();
+            }
 
             var alreadyFoundMap = new Dictionary<int, List<string>>();
             for (var i = 1; i <= stringLength; i++)

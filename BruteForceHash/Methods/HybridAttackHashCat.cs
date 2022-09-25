@@ -22,11 +22,11 @@ namespace BruteForceHash
         {
             PrintHeaders();
 
-            IEnumerable<byte[]> compiledCombinationPatterns;
+            List<byte[]> compiledCombinationPatterns;
             if (_options.HybridIgnoreSizeFilters)
-                compiledCombinationPatterns = _combinationGeneration.CompileCombinations(_combinationPatterns);
+                compiledCombinationPatterns = _combinationGeneration.CompileCombinations(_combinationPatterns).ToList();
             else
-                compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns);
+                compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns).ToList();
 
             var taskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads));
 
@@ -80,7 +80,7 @@ namespace BruteForceHash
                     return true;
 
                 return false;
-            }).ToList();
+            });
             var compiledHashCatCombinations = compiledCombinationPatterns.Except(compiledCpuPatterns);
 
             var maskFile = "smash5bruteforce.hcmask";
