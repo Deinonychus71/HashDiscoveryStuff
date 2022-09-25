@@ -34,7 +34,7 @@ namespace BruteForceHash.CombinationGenerator
         private readonly int _maxConsecutiveConcatenated;
         private readonly int _minConsecutiveConcatenated;
 
-        public CombinationGeneratorAdvanced(Options options, int stringLength) 
+        public CombinationGeneratorAdvanced(Options options, int stringLength)
             : base(options, stringLength)
         {
             if (string.IsNullOrEmpty(options.Delimiter))
@@ -150,7 +150,7 @@ namespace BruteForceHash.CombinationGenerator
         public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
         {
             //Get combinations of custom words
-            List<IEnumerable<string>> combinationsCustom = new List<IEnumerable<string>>();
+            List<List<string>> combinationsCustom = new List<List<string>>();
             if (combinationDeepLevel > 0 && !string.IsNullOrEmpty(customWordsDictionariesPaths))
             {
                 var splitPaths = customWordsDictionariesPaths.Split(";", StringSplitOptions.RemoveEmptyEntries);
@@ -169,7 +169,22 @@ namespace BruteForceHash.CombinationGenerator
 
             //Get include word
             var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            var hasIncludeWords = includeWords.Length > 0;
+            if (includeWords.Length > 0)
+            {
+                if (hasCombinationsCustom)
+                {
+                    for (var i = 0; i < combinationsCustom.Count; i++)
+                    {
+                        combinationsCustom[i].AddRange(includeWords);
+                        combinationsCustom[i] = combinationsCustom[i].Distinct().ToList();
+                    }
+                }
+                else
+                {
+                    combinationsCustom.Add(includeWords.ToList());
+                }
+            }
+            hasCombinationsCustom = combinationsCustom.Count > 0;
 
             var alreadyFoundMap = new Dictionary<int, List<string>>();
             for (var i = 1; i <= stringLength; i++)
@@ -214,32 +229,11 @@ namespace BruteForceHash.CombinationGenerator
                     {
                         foreach (var combinationCustom in combinationsCustom)
                         {
-                            if (hasIncludeWords)
+                            var wordCandidates = GenerateIncludeWordCombinations(combination, combinationCustom);
+                            if (wordCandidates.Count() > 0)
                             {
-                                var includeWordsAndCombination = combinationCustom.ToList();
-                                includeWordsAndCombination.AddRange(includeWords);
-                                var wordCandidates = GenerateIncludeWordCombinations(combination, includeWordsAndCombination.Distinct());
-                                if (wordCandidates.Count() > 0)
-                                {
-                                    output.AddRange(wordCandidates);
-                                }
+                                output.AddRange(wordCandidates);
                             }
-                            else
-                            {
-                                var wordCandidates = GenerateIncludeWordCombinations(combination, combinationCustom);
-                                if (wordCandidates.Count() > 0)
-                                {
-                                    output.AddRange(wordCandidates);
-                                }
-                            }
-                        }
-                    }
-                    else if (hasIncludeWords)
-                    {
-                        var wordCandidates = GenerateIncludeWordCombinations(combination, includeWords);
-                        if (wordCandidates != null)
-                        {
-                            output.AddRange(wordCandidates);
                         }
                     }
                     else
@@ -508,61 +502,6 @@ namespace BruteForceHash.CombinationGenerator
                 }
             }
             return obj;
-        }
-
-        private List<string> OrderList(List<string> patterns, bool longestWordFirst = false)
-        {
-            Dictionary<string, double> PatternToScore = new Dictionary<string, double>();
-
-            foreach (var pattern in patterns)
-            {
-                var tempPattern = pattern;
-                List<int> differences = new List<int>();
-                int lastInteger = 0;
-                while (tempPattern.IndexOf('{') != -1)
-                {
-                    int firstOpenBracket = tempPattern.IndexOf('{');
-                    int firstCloseBracket = tempPattern.IndexOf('}');
-                    var test = tempPattern.Substring(firstOpenBracket + 1, firstCloseBracket - 1);
-                    var currentInteger = Int32.Parse(tempPattern.Substring(firstOpenBracket + 1, firstCloseBracket - firstOpenBracket - 1));
-                    if (lastInteger != 0)
-                        differences.Add(lastInteger - currentInteger);
-                    lastInteger = currentInteger;
-                    tempPattern = tempPattern.Substring(firstCloseBracket + 1);
-                }
-                if (differences.Count == 0)
-                    PatternToScore.Add(pattern, 1.0);
-
-                else if (differences.Count == 1)
-                {
-                    PatternToScore.Add(pattern, Math.Min(Math.Abs(differences[0] / 5.0), 1.0));
-                }
-                else
-                {
-                    double scoreSum = Math.Min(Math.Abs(differences[0] / 5.0), 1.0);
-                    int scoresCounted = 1;
-                    for (int i = 1; i < differences.Count - 1; i++)
-                    {
-                        var tempScore = 0.0;
-                        if (differences[i] != 0)
-                        {
-                            tempScore = 0.5 * Math.Min(Math.Abs(differences[i] / 5.0), 1.0);
-                            if (((double)differences[i - 1]) / ((double)differences[i]) < 0)
-                                tempScore += 0.5;
-                        }
-                        scoreSum += tempScore;
-                        scoresCounted++;
-                    }
-
-                    PatternToScore.Add(pattern, scoreSum / scoresCounted + (longestWordFirst && differences.Sum() < 0 ? Math.Abs(differences.Sum()) * 0.05 : 0));
-                }
-
-
-            }
-
-            var KeyValueList = PatternToScore.ToList();
-            KeyValueList.Sort((Pair1, Pair2) => Pair2.Value.CompareTo(Pair1.Value));
-            return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
         }
     }
 }

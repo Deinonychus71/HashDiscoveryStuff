@@ -19,7 +19,7 @@ namespace BruteForceHash
         protected CancellationTokenSource _cancellationTokenSource;
 
         protected CombinationGeneratorBase _combinationGeneration;
-        protected readonly IEnumerable<string> _combinationPatterns;
+        protected readonly List<string> _combinationPatterns;
         protected readonly string _inputValidChars;
         protected readonly string _inputValidStartChars;
         protected readonly byte[] _validBytes = null;
@@ -46,79 +46,50 @@ namespace BruteForceHash
             _inputValidStartChars = _options.ValidStartingChars;
             _validStartBytes = Encoding.ASCII.GetBytes(_options.ValidStartingChars);
 
-            //Ignore Size Filters
-            if (options.HybridIgnoreSizeFilters)
-            {
-                options.MaxConcatenatedWords = 20;
-                options.MaxConsecutiveConcatenation = 20;
-                options.MaxConsecutiveOnes = 20;
-                options.MaxFours = 20;
-                options.MaxOnes = 20;
-                options.MaxThrees = 20;
-                options.MaxTwos = 20;
-                options.MaxWordLength = 50;
-                options.MaxDelimiters = 20;
-                options.MinDelimiters = 0;
-                options.MinOnes = 0;
-                options.MinTwos = 0;
-                options.MinThrees = 0;
-                options.MinFours = 0;
-                options.MinWordLength = 1;
-                options.MinConcatenatedWords = 0;
-                options.MinConsecutiveConcatenation = 1;
-                options.MinWordsLimit = 1;
-                options.ConcatenateFirstTwoWords = false;
-                options.ConcatenateLastTwoWords = false;
-                options.AtLeastAboveChars = 0;
-                options.AtLeastAboveWords = 0;
-                options.AtLeastUnderChars = 0;
-                options.AtLeastUnderWords = 0;
-                options.AtMostAboveChars = 0;
-                options.AtMostAboveWords = 0;
-                options.AtMostUnderChars = 0;
-                options.AtMostUnderWords = 0;
-            }
-
-            if (_options.MaxConcatenatedWords == 0)
+            if(options.HybridIgnoreSizeFilters)
+                _combinationGeneration = new CombinationGeneratorHybrid(options, stringLength);
+            else if (_options.MaxConcatenatedWords == 0)
                 _combinationGeneration = new CombinationGeneratorSimple(options, stringLength);
             else
                 _combinationGeneration = new CombinationGeneratorAdvanced(options, stringLength);
+
 
             //Calculate stringLength after prefix;
             _stringLength = stringLength;
 
             //Generate combinations
             _combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
-            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize, $"{_options.HybridDictionary};{_options.HybridDictionaryFirstWord};{_options.HybridDictionaryLastWord}", _options.HybridWordsHash);
+            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize, $"{_options.HybridDictionary};{_options.HybridDictionaryFirstWord};{_options.HybridDictionaryLastWord}", _options.HybridWordsHash).ToList();
 
-            //Filter combinations
-            var useFirstWords = !string.IsNullOrEmpty(_options.HybridDictionaryFirstWord);
-            var useLastWords = !string.IsNullOrEmpty(_options.HybridDictionaryLastWord);
-            var words = File.Exists(_options.HybridDictionary) ? File.ReadAllLines(_options.HybridDictionary) : new string[0];
-            var firstWords = File.Exists(_options.HybridDictionaryFirstWord) ? File.ReadAllLines(_options.HybridDictionaryFirstWord) : new string[0];
-            var lastWords = File.Exists(_options.HybridDictionaryLastWord) ? File.ReadAllLines(_options.HybridDictionaryLastWord) : new string[0];
-            var onlyFirstWords = firstWords.Except(words).ToArray();
-            var onlyLastWords = lastWords.Except(words).ToArray();
-
-            var finalCombinationPatterns = new List<string>();
-            foreach(var combinationPattern in _combinationPatterns)
+            if (!options.HybridIgnoreSizeFilters)
             {
-                //To fix - This isn't working as intended
-                if (useFirstWords && !combinationPattern.StartsWith("{") && !firstWords.Any(p => combinationPattern.StartsWith(p)))
-                    continue;
-                if (useLastWords && !combinationPattern.EndsWith("}") && !lastWords.Any(p => combinationPattern.EndsWith(p)))
-                    continue;
-                //End to fix
+                //Filter combinations
+                var useFirstWords = !string.IsNullOrEmpty(_options.HybridDictionaryFirstWord);
+                var useLastWords = !string.IsNullOrEmpty(_options.HybridDictionaryLastWord);
+                var words = File.Exists(_options.HybridDictionary) ? File.ReadAllLines(_options.HybridDictionary) : new string[0];
+                var firstWords = File.Exists(_options.HybridDictionaryFirstWord) ? File.ReadAllLines(_options.HybridDictionaryFirstWord) : new string[0];
+                var lastWords = File.Exists(_options.HybridDictionaryLastWord) ? File.ReadAllLines(_options.HybridDictionaryLastWord) : new string[0];
 
-                var totalUnknownChars = 0;
-                for (var i = 1; i <= 50; i++)
+                var finalCombinationPatterns = new List<string>();
+                foreach (var combinationPattern in _combinationPatterns)
                 {
-                    totalUnknownChars += (combinationPattern.Split("{" + (i) + "}").Length - 1) * i;
+                    //To fix - This isn't working as intended
+                    if (useFirstWords && !combinationPattern.StartsWith("{") && !firstWords.Any(p => combinationPattern.StartsWith(p)))
+                        continue;
+                    if (useLastWords && !combinationPattern.EndsWith("}") && !lastWords.Any(p => combinationPattern.EndsWith(p)))
+                        continue;
+                    //End to fix
+
+                    var totalUnknownChars = 0;
+                    for (var i = 1; i <= 50; i++)
+                    {
+                        totalUnknownChars += (combinationPattern.Split("{" + (i) + "}").Length - 1) * i;
+                    }
+                    if (totalUnknownChars <= _options.HybridMaxCharacters && totalUnknownChars >= _options.HybridMinCharacters)
+                        finalCombinationPatterns.Add(combinationPattern);
                 }
-                if (totalUnknownChars <= _options.HybridMaxCharacters && totalUnknownChars >= _options.HybridMinCharacters)
-                    finalCombinationPatterns.Add(combinationPattern);
+                _combinationPatterns = finalCombinationPatterns;
             }
-            _combinationPatterns = finalCombinationPatterns;
         }
 
         protected void PrintHeaders()
@@ -231,20 +202,23 @@ namespace BruteForceHash
                     if (optimizePrefixesAndSuffixes)
                     {
                         var prefixByteSize = Array.IndexOf(compiledCombination, _nullByte);
-                        prefixByteStr = Encoding.UTF8.GetString(compiledCombination, 0, prefixByteSize);
-                        var suffixByteOffset = Array.LastIndexOf(compiledCombination, _nullByte);
-                        if (suffixByteOffset != -1)
-                            suffixByteOffset += 2;
-                        var suffixByteSize = compiledCombination.Length - suffixByteOffset;
-                        suffixByteStr = Encoding.UTF8.GetString(compiledCombination, suffixByteOffset, suffixByteSize);
+                        if (prefixByteSize != -1)
+                        {
+                            prefixByteStr = Encoding.UTF8.GetString(compiledCombination, 0, prefixByteSize);
+                            var suffixByteOffset = Array.LastIndexOf(compiledCombination, _nullByte);
+                            if (suffixByteOffset != -1)
+                                suffixByteOffset += 2;
+                            var suffixByteSize = compiledCombination.Length - suffixByteOffset;
+                            suffixByteStr = Encoding.UTF8.GetString(compiledCombination, suffixByteOffset, suffixByteSize);
 
-                        var newCompiledCombination = new byte[compiledCombination.Length - prefixByteSize - suffixByteSize];
-                        Buffer.BlockCopy(compiledCombination, prefixByteSize, newCompiledCombination, 0, compiledCombination.Length - prefixByteSize - suffixByteSize);
-                        compiledCombination = newCompiledCombination;
+                            var newCompiledCombination = new byte[compiledCombination.Length - prefixByteSize - suffixByteSize];
+                            Buffer.BlockCopy(compiledCombination, prefixByteSize, newCompiledCombination, 0, compiledCombination.Length - prefixByteSize - suffixByteSize);
+                            compiledCombination = newCompiledCombination;
+                        }
                     }
                     //End Optimize
 
-                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, suffixByteStr + _options.Suffix , false);
+                    var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, suffixByteStr + _options.Suffix, true);
                     if (_options.Verbose && verbose)
                         _logger.Log($"Running Pattern: {_combinationGeneration.DecompileCombination(combinationPattern)}", false);
 
@@ -256,7 +230,7 @@ namespace BruteForceHash
 
             try
             {
-                Task.WaitAll(tasks.ToArray(), _cancellationTokenSource.Token);
+                Task.WaitAll(tasks.ToArray());
             }
             catch { }
         }
@@ -279,6 +253,7 @@ namespace BruteForceHash
                     RunHybridAttack(candidate, combinationPattern, _validBytes, combinationCursor, searchSizeRemaining - 1, cancellationToken);
                     candidate.Cursor -= 1;
                 }
+                return;
             }
 
             if(combinationCursor == combinationPattern.Length)

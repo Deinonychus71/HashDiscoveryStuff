@@ -22,7 +22,11 @@ namespace BruteForceHash
         {
             PrintHeaders();
 
-            var compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns).ToList();
+            IEnumerable<byte[]> compiledCombinationPatterns;
+            if (_options.HybridIgnoreSizeFilters)
+                compiledCombinationPatterns = _combinationGeneration.CompileCombinations(_combinationPatterns);
+            else
+                compiledCombinationPatterns = _combinationGeneration.CompileCombinationsJoin(_combinationPatterns);
 
             var taskFactory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(_options.NbrThreads));
 
@@ -65,7 +69,7 @@ namespace BruteForceHash
                 var totalUnknownChars = 0;
                 int cursor = 0;
                 var loc = Array.IndexOf(p, _nullByte, cursor);
-                while(loc != -1)
+                while (loc != -1)
                 {
                     totalUnknownChars += p[loc + 1];
                     cursor = loc + 1;
@@ -76,7 +80,7 @@ namespace BruteForceHash
                     return true;
 
                 return false;
-            });
+            }).ToList();
             var compiledHashCatCombinations = compiledCombinationPatterns.Except(compiledCpuPatterns);
 
             var maskFile = "smash5bruteforce.hcmask";
@@ -105,7 +109,7 @@ namespace BruteForceHash
                 }));
             }
 
-            RunAttackTasks(taskFactory, tasksCrack, compiledCpuPatterns, true, false);
+            RunAttackTasks(taskFactory, tasksCrack, compiledCpuPatterns, true, _options.Verbose);
 
             _logger.Log("-----------------------------------------");
             _logger.Log($"Done");
