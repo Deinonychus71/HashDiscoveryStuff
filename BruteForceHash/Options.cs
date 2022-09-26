@@ -140,6 +140,8 @@ namespace BruteForceHash
         public bool DictionariesCustomAddTypos { get; set; }
         [Option('D', "dictionaries_custom_min_words_hash", Required = false, Default = 0, HelpText = "Force at least x words from this dictionary to be used (for custom dictionary attack).")]
         public int DictionariesCustomMinWordsHash { get; set; }
+        [Option('D', "dictionaries_custom_min_words_hash_use_typos", Required = false, Default = false, HelpText = "Force at least x words from this dictionary to be used - Use Typos (for custom dictionary attack).")]
+        public bool DictionariesCustomMinWordsHashUseTypos { get; set; }
 
         [Option('D', "delete_generated_dictionary", Required = false, Default = false, HelpText = "Delete hashcat dictionary after it's done using it (for dictionary attack).")]
         public bool DeleteGeneratedDictionary { get; set; }

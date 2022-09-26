@@ -1,5 +1,7 @@
-﻿using System;
+﻿using BruteForceHash.Helpers;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -9,11 +11,13 @@ namespace BruteForceHash.CombinationGenerator
     {
         protected readonly Options _options;
         protected readonly int _stringLength;
+        private readonly TyposGenerator _typosGenerator;
 
         public CombinationGeneratorBase(Options options, int stringLength)
         {
             _options = options;
             _stringLength = stringLength;
+            _typosGenerator = new TyposGenerator(options);
         }
 
         public abstract byte[] CompileCombination(string combinationPattern);
@@ -108,6 +112,73 @@ namespace BruteForceHash.CombinationGenerator
             var KeyValueList = PatternToScore.ToList();
             KeyValueList.Sort((Pair1, Pair2) => Pair2.Value.CompareTo(Pair1.Value));
             return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
+        }
+
+        protected List<List<string>> GenerateWordCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
+        {
+            //Get combinations of custom words
+            List<List<string>> combinationsCustom = new List<List<string>>();
+            if (combinationDeepLevel > 0 && !string.IsNullOrEmpty(customWordsDictionariesPaths))
+            {
+                var splitPaths = customWordsDictionariesPaths.Split(";", StringSplitOptions.RemoveEmptyEntries);
+                var allCustomWords = new List<string>();
+                foreach (var dictPath in splitPaths)
+                {
+                    if (File.Exists(dictPath))
+                    {
+                        allCustomWords.AddRange(File.ReadAllLines(dictPath));
+                    }
+                }
+
+                if (_options.DictionariesCustomMinWordsHashUseTypos)
+                {
+                    var allCustomWordsTypos = new List<string>();
+                    foreach(var customWord in allCustomWords.Distinct())
+                    {
+                        allCustomWordsTypos.Add(customWord);
+                        allCustomWordsTypos.AddRange(_typosGenerator.GenerateTypos(customWord));
+                    }
+                    allCustomWords = allCustomWordsTypos;
+                }
+                else
+                {
+                    allCustomWords = allCustomWords.Distinct().ToList();
+                }
+
+                allCustomWords = allCustomWords.Distinct().ToList();
+
+                combinationsCustom = allCustomWords.Combinations(combinationDeepLevel).ToList();
+            }
+            var hasCombinationsCustom = combinationsCustom.Count > 0;
+
+            //Get include word
+            var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            if (includeWords.Length > 0)
+            {
+                if (hasCombinationsCustom)
+                {
+                    for (var i = 0; i < combinationsCustom.Count; i++)
+                    {
+                        combinationsCustom[i].AddRange(includeWords);
+                        combinationsCustom[i] = combinationsCustom[i].Distinct().ToList();
+                    }
+                }
+                else
+                {
+                    combinationsCustom.Add(includeWords.Distinct().ToList());
+                }
+            }
+            hasCombinationsCustom = combinationsCustom.Count > 0;
+
+            if (_options.Method == "hybrid")
+            {
+                return combinationsCustom.Where(p => {
+                    var sum = stringLength - p.Sum(x => x.Length);
+                    return sum <= _options.HybridMaxCharacters && sum >= _options.HybridMinCharacters;
+                }).ToList();
+            }
+
+            return combinationsCustom;
         }
 
         private class SequenceEqualityComparer<T> : IEqualityComparer<T[]>

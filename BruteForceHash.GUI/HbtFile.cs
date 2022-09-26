@@ -29,6 +29,7 @@ namespace BruteForceHash.GUI
         public bool DictionariesCustomWordsForceLowercase { get; set; }
         public bool DictionariesCustomWordsAddTypos { get; set; }
         public int DictionariesCustomWordsMinimumInHash { get; set; }
+        public bool DictionariesCustomWordsMinimumInHashUseTypos { get;set;}
         public bool DictionariesExcludeWordsUse { get; set; }
         public List<string> DictionariesExcludeWords { get; set; }
         public bool DictionariesExcludePartialWords { get; set; }

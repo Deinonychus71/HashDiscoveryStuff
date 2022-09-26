@@ -49,63 +49,24 @@ namespace BruteForceHash.CombinationGenerator
 
         public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
         {
-            //Get combinations of custom words
-            List<List<string>> combinationsCustom = new List<List<string>>();
-            if (combinationDeepLevel > 0 && !string.IsNullOrEmpty(customWordsDictionariesPaths))
-            {
-                var splitPaths = customWordsDictionariesPaths.Split(";", StringSplitOptions.RemoveEmptyEntries);
-                var allCustomWords = new List<string>();
-                foreach (var dictPath in splitPaths)
-                {
-                    if (File.Exists(dictPath))
-                    {
-                        allCustomWords.AddRange(File.ReadAllLines(dictPath));
-                    }
-                }
-                allCustomWords = allCustomWords.Distinct().ToList();
-                combinationsCustom = allCustomWords.Combinations(combinationDeepLevel).ToList();
-            }
-            var hasCombinationsCustom = combinationsCustom.Count > 0;
-
-            //Get include word
-            var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            if (includeWords.Length > 0)
-            {
-                if (hasCombinationsCustom)
-                {
-                    for (var i = 0; i < combinationsCustom.Count; i++)
-                    {
-                        combinationsCustom[i].AddRange(includeWords);
-                        combinationsCustom[i] = combinationsCustom[i].Distinct().ToList();
-                    }
-                }
-                else
-                {
-                    combinationsCustom.Add(includeWords.Distinct().ToList());
-                }
-            }
-            hasCombinationsCustom = combinationsCustom.Count > 0;
-
-            var filteredCombinationsCustom = combinationsCustom.Where(p => { 
-                var sum = stringLength - p.Sum(x => x.Length); 
-                return sum <= _options.HybridMaxCharacters && sum >= _options.HybridMinCharacters; 
-            });
+            IEnumerable<List<string>> combinationsCustom = GenerateWordCombinations(stringLength, customWordsDictionariesPaths, combinationDeepLevel);
+            var hasCombinationsCustom = combinationsCustom.Any();
 
             //Sorting
             switch (_options.Order.ToLower())
             {
                 case "more_words_first":
-                    filteredCombinationsCustom = filteredCombinationsCustom.OrderBy(p => p.Sum(x => x.Length));
+                    combinationsCustom = combinationsCustom.OrderBy(p => p.Sum(x => x.Length));
                     break;
                 case "fewer_words_first":
-                    filteredCombinationsCustom = filteredCombinationsCustom.OrderByDescending(p => p.Sum(x => x.Length));
+                    combinationsCustom = combinationsCustom.OrderByDescending(p => p.Sum(x => x.Length));
                     break;
             }
 
             var output = new List<string>();
             if (hasCombinationsCustom)
             {
-                foreach (var combinationCustom in filteredCombinationsCustom)
+                foreach (var combinationCustom in combinationsCustom)
                 {
                     GenerateCombinationsRec(output, combinationCustom, combinationCustom.Count, string.Empty, stringLength, true);
                 }

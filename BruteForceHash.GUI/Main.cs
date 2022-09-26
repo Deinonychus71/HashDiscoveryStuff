@@ -175,6 +175,7 @@ namespace BruteForceHash.GUI
             cbHybridBruteForceMinCharacters.SelectedIndex = 1;
             cbHybridBruteForceMaxCharacters.SelectedIndex = 6;
             cbHybridWordsInHash.SelectedIndex = 2;
+            chkDictionariesCustomWordsMinimumInHashUseTypos.Checked = false;
 
             txtDictCustWords.Text = string.Empty;
             txtDictExcludeWords.Text = string.Empty;
@@ -436,7 +437,7 @@ namespace BruteForceHash.GUI
             }
 
             //Common Dictionary & Hybrid Avanced
-            if (useDictAdvanced && (useMethodDictionary || useMethodHybrid))
+            if (useDictAdvanced && (useMethodDictionary || (useMethodHybrid && !chkHybridIgnoreSizeFilters.Checked)))
             {
                 arguments += $"--min_words_limit {cbMinWordsLimit.SelectedItem} " +
                     $"--max_concatenated_words {cbMaxConcatWords.SelectedItem} " +
@@ -463,6 +464,7 @@ namespace BruteForceHash.GUI
                                 $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsForceLowercase.Checked ? "--dictionaries_custom_force_lowercase" : "")} " +
                                 $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsAddTypos.Checked ? "--dictionaries_custom_add_typos" : "")} " +
                                 (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom_min_words_hash {cbDictionariesCustomWordsMinimumInHash.SelectedItem} " : string.Empty) +
+                                (chkDictionariesCustomWordsUse.Checked && chkDictionariesCustomWordsMinimumInHashUseTypos.Checked ? "--dictionaries_custom_min_words_hash_use_typos" : string.Empty) +
                                 $"{(chkUseDictFirst.Checked && chkDictFirstSkipDigits.Checked ? "--dictionaries_first_skip_digits" : "")} " +
                                 $"{(chkUseDictFirst.Checked && chkDictFirstSkipSpecials.Checked ? "--dictionaries_first_skip_specials" : "")} " +
                                 $"{(chkUseDictFirst.Checked && chkDictFirstForceLowercase.Checked ? "--dictionaries_first_force_lowercase" : "")} " +
@@ -626,6 +628,7 @@ namespace BruteForceHash.GUI
                 DictionariesCustomWordsForceLowercase = chkDictCustomWordsForceLowercase.Checked,
                 DictionariesCustomWordsAddTypos = chkDictCustomWordsAddTypos.Checked,
                 DictionariesCustomWordsMinimumInHash = Convert.ToInt32(cbDictionariesCustomWordsMinimumInHash.SelectedItem),
+                DictionariesCustomWordsMinimumInHashUseTypos = chkDictionariesCustomWordsMinimumInHashUseTypos.Checked,
                 DictionariesExcludeWordsUse = chkDictionariesExcludeWordsUse.Checked,
                 DictionariesExcludePartialWords = chkDictExcludePartialWords.Checked,
                 DictionariesExcludeWords = txtDictExcludeWords.Text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Distinct().OrderBy(p => p).ToList(),
@@ -755,6 +758,7 @@ namespace BruteForceHash.GUI
             chkDictCustomWordsForceLowercase.Checked = hbtObject.DictionariesCustomWordsForceLowercase;
             chkDictCustomWordsAddTypos.Checked = hbtObject.DictionariesCustomWordsAddTypos;
             cbDictionariesCustomWordsMinimumInHash.SelectedItem = hbtObject.DictionariesCustomWordsMinimumInHash.ToString();
+            chkDictionariesCustomWordsMinimumInHashUseTypos.Checked = hbtObject.DictionariesCustomWordsMinimumInHashUseTypos;
             chkDictionariesExcludeWordsUse.Checked = hbtObject.DictionariesExcludeWordsUse;
             chkDictExcludePartialWords.Checked = hbtObject.DictionariesExcludePartialWords;
             txtDictExcludeWords.Text = string.Join("\r\n", hbtObject.DictionariesExcludeWords ?? new List<string>());
@@ -1268,6 +1272,7 @@ namespace BruteForceHash.GUI
             chkDictCustomWordsSkipSpecials.Enabled = chkDictionariesCustomWordsUse.Checked;
             chkDictCustomWordsForceLowercase.Enabled = chkDictionariesCustomWordsUse.Checked;
             chkDictCustomWordsAddTypos.Enabled = chkDictionariesCustomWordsUse.Checked;
+            chkDictionariesCustomWordsMinimumInHashUseTypos.Enabled = chkDictionariesCustomWordsUse.Checked;
             cbDictionariesCustomWordsMinimumInHash.Enabled = chkDictionariesCustomWordsUse.Checked;
             txtDictCustWords.Enabled = chkDictionariesCustomWordsUse.Checked;
             if (chkDictionariesCustomWordsUse.Checked)

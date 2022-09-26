@@ -285,6 +285,7 @@ namespace BruteForceHash.GUI
             this.lblStartingValidChars = new System.Windows.Forms.Label();
             this.chkUtf8Toggle = new System.Windows.Forms.CheckBox();
             this.txtStartingValidChars = new System.Windows.Forms.TextBox();
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos = new System.Windows.Forms.CheckBox();
             this.pnlDictionary.SuspendLayout();
             this.grpSizeFiltering.SuspendLayout();
             this.grpWordFiltering.SuspendLayout();
@@ -2050,6 +2051,7 @@ namespace BruteForceHash.GUI
             // 
             // tabMainDictionariesCustom
             // 
+            this.tabMainDictionariesCustom.Controls.Add(this.chkDictionariesCustomWordsMinimumInHashUseTypos);
             this.tabMainDictionariesCustom.Controls.Add(this.chkDictionariesCustomWordsUse);
             this.tabMainDictionariesCustom.Controls.Add(this.lblDictionariesCustomWordsUse);
             this.tabMainDictionariesCustom.Controls.Add(this.lblDictionariesCustomWordsAtLeast);
@@ -2094,7 +2096,7 @@ namespace BruteForceHash.GUI
             // lblDictionariesCustomWordsAtLeast
             // 
             this.lblDictionariesCustomWordsAtLeast.AutoSize = true;
-            this.lblDictionariesCustomWordsAtLeast.Location = new System.Drawing.Point(13, 245);
+            this.lblDictionariesCustomWordsAtLeast.Location = new System.Drawing.Point(13, 258);
             this.lblDictionariesCustomWordsAtLeast.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesCustomWordsAtLeast.Name = "lblDictionariesCustomWordsAtLeast";
             this.lblDictionariesCustomWordsAtLeast.Size = new System.Drawing.Size(67, 23);
@@ -2104,7 +2106,7 @@ namespace BruteForceHash.GUI
             // lblDictionariesCustomWordsHash
             // 
             this.lblDictionariesCustomWordsHash.AutoSize = true;
-            this.lblDictionariesCustomWordsHash.Location = new System.Drawing.Point(13, 277);
+            this.lblDictionariesCustomWordsHash.Location = new System.Drawing.Point(13, 290);
             this.lblDictionariesCustomWordsHash.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesCustomWordsHash.Name = "lblDictionariesCustomWordsHash";
             this.lblDictionariesCustomWordsHash.Size = new System.Drawing.Size(125, 23);
@@ -2120,7 +2122,7 @@ namespace BruteForceHash.GUI
             "1",
             "2",
             "3"});
-            this.cbDictionariesCustomWordsMinimumInHash.Location = new System.Drawing.Point(81, 238);
+            this.cbDictionariesCustomWordsMinimumInHash.Location = new System.Drawing.Point(81, 251);
             this.cbDictionariesCustomWordsMinimumInHash.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbDictionariesCustomWordsMinimumInHash.Name = "cbDictionariesCustomWordsMinimumInHash";
             this.cbDictionariesCustomWordsMinimumInHash.Size = new System.Drawing.Size(53, 31);
@@ -2129,7 +2131,7 @@ namespace BruteForceHash.GUI
             // lblDictionariesCustomWordsFiltering
             // 
             this.lblDictionariesCustomWordsFiltering.AutoSize = true;
-            this.lblDictionariesCustomWordsFiltering.Location = new System.Drawing.Point(9, 203);
+            this.lblDictionariesCustomWordsFiltering.Location = new System.Drawing.Point(9, 216);
             this.lblDictionariesCustomWordsFiltering.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDictionariesCustomWordsFiltering.Name = "lblDictionariesCustomWordsFiltering";
             this.lblDictionariesCustomWordsFiltering.Size = new System.Drawing.Size(123, 23);
@@ -3583,6 +3585,17 @@ namespace BruteForceHash.GUI
             this.txtStartingValidChars.Text = "etainoshrdlucmfwygpbvkqjxz_";
             this.txtStartingValidChars.TextChanged += new System.EventHandler(this.TxtStartingValidCharsChanged);
             // 
+            // chkDictionariesCustomWordsMinimumInHashUseTypos
+            // 
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.AutoSize = true;
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.Location = new System.Drawing.Point(9, 323);
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.Name = "chkDictionariesCustomWordsMinimumInHashUseTypos";
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.Size = new System.Drawing.Size(115, 27);
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.TabIndex = 93;
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.Text = "Add Typos";
+            this.chkDictionariesCustomWordsMinimumInHashUseTypos.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -3932,6 +3945,7 @@ namespace BruteForceHash.GUI
         private System.Windows.Forms.Label lblHybridHashcatThreshold2;
         private System.Windows.Forms.CheckBox chkDictCacheSuffix;
         private System.Windows.Forms.CheckBox chkDictCachePrefix;
+        private System.Windows.Forms.CheckBox chkDictionariesCustomWordsMinimumInHashUseTypos;
     }
 }
 

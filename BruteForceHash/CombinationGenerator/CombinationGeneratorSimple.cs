@@ -83,42 +83,8 @@ namespace BruteForceHash.CombinationGenerator
 
         public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
         {
-            //Get combinations of custom words
-            List<List<string>> combinationsCustom = new List<List<string>>();
-            if (combinationDeepLevel > 0 && !string.IsNullOrEmpty(customWordsDictionariesPaths))
-            {
-                var splitPaths = customWordsDictionariesPaths.Split(";", StringSplitOptions.RemoveEmptyEntries);
-                var allCustomWords = new List<string>();
-                foreach (var dictPath in splitPaths)
-                {
-                    if (File.Exists(dictPath))
-                    {
-                        allCustomWords.AddRange(File.ReadAllLines(dictPath));
-                    }
-                }
-                allCustomWords = allCustomWords.Distinct().ToList();
-                combinationsCustom = allCustomWords.Combinations(combinationDeepLevel).ToList();
-            }
+            List<List<string>> combinationsCustom = GenerateWordCombinations(stringLength, customWordsDictionariesPaths, combinationDeepLevel);
             var hasCombinationsCustom = combinationsCustom.Count > 0;
-
-            //Get include word
-            var includeWords = _options.IncludeWord.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            if (includeWords.Length > 0)
-            {
-                if (hasCombinationsCustom)
-                {
-                    for (var i = 0; i < combinationsCustom.Count; i++)
-                    {
-                        combinationsCustom[i].AddRange(includeWords);
-                        combinationsCustom[i] = combinationsCustom[i].Distinct().ToList();
-                    }
-                }
-                else
-                {
-                    combinationsCustom.Add(includeWords.Distinct().ToList());
-                }
-            }
-            hasCombinationsCustom = combinationsCustom.Count > 0;
 
             if(_options.Method == "hybrid")
             {
