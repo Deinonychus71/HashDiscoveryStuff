@@ -14,4 +14,10 @@
     <ProjectReference Include="..\..\Research\HashKeys\HashKeys.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MsbtEditor">
+      <HintPath>..\..\Common\HashCommon\MsbtEditor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
