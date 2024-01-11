@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashCleanup", "Tools\Brutef
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashParser", "Tools\Research\HashParser\HashParser.csproj", "{2A69DC36-DECF-44E9-8E22-7A8415C65289}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParamLabelsParser", "Tools\DictionaryGeneration\ParamLabelsParser\ParamLabelsParser.csproj", "{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashCrackDictionaryGen", "Tools\DictionaryGeneration\HashCrackDictionaryGen\HashCrackDictionaryGen.csproj", "{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiScrapper", "Tools\DictionaryGeneration\WikiScrapper\WikiScrapper.csproj", "{3A5E9ABA-3472-4F41-BB21-10D9B60E700E}"
 EndProject
@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashKeys", "Tools\Research\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictSplit", "Tools\DictionaryGeneration\DictSplit\DictSplit.csproj", "{DA9CBB21-63F8-427D-BDD2-D984E41F2B15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainExecParser", "Tools\DictionaryGeneration\MainExecParser\MainExecParser.csproj", "{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainExecParser", "Tools\DictionaryGeneration\MainExecParser\MainExecParser.csproj", "{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

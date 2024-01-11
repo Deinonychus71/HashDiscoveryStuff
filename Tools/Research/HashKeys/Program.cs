@@ -11,7 +11,7 @@ namespace HashKeys
     /// <summary>
     /// Split the paramlabel words using different value types to make dictionary. Require prc/stprm/stdat files.
     /// </summary>
-    class Program
+    public class Program
     {
         private const string DICT_LIST = "[Keys]List";
         private const string DICT_STRUCT = "[Keys]Struct";
@@ -27,32 +27,38 @@ namespace HashKeys
         private const string DICT_SHORT = "[Keys][Numeric]Short";
         private const string DICT_UINT = "[Keys][Numeric]UInt";
         private const string DICT_USHORT = "[Keys][Numeric]UShort";
-        private static readonly char[] _splitChars = new char[] { ',', '.', '\\', '/', '_' };
+        private static int[] _listByHits = new int[] { 2, 3, 4, 5, 10, 15, 20 };
 
         static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args).WithParsed((o) =>
             {
-                if (!Directory.Exists(o.InputPath))
-                {
-                    Console.WriteLine($"Directory '{o.InputPath}' does not exist");
-                    return;
-                }
+                RunProgram(o);
+            });
+        }
 
-                if (!File.Exists(o.InputParamLabelsFile))
-                {
-                    Console.WriteLine($"File '{o.InputParamLabelsFile}' does not exist");
-                    return;
-                }
+        public static void RunProgram(Options o)
+        {
+            if (!Directory.Exists(o.InputSmashRootPath))
+            {
+                Console.WriteLine($"Directory '{o.InputSmashRootPath}' does not exist");
+                return;
+            }
 
-                Directory.CreateDirectory(o.OutputPath);
+            if (!File.Exists(o.InputParamLabelsFile))
+            {
+                Console.WriteLine($"File '{o.InputParamLabelsFile}' does not exist");
+                return;
+            }
 
-                var filesPrc = Directory.GetFiles(o.InputPath, "*.prc", SearchOption.AllDirectories).ToList();
-                filesPrc.AddRange(Directory.GetFiles(o.InputPath, "*.stprm", SearchOption.AllDirectories));
-                filesPrc.AddRange(Directory.GetFiles(o.InputPath, "*.stdat", SearchOption.AllDirectories));
-                var dictHashes = HashHelper.GetParamLabels(o.InputParamLabelsFile);
+            Directory.CreateDirectory(o.OutputPath);
 
-                var dictionaries = new Dictionary<string, List<string>>()
+            var filesPrc = Directory.GetFiles(o.InputSmashRootPath, "*.prc", SearchOption.AllDirectories).ToList();
+            filesPrc.AddRange(Directory.GetFiles(o.InputSmashRootPath, "*.stprm", SearchOption.AllDirectories));
+            filesPrc.AddRange(Directory.GetFiles(o.InputSmashRootPath, "*.stdat", SearchOption.AllDirectories));
+            var dictHashes = HashHelper.GetParamLabels(o.InputParamLabelsFile);
+
+            var dictionaries = new Dictionary<string, List<string>>()
                 {
                     { DICT_LIST, new List<string>() },
                     { DICT_STRUCT, new List<string>() },
@@ -70,38 +76,72 @@ namespace HashKeys
                     { DICT_STRINGVALUE, new List<string>() },
                 };
 
-                var excludeFilters = o.ExcludeFilterPath?.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
-                if (excludeFilters == null)
-                    excludeFilters = new List<string>();
-                var includeFilters = o.IncludeFilterPath?.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
-                if (includeFilters == null)
-                    includeFilters = new List<string>();
+            var excludeFilters = o.ExcludeFilterPath?.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+            if (excludeFilters == null)
+                excludeFilters = new List<string>();
+            var includeFilters = o.IncludeFilterPath?.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+            if (includeFilters == null)
+                includeFilters = new List<string>();
 
-                //Get all words
-                foreach (var file in filesPrc)
-                {
-                    var inputFileRelative = file.TrimStart(o.InputPath);
-                    if (includeFilters.Count > 0 && !includeFilters.Any(f => inputFileRelative.StartsWith(f)))
-                        continue;
-                    if (excludeFilters.Any(f => inputFileRelative.StartsWith(f)))
-                        continue;
+            //Get all words
+            foreach (var file in filesPrc)
+            {
+                var inputFileRelative = file.TrimStart(o.InputSmashRootPath);
+                if (includeFilters.Count > 0 && !includeFilters.Any(f => inputFileRelative.StartsWith(f)))
+                    continue;
+                if (excludeFilters.Any(f => inputFileRelative.StartsWith(f)))
+                    continue;
 
-                    var t = new ParamFile();
-                    t.Open(file);
+                var t = new ParamFile();
+                t.Open(file);
 
-                    ParseStruct(dictionaries, dictHashes, t.Root.Nodes);
+                ParseStruct(dictionaries, dictHashes, t.Root.Nodes);
 
-                    foreach(var dictKey in dictionaries.Keys.ToList())
-                        dictionaries[dictKey] = dictionaries[dictKey].Distinct().ToList();
-                }
-
-                //Export
                 foreach (var dictKey in dictionaries.Keys.ToList())
+                    dictionaries[dictKey] = dictionaries[dictKey].Distinct().ToList();
+            }
+
+            //Export
+            foreach (var dictKey in dictionaries.Keys.ToList())
+            {
+                var allWords = WordsParsing.GetAllWords(dictionaries[dictKey]).Distinct().OrderBy(p => p);
+                if (allWords.Any())
                 {
-                    var allWords = GetAllWords(dictionaries[dictKey]).Distinct().OrderBy(p => p);
-                    File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, dictKey)), allWords.ToArray());
+                    File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, string.Empty, string.Empty, dictKey)), allWords.ToArray());
+                    if (o.AddLastWordDic)
+                    {
+                        var lastWords = dictionaries[dictKey].Where(p => p.Contains("_")).Select(p => p.Substring(p.LastIndexOf("_") + 1)).Distinct().OrderBy(p => p);
+                        if (lastWords.Any())
+                        {
+                            File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, "[LastWord]", string.Empty, dictKey)), lastWords.ToArray());
+
+                            if (o.AddByHitsDic)
+                            {
+                                var groupedWords = WordsParsing.GetAllWords(lastWords, true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
+                                foreach (var listByHitThreshold in _listByHits)
+                                {
+                                    var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
+                                    var listWords = validWords.Select(p => p.Key);
+                                    if (listWords.Any())
+                                        File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, "[LastWord]", $"[ByHits-AtLeast{listByHitThreshold:D2}]", dictKey)), listWords);
+                                }
+                            }
+                        }
+                    }
+
+                    if (o.AddByHitsDic)
+                    {
+                        var groupedWords = WordsParsing.GetAllWords(dictionaries[dictKey], true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
+                        foreach (var listByHitThreshold in _listByHits)
+                        {
+                            var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
+                            var listWords = validWords.Select(p => p.Key);
+                            if (listWords.Any())
+                                File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, string.Empty, $"[ByHits-AtLeast{listByHitThreshold:D2}]", dictKey)), listWords);
+                        }
+                    }
                 }
-            });
+            }
         }
 
         private static void ParseStruct(Dictionary<string, List<string>> dictionaries, Dictionary<ulong, string> dictHashes, Hash40Pairs<IParam> nodes)
@@ -205,40 +245,6 @@ namespace HashKeys
                 return;
 
             dict.Add(dictHashes[hexValue]);
-        }
-
-        private static IEnumerable<string> GetAllWords(IEnumerable<string> lines, bool skipDigits = false, int minLength = -1, int maxLength = -1, bool keepDouble = false)
-        {
-            var output = new List<string>();
-            foreach (var line in lines)
-            {
-                var splitWords = SplitWords(new string[1] { line }, 0).Distinct();
-                foreach (var splitWord in splitWords)
-                {
-                    if (minLength != -1 && splitWord.Length < minLength)
-                        continue;
-
-                    if (maxLength != -1 && splitWord.Length > maxLength)
-                        continue;
-
-                    if (skipDigits && !splitWord.All(char.IsLetter))
-                        continue;
-
-                    if (keepDouble || (!keepDouble && !output.Contains(splitWord)))
-                        output.Add(splitWord);
-                }
-            }
-            return output;
-        }
-
-        private static IEnumerable<string> SplitWords(IEnumerable<string> input, int currentIndex)
-        {
-            if (currentIndex < _splitChars.Length)
-            {
-                input = input.SelectMany(p => p.Split(_splitChars[currentIndex], System.StringSplitOptions.RemoveEmptyEntries));
-                return SplitWords(input, currentIndex + 1);
-            }
-            return input;
         }
     }
 }

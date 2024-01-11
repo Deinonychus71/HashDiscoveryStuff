@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ParamLabelsParser": {
+      "commandName": "Project",
+      "commandLineArgs": "ParamLabels.csv"
+    }
+  }
+}

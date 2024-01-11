@@ -4,10 +4,10 @@ namespace HashKeys
 {
     public class Options
     {
-        [Option('i', "input_path", Required = false, Default = "root", HelpText = "Param to root")]
-        public string InputPath { get; set; }
+        [Option('i', "input_smash_root_path", Required = false, Default = "root", HelpText = "Param to smash root")]
+        public string InputSmashRootPath { get; set; }
 
-        [Option('f', "format_string", Required = false, Default = "[Smash][Ultimate][ParamLabels][Key-Value][All]{0}.dic", HelpText = "Format string for the output filename")]
+        [Option('f', "format_string", Required = false, Default = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}{2}.dic", HelpText = "Format string for the output filename. {0} is [LastWord], {1} is [ByHits], {2} is the type of key/value")]
         public string FormatString { get; set; }
 
         [Option('r', "exclude_filter_path", Required = false, Default = "", HelpText = "Path to filter out, separated by comma (ex: /stage)")]
@@ -21,5 +21,11 @@ namespace HashKeys
 
         [Option('p', "input_param_labels", Required = false, Default = "ParamLabels.csv", HelpText = "Input ParamLabel")]
         public string InputParamLabelsFile { get; set; }
+
+        [Option('l', "add_last_word_dic", Required = false, Default = false, HelpText = "Add a version of the dictionary with only last words")]
+        public bool AddLastWordDic { get; set; }
+
+        [Option('h', "add_by_hits_dic", Required = false, Default = false, HelpText = "Add a version of the dictionary with only most used words")]
+        public bool AddByHitsDic { get; set; }
     }
 }

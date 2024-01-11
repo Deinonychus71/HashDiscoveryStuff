@@ -13,13 +13,31 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="MsbtEditor">
+      <HintPath>MsbtEditor.dll</HintPath>
+    </Reference>
     <Reference Include="paracobNET">
       <HintPath>paracobNET.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ParamLabels.csv">
+    <None Update="Sources\const_value_table.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Sources\dict_english.dic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Sources\dict_japanese.dic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Sources\Hashes_FullPath.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Sources\ParamLabels.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Sources\SmashWiiU.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
