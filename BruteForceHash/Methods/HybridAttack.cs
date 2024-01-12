@@ -28,7 +28,7 @@ namespace BruteForceHash
         protected readonly byte _nullByte = 0x00;
         protected readonly int _stringLength;
         protected readonly string _delimiter;
-        
+
         private int _foundResult = 0;
 
         public HybridAttack(Logger logger, Options options, int stringLength, uint hexValue)
@@ -46,7 +46,7 @@ namespace BruteForceHash
             _inputValidStartChars = _options.ValidStartingChars;
             _validStartBytes = Encoding.ASCII.GetBytes(_options.ValidStartingChars);
 
-            if(options.HybridIgnoreSizeFilters)
+            if (options.HybridIgnoreSizeFilters)
                 _combinationGeneration = new CombinationGeneratorHybrid(options, stringLength);
             else if (_options.MaxConcatenatedWords == 0)
                 _combinationGeneration = new CombinationGeneratorSimple(options, stringLength);
@@ -95,8 +95,8 @@ namespace BruteForceHash
         protected void PrintHeaders()
         {
             _logger.Log($"Delimiter: {_delimiter}");
-            if(!_options.HybridIgnoreSizeFilters)
-            _logger.Log($"Delimiters: Between {_options.MinDelimiters} and {_options.MaxDelimiters}");
+            if (!_options.HybridIgnoreSizeFilters)
+                _logger.Log($"Delimiters: Between {_options.MinDelimiters} and {_options.MaxDelimiters}");
             _logger.Log($"Words Limit: {_options.WordsLimit}");
             if (!_options.HybridIgnoreSizeFilters)
             {
@@ -245,7 +245,7 @@ namespace BruteForceHash
             int preWordSize = 0;
             byte searchLength;
 
-            if(searchSizeRemaining > 0)
+            if (searchSizeRemaining > 0)
             {
                 foreach (byte b in validBytes)
                 {
@@ -256,7 +256,7 @@ namespace BruteForceHash
                 return;
             }
 
-            if(combinationCursor == combinationPattern.Length)
+            if (combinationCursor == combinationPattern.Length)
             {
                 TestCandidate(candidate);
                 return;

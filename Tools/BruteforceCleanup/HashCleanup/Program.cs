@@ -39,7 +39,7 @@ namespace HashCleanup
             }
 
             HashSet<string> dict = new HashSet<string>();
-            if(checkDictionary == true)
+            if (checkDictionary == true)
             {
                 var lines = File.ReadAllLines("dict_cleanup.dic").Distinct().Select(p => p.ToLower());
                 foreach (var line in lines)
@@ -84,13 +84,13 @@ namespace HashCleanup
             {
                 bool letterFound = false;
                 bool digitFoundAfterLetter = false;
-                for(int i = 0; i< word.Length; i++)
+                for (int i = 0; i < word.Length; i++)
                 {
                     if (digitFoundAfterLetter && !char.IsDigit(word[i]))
                         return false;
                     else if (!char.IsDigit(word[i]))
                         letterFound = true;
-                    else if (letterFound && char.IsDigit(word[i]) )
+                    else if (letterFound && char.IsDigit(word[i]))
                         digitFoundAfterLetter = true;
                 }
             }

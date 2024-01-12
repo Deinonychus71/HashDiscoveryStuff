@@ -1,7 +1,6 @@
 ﻿using CommandLine;
 using HashCommon;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,7 +13,7 @@ namespace GhidraMainCrackDictionaryGen
         private readonly static char[] _trimEnd = new[] { ',', '\"', '\'', ';', ')' };
         private readonly static char[] _trimEndPlusDigits = new[] { ',', '\"', '\'', ';', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
         private readonly static char[] _trimStart = new[] { '*', '(', '\"', '\'', ',' };
-        private readonly static string[] _validOperatorsHash = new [] { "==", "!=" };
+        private readonly static string[] _validOperatorsHash = new[] { "==", "!=" };
         private readonly static string[] _filterPreviousWord = new[] { "LAB", "FUN", "DAT", "joined" };
         private readonly static string[] _filterFinalWord = new[] { "aaa", "bbb", "ccc", "ddd", "eee", "fff", "ppp" };
         private readonly static Regex _regOnlyDigits = new Regex(@"^[0-9]+$", RegexOptions.Compiled);

@@ -57,7 +57,7 @@ namespace DictTransformation
                             continue;
 
                         var badNbrChars = false;
-                        foreach(var forbiddenNumber in forbiddenNumbers)
+                        foreach (var forbiddenNumber in forbiddenNumbers)
                         {
                             if (word.Length == forbiddenNumber)
                             {
@@ -95,7 +95,7 @@ namespace DictTransformation
 
         private static IEnumerable<string> SplitWords(IEnumerable<string> input, string[] splitChar, int currentIndex)
         {
-            if(currentIndex < splitChar.Length)
+            if (currentIndex < splitChar.Length)
             {
                 input = input.SelectMany(p => p.Split(splitChar[currentIndex], System.StringSplitOptions.RemoveEmptyEntries));
                 return SplitWords(input, splitChar, currentIndex + 1);

@@ -1,13 +1,12 @@
 ﻿using CommandLine;
 using CsvHelper;
+using HashCommon;
 using paracobNET;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using HashCommon;
-using System.Text;
 
 namespace HashParser
 {
@@ -47,7 +46,7 @@ namespace HashParser
                     var t = new ParamFile();
                     t.Open(file);
 
-                    if(o.TrackUncracked)
+                    if (o.TrackUncracked)
                         ParseStruct(outputUncracked, t.Root.Nodes, dictHashes, inputFileRelative, string.Empty, string.Empty, o.TrackUncracked);
                     else
                         ParseStruct(output, t.Root.Nodes, dictHashes, inputFileRelative, string.Empty, string.Empty, o.TrackUncracked);
@@ -91,7 +90,7 @@ namespace HashParser
                     grouped.AddRange(groupedValues);
 
                     //Double check
-                    foreach(var group in grouped)
+                    foreach (var group in grouped)
                     {
                         var test = GetHexaLabel(dictHashes, Convert.ToUInt64(group.Hex, 16));
                         if (!test.StartsWith("0x"))

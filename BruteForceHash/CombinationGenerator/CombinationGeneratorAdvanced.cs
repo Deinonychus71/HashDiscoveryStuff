@@ -1,7 +1,5 @@
-﻿using BruteForceHash.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -154,7 +152,8 @@ namespace BruteForceHash.CombinationGenerator
 
             if (_options.Method == "hybrid")
             {
-                combinationsCustom = combinationsCustom.Where(p => {
+                combinationsCustom = combinationsCustom.Where(p =>
+                {
                     var sum = stringLength - p.Sum(x => x.Length);
                     return sum <= _options.HybridMaxCharacters && sum >= _options.HybridMinCharacters;
                 }).ToList();

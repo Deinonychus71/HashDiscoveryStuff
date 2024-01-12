@@ -34,7 +34,8 @@ namespace BruteForceHash
             string arg = $"/c \"BruteForceHash.exe {Parser.Default.FormatCommandLine(_options)} | (cd \"{Path.GetDirectoryName(_options.PathHashCat)}\" && \"{Path.GetFileName(_options.PathHashCat)}\" {arguments}\")";
 
             _logger.Log("SLOWER!! DO NOT USE :(");
-            if (monitor) {
+            if (monitor)
+            {
                 _logger.Log($"Launch hashcat: \"{_options.PathHashCat}\" {arguments}");
             }
 
@@ -55,13 +56,13 @@ namespace BruteForceHash
 
         public void Run(List<string> argumentsList, bool verbose, bool monitor)
         {
-            if(monitor)
+            if (monitor)
                 LaunchMonitoringTask();
 
             // Launch HashCat
             foreach (var arguments in argumentsList)
             {
-                if(verbose)
+                if (verbose)
                     _logger.Log($"Running hashcat with arguments {arguments}.", false);
 
                 using (var process = new Process())

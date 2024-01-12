@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
+using RikTheVeggie;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
-using RikTheVeggie;
-using System.Collections;
+using System.Windows.Forms;
 
 namespace BruteForceHash.GUI
 {
@@ -358,11 +358,11 @@ namespace BruteForceHash.GUI
             var dictionaryHybridLastWord = string.Empty;
 
             SaveCustomDictionaries();
-            if(chkDictionariesUse.Checked)
+            if (chkDictionariesUse.Checked)
                 dictionaries = GetDictionary(tvDictMain);
             if (chkDictionariesCustomWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}].dic"))
                 dictionariesCustom = $"{hexFolder}\\[{hex}].dic";
-            if(chkDictionariesExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Exclude].dic"))
+            if (chkDictionariesExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Exclude].dic"))
                 dictionariesExclude = $"{hexFolder}\\[{hex}][Exclude].dic";
 
             if (chkUseDictFirst.Checked)
@@ -394,7 +394,7 @@ namespace BruteForceHash.GUI
 
             //Common All
             string arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                $"--method {(useMethodDictionary ? "dictionary" : useMethodCharacter ? "character" : useMethodHybrid ? "hybrid": string.Empty)} " +
+                                $"--method {(useMethodDictionary ? "dictionary" : useMethodCharacter ? "character" : useMethodHybrid ? "hybrid" : string.Empty)} " +
                                 $"{(chkVerbose.Checked ? "--verbose" : "")} " +
                                 $"--confirm_end " +
                                 $"--prefix \"{txtPrefix.Text.Trim()}\" " +
@@ -589,7 +589,7 @@ namespace BruteForceHash.GUI
         private void SaveHBT(string fileName)
         {
             var hex = GetHex();
-            if(_needOverrideConfirmation)
+            if (_needOverrideConfirmation)
             {
                 var hexFolder = GetHexFolder(false);
                 var isValidHex = IsValidHex();

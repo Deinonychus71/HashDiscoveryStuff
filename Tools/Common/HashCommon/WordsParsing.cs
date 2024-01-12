@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace HashCommon
 {
     public static class WordsParsing
     {
-        private readonly static char[] _splitChars = new[] { ',', '.', '\\', '/', '_', '(',')' };
+        private readonly static char[] _splitChars = new[] { ',', '.', '\\', '/', '_', '(', ')' };
 
         public static IEnumerable<string> SplitWords(string input, int currentIndex = 0)
         {
-            return SplitWords(new string[] {input}, currentIndex);
+            return SplitWords(new string[] { input }, currentIndex);
         }
 
         public static IEnumerable<string> SplitWords(IEnumerable<string> input, int currentIndex = 0)

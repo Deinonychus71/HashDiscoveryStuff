@@ -39,7 +39,7 @@ namespace BruteForceHash.CombinationGenerator
         public string DecompileCombination(byte[] compiledCombinationPattern)
         {
             var output = string.Empty;
-            for(var i = 0; i < compiledCombinationPattern.Length; i++)
+            for (var i = 0; i < compiledCombinationPattern.Length; i++)
             {
                 byte val = compiledCombinationPattern[i];
                 if (val == 0)
@@ -133,7 +133,7 @@ namespace BruteForceHash.CombinationGenerator
                 if (_options.DictionariesCustomMinWordsHashUseTypos)
                 {
                     var allCustomWordsTypos = new List<string>();
-                    foreach(var customWord in allCustomWords.Distinct())
+                    foreach (var customWord in allCustomWords.Distinct())
                     {
                         allCustomWordsTypos.Add(customWord);
                         allCustomWordsTypos.AddRange(_typosGenerator.GenerateTypos(customWord));
@@ -172,7 +172,8 @@ namespace BruteForceHash.CombinationGenerator
 
             if (_options.Method == "hybrid")
             {
-                return combinationsCustom.Where(p => {
+                return combinationsCustom.Where(p =>
+                {
                     var sum = stringLength - p.Sum(x => x.Length);
                     return sum <= _options.HybridMaxCharacters && sum >= _options.HybridMinCharacters;
                 }).ToList();

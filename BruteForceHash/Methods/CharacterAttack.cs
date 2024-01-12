@@ -60,7 +60,7 @@ namespace BruteForceHash.Methods
                 inputValidStartChars = Console.ReadLine();
                 if (string.IsNullOrEmpty(inputValidStartChars))
                     inputValidStartChars = _validStartChars;
-                
+
                 validStartBytes = Encoding.ASCII.GetBytes(inputValidStartChars);
             }
             else

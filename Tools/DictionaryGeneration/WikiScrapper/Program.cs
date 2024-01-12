@@ -31,7 +31,7 @@ namespace WikiScrapper
                     var scrapUrl = scrapUrls[0];
                     if (scrapUrl.StartsWith('/'))
                         scrapUrl = $"{baseUrl}{scrapUrl}";
-                    if(scrapUrl.Contains('#'))
+                    if (scrapUrl.Contains('#'))
                         scrapUrl = scrapUrl.Substring(0, scrapUrl.IndexOf("#"));
                     var doc = web.Load(scrapUrl);
                     var content = doc.GetElementbyId("mw-content-text");
@@ -114,7 +114,7 @@ namespace WikiScrapper
                 if (skipSpecials && !_specialCharactersRegex.IsMatch(checkWord))
                 {
                     //Special detected, try cleaning accents
-                    string jpnCleanedWord = checkWord.Replace('ō', 'o').Replace("ā", "a").Replace("é", "e").Replace("ī","i").Replace("ï", "i").Replace("ū", "u").Replace("ð", "o").Replace("ä", "a").Replace("è", "e").Replace("ē", "e");
+                    string jpnCleanedWord = checkWord.Replace('ō', 'o').Replace("ā", "a").Replace("é", "e").Replace("ī", "i").Replace("ï", "i").Replace("ū", "u").Replace("ð", "o").Replace("ä", "a").Replace("è", "e").Replace("ē", "e");
 
                     bool copyJpn = true;
                     if (!_specialCharactersRegex.IsMatch(jpnCleanedWord))

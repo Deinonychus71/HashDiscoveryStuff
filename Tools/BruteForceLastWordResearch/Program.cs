@@ -1,10 +1,6 @@
 ﻿using CommandLine;
-using HashCommon;
-using paracobNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace BruteForceLastWordResearch
 {
@@ -53,7 +49,7 @@ namespace BruteForceLastWordResearch
 
             Directory.CreateDirectory(o.OutputPath);
 
-            
+
         }
     }
 }

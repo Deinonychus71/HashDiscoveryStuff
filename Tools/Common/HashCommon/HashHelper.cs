@@ -5,7 +5,7 @@ using System.IO;
 
 namespace HashCommon
 {
-    public  class HashHelper
+    public class HashHelper
     {
         private Dictionary<ulong, string> _paramLabels;
 

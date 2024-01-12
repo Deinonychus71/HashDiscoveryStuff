@@ -47,7 +47,7 @@ namespace HashTable
                     }
                     Console.WriteLine("Done!");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("Error: " + e.Message);
                 }
@@ -108,7 +108,7 @@ namespace HashTable
         {
             var csvDictEntry = new OrderedDictionary<string, object>();
             csvDictEntry.Add("ID", index);
-            
+
             foreach (var prm in paramStruct.Nodes)
             {
                 var key = _hashHelper.GetHexaLabel(prm.Key);

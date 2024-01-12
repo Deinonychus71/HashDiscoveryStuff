@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace DictSplit
 {
@@ -41,7 +41,7 @@ namespace DictSplit
                             dicts[count].Add(word);
                         }
 
-                        foreach(var dict in dicts)
+                        foreach (var dict in dicts)
                         {
                             File.WriteAllLines(Path.Combine(path, $"{prePath}[{Path.GetFileNameWithoutExtension(fileName)}]{dict.Key.ToString("D2")}{Path.GetExtension(fileName)}"), dict.Value.ToArray());
                         }

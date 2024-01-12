@@ -4,7 +4,7 @@ namespace WikiScrapper
 {
     public class Options
     {
-        [Option('i', "input_url", Required = false, Default ="ParamLabels.csv", HelpText = "Input ParamLabel")]
+        [Option('i', "input_url", Required = false, Default = "ParamLabels.csv", HelpText = "Input ParamLabel")]
         public string InputUrl { get; set; }
 
         [Option('d', "dict_eng", Required = false, Default = "dict_english.dic", HelpText = "English Dictionary")]

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -422,7 +421,7 @@ namespace HashCrackDictionaryGen
             var folderValuesByHits = Path.Combine(folderValues, "ByHits");
 
             var msbtFiles = Directory.GetFiles(o.InputSmashRootPath, "*.msbt", SearchOption.AllDirectories);
-            foreach(var msbtFile in msbtFiles)
+            foreach (var msbtFile in msbtFiles)
             {
                 if (msbtFile.Contains("+us_en"))
                 {

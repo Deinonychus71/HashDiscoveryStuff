@@ -23,7 +23,7 @@ namespace BruteForceHash.Methods
 
         protected override void WaitForDictionariesToRun(Task[] tasks, CancellationToken cancellationToken)
         {
-            if(_hexExtract == 0 && !_options.RunHashcat)
+            if (_hexExtract == 0 && !_options.RunHashcat)
                 base.WaitForDictionariesToRun(tasks, cancellationToken);
 
             if (!_runHashCat)
