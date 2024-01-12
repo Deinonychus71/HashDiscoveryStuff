@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace MainExecParser
+namespace GhidraMainCrackDictionaryGen
 {
     class Program
     {

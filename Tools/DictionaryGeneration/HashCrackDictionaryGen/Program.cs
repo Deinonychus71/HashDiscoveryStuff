@@ -71,11 +71,11 @@ namespace HashCrackDictionaryGen
             var allWords = WordsParsing.GetAllWords(allHashes);
 
             //Export Full Dictionary
-            ExportDictionary(pathParamLabels, "[Smash][Ultimate][ParamLabels]Full", allWords);
+            ExportDictionary(pathParamLabels, "[SmashUltimate][ParamLabels]Full", allWords);
 
             //Export Digits Only
             var numericHashes = allWords.Where(p => _regOnlyDigits.IsMatch(p));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Digits_Only", numericHashes);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Digits_Only", numericHashes);
 
             //Remove exclusively digits hashes
             allHashes = allHashes.Where(p => !_regOnlyDigits.IsMatch(p));
@@ -92,11 +92,11 @@ namespace HashCrackDictionaryGen
             fightersList.AddRange(fighters4Hashes);
             fightersList.AddRange(fighters5Hashes);
             var fighterWords = WordsParsing.GetAllWords(fightersList.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Fighters", fighterWords);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Fighters", fighterWords);
 
             var stagesHashes = allHashes.Where(p => p.StartsWith("ui_stage_")).Select(p => p.Replace("ui_stage_", string.Empty));
             var stageWords = WordsParsing.GetAllWords(stagesHashes.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Stages", stageWords);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Stages", stageWords);
 
             var itemsHashes = allHashes.Where(p => p.StartsWith("item_kind_") && !p.StartsWith("ui_item_assist_")).Select(p => p.Replace("item_kind_", string.Empty));
             var items2Hashes = allHashes.Where(p => p.StartsWith("ui_item_")).Select(p => p.Replace("ui_item_", string.Empty));
@@ -111,7 +111,7 @@ namespace HashCrackDictionaryGen
             itemsList.AddRange(spiritsHashes);
             itemsList.AddRange(spirits2Hashes);
             var itemsWords = WordsParsing.GetAllWords(itemsList.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Items_Assists_Spirits", itemsWords);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Items_Assists_Spirits", itemsWords);
 
             var seriesHashes = allHashes.Where(p => p.StartsWith("ui_series_")).Select(p => p.Replace("ui_series_", string.Empty));
             var series2Hashes = allHashes.Where(p => p.StartsWith("ui_profile_em_")).Select(p => p.Replace("ui_profile_em_", string.Empty));
@@ -120,17 +120,17 @@ namespace HashCrackDictionaryGen
             gamesList.AddRange(series2Hashes);
             gamesList.AddRange(gameTitleHashes);
             var gameWords = WordsParsing.GetAllWords(gamesList.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Games", gameWords);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Games", gameWords);
 
             var bgmHashes = allHashes.Where(p => p.StartsWith("ui_bgm_")).Select(p => p.Replace("ui_bgm_", string.Empty));
             var bgmWordsAll = WordsParsing.GetAllWords(bgmHashes.Distinct(), false, 2);
             var bgmWordsNoDigits = WordsParsing.GetAllWords(bgmHashes.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Bgms_Full", bgmWordsAll);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Bgms_Names", bgmWordsNoDigits);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Bgms_Full", bgmWordsAll);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Bgms_Names", bgmWordsNoDigits);
 
             var actorsHashes = allHashes.Where(p => p.StartsWith("sound_actor_")).Select(p => p.Replace("sound_actor_", string.Empty));
             var actorsWords = WordsParsing.GetAllWords(actorsHashes.Distinct(), false, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Actors", actorsWords);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Actors", actorsWords);
 
             //Files & Directories
             var filesHashes = allHashes.Where(p => p.Contains('.'));
@@ -141,40 +141,40 @@ namespace HashCrackDictionaryGen
             filesList.AddRange(filesWords);
             filesList.AddRange(directoryHashes);
             filesList.AddRange(WordsParsing.GetAllWords(directoryHashes));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]File_Directories", filesList);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]File_Directories", filesList);
 
             var allWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
             //Get all english words
             var outputEnglishWords = FilterWithDictionary(allWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[Smash][Ultimate][ParamLabels][Language]English", outputEnglishWords.Distinct());
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]English_1-4_Letters", outputEnglishWords.Distinct().Where(p => p.Length < 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]English_5+_Letters", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]English_Common", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][ParamLabels][Language]English", outputEnglishWords.Distinct());
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]English_1-4_Letters", outputEnglishWords.Distinct().Where(p => p.Length < 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]English_5+_Letters", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]English_Common", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //Get all japanese words
             var outputJapaneseWords = FilterWithDictionary(allWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[Smash][Ultimate][ParamLabels][Language]Japanese", outputJapaneseWords.Distinct());
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Japanese_1-4_Letters", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Japanese_5+_Letters", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Japanese_Common", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][ParamLabels][Language]Japanese", outputJapaneseWords.Distinct());
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Japanese_1-4_Letters", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Japanese_5+_Letters", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Japanese_Common", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //- Technical word / dev language
             var techWords = allHashes.Where(p => p.Contains("_")).Select(p => p.Substring(p.LastIndexOf("_") + 1)).Where(p => p.All(char.IsLetter));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]LastWord_Common", techWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]LastWord_Common", techWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //By Hits
             var groupedWords = WordsParsing.GetAllWords(allHashes, true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
             foreach (var listByHitThreshold in _listByHits)
             {
                 var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
-                ExportDictionary(folderByHits, $"[Smash][Ultimate][ParamLabels][ByHits]All_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
+                ExportDictionary(folderByHits, $"[SmashUltimate][ParamLabels][ByHits]All_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
             }
 
             groupedWords = outputEnglishWords.GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
             foreach (var listByHitThreshold in _listByHits)
             {
                 var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
-                ExportDictionary(folderByHits, $"[Smash][Ultimate][ParamLabels][ByHits]English_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
+                ExportDictionary(folderByHits, $"[SmashUltimate][ParamLabels][ByHits]English_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
             }
 
             //Other
@@ -193,8 +193,8 @@ namespace HashCrackDictionaryGen
                 .Except(outputEnglishWords)
                 .Except(outputJapaneseWords)
                 .Except(techWords);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Other", exportOtherList);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][ParamLabels][Specialized]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Other", exportOtherList);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
         }
 
         static void GenerateSmashWiiUDictionaries(Options o, string pathSmashWiiU, HashSet<string> allEnglishWords, HashSet<string> allJapaneseWords)
@@ -209,11 +209,11 @@ namespace HashCrackDictionaryGen
             var allWords = WordsParsing.GetAllWords(allHashes);
 
             //Export Full Dictionary
-            ExportDictionary(folderSpecialized, "[Smash][WiiU]Full", allWords);
+            ExportDictionary(folderSpecialized, "[SmashWiiU]Full", allWords);
 
             //Export Digits Only
             var numericHashes = allWords.Where(p => _regOnlyDigits.IsMatch(p));
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Digits_Only", numericHashes);
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Digits_Only", numericHashes);
 
             //Remove exclusively digits hashes
             allHashes = allHashes.Where(p => !_regOnlyDigits.IsMatch(p));
@@ -222,11 +222,11 @@ namespace HashCrackDictionaryGen
             var fightersHashes = allHashes.Where(p => p.StartsWith("fighter/")).Select(p => p.Replace("fighter/", string.Empty));
             var fightersList = fightersHashes.ToList();
             var fighterWords = WordsParsing.GetAllWords(fightersList.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Fighters", fighterWords);
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Fighters", fighterWords);
 
             var stagesHashes = allHashes.Where(p => p.StartsWith("stage/")).Select(p => p.Replace("stage/", string.Empty));
             var stageWords = WordsParsing.GetAllWords(stagesHashes.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Stages", stageWords);
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Stages", stageWords);
 
             var itemsHashes = allHashes.Where(p => p.StartsWith("item/") && !p.StartsWith("item/assist/")).Select(p => p.Replace("item/", string.Empty));
             var items2Hashes = allHashes.Where(p => p.StartsWith("animcmd/item/")).Select(p => p.Replace("animcmd/item/", string.Empty));
@@ -235,40 +235,40 @@ namespace HashCrackDictionaryGen
             itemsList.AddRange(items2Hashes);
             itemsList.AddRange(assistHashes);
             var itemsWords = WordsParsing.GetAllWords(itemsList.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Items_Assists", itemsWords);
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Items_Assists", itemsWords);
 
             var allWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
             //Get all english words
             var outputEnglishWords = FilterWithDictionary(allWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[Smash][WiiU][Language]English", outputEnglishWords.Distinct());
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]English_1-4_Letters", outputEnglishWords.Distinct().Where(p => p.Length < 5));
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]English_5+_Letters", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]English_Common", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionarySplitBySize(folderLanguage, "[SmashWiiU][Language]English", outputEnglishWords.Distinct());
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]English_1-4_Letters", outputEnglishWords.Distinct().Where(p => p.Length < 5));
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]English_5+_Letters", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]English_Common", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //Get all japanese words
             var outputJapaneseWords = FilterWithDictionary(allWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[Smash][WiiU][Language]Japanese", outputJapaneseWords.Distinct());
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Japanese_1-4_Letters", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Japanese_5+_Letters", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Japanese_Common", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionarySplitBySize(folderLanguage, "[SmashWiiU][Language]Japanese", outputJapaneseWords.Distinct());
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Japanese_1-4_Letters", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Japanese_5+_Letters", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Japanese_Common", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //- Technical word / dev language
             var techWords = allHashes.Where(p => p.Contains("_")).Select(p => p.Substring(p.LastIndexOf("_") + 1)).Where(p => p.All(char.IsLetter));
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]LastWord_Common", techWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]LastWord_Common", techWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //By Hits
-            var groupedWords = WordsParsing.GetAllWords(allHashes, true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
+            var groupedWords = WordsParsing.GetAllWords(allHashes, true, 2, -1, true).GroupBy(i => i, StringComparer.OrdinalIgnoreCase).ToDictionary(p => p.Key, p => p.Count());
             foreach (var listByHitThreshold in _listByHits)
             {
                 var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
-                ExportDictionary(folderByHits, $"[Smash][WiiU][ByHits]All_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
+                ExportDictionary(folderByHits, $"[SmashWiiU][ByHits]All_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key.ToLower()));
             }
 
-            groupedWords = outputEnglishWords.GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
+            groupedWords = outputEnglishWords.GroupBy(i => i, StringComparer.OrdinalIgnoreCase).ToDictionary(p => p.Key, p => p.Count());
             foreach (var listByHitThreshold in _listByHits)
             {
                 var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
-                ExportDictionary(folderByHits, $"[Smash][WiiU][ByHits]English_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
+                ExportDictionary(folderByHits, $"[SmashWiiU][ByHits]English_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key.ToLower()));
             }
 
             //Other
@@ -282,8 +282,8 @@ namespace HashCrackDictionaryGen
                 .Except(outputEnglishWords)
                 .Except(outputJapaneseWords)
                 .Except(techWords);
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Other", exportOtherList);
-            ExportDictionary(folderSpecialized, "[Smash][WiiU][Specialized]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Other", exportOtherList);
+            ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
         }
 
         static void GenerateSmashPathDictionaries(Options o, string pathPath, HashSet<string> allEnglishWords, HashSet<string> allJapaneseWords)
@@ -296,11 +296,11 @@ namespace HashCrackDictionaryGen
             var allWords = WordsParsing.GetAllWords(allHashes);
 
             //Export Full Dictionary
-            ExportDictionary(pathPath, "[Smash][Ultimate][Path]Full", allWords);
+            ExportDictionary(pathPath, "[SmashUltimate][Path]Full", allWords);
 
             //Export Digits Only
             var pathNumericHashes = allWords.Where(p => _regOnlyDigits.IsMatch(p));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Digits_Only", pathNumericHashes);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Digits_Only", pathNumericHashes);
 
             //Remove exclusively digits hashes
             allHashes = allHashes.Where(p => !_regOnlyDigits.IsMatch(p));
@@ -308,26 +308,26 @@ namespace HashCrackDictionaryGen
             //Nouns
             var pathFightersHashes = allHashes.Where(p => p.StartsWith("fighter/"));
             var pathFighterWords = WordsParsing.GetAllWords(pathFightersHashes.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Fighters", pathFighterWords);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Fighters", pathFighterWords);
 
             var pathStageHashes = allHashes.Where(p => p.StartsWith("stage/"));
             var pathStageWords = WordsParsing.GetAllWords(pathStageHashes.Distinct(), true, 2);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Stage", pathStageWords);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Stage", pathStageWords);
 
             var pathAllWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
             //Get all english words
             var pathOutputEnglishWords = FilterWithDictionary(pathAllWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[Smash][Ultimate][Path][Language]English", pathOutputEnglishWords.Distinct());
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]English_1-4_Letters", pathOutputEnglishWords.Distinct().Where(p => p.Length < 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]English_5+_Letters", pathOutputEnglishWords.Distinct().Where(p => p.Length >= 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]English_Common", pathOutputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Path][Language]English", pathOutputEnglishWords.Distinct());
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]English_1-4_Letters", pathOutputEnglishWords.Distinct().Where(p => p.Length < 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]English_5+_Letters", pathOutputEnglishWords.Distinct().Where(p => p.Length >= 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]English_Common", pathOutputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //Get all japanese words
             var pathOutputJapaneseWords = FilterWithDictionary(pathAllWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[Smash][Ultimate][Path][Language]Japanese", pathOutputJapaneseWords.Distinct());
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Japanese_1-4_Letters", pathOutputJapaneseWords.Distinct().Where(p => p.Length < 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Japanese_5+_Letters", pathOutputJapaneseWords.Distinct().Where(p => p.Length >= 5));
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Japanese_Common", pathOutputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Path][Language]Japanese", pathOutputJapaneseWords.Distinct());
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Japanese_1-4_Letters", pathOutputJapaneseWords.Distinct().Where(p => p.Length < 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Japanese_5+_Letters", pathOutputJapaneseWords.Distinct().Where(p => p.Length >= 5));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Japanese_Common", pathOutputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //Other
             var otherList = new List<string>();
@@ -338,8 +338,8 @@ namespace HashCrackDictionaryGen
                 .Except(pathStageWords)
                 .Except(pathOutputEnglishWords)
                 .Except(pathOutputJapaneseWords);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Other", exportOtherList);
-            ExportDictionary(folderSpecialized, "[Smash][Ultimate][Path][Specialized]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Other", exportOtherList);
+            ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
         }
 
         static void GenerateSmashKeyValueDictionary(Options o, string pathParamLabelsKeys)
@@ -355,61 +355,61 @@ namespace HashCrackDictionaryGen
 
             //All
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "All");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[All]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[All]{2}.dic";
             options.IncludeFilterPath = "";
             HashKeys.Program.RunProgram(options);
 
             //Assist
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Assist");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Assist]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Assist]{2}.dic";
             options.IncludeFilterPath = "/assist";
             HashKeys.Program.RunProgram(options);
 
             //Boss
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Boss");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Boss]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Boss]{2}.dic";
             options.IncludeFilterPath = "/boss";
             HashKeys.Program.RunProgram(options);
 
             //Enemy
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Enemy");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Enemy]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Enemy]{2}.dic";
             options.IncludeFilterPath = "/enemy";
             HashKeys.Program.RunProgram(options);
 
             //Fighter
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Fighter");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Fighter]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Fighter]{2}.dic";
             options.IncludeFilterPath = "/fighter";
             HashKeys.Program.RunProgram(options);
 
             //Item
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Item");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Item]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Item]{2}.dic";
             options.IncludeFilterPath = "/item";
             HashKeys.Program.RunProgram(options);
 
             //Param
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Param");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Param]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Param]{2}.dic";
             options.IncludeFilterPath = "/param";
             HashKeys.Program.RunProgram(options);
 
             //Pokemon
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Pokemon");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Pokemon]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Pokemon]{2}.dic";
             options.IncludeFilterPath = "/pokemon";
             HashKeys.Program.RunProgram(options);
 
             //Stage
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "Stage");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[Stage]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Stage]{2}.dic";
             options.IncludeFilterPath = "/stage";
             HashKeys.Program.RunProgram(options);
 
             //UI
             options.OutputPath = Path.Combine(pathParamLabelsKeys, "UI");
-            options.FormatString = "[Smash][Ultimate][ParamLabels][Key-Value]{0}{1}[UI]{2}.dic";
+            options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[UI]{2}.dic";
             options.IncludeFilterPath = "/ui";
             HashKeys.Program.RunProgram(options);
         }
@@ -417,7 +417,7 @@ namespace HashCrackDictionaryGen
         static void GenerateMSBTValueDictionary(Options o, string pathMSBT)
         {
             var folderKeys = Path.Combine(pathMSBT, "Keys");
-            var folderValues = Path.Combine(pathMSBT, "Keys");
+            var folderValues = Path.Combine(pathMSBT, "Values");
             var folderKeysByHits = Path.Combine(folderKeys, "ByHits");
             var folderValuesByHits = Path.Combine(folderValues, "ByHits");
 
@@ -428,28 +428,30 @@ namespace HashCrackDictionaryGen
                 {
                     var dictionary = MsbtHelper.GetMsbtValues(msbtFile);
 
-                    var values = dictionary.Values.Select(p => Regex.Replace(p, "[^a-zA-Z0-9_]+", " ", RegexOptions.Compiled)).ToList();
-                    var allKeyWords = WordsParsing.GetAllWords(dictionary.Keys);
-                    var allValueWords = WordsParsing.GetAllWords(values);
+                    var values = dictionary.Values.Select(p => Regex.Replace(p, "[^a-zA-Z0-9_]+", " ", RegexOptions.Compiled)).Select(p => p.ToLower()).ToList();
+                    var allKeyWords = WordsParsing.GetAllWords(dictionary.Keys).Select(p => p.ToLower());
+                    var allValueWords = WordsParsing.GetAllWords(values).SelectMany(p => p.Split(' ', StringSplitOptions.RemoveEmptyEntries)).Distinct();
 
                     var title = Path.GetFileName(msbtFile).Replace("+us_en.msbt", string.Empty);
 
-                    ExportDictionary(folderKeys, $"[Smash][Ultimate][MSBT][Keys]{title}", allKeyWords);
-                    ExportDictionary(folderValues, $"[Smash][Ultimate][MSBT][Values]{title}", allValueWords);
+                    ExportDictionary(folderKeys, $"[SmashUltimate][MSBT][Keys][{title}]Full", allKeyWords);
+                    ExportDictionary(folderKeys, $"[SmashUltimate][MSBT][Keys][{title}]No_Digits", allKeyWords.Where(p => p.All(char.IsLetter)));
+                    ExportDictionary(folderValues, $"[SmashUltimate][MSBT][Values][{title}]Full", allValueWords);
+                    ExportDictionary(folderValues, $"[SmashUltimate][MSBT][Values][{title}]No_Digits", allValueWords.Where(p => p.All(char.IsLetter)));
 
                     //By Hits
                     var groupedKeyWords = WordsParsing.GetAllWords(dictionary.Keys, true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
                     foreach (var listByHitThreshold in _listByHits)
                     {
                         var validWords = groupedKeyWords.Where(p => p.Value >= listByHitThreshold);
-                        ExportDictionary(folderKeysByHits, $"[Smash][Ultimate][MSBT][Keys][ByHits]{title}_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
+                        ExportDictionary(folderKeysByHits, $"[SmashUltimate][MSBT][Keys][ByHits][{title}]AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
                     }
 
                     var groupedValueWords = WordsParsing.GetAllWords(values, true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
                     foreach (var listByHitThreshold in _listByHits)
                     {
                         var validWords = groupedValueWords.Where(p => p.Value >= listByHitThreshold);
-                        ExportDictionary(folderValuesByHits, $"[Smash][Ultimate][MSBT][Values][ByHits]{title}_AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
+                        ExportDictionary(folderValuesByHits, $"[SmashUltimate][MSBT][Values][ByHits][{title}]AtLeast_{listByHitThreshold:D2}hits", validWords.Select(p => p.Key));
                     }
                 }
             }

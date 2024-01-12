@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using HashCommon;
 using System.Text;
 
 namespace HashParser
@@ -75,12 +76,14 @@ namespace HashParser
                     {
                         Hex = p.Key,
                         KeyOrValue = "Key",
+                        Type = string.Join(" | ", p.Select(p2 => p2.Type).Distinct().Take(10)),
                         FilePaths = string.Join(" | ", p.Select(p2 => p2.FilePath).Distinct().Take(10))
                     });
                     var groupedValues = outputUncracked.Where(p => p.ValueHexa != null && p.ValueLabel.StartsWith("0x")).GroupBy(p => p.ValueLabel).Select(p => new CsvEntryUncracked()
                     {
                         Hex = p.Key,
                         KeyOrValue = "Value",
+                        Type = string.Join(" | ", p.Select(p2 => p2.Type).Distinct().Take(10)),
                         FilePaths = string.Join(" | ", p.Select(p2 => p2.FilePath).Distinct().Take(10))
                     });
                     var grouped = new List<CsvEntryUncracked>();

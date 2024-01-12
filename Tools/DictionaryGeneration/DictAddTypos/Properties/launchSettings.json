@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "DictTransformation": {
-      "commandName": "Project",
-      "commandLineArgs": "-i dictionary_english_lite.dic -t -c \",|.|/|\\|_\" -h -D"
-    }
-  }
-}

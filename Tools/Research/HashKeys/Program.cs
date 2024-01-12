@@ -13,20 +13,20 @@ namespace HashKeys
     /// </summary>
     public class Program
     {
-        private const string DICT_LIST = "[Keys]List";
-        private const string DICT_STRUCT = "[Keys]Struct";
-        private const string DICT_BOOLEAN = "[Keys]Boolean";
-        private const string DICT_HASH40KEY = "[Keys]Hash40";
-        private const string DICT_STRINGKEY = "[Keys]String";
+        private const string DICT_LIST = "List";
+        private const string DICT_STRUCT = "Struct";
+        private const string DICT_BOOLEAN = "Boolean";
+        private const string DICT_HASH40KEY = "Hash40";
+        private const string DICT_STRINGKEY = "String";
         private const string DICT_HASH40VALUE = "[Values]Hash40";
         private const string DICT_STRINGVALUE = "[Values]String";
-        private const string DICT_FLOAT = "[Keys][Numeric]Float";
-        private const string DICT_BYTE = "[Keys][Numeric]Byte";
-        private const string DICT_INT = "[Keys][Numeric]Int";
-        private const string DICT_SBYTE = "[Keys][Numeric]SByte";
-        private const string DICT_SHORT = "[Keys][Numeric]Short";
-        private const string DICT_UINT = "[Keys][Numeric]UInt";
-        private const string DICT_USHORT = "[Keys][Numeric]UShort";
+        private const string DICT_FLOAT = "[Numeric]Float";
+        private const string DICT_BYTE = "[Numeric]Byte";
+        private const string DICT_INT = "[Numeric]Int";
+        private const string DICT_SBYTE = "[Numeric]SByte";
+        private const string DICT_SHORT = "[Numeric]Short";
+        private const string DICT_UINT = "[Numeric]UInt";
+        private const string DICT_USHORT = "[Numeric]UShort";
         private static int[] _listByHits = new int[] { 2, 3, 4, 5, 10, 15, 20 };
 
         static void Main(string[] args)
@@ -107,23 +107,26 @@ namespace HashKeys
                 var allWords = WordsParsing.GetAllWords(dictionaries[dictKey]).Distinct().OrderBy(p => p);
                 if (allWords.Any())
                 {
-                    File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, string.Empty, string.Empty, dictKey)), allWords.ToArray());
+                    File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, string.Empty, "[AllWords]", dictKey)), allWords.ToArray());
                     if (o.AddLastWordDic)
                     {
                         var lastWords = dictionaries[dictKey].Where(p => p.Contains("_")).Select(p => p.Substring(p.LastIndexOf("_") + 1)).Distinct().OrderBy(p => p);
                         if (lastWords.Any())
                         {
-                            File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, "[LastWord]", string.Empty, dictKey)), lastWords.ToArray());
+                            File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, string.Empty, "[LastWord]", dictKey)), lastWords.ToArray());
 
                             if (o.AddByHitsDic)
                             {
-                                var groupedWords = WordsParsing.GetAllWords(lastWords, true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
+                                var groupedWords = WordsParsing.GetAllWords(lastWords, true, 2, -1, true).GroupBy(i => i, StringComparer.OrdinalIgnoreCase).ToDictionary(p => p.Key, p => p.Count());
                                 foreach (var listByHitThreshold in _listByHits)
                                 {
                                     var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
-                                    var listWords = validWords.Select(p => p.Key);
+                                    var listWords = validWords.Select(p => p.Key.ToLower());
                                     if (listWords.Any())
-                                        File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, "[LastWord]", $"[ByHits-AtLeast{listByHitThreshold:D2}]", dictKey)), listWords);
+                                    {
+                                        var key = dictKey.Contains("]") ? $"{dictKey.Replace("]", "][")}]" : $"[{dictKey}]";
+                                        File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, $"[ByHits]", "[LastWord]", $"{key}AtLeast{listByHitThreshold:D2}")), listWords);
+                                    }
                                 }
                             }
                         }
@@ -131,13 +134,16 @@ namespace HashKeys
 
                     if (o.AddByHitsDic)
                     {
-                        var groupedWords = WordsParsing.GetAllWords(dictionaries[dictKey], true, 2, -1, true).GroupBy(i => i).ToDictionary(p => p.Key, p => p.Count());
+                        var groupedWords = WordsParsing.GetAllWords(dictionaries[dictKey], true, 2, -1, true).GroupBy(i => i, StringComparer.OrdinalIgnoreCase).ToDictionary(p => p.Key, p => p.Count());
                         foreach (var listByHitThreshold in _listByHits)
                         {
                             var validWords = groupedWords.Where(p => p.Value >= listByHitThreshold);
-                            var listWords = validWords.Select(p => p.Key);
+                            var listWords = validWords.Select(p => p.Key.ToLower());
                             if (listWords.Any())
-                                File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, string.Empty, $"[ByHits-AtLeast{listByHitThreshold:D2}]", dictKey)), listWords);
+                            {
+                                var key = dictKey.Contains("]") ? $"{dictKey.Replace("]", "][")}]" : $"[{dictKey}]";
+                                File.WriteAllLines(Path.Combine(o.OutputPath, string.Format(o.FormatString, $"[ByHits]", "[AllWords]", $"{key}AtLeast{listByHitThreshold:D2}")), listWords);
+                            }
                         }
                     }
                 }

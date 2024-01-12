@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "WikiScrapper": {
-      "commandName": "Project",
-      "commandLineArgs": "-i \"https://splatoonwiki.org/wiki/Super_Smash_Bros._Ultimate\" -n -s"
-    }
-  }
-}

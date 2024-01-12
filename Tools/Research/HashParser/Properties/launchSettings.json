@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "HashParser": {
-      "commandName": "Project",
-      "commandLineArgs": "-i params11 --track_uncracked"
-    }
-  }
-}

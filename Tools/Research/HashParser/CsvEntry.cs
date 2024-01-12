@@ -16,6 +16,7 @@
     {
         public string KeyOrValue { get; set; }
         public string Hex { get; set; }
+        public string Type { get; set; }
         public string FilePaths { get; set; }
     }
 }

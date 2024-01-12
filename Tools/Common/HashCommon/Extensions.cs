@@ -1,4 +1,4 @@
-﻿namespace HashParser
+﻿namespace HashCommon
 {
     public static class Extensions
     {
@@ -12,7 +12,7 @@
                 result = result.Substring(trimString.Length);
             }
 
-            return result;
+            return result.Replace('\\', '/');
         }
     }
 }
