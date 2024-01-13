@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,16 +15,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="paracobNET">
-      <HintPath>..\Common\HashCommon\paracobNET.dll</HintPath>
+    <Reference Include="Crc32.NET">
+      <HintPath>..\Crc32-NET\Crc32.NET.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="LastWordDictionary.txt">
+    <None Update="LastWordsDictionaryInline.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ParamLabels.csv">
+    <None Update="LastWordsDictionaryNumeric.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="LastWordsDictionaryOther.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="uncracked_hashes_grouped.csv">
