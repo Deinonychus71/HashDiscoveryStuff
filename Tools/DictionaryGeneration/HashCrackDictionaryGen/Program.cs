@@ -145,14 +145,14 @@ namespace HashCrackDictionaryGen
             var allWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
             //Get all english words
             var outputEnglishWords = FilterWithDictionary(allWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][ParamLabels][Language]English", outputEnglishWords.Distinct());
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][ParamLabels][Language][English]", outputEnglishWords.Distinct());
             ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]English_1-4_Letters", outputEnglishWords.Distinct().Where(p => p.Length < 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]English_5+_Letters", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]English_Common", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //Get all japanese words
             var outputJapaneseWords = FilterWithDictionary(allWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][ParamLabels][Language]Japanese", outputJapaneseWords.Distinct());
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][ParamLabels][Language][Japanese]", outputJapaneseWords.Distinct());
             ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Japanese_1-4_Letters", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Japanese_5+_Letters", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][ParamLabels][Specialized]Japanese_Common", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
@@ -239,14 +239,14 @@ namespace HashCrackDictionaryGen
             var allWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
             //Get all english words
             var outputEnglishWords = FilterWithDictionary(allWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[SmashWiiU][Language]English", outputEnglishWords.Distinct());
+            ExportDictionarySplitBySize(folderLanguage, "[SmashWiiU][Language][English]", outputEnglishWords.Distinct());
             ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]English_1-4_Letters", outputEnglishWords.Distinct().Where(p => p.Length < 5));
             ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]English_5+_Letters", outputEnglishWords.Distinct().Where(p => p.Length >= 5));
             ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]English_Common", outputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //Get all japanese words
             var outputJapaneseWords = FilterWithDictionary(allWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[SmashWiiU][Language]Japanese", outputJapaneseWords.Distinct());
+            ExportDictionarySplitBySize(folderLanguage, "[SmashWiiU][Language][Japanese]", outputJapaneseWords.Distinct());
             ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Japanese_1-4_Letters", outputJapaneseWords.Distinct().Where(p => p.Length < 5));
             ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Japanese_5+_Letters", outputJapaneseWords.Distinct().Where(p => p.Length >= 5));
             ExportDictionary(folderSpecialized, "[SmashWiiU][Specialized]Japanese_Common", outputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
@@ -316,14 +316,14 @@ namespace HashCrackDictionaryGen
             var pathAllWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
             //Get all english words
             var pathOutputEnglishWords = FilterWithDictionary(pathAllWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Path][Language]English", pathOutputEnglishWords.Distinct());
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Path][Language][English]", pathOutputEnglishWords.Distinct());
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]English_1-4_Letters", pathOutputEnglishWords.Distinct().Where(p => p.Length < 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]English_5+_Letters", pathOutputEnglishWords.Distinct().Where(p => p.Length >= 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]English_Common", pathOutputEnglishWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
 
             //Get all japanese words
             var pathOutputJapaneseWords = FilterWithDictionary(pathAllWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
-            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Path][Language]Japanese", pathOutputJapaneseWords.Distinct());
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Path][Language][Japanese]", pathOutputJapaneseWords.Distinct());
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Japanese_1-4_Letters", pathOutputJapaneseWords.Distinct().Where(p => p.Length < 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Japanese_5+_Letters", pathOutputJapaneseWords.Distinct().Where(p => p.Length >= 5));
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Japanese_Common", pathOutputJapaneseWords.GroupBy(i => i).Where(p => p.Key.Length >= o.CommonWordsThresholdSizeMin).OrderByDescending(p => p.Count()).Take(o.CommonWordsThreshold).Select(p => p.Key));
@@ -486,7 +486,7 @@ namespace HashCrackDictionaryGen
 
                 foreach (var linesDict in dicts)
                 {
-                    var dictNameSplit = $"{path}[{linesDict.Key:D2}]";
+                    var dictNameSplit = $"{path}{linesDict.Key:D2}";
                     var pathWithExtension = $"{dictNameSplit}.dic";
                     Console.WriteLine($"Write '{dictNameSplit}' to '{pathWithExtension}'");
                     if (linesDict.Value.Count > 0)

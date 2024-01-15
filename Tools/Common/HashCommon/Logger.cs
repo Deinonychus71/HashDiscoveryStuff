@@ -4,7 +4,7 @@ namespace HashCommon
 {
     public static class Logger
     {
-        private readonly static ConsoleColor _defaultConsoleColor = Console.ForegroundColor;
+        private readonly static ConsoleColor _defaultConsoleColor = ConsoleColor.Gray;
 
         public static void LogInformation(string message, bool resetLine = false)
         {

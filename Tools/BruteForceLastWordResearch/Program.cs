@@ -235,7 +235,7 @@ namespace BruteForceLastWordResearch
                 {
                     if (correlatedFlatted.Any())
                     {
-                        Logger.LogSuccess($"{filePathGroup.Key}: {correlatedFlatted} Results.");
+                        Logger.LogSuccess($"{filePathGroup.Key}: {correlatedFlatted.Count} Results.");
                         using (var writer = new StreamWriter(savedPathFileCsv))
                         {
                             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
