@@ -9,6 +9,7 @@ namespace BruteForceHash.GUI
         public const string ASCIIUpperCase = "ETAINOSHRDLUCMFWYGPBVKQJXZ";
         public const string ASCIIDigits = "0123456789";
         public const string ASCIISpecials = "!#$%&' ()*+,-./:;<=>?@[\\]\"^_`{|}~";
+        public const string ASCIISpecialsHashcatSafe = "_,-.:;!'()/<=>[\\]^`{|}~#%&@$*+";
         public const string Latin1Accents = "àáâãäåæçèéêëìíîïðñòóôõöùúûüýńň";
         public const string Latin1Quotes = "¨´‘’“”‟„‛ ‚";
         public const string Latin1Dashes = "_-‑‒–——―";
@@ -36,6 +37,7 @@ namespace BruteForceHash.GUI
                 { nameof(ASCIIUpperCase), ASCIIUpperCase },
                 { nameof(ASCIIDigits), ASCIIDigits },
                 { nameof(ASCIISpecials), ASCIISpecials },
+                { nameof(ASCIISpecialsHashcatSafe), ASCIISpecialsHashcatSafe },
                 { nameof(Latin1Accents), Latin1Accents },
                 { nameof(Latin1Quotes), Latin1Quotes },
                 { nameof(Latin1Dashes), Latin1Dashes },
