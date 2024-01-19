@@ -43,6 +43,14 @@ namespace HashCrackDictionaryGen
             var pathPath = Path.Combine("Dictionaries", "SmashUltimate", "Path");
             GenerateSmashPathDictionaries(o, pathPath, allEnglishWords, allJapaneseWords);
 
+            //Motion
+            var motionPath = Path.Combine("Dictionaries", "SmashUltimate", "Motion");
+            GenerateSmashMotionDictionaries(o, motionPath, allEnglishWords, allJapaneseWords);
+
+            //Motion
+            var soundLabelInfoPath = Path.Combine("Dictionaries", "SmashUltimate", "SoundLabelInfo");
+            GenerateSmashSoundLabelInfoDictionaries(o, soundLabelInfoPath, allEnglishWords, allJapaneseWords);
+
             //Key-Value
             var pathParamLabelsKeyValue = Path.Combine(pathParamLabels, "Key-Value");
             GenerateSmashKeyValueDictionary(o, pathParamLabelsKeyValue);
@@ -339,6 +347,68 @@ namespace HashCrackDictionaryGen
                 .Except(pathOutputJapaneseWords);
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Other", exportOtherList);
             ExportDictionary(folderSpecialized, "[SmashUltimate][Path][Specialized]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
+        }
+
+        static void GenerateSmashMotionDictionaries(Options o, string motionPath, HashSet<string> allEnglishWords, HashSet<string> allJapaneseWords)
+        {
+            var folderLanguage = Path.Combine(motionPath, "Language");
+
+            var allHashesPath = File.ReadAllLines(o.InputFileMotionListLabels);
+            var allHashes = allHashesPath.Distinct();
+            var allWords = WordsParsing.GetAllWords(allHashes);
+
+            //Export Full Dictionary
+            ExportDictionary(motionPath, "[SmashUltimate][Motion]Full", allWords);
+
+            //Remove exclusively digits hashes
+            allHashes = allHashes.Where(p => !_regOnlyDigits.IsMatch(p));
+
+            var pathAllWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
+            //Get all english words
+            var pathOutputEnglishWords = FilterWithDictionary(pathAllWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Motion][Language][English]", pathOutputEnglishWords.Distinct());
+            //Get all japanese words
+            var pathOutputJapaneseWords = FilterWithDictionary(pathAllWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][Motion][Language][Japanese]", pathOutputJapaneseWords.Distinct());
+            //Other
+            var otherList = new List<string>();
+            otherList.AddRange(allWords);
+            var exportOtherList = otherList
+                .Except(pathOutputEnglishWords)
+                .Except(pathOutputJapaneseWords);
+            ExportDictionary(motionPath, "[SmashUltimate][Motion]Other", exportOtherList);
+            ExportDictionary(motionPath, "[SmashUltimate][Motion]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
+        }
+
+        static void GenerateSmashSoundLabelInfoDictionaries(Options o, string soundLabelInfoPath, HashSet<string> allEnglishWords, HashSet<string> allJapaneseWords)
+        {
+            var folderLanguage = Path.Combine(soundLabelInfoPath, "Language");
+
+            var allHashesPath = File.ReadAllLines(o.InputFileSoundLabelInfo);
+            var allHashes = allHashesPath.Distinct();
+            var allWords = WordsParsing.GetAllWords(allHashes);
+
+            //Export Full Dictionary
+            ExportDictionary(soundLabelInfoPath, "[SmashUltimate][SoundLabelInfo]Full", allWords);
+
+            //Remove exclusively digits hashes
+            allHashes = allHashes.Where(p => !_regOnlyDigits.IsMatch(p));
+
+            var pathAllWordsPlusDouble = WordsParsing.GetAllWords(allHashes, false, -1, -1, true);
+            //Get all english words
+            var pathOutputEnglishWords = FilterWithDictionary(pathAllWordsPlusDouble, allEnglishWords, o.MinimumCharactersDeepSearch);
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][SoundLabelInfo][Language][English]", pathOutputEnglishWords.Distinct());
+            //Get all japanese words
+            var pathOutputJapaneseWords = FilterWithDictionary(pathAllWordsPlusDouble, allJapaneseWords, o.MinimumCharactersDeepSearch);
+            ExportDictionarySplitBySize(folderLanguage, "[SmashUltimate][SoundLabelInfo][Language][Japanese]", pathOutputJapaneseWords.Distinct());
+            //Other
+            var otherList = new List<string>();
+            otherList.AddRange(allWords);
+            var exportOtherList = otherList
+                .Except(pathOutputEnglishWords)
+                .Except(pathOutputJapaneseWords);
+            ExportDictionary(soundLabelInfoPath, "[SmashUltimate][SoundLabelInfo]Other", exportOtherList);
+            ExportDictionary(soundLabelInfoPath, "[SmashUltimate][SoundLabelInfo]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
         }
 
         static void GenerateSmashKeyValueDictionary(Options o, string pathParamLabelsKeys)

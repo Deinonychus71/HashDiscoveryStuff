@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BruteForceLastWordResearch
+﻿namespace BruteForceLastWordResearch
 {
     public class CsvEntryUncracked
     {

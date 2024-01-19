@@ -13,6 +13,12 @@ namespace HashCrackDictionaryGen
         [Option('i', "input_file_const_value_table", Required = false, Default = "Sources\\const_value_table.csv", HelpText = "Input const_value_table")]
         public string InputFileConstValueTableFile { get; set; }
 
+        [Option('i', "input_file_motion_list_labels", Required = false, Default = "Sources\\MotionListLabels.txt", HelpText = "Input _motion_list_labels")]
+        public string InputFileMotionListLabels { get; set; }
+
+        [Option('i', "input_file_sound_label_info", Required = false, Default = "Sources\\SoundLabelInfo.txt", HelpText = "Input sound_label_info")]
+        public string InputFileSoundLabelInfo { get; set; }
+
         [Option('i', "input_file_path_hashes", Required = false, Default = "Sources\\Hashes_FullPath.txt", HelpText = "Input path_hashes")]
         public string InputFilePathHashes { get; set; }
 

@@ -46,7 +46,7 @@ namespace BruteForceHash
             _inputValidStartChars = _options.ValidStartingChars;
             _validStartBytes = Encoding.ASCII.GetBytes(_options.ValidStartingChars);
 
-            if (options.HybridIgnoreSizeFilters)
+            if (options.HybridIgnoreSizeFilters && (!string.IsNullOrEmpty(options.HybridDictionary) || !string.IsNullOrEmpty(options.HybridDictionaryFirstWord) || !string.IsNullOrEmpty(options.HybridDictionaryLastWord)))
                 _combinationGeneration = new CombinationGeneratorHybrid(options, stringLength);
             else if (_options.MaxConcatenatedWords == 0)
                 _combinationGeneration = new CombinationGeneratorSimple(options, stringLength);

@@ -3,13 +3,11 @@ using CommandLine;
 using CsvHelper;
 using HashCommon;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BruteForceLastWordResearch
 {
@@ -151,7 +149,7 @@ namespace BruteForceLastWordResearch
                     Logger.LogInformation($"{filePathGroup.Key}: Processing hash {hexEntry.Hex} ({hexEntry.Type})...");
 
                     string[] lastWordsDic;
-                    if(hexEntry.Type == _inlineType)
+                    if (hexEntry.Type == _inlineType)
                         lastWordsDic = lastWordsInlineDic;
                     else if (_numericTypes.Contains(hexEntry.Type))
                         lastWordsDic = lastWordsNumericDic;
