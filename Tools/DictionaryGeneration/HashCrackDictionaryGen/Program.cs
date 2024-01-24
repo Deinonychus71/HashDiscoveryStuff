@@ -55,6 +55,10 @@ namespace HashCrackDictionaryGen
             var pathParamLabelsKeyValue = Path.Combine(pathParamLabels, "Key-Value");
             GenerateSmashKeyValueDictionary(o, pathParamLabelsKeyValue);
 
+            //By File
+            var pathParamLabelsByFile = Path.Combine(pathParamLabels, "ByFile");
+            GenerateSmashByFileDictionary(o, pathParamLabelsByFile);
+
             //MSBT
             var pathMSBT = Path.Combine("Dictionaries", "SmashUltimate", "MSBT");
             GenerateMSBTValueDictionary(o, pathMSBT);
@@ -411,76 +415,112 @@ namespace HashCrackDictionaryGen
             ExportDictionary(soundLabelInfoPath, "[SmashUltimate][SoundLabelInfo]Other_No_Digits", exportOtherList.Where(p => p.All(char.IsLetter)));
         }
 
-        static void GenerateSmashKeyValueDictionary(Options o, string pathParamLabelsKeys)
+        static void GenerateSmashKeyValueDictionary(Options o, string pathParamLabelsKeyValue)
         {
             var options = new HashKeys.Options
             {
                 InputParamLabelsFile = o.InputParamLabelsFile,
                 InputSmashRootPath = o.InputSmashRootPath,
-                OutputPath = pathParamLabelsKeys,
+                OutputPath = pathParamLabelsKeyValue,
                 AddByHitsDic = true,
                 AddLastWordDic = true
             };
 
             //All
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "All");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "All");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[All]{2}.dic";
             options.IncludeFilterPath = "";
             HashKeys.Program.RunProgram(options);
 
             //Assist
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Assist");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Assist");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Assist]{2}.dic";
             options.IncludeFilterPath = "/assist";
             HashKeys.Program.RunProgram(options);
 
             //Boss
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Boss");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Boss");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Boss]{2}.dic";
             options.IncludeFilterPath = "/boss";
             HashKeys.Program.RunProgram(options);
 
             //Enemy
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Enemy");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Enemy");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Enemy]{2}.dic";
             options.IncludeFilterPath = "/enemy";
             HashKeys.Program.RunProgram(options);
 
             //Fighter
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Fighter");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Fighter");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Fighter]{2}.dic";
             options.IncludeFilterPath = "/fighter";
             HashKeys.Program.RunProgram(options);
 
             //Item
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Item");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Item");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Item]{2}.dic";
             options.IncludeFilterPath = "/item";
             HashKeys.Program.RunProgram(options);
 
             //Param
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Param");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Param");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Param]{2}.dic";
             options.IncludeFilterPath = "/param";
             HashKeys.Program.RunProgram(options);
 
             //Pokemon
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Pokemon");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Pokemon");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Pokemon]{2}.dic";
             options.IncludeFilterPath = "/pokemon";
             HashKeys.Program.RunProgram(options);
 
             //Stage
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "Stage");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "Stage");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[Stage]{2}.dic";
             options.IncludeFilterPath = "/stage";
             HashKeys.Program.RunProgram(options);
 
             //UI
-            options.OutputPath = Path.Combine(pathParamLabelsKeys, "UI");
+            options.OutputPath = Path.Combine(pathParamLabelsKeyValue, "UI");
             options.FormatString = "[SmashUltimate][ParamLabels]{0}[Key-Value]{1}[UI]{2}.dic";
             options.IncludeFilterPath = "/ui";
             HashKeys.Program.RunProgram(options);
+        }
+
+        static void GenerateSmashByFileDictionary(Options o, string pathParamLabelsByFile)
+        {
+            var options = new HashKeys.Options
+            {
+                InputParamLabelsFile = o.InputParamLabelsFile,
+                InputSmashRootPath = o.InputSmashRootPath,
+                OutputPath = pathParamLabelsByFile,
+                AddByHitsDic = false,
+                AddLastWordDic = true
+            };
+
+            //Per file
+            options.AddByHitsDic = false;
+            options.AddLastWordDic = true;
+            var filesPrc = Directory.GetFiles(o.InputSmashRootPath, "*.prc", SearchOption.AllDirectories).ToList();
+            filesPrc.AddRange(Directory.GetFiles(o.InputSmashRootPath, "*.stprm", SearchOption.AllDirectories));
+            filesPrc.AddRange(Directory.GetFiles(o.InputSmashRootPath, "*.stdat", SearchOption.AllDirectories));
+            var filterPaths = new string[] { "c01", "c02", "c03", "c04", "c05", "c06", "c07" };
+            foreach (var file in filesPrc)
+            {
+                var inputFileRelative = file.TrimStart(o.InputSmashRootPath);
+                var path = Path.GetDirectoryName(inputFileRelative).Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
+                if (filterPaths.Any(p => path.Contains(p)))
+                    continue;
+                var filename = Path.GetFileName(file);
+                var pathJoined = new List<string>() { pathParamLabelsByFile };
+                if (pathJoined.Contains("c00"))
+                    pathJoined.Remove("c00");
+                pathJoined.AddRange(path);
+                options.OutputPath = Path.Combine(pathJoined.ToArray());
+                options.FormatString = $"[SmashUltimate][ParamLabels][ByFile]{string.Join(string.Empty, path.Select(p => $"[{p}]"))}[{filename}]{{1}}{{2}}.dic";
+                options.IncludeFilterPath = inputFileRelative;
+                HashKeys.Program.RunProgram(options);
+            }
         }
 
         static void GenerateMSBTValueDictionary(Options o, string pathMSBT)
