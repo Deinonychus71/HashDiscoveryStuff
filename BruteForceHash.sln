@@ -39,9 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkylineLoggerWithParams", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ghidra", "Ghidra", "{E7191101-5C9D-420B-89CE-40F291222F02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhidraMainReplaceHexes", "Tools\Ghidra\GhidraMainReplaceHexes\GhidraMainReplaceHexes.csproj", "{E115B8D7-5AFD-49C3-9378-C43C11C20109}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhidraMainReplaceHexes", "Tools\Ghidra\GhidraMainReplaceHexes\GhidraMainReplaceHexes.csproj", "{E115B8D7-5AFD-49C3-9378-C43C11C20109}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashRelationalResearch", "Tools\Research\HashRelationalResearch\HashRelationalResearch.csproj", "{41FDFC40-64C5-4693-A52F-912BBDACBEE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashRelationalResearch", "Tools\Research\HashRelationalResearch\HashRelationalResearch.csproj", "{41FDFC40-64C5-4693-A52F-912BBDACBEE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
