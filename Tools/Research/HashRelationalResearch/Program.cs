@@ -503,7 +503,7 @@ namespace HashRelationalResearch
                     {
                         csv.WriteHeader<CSVEntry>();
                         csv.NextRecord();
-                        foreach (var record in csvExport.Where(p => string.IsNullOrEmpty(p.Label) && !string.IsNullOrEmpty(p.CSources) && string.IsNullOrEmpty(p.PRCSources)))
+                        foreach (var record in csvExport.Where(p => !p.SuspiciousHash && string.IsNullOrEmpty(p.Label) && !string.IsNullOrEmpty(p.CSources) && string.IsNullOrEmpty(p.PRCSources)))
                         {
                             csv.WriteRecord(record);
                             csv.NextRecord();

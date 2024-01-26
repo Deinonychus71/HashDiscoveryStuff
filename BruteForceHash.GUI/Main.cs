@@ -286,9 +286,9 @@ namespace BruteForceHash.GUI
             tvDictLastWord.EndUpdate();
         }
 
-        private void AddDictionaryToTreeView(TreeView tv, string filename, string dictionaryPath)
+        private static void AddDictionaryToTreeView(TreeView tv, string filename, string dictionaryPath)
         {
-            var dictionaryFiles = Regex.Split(filename, @"\[(.*?)\]", RegexOptions.Compiled).Where(p => !string.IsNullOrEmpty(p)).ToArray();
+            var dictionaryFiles = DictionaryFilesRegex().Split(filename).Where(p => !string.IsNullOrEmpty(p)).ToArray();
             var lastKey = string.Empty;
             var currentNodeCollection = tv.Nodes;
             for (int i = 0; i < dictionaryFiles.Length; i++)
@@ -956,7 +956,7 @@ namespace BruteForceHash.GUI
             return GetDictionaryRec(tv.Nodes, string.Empty, allDictionaries);
         }
 
-        private string GetDictionaryRec(TreeNodeCollection trc, string output, string[] allDictionaries)
+        private static string GetDictionaryRec(TreeNodeCollection trc, string output, string[] allDictionaries)
         {
             if (trc != null)
             {
@@ -1426,6 +1426,9 @@ namespace BruteForceHash.GUI
         {
             txtDictLastWordExcludeWords.Text = txtDictExcludeWords.Text;
         }
+
+        [GeneratedRegex(@"\[(.*?)\]", RegexOptions.Compiled)]
+        private static partial Regex DictionaryFilesRegex();
     }
 
     public class TreeViewSorter : IComparer

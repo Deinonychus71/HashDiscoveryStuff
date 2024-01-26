@@ -45,7 +45,7 @@ namespace HashCommon
                 ListIndex = index,
                 TypeKey = prmValue.TypeKey,
                 HashKeyValue = prmKey,
-                HashKeyLabel = solveLabels && dictHashes.ContainsKey(prmKey) ? dictHashes[prmKey] : null,
+                HashKeyLabel = solveLabels && dictHashes.TryGetValue(prmKey, out string valueKeyLabel) ? valueKeyLabel : null,
             };
 
             if (prmValue.TypeKey == ParamType.list)
@@ -60,7 +60,7 @@ namespace HashCommon
             {
                 var valueHex = (ulong)(prmValue as ParamValue).Value;
                 prcNode.Value = valueHex;
-                prcNode.Hash40String = solveLabels && dictHashes.ContainsKey(valueHex) ? dictHashes[valueHex] : null;
+                prcNode.Hash40String = solveLabels && dictHashes.TryGetValue(valueHex, out string valueLabel) ? valueLabel : null;
             }
             else
             {
@@ -208,35 +208,22 @@ namespace HashCommon
 
         private static string GetTypeKey(ParamType paramType)
         {
-            switch (paramType)
+            return paramType switch
             {
-                case ParamType.list:
-                    return "List";
-                case ParamType.@sbyte:
-                    return "SByte";
-                case ParamType.@ushort:
-                    return "UShort";
-                case ParamType.@uint:
-                    return "UInt";
-                case ParamType.@short:
-                    return "Short";
-                case ParamType.@bool:
-                    return "Bool";
-                case ParamType.@byte:
-                    return "Byte";
-                case ParamType.@float:
-                    return "Float";
-                case ParamType.hash40:
-                    return "Hash40";
-                case ParamType.@int:
-                    return "Int";
-                case ParamType.@string:
-                    return "String";
-                case ParamType.@struct:
-                    return "Struct";
-                default:
-                    return "Unknown";
-            }
+                ParamType.list => "List",
+                ParamType.@sbyte => "SByte",
+                ParamType.@ushort => "UShort",
+                ParamType.@uint => "UInt",
+                ParamType.@short => "Short",
+                ParamType.@bool => "Bool",
+                ParamType.@byte => "Byte",
+                ParamType.@float => "Float",
+                ParamType.hash40 => "Hash40",
+                ParamType.@int => "Int",
+                ParamType.@string => "String",
+                ParamType.@struct => "Struct",
+                _ => "Unknown",
+            };
         }
     }
 }

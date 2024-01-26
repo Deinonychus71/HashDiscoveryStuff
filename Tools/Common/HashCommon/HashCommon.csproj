@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="CsvHelper" Version="30.0.3" />
+    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,9 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Crc32.NET">
-      <HintPath>..\..\Crc32-NET\Crc32.NET.dll</HintPath>
-    </Reference>
     <Reference Include="MsbtEditor">
       <HintPath>MsbtEditor.dll</HintPath>
     </Reference>

@@ -1,22 +1,22 @@
-﻿using Force.Crc32;
-using paracobNET;
+﻿using paracobNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Hashing;
 using System.Text;
 
 namespace HashCommon
 {
     public class HashHelper
     {
-        private Dictionary<ulong, string> _paramLabels;
+        private readonly Dictionary<ulong, string> _paramLabels;
 
         public HashHelper(string inputFileParamLabels)
         {
             _paramLabels = GetParamLabels(inputFileParamLabels);
         }
 
-        public ParamFile OpenParamFile(string inputFile)
+        public static ParamFile OpenParamFile(string inputFile)
         {
             var t = new ParamFile();
             t.Open(inputFile);
@@ -28,7 +28,7 @@ namespace HashCommon
             if (hexValue == 0)
                 return string.Empty;
 
-            return _paramLabels.ContainsKey(hexValue) ? _paramLabels[hexValue] : ToHash40(hexValue);
+            return _paramLabels.TryGetValue(hexValue, out string value) ? value : ToHash40(hexValue);
         }
 
         #region Static
@@ -51,7 +51,7 @@ namespace HashCommon
 
         public static string ToHash40(string input)
         {
-            var hex = Crc32Algorithm.Compute(Encoding.UTF8.GetBytes(input));
+            var hex = Crc32.HashToUInt32(Encoding.UTF8.GetBytes(input));
             return $"0x{input.Length:x2}{hex:x8}";
         }
 

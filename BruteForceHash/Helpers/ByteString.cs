@@ -1,13 +1,13 @@
-﻿using Force.Crc32;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
+using System.IO.Hashing;
 using System.Text;
 
 namespace BruteForceHash.Helpers
 {
     public class ByteString
     {
-        public static ConcurrentDictionary<string, uint> _optimizedValues = new ConcurrentDictionary<string, uint>();
+        private static readonly ConcurrentDictionary<string, uint> _optimizedValues = new();
 
         private readonly int _leadPrefixOffset;
         private readonly int _leadSuffixOffset;
@@ -162,7 +162,7 @@ namespace BruteForceHash.Helpers
         #region Crc
         public bool CRC32Check()
         {
-            var testValue = Crc32Algorithm.Compute(_value);
+            var testValue = Crc32.HashToUInt32(_value);
             if (testValue == _hexToFind)
             {
                 if (_canBeOptimized)
@@ -176,7 +176,7 @@ namespace BruteForceHash.Helpers
                         _value[j] = temp[i];
                         j++;
                     }
-                    _hexToFind = Crc32Algorithm.Compute(_value);
+                    _hexToFind = Crc32.HashToUInt32(_value);
                     Cursor = newLength - (temp.Length - Cursor) + _leadSuffixOffset;
                     _canBeOptimized = false;
                     _wasOptimized = true;
