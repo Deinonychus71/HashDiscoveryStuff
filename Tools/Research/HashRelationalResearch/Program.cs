@@ -176,38 +176,39 @@ namespace HashRelationalResearch
             {
                 var inputFileRelative = file.TrimStart(o.InputPrcRootPath);
                 var prcFile = PrcParser.ParsePrcFile(file, paramLabels);
-                var allNodes = prcFile.GetAllNodes().Where(p => p.HashKeyValue > 0).DistinctBy(p => p.HashKeyValue);
+                var allNodes = prcFile.GetAllNodes().Where(p => p.HashKeyValue > 0);
                 addedHashes.Clear();
                 foreach (var node in allNodes)
                 {
                     //Key
                     var hashKeyFormatted = HashHelper.ToHash40(node.HashKeyValue);
-                    if (addedHashes.Contains(hashKeyFormatted))
-                        continue;
 
-                    var hashInfoKey = dictHashInfo.ContainsKey(hashKeyFormatted) ? dictHashInfo[hashKeyFormatted] : null;
-                    ExportEntry exportKeyEntry;
-                    if (!exportEntries.ContainsKey(hashKeyFormatted))
+                    if (!addedHashes.Contains(hashKeyFormatted))
                     {
-                        exportKeyEntry = new ExportEntry()
+                        var hashInfoKey = dictHashInfo.ContainsKey(hashKeyFormatted) ? dictHashInfo[hashKeyFormatted] : null;
+                        ExportEntry exportKeyEntry;
+                        if (!exportEntries.ContainsKey(hashKeyFormatted))
                         {
-                            Hash40Hex = hashKeyFormatted,
-                            Label = hashInfoKey
-                        };
-                        exportEntries.Add(hashKeyFormatted, exportKeyEntry);
-                    }
-                    else
-                    {
-                        exportKeyEntry = exportEntries[hashKeyFormatted];
-                    }
+                            exportKeyEntry = new ExportEntry()
+                            {
+                                Hash40Hex = hashKeyFormatted,
+                                Label = hashInfoKey
+                            };
+                            exportEntries.Add(hashKeyFormatted, exportKeyEntry);
+                        }
+                        else
+                        {
+                            exportKeyEntry = exportEntries[hashKeyFormatted];
+                        }
 
-                    exportKeyEntry.PRCFiles.Add(new ExportPRCFileEntry()
-                    {
-                        File = inputFileRelative,
-                        IsKey = true,
-                        Path = node.GetFullPath(),
-                        Type = node.TypeKeyFormatted
-                    });
+                        exportKeyEntry.PRCFiles.Add(new ExportPRCFileEntry()
+                        {
+                            File = inputFileRelative,
+                            IsKey = true,
+                            Path = node.GetFullPath(),
+                            Type = node.TypeKeyFormatted
+                        });
+                    }
 
                     //Value
                     if (node.IsHash40Value && (ulong)node.Value > 0)
@@ -503,7 +504,7 @@ namespace HashRelationalResearch
                     {
                         csv.WriteHeader<CSVEntry>();
                         csv.NextRecord();
-                        foreach (var record in csvExport.Where(p => !p.SuspiciousHash && string.IsNullOrEmpty(p.Label) && !string.IsNullOrEmpty(p.CSources) && string.IsNullOrEmpty(p.PRCSources)))
+                        foreach (var record in csvExport.Where(p => string.IsNullOrEmpty(p.Label) && !string.IsNullOrEmpty(p.CSources)))
                         {
                             csv.WriteRecord(record);
                             csv.NextRecord();
