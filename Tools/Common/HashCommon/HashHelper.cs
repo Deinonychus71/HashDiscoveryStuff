@@ -1,7 +1,9 @@
-﻿using paracobNET;
+﻿using Force.Crc32;
+using paracobNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace HashCommon
 {
@@ -26,7 +28,7 @@ namespace HashCommon
             if (hexValue == 0)
                 return string.Empty;
 
-            return _paramLabels.ContainsKey(hexValue) ? _paramLabels[hexValue] : $"0x{hexValue:x10}";
+            return _paramLabels.ContainsKey(hexValue) ? _paramLabels[hexValue] : ToHash40(hexValue);
         }
 
         #region Static
@@ -45,6 +47,17 @@ namespace HashCommon
             }
 
             return output;
+        }
+
+        public static string ToHash40(string input)
+        {
+            var hex = Crc32Algorithm.Compute(Encoding.UTF8.GetBytes(input));
+            return $"0x{input.Length:x2}{hex:x8}";
+        }
+
+        public static string ToHash40(ulong input)
+        {
+            return $"0x{input:x10}";
         }
         #endregion
     }

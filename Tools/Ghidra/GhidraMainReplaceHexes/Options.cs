@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace HashCrackDictionaryGen
+namespace GhidraMainReplaceHexes
 {
     public class Options
     {

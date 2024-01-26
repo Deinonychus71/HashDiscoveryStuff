@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace GhidraMainCrackDictionaryGen
+namespace NROCrackDictionaryGen
 {
     public class Options
     {

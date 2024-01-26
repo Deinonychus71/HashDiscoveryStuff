@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BruteForceHash.GUI", "Brute
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F11EE245-C3CD-42B4-ADA8-B220982ECEE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictTransformation", "Tools\DictionaryGeneration\DictAddTypos\DictTransformation.csproj", "{BFD638AF-D601-4E58-8620-460609B719FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictTransformation", "Tools\DictionaryGeneration\DictTransformation\DictTransformation.csproj", "{BFD638AF-D601-4E58-8620-460609B719FA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashCleanup", "Tools\BruteforceCleanup\HashCleanup\HashCleanup.csproj", "{6D861219-69EC-4104-8892-220C137A3030}"
 EndProject
@@ -18,8 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashCrackDictionaryGen", "Tools\DictionaryGeneration\HashCrackDictionaryGen\HashCrackDictionaryGen.csproj", "{E86936D6-488C-41BB-989E-7D4BF8AF8CCB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikiScrapper", "Tools\DictionaryGeneration\WikiScrapper\WikiScrapper.csproj", "{3A5E9ABA-3472-4F41-BB21-10D9B60E700E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashTable", "Tools\Research\HashTable\HashTable.csproj", "{F2249EE5-F149-47F3-965B-CD4FC01C19D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashCommon", "Tools\Common\HashCommon\HashCommon.csproj", "{5AFBA525-D05F-4766-889A-C290024A4F8C}"
 EndProject
@@ -33,15 +31,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashKeys", "Tools\Research\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictSplit", "Tools\DictionaryGeneration\DictSplit\DictSplit.csproj", "{DA9CBB21-63F8-427D-BDD2-D984E41F2B15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhidraMainCrackDictionaryGen", "Tools\DictionaryGeneration\GhidraMainCrackDictionaryGen\GhidraMainCrackDictionaryGen.csproj", "{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NROCrackDictionaryGen", "Tools\DictionaryGeneration\NROCrackDictionaryGen\NROCrackDictionaryGen.csproj", "{DCBF409C-DB5E-4CE7-8785-7D6B9A77F101}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BruteForceLastWordResearch", "Tools\BruteForceLastWordResearch\BruteForceLastWordResearch.csproj", "{D366581D-C326-47E4-A9C6-23730775E298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BruteForceLastWordResearch", "Tools\Research\BruteForceLastWordResearch\BruteForceLastWordResearch.csproj", "{D366581D-C326-47E4-A9C6-23730775E298}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkylineLoggerWithParams", "Tools\SkylineLoggerWithParams\SkylineLoggerWithParams.csproj", "{416ED4B1-C3DF-40E0-91BA-F410E1845915}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkylineLoggerWithParams", "Tools\Common\SkylineLoggerWithParams\SkylineLoggerWithParams.csproj", "{416ED4B1-C3DF-40E0-91BA-F410E1845915}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ghidra", "Ghidra", "{E7191101-5C9D-420B-89CE-40F291222F02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhidraMainReplaceHexes", "Tools\Ghidra\GhidraMainReplaceHexes\GhidraMainReplaceHexes.csproj", "{E115B8D7-5AFD-49C3-9378-C43C11C20109}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashRelationalResearch", "Tools\Research\HashRelationalResearch\HashRelationalResearch.csproj", "{41FDFC40-64C5-4693-A52F-912BBDACBEE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +77,6 @@ Global
 		{3A5E9ABA-3472-4F41-BB21-10D9B60E700E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A5E9ABA-3472-4F41-BB21-10D9B60E700E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A5E9ABA-3472-4F41-BB21-10D9B60E700E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2249EE5-F149-47F3-965B-CD4FC01C19D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2249EE5-F149-47F3-965B-CD4FC01C19D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2249EE5-F149-47F3-965B-CD4FC01C19D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2249EE5-F149-47F3-965B-CD4FC01C19D3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AFBA525-D05F-4766-889A-C290024A4F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5AFBA525-D05F-4766-889A-C290024A4F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AFBA525-D05F-4766-889A-C290024A4F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -109,6 +105,10 @@ Global
 		{E115B8D7-5AFD-49C3-9378-C43C11C20109}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E115B8D7-5AFD-49C3-9378-C43C11C20109}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E115B8D7-5AFD-49C3-9378-C43C11C20109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41FDFC40-64C5-4693-A52F-912BBDACBEE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41FDFC40-64C5-4693-A52F-912BBDACBEE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41FDFC40-64C5-4693-A52F-912BBDACBEE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41FDFC40-64C5-4693-A52F-912BBDACBEE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,7 +119,6 @@ Global
 		{2A69DC36-DECF-44E9-8E22-7A8415C65289} = {63E546C6-21E5-4790-89A7-8C510BE14860}
 		{E86936D6-488C-41BB-989E-7D4BF8AF8CCB} = {61E1588A-5C93-4929-B3CC-4DC39BF07B38}
 		{3A5E9ABA-3472-4F41-BB21-10D9B60E700E} = {61E1588A-5C93-4929-B3CC-4DC39BF07B38}
-		{F2249EE5-F149-47F3-965B-CD4FC01C19D3} = {63E546C6-21E5-4790-89A7-8C510BE14860}
 		{5AFBA525-D05F-4766-889A-C290024A4F8C} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{63E546C6-21E5-4790-89A7-8C510BE14860} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{61E1588A-5C93-4929-B3CC-4DC39BF07B38} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
@@ -131,6 +130,7 @@ Global
 		{416ED4B1-C3DF-40E0-91BA-F410E1845915} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{E7191101-5C9D-420B-89CE-40F291222F02} = {F11EE245-C3CD-42B4-ADA8-B220982ECEE6}
 		{E115B8D7-5AFD-49C3-9378-C43C11C20109} = {E7191101-5C9D-420B-89CE-40F291222F02}
+		{41FDFC40-64C5-4693-A52F-912BBDACBEE8} = {63E546C6-21E5-4790-89A7-8C510BE14860}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C3FFE77-9564-4A8F-969C-773584C00F90}

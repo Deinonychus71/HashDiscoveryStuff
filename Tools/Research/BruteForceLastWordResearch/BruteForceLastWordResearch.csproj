@@ -11,12 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\HashCommon\HashCommon.csproj" />
+    <ProjectReference Include="..\..\Common\HashCommon\HashCommon.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Crc32.NET">
-      <HintPath>..\Crc32-NET\Crc32.NET.dll</HintPath>
+      <HintPath>..\..\Crc32-NET\Crc32.NET.dll</HintPath>
     </Reference>
   </ItemGroup>
 

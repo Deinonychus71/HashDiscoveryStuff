@@ -66,7 +66,7 @@ namespace SkylineLoggerWithParams
                                 Console.Write(string.Join('\n', savedStrLines));
                             }
                         }
-                        catch (SocketException _)
+                        catch
                         {
                             break;
                         }
@@ -78,7 +78,7 @@ namespace SkylineLoggerWithParams
                     Console.WriteLine(e.Message);
                     Thread.Sleep(5000);
                 }
-                catch (Exception _)
+                catch
                 {
                     Thread.Sleep(5000);
                 }

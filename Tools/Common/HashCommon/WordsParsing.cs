@@ -7,17 +7,19 @@ namespace HashCommon
     {
         private readonly static char[] _splitChars = new[] { ',', '.', '\\', '/', '_', '(', ')' };
 
-        public static IEnumerable<string> SplitWords(string input, int currentIndex = 0)
+        public static IEnumerable<string> SplitWords(string input, char[] splitChars = null, int currentIndex = 0)
         {
-            return SplitWords(new string[] { input }, currentIndex);
+            if (splitChars == null)
+                splitChars = _splitChars;
+            return SplitWords(new string[] { input }, splitChars, currentIndex);
         }
 
-        public static IEnumerable<string> SplitWords(IEnumerable<string> input, int currentIndex = 0)
+        public static IEnumerable<string> SplitWords(IEnumerable<string> input, char[] splitChars, int currentIndex = 0)
         {
-            if (currentIndex < _splitChars.Length)
+            if (currentIndex < splitChars.Length)
             {
-                input = input.SelectMany(p => p.Split(_splitChars[currentIndex], System.StringSplitOptions.RemoveEmptyEntries));
-                return SplitWords(input, currentIndex + 1);
+                input = input.SelectMany(p => p.Split(splitChars[currentIndex], System.StringSplitOptions.RemoveEmptyEntries));
+                return SplitWords(input, splitChars, currentIndex + 1);
             }
             return input;
         }
@@ -52,7 +54,7 @@ namespace HashCommon
             var output = new List<string>();
             foreach (var line in lines)
             {
-                var splitWords = SplitWords(new string[1] { line }, 0).Distinct();
+                var splitWords = SplitWords(new string[1] { line }, _splitChars, 0).Distinct();
                 foreach (var splitWord in splitWords)
                 {
                     if (minLength != -1 && splitWord.Length < minLength)

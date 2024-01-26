@@ -9,10 +9,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="paracobNET.dll" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Crc32.NET">
+      <HintPath>..\..\Crc32-NET\Crc32.NET.dll</HintPath>
+    </Reference>
     <Reference Include="MsbtEditor">
       <HintPath>MsbtEditor.dll</HintPath>
     </Reference>
@@ -31,6 +39,9 @@
     <None Update="Sources\dict_japanese.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Sources\effect_handle_flags.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Sources\Hashes_FullPath.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -44,6 +55,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Sources\SoundLabelInfo.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Sources\SQBLabels.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
