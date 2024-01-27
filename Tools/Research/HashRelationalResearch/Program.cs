@@ -14,8 +14,8 @@ namespace HashRelationalResearch
 {
     class Program
     {
-        private static readonly string[] _functionExclude = new string[] { "{", "}", "//", "#", " ", "LAB", "joined", "code" };
-        private static readonly char[] _seekHexSeparators = new char[] { ' ', ',', ')', '(', '[', ']', '{', '}', ';', ':', 'U' };
+        private static readonly string[] _functionExclude = ["{", "}", "//", "#", " ", "LAB", "joined", "code"];
+        private static readonly char[] _seekHexSeparators = [' ', ',', ')', '(', '[', ']', '{', '}', ';', ':', 'U'];
 
         static void Main(string[] args)
         {
@@ -36,15 +36,15 @@ namespace HashRelationalResearch
 
             //Load ParamLabels
             Console.WriteLine($"Loading ParamLabels '{o.InputParamLabelsFile}'...");
-            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputParamLabelsFile, null, false), "ParamLabels");
+            AppendToHashInfo(dictHashInfo, File.ReadAllLines(o.InputParamLabelsFile).Select(p => p.Split(',', StringSplitOptions.RemoveEmptyEntries)).Where(p => p.Length == 2).ToDictionary(p => p[0], p => p[1]), "ParamLabels");
             Console.WriteLine($"Loading MotionList '{o.InputFileMotionListLabels}'...");
-            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFileMotionListLabels, new[] { '/', '.' }, true), "MotionList");
+            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFileMotionListLabels, ['/', '.'], true), "MotionList");
             Console.WriteLine($"Loading Paths '{o.InputFilePathHashes}'...");
-            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFilePathHashes, new[] { '/' }, true), "Paths");
+            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFilePathHashes, ['/'], true), "Paths");
             Console.WriteLine($"Loading SoundInfo '{o.InputFileSoundLabelInfo}'...");
-            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFileSoundLabelInfo, new[] { '/', '.' }, true), "SoundInfo");
+            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFileSoundLabelInfo, ['/', '.'], true), "SoundInfo");
             Console.WriteLine($"Loading SQB '{o.InputFileSQBLabels}'...");
-            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFileSQBLabels, new[] { '/', '.' }, true), "SQB");
+            AppendToHashInfo(dictHashInfo, GetHashFile(o.InputFileSQBLabels, ['/', '.'], true), "SQB");
             Console.WriteLine($"Loading Effects '{o.InputFileEffectsLabels}'...");
             AppendEffectsFileToHashInfo(dictHashInfo, o.InputFileEffectsLabels, "Effects");
 
@@ -74,7 +74,7 @@ namespace HashRelationalResearch
         private static Dictionary<string, string> GetHashFile(string input, char[] splitChars, bool useCache = false)
         {
             var cachedFile = $"{input}.hash";
-            if (File.Exists(cachedFile))
+            if (useCache && File.Exists(cachedFile))
             {
                 var cachedLines = File.ReadAllLines(input);
                 return cachedLines.Select(p => p.Split(',', StringSplitOptions.RemoveEmptyEntries)).Where(p => p.Length > 1).ToDictionary(p => p[0], p => p[1]);
@@ -85,15 +85,13 @@ namespace HashRelationalResearch
             foreach (var line in lines)
             {
                 var hexString = HashHelper.ToHash40(line);
-                if (!hexes.ContainsKey(hexString))
-                    hexes.Add(hexString, line);
+                hexes.TryAdd(hexString, line);
 
                 var allWords = WordsParsing.SplitWords(line, splitChars);
                 foreach (var word in allWords)
                 {
                     var hexString2 = HashHelper.ToHash40(word);
-                    if (!hexes.ContainsKey(hexString2))
-                        hexes.Add(hexString2, word);
+                    hexes.TryAdd(hexString2, word);
                 }
             }
 
@@ -107,18 +105,15 @@ namespace HashRelationalResearch
 
             using (var reader = new StreamReader(input))
             {
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-                {
-                    csvEffects = csv.GetRecords<CSVEffect>().ToList();
-                }
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+                csvEffects = csv.GetRecords<CSVEffect>().ToList();
             }
 
             foreach (var csvEffect in csvEffects)
             {
                 var value = csvEffect.Name.ToLower();
                 var hexString = HashHelper.ToHash40(value);
-                HashInfo hashInfo;
-                if (!dictHashInfo.ContainsKey(hexString))
+                if (!dictHashInfo.TryGetValue(hexString, out HashInfo hashInfo))
                 {
                     hashInfo = new HashInfo()
                     {
@@ -127,8 +122,6 @@ namespace HashRelationalResearch
                     };
                     dictHashInfo.Add(hexString, hashInfo);
                 }
-                else
-                    hashInfo = dictHashInfo[hexString];
 
                 if (!hashInfo.Sources.Contains(source))
                     hashInfo.Sources.Add(source);
@@ -141,8 +134,7 @@ namespace HashRelationalResearch
         {
             foreach (var dictHashesEntry in dictHashes)
             {
-                HashInfo hashInfo;
-                if (!dictHashInfo.ContainsKey(dictHashesEntry.Key))
+                if (!dictHashInfo.TryGetValue(dictHashesEntry.Key, out HashInfo hashInfo))
                 {
                     hashInfo = new HashInfo()
                     {
@@ -151,8 +143,6 @@ namespace HashRelationalResearch
                     };
                     dictHashInfo.Add(dictHashesEntry.Key, hashInfo);
                 }
-                else
-                    hashInfo = dictHashInfo[dictHashesEntry.Key];
 
                 if (!hashInfo.Sources.Contains(source))
                     hashInfo.Sources.Add(source);
@@ -185,9 +175,8 @@ namespace HashRelationalResearch
 
                     if (!addedHashes.Contains(hashKeyFormatted))
                     {
-                        var hashInfoKey = dictHashInfo.ContainsKey(hashKeyFormatted) ? dictHashInfo[hashKeyFormatted] : null;
-                        ExportEntry exportKeyEntry;
-                        if (!exportEntries.ContainsKey(hashKeyFormatted))
+                        dictHashInfo.TryGetValue(hashKeyFormatted, out HashInfo hashInfoKey);
+                        if (!exportEntries.TryGetValue(hashKeyFormatted, out ExportEntry exportKeyEntry))
                         {
                             exportKeyEntry = new ExportEntry()
                             {
@@ -195,10 +184,6 @@ namespace HashRelationalResearch
                                 Label = hashInfoKey
                             };
                             exportEntries.Add(hashKeyFormatted, exportKeyEntry);
-                        }
-                        else
-                        {
-                            exportKeyEntry = exportEntries[hashKeyFormatted];
                         }
 
                         exportKeyEntry.PRCFiles.Add(new ExportPRCFileEntry()
@@ -217,9 +202,8 @@ namespace HashRelationalResearch
                         if (addedHashes.Contains(hash40Formatted))
                             continue;
 
-                        var hashInfoValue = dictHashInfo.ContainsKey(hash40Formatted) ? dictHashInfo[hash40Formatted] : null;
-                        ExportEntry exportValueEntry;
-                        if (!exportEntries.ContainsKey(hash40Formatted))
+                        dictHashInfo.TryGetValue(hash40Formatted, out HashInfo hashInfoValue);
+                        if (!exportEntries.TryGetValue(hash40Formatted, out ExportEntry exportValueEntry))
                         {
                             exportValueEntry = new ExportEntry()
                             {
@@ -227,10 +211,6 @@ namespace HashRelationalResearch
                                 Label = hashInfoValue
                             };
                             exportEntries.Add(hash40Formatted, exportValueEntry);
-                        }
-                        else
-                        {
-                            exportValueEntry = exportEntries[hash40Formatted];
                         }
 
                         exportValueEntry.PRCFiles.Add(new ExportPRCFileEntry()
@@ -277,7 +257,7 @@ namespace HashRelationalResearch
                     {
                         if (currentFunctionEntry != null && (currentFunctionEntry.Hashes.Count > 0))
                         {
-                            while (currentFunctionContent[currentFunctionContent.Count - 1].Trim() == string.Empty)
+                            while (currentFunctionContent[^1].Trim() == string.Empty)
                                 currentFunctionContent.RemoveAt(currentFunctionContent.Count - 1);
                             currentFunctionEntry.Content = string.Join("\r\n", currentFunctionContent);
                             functionDefinitions.Add(currentFunctionEntry);
@@ -286,7 +266,7 @@ namespace HashRelationalResearch
                         {
                             Function = fileContent[i]
                         };
-                        currentFunctionContent = new List<string>();
+                        currentFunctionContent = [];
                         currentFunctionLine = 1;
                     }
 
@@ -338,7 +318,7 @@ namespace HashRelationalResearch
                             currentFunctionEntry.Hashes.Add(word);
 
                         //Solve the word, if possible
-                        var label = dictHashInfo.ContainsKey(word) ? dictHashInfo[word] : null;
+                        dictHashInfo.TryGetValue(word, out HashInfo label);
                         if (label == null)
                         {
                             if (j == 0)
@@ -359,8 +339,7 @@ namespace HashRelationalResearch
                             }
                         }
 
-                        ExportEntry exportEntry;
-                        if (!exportEntries.ContainsKey(word))
+                        if (!exportEntries.TryGetValue(word, out ExportEntry exportEntry))
                         {
                             exportEntry = new ExportEntry()
                             {
@@ -372,7 +351,6 @@ namespace HashRelationalResearch
                         }
                         else
                         {
-                            exportEntry = exportEntries[word];
                             if (!suspiciousHex)
                                 exportEntry.SuspiciousHex = false;
                         }
@@ -399,7 +377,7 @@ namespace HashRelationalResearch
                 //Last function
                 if (currentFunctionEntry.Hashes.Count > 0)
                 {
-                    while (currentFunctionContent[currentFunctionContent.Count - 1].Trim() == string.Empty)
+                    while (currentFunctionContent[^1].Trim() == string.Empty)
                         currentFunctionContent.RemoveAt(currentFunctionContent.Count - 1);
                     currentFunctionEntry.Content = string.Join("\r\n", currentFunctionContent);
                     functionDefinitions.Add(currentFunctionEntry);
@@ -420,10 +398,10 @@ namespace HashRelationalResearch
                 var prc = entry.PRCFiles.FirstOrDefault();
                 var c = entry.CFiles.FirstOrDefault();
                 var functionInstance = c?.Instances.FirstOrDefault();
-                var fileFunctions = functionInstance != null && functionsDefinitions.ContainsKey(c.File) ? functionsDefinitions[c.File] : new List<ExportFunctionEntry>();
+                var fileFunctions = functionInstance != null && functionsDefinitions.TryGetValue(c.File, out List<ExportFunctionEntry> fileFunctionsValue) ? fileFunctionsValue : [];
                 var function = fileFunctions != null && functionInstance != null ? fileFunctions[functionInstance.FunctionId] : null;
                 var functionName = function?.Function;
-                var relatedKnownHashes = function != null ? function.Hashes.Where(p => dictHashInfo.ContainsKey(p)).Select(p => dictHashInfo[p].Label) : new List<string>();
+                var relatedKnownHashes = function != null ? function.Hashes.Where(dictHashInfo.ContainsKey).Select(p => dictHashInfo[p].Label) : new List<string>();
                 var relatedUnknownHashes = function != null ? function.Hashes.Where(p => !dictHashInfo.ContainsKey(p) && !exportEntries[p].SuspiciousHex) : new List<string>();
                 var relatedSuspiciousHashes = function != null ? function.Hashes.Where(p => !dictHashInfo.ContainsKey(p) && exportEntries[p].SuspiciousHex) : new List<string>();
 
@@ -432,16 +410,16 @@ namespace HashRelationalResearch
                     Hash = hash40,
                     Label = entry.Label?.Label,
                     LabelSources = entry.Label?.Sources != null ? string.Join(", ", entry.Label.Sources) : null,
-                    PRCSources = string.Join(", ", entry.PRCFiles.Select(p => p.File).Distinct().Take(5)),
+                    PRCSources = string.Join(", ", entry.PRCFiles.Select(p => p.File).Distinct().OrderBy(p => p).Take(5)),
                     PRCType = prc != null && prc.IsKey ? "Key" : prc?.Type,
                     PRCFirstPath = entry.PRCFiles.FirstOrDefault()?.Path,
-                    CSources = string.Join(", ", entry.CFiles.Select(p => p.File).Distinct().Take(5)),
+                    CSources = string.Join(", ", entry.CFiles.Select(p => p.File).Distinct().OrderBy(p => p).Take(5)),
                     CFirstFunction = functionName,
                     CFirstLine = functionInstance?.FileLine.ToString(),
                     CFirstCode = functionInstance?.LineCode,
-                    RelatedKnownHashes = string.Join(", ", relatedKnownHashes),
-                    RelatedUnknownHashes = string.Join(", ", relatedUnknownHashes),
-                    RelatedSuspiciousHashes = string.Join(", ", relatedSuspiciousHashes),
+                    RelatedKnownHashes = string.Join(", ", relatedKnownHashes.OrderBy(p => p).Take(50)),
+                    RelatedUnknownHashes = string.Join(", ", relatedUnknownHashes.OrderBy(p => p).Take(50)),
+                    RelatedSuspiciousHashes = string.Join(", ", relatedSuspiciousHashes.OrderBy(p => p).Take(50)),
                     SuspiciousHash = entry.SuspiciousHex,
                 };
                 csvExport.Add(csvEntry);
@@ -449,84 +427,35 @@ namespace HashRelationalResearch
 
             if (!string.IsNullOrEmpty(o.OutputFileCSV))
             {
-                Console.WriteLine($"Writing to CSV '{o.OutputFileCSV}'...");
-                using (var writer = new StreamWriter(o.OutputFileCSV))
-                {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                    {
-                        csv.WriteHeader<CSVEntry>();
-                        csv.NextRecord();
-                        foreach (var record in csvExport)
-                        {
-                            csv.WriteRecord(record);
-                            csv.NextRecord();
-                        }
-                    }
-                }
+                GenerateCSV(o.OutputFileCSV, csvExport);
 
                 var fileUncracked = $"{Path.GetFileNameWithoutExtension(o.OutputFileCSV)}_uncracked{Path.GetExtension(o.OutputFileCSV)}";
-                Console.WriteLine($"Writing to CSV '{fileUncracked}'...");
-                using (var writer = new StreamWriter(fileUncracked))
-                {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                    {
-                        csv.WriteHeader<CSVEntry>();
-                        csv.NextRecord();
-                        foreach (var record in csvExport.Where(p => string.IsNullOrEmpty(p.Label)))
-                        {
-                            csv.WriteRecord(record);
-                            csv.NextRecord();
-                        }
-                    }
-                }
+                GenerateCSV(fileUncracked, csvExport.Where(p => string.IsNullOrEmpty(p.Label)));
 
                 var fileNRO = $"{Path.GetFileNameWithoutExtension(o.OutputFileCSV)}_nro{Path.GetExtension(o.OutputFileCSV)}";
-                Console.WriteLine($"Writing to CSV NRO only '{fileNRO}'...");
-                using (var writer = new StreamWriter(fileNRO))
-                {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                    {
-                        csv.WriteHeader<CSVEntry>();
-                        csv.NextRecord();
-                        foreach (var record in csvExport.Where(p => !string.IsNullOrEmpty(p.CSources)))
-                        {
-                            csv.WriteRecord(record);
-                            csv.NextRecord();
-                        }
-                    }
-                }
+                GenerateCSV(fileNRO, csvExport.Where(p => !string.IsNullOrEmpty(p.CSources)));
 
                 var fileNROUncracked = $"{Path.GetFileNameWithoutExtension(o.OutputFileCSV)}_nro_uncracked{Path.GetExtension(o.OutputFileCSV)}";
-                Console.WriteLine($"Writing to CSV NRO Uncracked only '{fileNROUncracked}'...");
-                using (var writer = new StreamWriter(fileNROUncracked))
-                {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                    {
-                        csv.WriteHeader<CSVEntry>();
-                        csv.NextRecord();
-                        foreach (var record in csvExport.Where(p => string.IsNullOrEmpty(p.Label) && !string.IsNullOrEmpty(p.CSources)))
-                        {
-                            csv.WriteRecord(record);
-                            csv.NextRecord();
-                        }
-                    }
-                }
+                GenerateCSV(fileNROUncracked, csvExport.Where(p => string.IsNullOrEmpty(p.Label) && !string.IsNullOrEmpty(p.CSources)));
 
                 var filePRC = $"{Path.GetFileNameWithoutExtension(o.OutputFileCSV)}_prc{Path.GetExtension(o.OutputFileCSV)}";
-                Console.WriteLine($"Writing to CSV PRC only '{filePRC}'...");
-                using (var writer = new StreamWriter(filePRC))
-                {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                    {
-                        csv.WriteHeader<CSVEntry>();
-                        csv.NextRecord();
-                        foreach (var record in csvExport.Where(p => !string.IsNullOrEmpty(p.PRCSources)))
-                        {
-                            csv.WriteRecord(record);
-                            csv.NextRecord();
-                        }
-                    }
-                }
+                GenerateCSV(filePRC, csvExport.Where(p => !string.IsNullOrEmpty(p.PRCSources)));
+            }
+        }
+
+        private static void GenerateCSV(string input, IEnumerable<CSVEntry> csvExport)
+        {
+            Console.WriteLine($"Writing CSV '{input}'...");
+
+            using var writer = new StreamWriter(input);
+            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+            csv.WriteHeader<CSVEntry>();
+            csv.NextRecord();
+            foreach (var record in csvExport)
+            {
+                csv.WriteRecord(record);
+                csv.NextRecord();
             }
         }
     }

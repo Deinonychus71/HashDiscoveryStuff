@@ -29,7 +29,7 @@ namespace HashCommon
 
         private static PrcStruct ParseStruct(Dictionary<ulong, string> dictHashes, PrcNode parentNode, Hash40Pairs<IParam> nodes, bool solveLabels)
         {
-            var o = new PrcStruct() { Nodes = new List<PrcNode>() };
+            var o = new PrcStruct() { Nodes = [] };
 
             foreach (var prm in nodes)
             {
@@ -205,7 +205,7 @@ namespace HashCommon
 
         public PrcNode()
         {
-            Children = new List<PrcNode>();
+            Children = [];
         }
 
         private static string GetTypeKey(ParamType paramType)
