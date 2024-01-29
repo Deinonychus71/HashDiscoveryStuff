@@ -85,26 +85,23 @@ namespace HashRelationalResearch.GUI.Models
 
     public class HbtFileDictionaryAttack
     {
-        public HbtFileDictionary DictionaryMain { get; set; } = new();
-        public string DictionaryMainFilterFirstFrom { get; set; } = string.Empty;
-        public string DictionaryMainFilterFirstTo { get; set; } = string.Empty;
-        public int DictionaryMainCustomWordsMinimumInHash { get; set; }
-        public bool DictionaryMainCustomWordsMinimumInHashUseTypos { get; set; }
-        public bool DictionaryMainCacheDynamicPrefix { get; set; }
-        public bool DictionaryMainCacheDynamicSuffix { get; set; }
+        public HbtFileDictionary DictionaryMain { get; set; } = new()
+        {
+            UseDictionary = true
+        };
         public HbtFileDictionary DictionaryFirstWord { get; set; } = new();
         public HbtFileDictionary DictionaryLastWord { get; set; } = new();
     }
 
     public class HbtFileDictionary
     {
-        public bool UseDictionary { get; set; }
+        public bool UseDictionary { get; set; } = false;
         public string? Dictionaries { get; set; }
-        public bool SkipDigits { get; set; }
-        public bool SkipSpecials { get; set; }
-        public bool ForceLowercase { get; set; }
-        public bool AddTypos { get; set; }
-        public bool ReverseOrder { get; set; }
+        public bool SkipDigits { get; set; } = false;
+        public bool SkipSpecials { get; set; } = true;
+        public bool ForceLowercase { get; set; } = true;
+        public bool AddTypos { get; set; } = false;
+        public bool ReverseOrder { get; set; } = false;
 
         public bool UseCustomWords { get; set; }
         public bool CustomWords { get; set; }
@@ -116,6 +113,15 @@ namespace HashRelationalResearch.GUI.Models
         public bool UseExcludeWords { get; set; }
         public List<string> ExcludeWords { get; set; } = [];
         public bool ExcludePartialWords { get; set; }
+
+        //Only for Main
+        public string MainFilterFirstFrom { get; set; } = string.Empty;
+        public string MainFilterFirstTo { get; set; } = string.Empty;
+        public bool MainCacheDynamicPrefix { get; set; } = true;
+        public bool MainCacheDynamicSuffix { get; set; } = true;
+
+        public int MainCustomWordsMinimumInHash { get; set; } = 0;
+        public bool MainCustomWordsMinimumInHashUseTypos { get; set; } = false;
     }
 
     public class HbtFileCharacterAttack

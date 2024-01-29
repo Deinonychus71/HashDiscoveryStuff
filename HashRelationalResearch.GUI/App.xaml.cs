@@ -48,6 +48,7 @@ namespace HashRelationalResearch.GUI
             services.Configure<AppConfiguration>(configuration);
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IHashDBService, HashDBService>();
+            services.AddSingleton<IDictionaryService, DictionaryService>();
 
             services.AddScoped<MainWindow>();
             services.AddScoped<MainWindowVM>();
@@ -55,6 +56,7 @@ namespace HashRelationalResearch.GUI
             services.AddTransient<ResearchNroVM>();
             services.AddTransient<ResearchPrcVM>();
             services.AddTransient<HashCrackVM>();
+            services.AddTransient<HashCrackDictionaryTabVM>();
 
             return services;
         }

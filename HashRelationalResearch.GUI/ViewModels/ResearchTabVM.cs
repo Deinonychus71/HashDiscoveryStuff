@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashCommon;
 using HashRelationalResearch.GUI.Helpers;
+using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
@@ -19,6 +20,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         private ResearchNroVM _nroVM;
         private ResearchPrcVM _prcVM;
         private HashCrackVM _hashCrackVM;
+        private HbtFile? _hbtFile;
 
         private string _tabLabel = DEFAULT_TAB_NAME;
         private string? _hashValue;
@@ -125,12 +127,16 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         public ResearchTabVM(IHashDBService hashDBService, ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
         {
+            _hbtFile = new HbtFile();
+
             _hashDBService = hashDBService;
             _nroVM = researchNroVM;
             _prcVM = researchPrcVM;
             _hashCrackVM = hashCrackVM;
             HashValueChanged = new RelayCommand(LoadNewHash);
             HashLabelChanged = new RelayCommand(TestHashLabel);
+
+            _hashCrackVM.LoadHbtFile(_hbtFile);
         }
 
         private void RefreshHash()

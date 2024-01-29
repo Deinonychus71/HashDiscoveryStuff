@@ -3,10 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vm="clr-namespace:HashRelationalResearch.GUI.ViewModels"
-             xmlns:h="clr-namespace:HashRelationalResearch.GUI.Helpers"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:uc="clr-namespace:HashRelationalResearch.GUI.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="500">
     <TabControl>
@@ -31,24 +27,33 @@
                 </Grid.RowDefinitions>
                 
                 <!-- Left Panel -->
-                <CheckBox Grid.Row="0" Grid.Column="0" Content="Use"/>
-                <CheckBox Grid.Row="1" Grid.Column="0" Content="Skip Digits"/>
-                <CheckBox Grid.Row="2" Grid.Column="0" Content="Skip Specials"/>
-                <CheckBox Grid.Row="3" Grid.Column="0" Content="Force Lowercase"/>
-                <CheckBox Grid.Row="4" Grid.Column="0" Content="Add Typos"/>
-                <CheckBox Grid.Row="5" Grid.Column="0" Content="Reverse Order"/>
-                <StackPanel Grid.Row="6" Grid.Column="0" Orientation="Vertical">
+                <CheckBox Grid.Row="0" Grid.Column="0" Content="Use" IsChecked="{Binding HbtFileDictionary.UseDictionary, Mode=TwoWay}"/>
+                <CheckBox Grid.Row="1" Grid.Column="0" Content="Skip Digits" IsChecked="{Binding HbtFileDictionary.SkipDigits, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
+                <CheckBox Grid.Row="2" Grid.Column="0" Content="Skip Specials" IsChecked="{Binding HbtFileDictionary.SkipSpecials, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
+                <CheckBox Grid.Row="3" Grid.Column="0" Content="Force Lowercase" IsChecked="{Binding HbtFileDictionary.ForceLowercase, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
+                <CheckBox Grid.Row="4" Grid.Column="0" Content="Add Typos" IsChecked="{Binding HbtFileDictionary.AddTypos, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
+                <CheckBox Grid.Row="5" Grid.Column="0" Content="Reverse Order" IsChecked="{Binding HbtFileDictionary.ReverseOrder, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
+                <StackPanel Grid.Row="6" Grid.Column="0" Orientation="Vertical" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{Binding IsMainDictionary, Converter={StaticResource Bool2Visibility}}">
                     <Label Content="First Word from:"/>
-                    <TextBox Width="Auto"/>
+                    <TextBox Width="Auto" Text="{Binding HbtFileDictionary.MainFilterFirstFrom, Mode=TwoWay}"/>
                     <Label Content="to:"/>
-                    <TextBox Width="Auto"/>
+                    <TextBox Width="Auto" Text="{Binding HbtFileDictionary.MainFilterFirstTo, Mode=TwoWay}"/>
                 </StackPanel>
-                <CheckBox Grid.Row="8" Grid.Column="0" Content="Cache Prefix"/>
-                <CheckBox Grid.Row="9" Grid.Column="0" Content="Cache Suffix"/>
-                <Button Grid.Row="10" Grid.Column="0" Content="Unselect All" Margin="10,0"/>
+                <CheckBox Grid.Row="8" Grid.Column="0" Content="Cache Prefix" IsChecked="{Binding HbtFileDictionary.MainCacheDynamicPrefix, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{Binding IsMainDictionary, Converter={StaticResource Bool2Visibility}}"/>
+                <CheckBox Grid.Row="9" Grid.Column="0" Content="Cache Suffix" IsChecked="{Binding HbtFileDictionary.MainCacheDynamicSuffix, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{Binding IsMainDictionary, Converter={StaticResource Bool2Visibility}}"/>
+                <Button Grid.Row="10" Grid.Column="0" Content="Unselect All" Margin="10,0" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
 
                 <!-- Right Panel -->
-                <TreeView Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" />
+                <TreeView Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" ItemsSource="{Binding TreeViewItems, Mode=OneWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
+                                <Label Content="{Binding Name}"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
             </Grid>
         </TabItem>
         <TabItem Header="Custom Words"/>

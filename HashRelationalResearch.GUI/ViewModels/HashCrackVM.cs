@@ -16,13 +16,13 @@ namespace HashRelationalResearch.GUI.ViewModels
         private HashCrackDictionaryTabVM _mainDictionaryVM;
         private HashCrackDictionaryTabVM _firstWordVM;
         private HashCrackDictionaryTabVM _lastWordVM;
-        private HbtFile _hbtFile;
+        private HbtFile? _hbtFile;
 
         private string? _selectedExcludePattern;
         private string? _selectedIncludePattern;
 
         #region Properties
-        public HbtFile HbtFile
+        public HbtFile? HbtFile
         {
             get => _hbtFile;
             set
@@ -38,7 +38,8 @@ namespace HashRelationalResearch.GUI.ViewModels
             set
             {
                 _selectedExcludePattern = value;
-                HbtFile.WordFiltering.ExcludePatterns = value ?? string.Empty;
+                if (HbtFile != null)
+                    HbtFile.WordFiltering.ExcludePatterns = value ?? string.Empty;
                 OnPropertyChanged(nameof(HbtFile));
                 OnPropertyChanged(nameof(SelectedExcludePattern));
             }
@@ -50,7 +51,8 @@ namespace HashRelationalResearch.GUI.ViewModels
             set
             {
                 _selectedIncludePattern = value;
-                HbtFile.WordFiltering.IncludePatterns = value ?? string.Empty;
+                if (HbtFile != null)
+                    HbtFile.WordFiltering.IncludePatterns = value ?? string.Empty;
                 OnPropertyChanged(nameof(HbtFile));
                 OnPropertyChanged(nameof(SelectedIncludePattern));
             }
@@ -107,7 +109,8 @@ namespace HashRelationalResearch.GUI.ViewModels
         public int[] AdvancedMinWordsList { get; set; } = GetIntegerList(1, 10);
         #endregion
 
-        public HashCrackVM(IConfigurationService configurationService)
+        public HashCrackVM(IConfigurationService configurationService, HashCrackDictionaryTabVM mainDictionaryVM, 
+            HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
         {
             _configurationService = configurationService;
 
@@ -115,10 +118,18 @@ namespace HashRelationalResearch.GUI.ViewModels
             ExcludePatternsList = configurationService.GetExcludePatterns();
             IncludePatternsList = configurationService.GetIncludePatterns();
 
-            _mainDictionaryVM = new HashCrackDictionaryTabVM();
-            _firstWordVM = new HashCrackDictionaryTabVM();
-            _lastWordVM = new HashCrackDictionaryTabVM();
-            _hbtFile = new HbtFile();
+            _mainDictionaryVM = mainDictionaryVM;
+            _mainDictionaryVM.IsMainDictionary = true;
+            _firstWordVM = firstWordDictionaryVM;
+            _lastWordVM = lastWordDictionaryVM;
+        }
+
+        public void LoadHbtFile(HbtFile hbtFile)
+        {
+            HbtFile = hbtFile;
+            _mainDictionaryVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryMain);
+            _firstWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryFirstWord);
+            _lastWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryLastWord);
         }
 
         private static int[] GetIntegerList(int minValue, int maxValue)

@@ -342,4 +342,5 @@ healthchecksdb
 **/Tools/**/*.dic
 **/BruteForceHash/**/*.dic
 **/BruteForceHash.GUI/**/*.dic
+**/HashRelationalResearch.GUI/**/*.dic
 **/**/launchSettings.json

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:vm="clr-namespace:HashRelationalResearch.GUI.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:h="clr-namespace:HashRelationalResearch.GUI.Helpers"
              xmlns:uc="clr-namespace:HashRelationalResearch.GUI.Controls"
@@ -21,6 +20,7 @@
             <RowDefinition Height="160"/>
             <RowDefinition Height="150"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         
         <!-- Header -->
@@ -233,15 +233,22 @@
         
         <!-- Right Panel -->
         <TabControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="5">
-            <TabItem Header="Main Dictionary">
-                <uc:HashCrackDictionaryTab DataContext="{Binding MainDictionaryVM, Mode=OneWay}"/>
-            </TabItem>
-            <TabItem Header="First Word Overrides">
-                <uc:HashCrackDictionaryTab DataContext="{Binding FirstWordVM, Mode=OneWay}"/>
-            </TabItem>
-            <TabItem Header="Last Word Overrides">
-                <uc:HashCrackDictionaryTab DataContext="{Binding LastWordVM, Mode=OneWay}"/>
-            </TabItem>
+            <TabItem Header="Main Dictionary" Content="{Binding MainDictionaryVM, Mode=OneWay}"/>
+            <TabItem Header="First Word Overrides" Content="{Binding FirstWordVM, Mode=OneWay}"/>
+            <TabItem Header="Last Word Overrides" Content="{Binding LastWordVM, Mode=OneWay}"/>
         </TabControl>
+        
+        <!-- Bottom -->
+        <Grid Grid.Row="6" Grid.ColumnSpan="2" Margin="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Content="START"/>
+            <Button Grid.Column="3" Content="START HASHCAT"/>
+        </Grid>
     </Grid>
 </UserControl>
