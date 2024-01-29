@@ -37,7 +37,7 @@ namespace HashRelationalResearch.GUI.Models
         public TreeViewItemModel(TreeViewItemModel? parent, string key, string name, string? fullPathName = null)
         {
             _parent = parent;
-            Key = key;  
+            Key = key;
             Name = name;
             FullPathName = fullPathName;
         }

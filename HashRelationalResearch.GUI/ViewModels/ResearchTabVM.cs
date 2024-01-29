@@ -1,13 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashCommon;
-using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
-using HashRelationalResearch.GUI.Services;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
@@ -73,7 +68,8 @@ namespace HashRelationalResearch.GUI.ViewModels
             set
             {
                 _tabLabel = value;
-                if (string.IsNullOrEmpty(_tabLabel)){
+                if (string.IsNullOrEmpty(_tabLabel))
+                {
                     _tabLabel = DEFAULT_TAB_NAME;
                 }
                 OnPropertyChanged(nameof(TabLabel));

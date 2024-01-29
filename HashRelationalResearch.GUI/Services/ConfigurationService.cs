@@ -1,13 +1,8 @@
 ﻿using HashRelationalResearch.GUI.Config;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace HashRelationalResearch.GUI.Services
 {
@@ -29,7 +24,7 @@ namespace HashRelationalResearch.GUI.Services
 
         public string[] GetExcludePatterns()
         {
-            if(_excludePatterns == null && File.Exists("PatternSamples/exclude_patterns.txt"))
+            if (_excludePatterns == null && File.Exists("PatternSamples/exclude_patterns.txt"))
             {
                 _excludePatterns = File.ReadAllLines("PatternSamples/exclude_patterns.txt");
             }

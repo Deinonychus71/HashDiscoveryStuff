@@ -1,8 +1,4 @@
-﻿using HashRelationalResearch.GUI.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-
-namespace HashRelationalResearch.GUI.Controls
+﻿namespace HashRelationalResearch.GUI.Controls
 {
     /// <summary>
     /// Interaction logic for ResearchTab.xaml

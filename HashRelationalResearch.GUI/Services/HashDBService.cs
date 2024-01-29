@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace HashRelationalResearch.GUI.Services
 {
-    public class HashDBService: IHashDBService
+    public class HashDBService : IHashDBService
     {
         private Dictionary<string, ExportEntry> _entries = [];
         private Dictionary<string, List<ExportFunctionEntry>> _functions = [];

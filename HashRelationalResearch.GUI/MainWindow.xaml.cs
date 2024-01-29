@@ -1,11 +1,6 @@
-﻿using HashRelationalResearch.GUI.Config;
-using HashRelationalResearch.GUI.Services;
-using HashRelationalResearch.GUI.Services.Interfaces;
-using HashRelationalResearch.GUI.ViewModels;
-using Microsoft.Extensions.Options;
+﻿using HashRelationalResearch.GUI.ViewModels;
 using Microsoft.Win32;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace HashRelationalResearch.GUI
 {

@@ -56,9 +56,9 @@ namespace HashRelationalResearch.GUI.ViewModels
         private static List<string> RetrieveDictionaries(IEnumerable<TreeViewItemModel> treeViewItems)
         {
             var output = new List<string>();
-            foreach(var treeViewItem in treeViewItems)
+            foreach (var treeViewItem in treeViewItems)
             {
-                if(treeViewItem.IsChecked.HasValue && treeViewItem.IsChecked.Value && !string.IsNullOrEmpty(treeViewItem.FullPathName))
+                if (treeViewItem.IsChecked.HasValue && treeViewItem.IsChecked.Value && !string.IsNullOrEmpty(treeViewItem.FullPathName))
                     output.Add(treeViewItem.FullPathName);
                 output.AddRange(RetrieveDictionaries(treeViewItem.Children));
             }

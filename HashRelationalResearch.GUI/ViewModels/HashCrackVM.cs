@@ -1,12 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using CsvHelper.Configuration.Attributes;
 using HashRelationalResearch.GUI.Models;
-using HashRelationalResearch.GUI.Services;
 using HashRelationalResearch.GUI.Services.Interfaces;
-using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels

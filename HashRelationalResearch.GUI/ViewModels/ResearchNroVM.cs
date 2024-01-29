@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashRelationalResearch.GUI.Helpers;
-using HashRelationalResearch.GUI.Services;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
 using System.Collections.Generic;
