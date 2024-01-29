@@ -4,7 +4,6 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -16,6 +15,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tools\Research\HashRelationalResearch\HashRelationalResearch.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="paracobNET">
+      <HintPath>..\Tools\Common\HashCommon\paracobNET.dll</HintPath>
+    </Reference>
+    <Reference Include="prcEditor">
+      <HintPath>..\Tools\Common\HashCommon\prcEditor.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

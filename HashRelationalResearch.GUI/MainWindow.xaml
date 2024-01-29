@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:HashRelationalResearch.GUI"
+        xmlns:controls="clr-namespace:HashRelationalResearch.GUI.Controls"
         xmlns:vm="clr-namespace:HashRelationalResearch.GUI.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="950" Width="1200">
+        Title="MainWindow" MinHeight="1050" Height="1050" MinWidth="1800" Width="1800">
     <Window.DataContext>
         <vm:MainWindowVM />
     </Window.DataContext>
@@ -24,7 +24,7 @@
                 <MenuItem Header="_Exit" />
             </MenuItem>
         </Menu>
-        <local:ResearchTab Grid.Row="1"></local:ResearchTab>
+        <controls:ResearchTab Grid.Row="1" Margin="0,0,-507,-354"></controls:ResearchTab>
     </Grid>
     
     

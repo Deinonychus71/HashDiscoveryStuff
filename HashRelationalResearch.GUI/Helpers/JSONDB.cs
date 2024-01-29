@@ -1,5 +1,8 @@
 ﻿using HashRelationalResearch.Models;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace HashRelationalResearch.GUI.Helpers
@@ -8,6 +11,7 @@ namespace HashRelationalResearch.GUI.Helpers
     {
         private static Dictionary<string, ExportEntry> _entries = [];
         private static Dictionary<string, List<ExportFunctionEntry>> _functions = [];
+        private static Dictionary<string, string> _labels = [];
 
         public static void Init(string filename)
         {
@@ -18,6 +22,15 @@ namespace HashRelationalResearch.GUI.Helpers
                 {
                     _entries = file.ExportEntries;
                     _functions = file.ExportFunctions;
+                    _labels = _entries.Values.Where(p => p.Label != null).ToDictionary(p => p.Hash40Hex, p => p.Label.Label);
+                    prcEditor.MainWindow.HashToStringLabels.Clear();
+                    prcEditor.MainWindow.StringToHashLabels.Clear();
+                    foreach (var label in _labels)
+                    {
+                        prcEditor.MainWindow.HashToStringLabels.Add(ulong.Parse(label.Key[2..], NumberStyles.HexNumber), label.Value);
+                        prcEditor.MainWindow.StringToHashLabels.Add(label.Value, ulong.Parse(label.Key[2..], NumberStyles.HexNumber));
+                    }
+
                 }
             }
             catch
@@ -52,6 +65,13 @@ namespace HashRelationalResearch.GUI.Helpers
                 }
             }
             return output;
+        }
+
+        public static string? GetLabel(string hash40)
+        {
+            if (_labels.TryGetValue(hash40, out string? value))
+                return value;
+            return null;
         }
     }
 }

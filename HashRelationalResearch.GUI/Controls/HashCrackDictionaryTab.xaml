@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="HashRelationalResearch.GUI.Controls.HashCrackDictionaryTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:HashRelationalResearch.GUI.ViewModels"
+             xmlns:h="clr-namespace:HashRelationalResearch.GUI.Helpers"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:uc="clr-namespace:HashRelationalResearch.GUI.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="500">
+    <UserControl.DataContext>
+        <vm:HashCrackDictionaryTabVM />
+    </UserControl.DataContext>
+    <TabControl>
+        <TabItem Header="Common Dictionaries">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="125"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+                
+                <!-- Left Panel -->
+                <CheckBox Grid.Row="0" Grid.Column="0" Content="Use"/>
+                <CheckBox Grid.Row="1" Grid.Column="0" Content="Skip Digits"/>
+                <CheckBox Grid.Row="2" Grid.Column="0" Content="Skip Specials"/>
+                <CheckBox Grid.Row="3" Grid.Column="0" Content="Force Lowercase"/>
+                <CheckBox Grid.Row="4" Grid.Column="0" Content="Add Typos"/>
+                <CheckBox Grid.Row="5" Grid.Column="0" Content="Reverse Order"/>
+                <StackPanel Grid.Row="6" Grid.Column="0" Orientation="Vertical">
+                    <Label Content="First Word from:"/>
+                    <TextBox Width="Auto"/>
+                    <Label Content="to:"/>
+                    <TextBox Width="Auto"/>
+                </StackPanel>
+                <CheckBox Grid.Row="8" Grid.Column="0" Content="Cache Prefix"/>
+                <CheckBox Grid.Row="9" Grid.Column="0" Content="Cache Suffix"/>
+                <Button Grid.Row="10" Grid.Column="0" Content="Unselect All" Margin="10,0"/>
+
+                <!-- Right Panel -->
+                <TreeView Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="Custom Words"/>
+        <TabItem Header="Exclude Words"/>
+    </TabControl>
+</UserControl>

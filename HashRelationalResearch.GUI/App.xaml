@@ -5,23 +5,9 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-
-            <Style TargetType="{x:Type Button}">
-                <Setter Property="Padding" Value="5" />
-            </Style>
-
-            <Style TargetType="{x:Type Label}">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-            </Style>
-
-            <Style TargetType="{x:Type TextBox}">
-                <Setter Property="Height" Value="28px"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="0,0,10,0"/>
-                <Setter Property="Padding" Value="3"/>
-            </Style>
-
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Style/Main.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

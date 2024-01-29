@@ -9,28 +9,63 @@ namespace HashRelationalResearch.GUI.ViewModels
     public class ResearchTabVM : ViewModelBase
     {
         #region Members
+        private ResearchNroVM _nroVM;
+        private ResearchPrcVM _prcVM;
+        private HashCrackVM _hashCrackVM;
+
         private string? _hashValue;
         private string? _hashLabel;
         private string? _hashLabelSaved;
         private bool _isLabelChangedSuccess;
         private bool _isLabelChangedFailure;
-        private string? _codeEditorText;
+
         private ExportEntry? _exportEntry;
         #endregion
 
         #region Properties
-        public ICommand LoadEntry { get; }
-
         public ICommand HashValueChanged { get; }
 
         public ICommand HashLabelChanged { get; }
+
+        public ResearchPrcVM NROPRC
+        {
+            get => _prcVM;
+            set
+            {
+                _prcVM = value;
+                OnPropertyChanged(nameof(NROPRC));
+            }
+        }
+
+        public ResearchNroVM NROVM
+        {
+            get => _nroVM;
+            set
+            {
+                _nroVM = value;
+                OnPropertyChanged(nameof(NROVM));
+            }
+        }
+
+        public HashCrackVM HackCrackVM
+        {
+            get => _hashCrackVM;
+            set
+            {
+                _hashCrackVM = value;
+                OnPropertyChanged(nameof(HackCrackVM));
+            }
+        }
 
         public string? HashValue
         {
             get => _hashValue;
             set
             {
-                _hashValue = value;
+                var valueTemp = value;
+                if (valueTemp != null && valueTemp.Length == 11 && valueTemp.StartsWith("0x"))
+                    valueTemp = valueTemp.Replace("0x", "0x0");
+                _hashValue = valueTemp;
                 OnPropertyChanged(nameof(HashValue));
             }
         }
@@ -64,21 +99,13 @@ namespace HashRelationalResearch.GUI.ViewModels
                 OnPropertyChanged(nameof(HashLabel));
             }
         }
-
-        public string? CodeEditorText
-        {
-            get => _codeEditorText;
-            set
-            {
-                _codeEditorText = value;
-                OnPropertyChanged(nameof(CodeEditorText));
-            }
-        }
         #endregion
 
         public ResearchTabVM()
         {
-            LoadEntry = new RelayCommand<string>((p) => LoggedIn(p));
+            _nroVM = new ResearchNroVM();
+            _prcVM = new ResearchPrcVM();
+            _hashCrackVM = new HashCrackVM();
             HashValueChanged = new RelayCommand(LoadNewHash);
             HashLabelChanged = new RelayCommand(TestHashLabel);
         }
@@ -86,7 +113,8 @@ namespace HashRelationalResearch.GUI.ViewModels
         private void RefreshHash()
         {
             HashLabel = string.Empty;
-            CodeEditorText = string.Empty;
+            _nroVM.ClearData();
+            _prcVM.ClearData();
 
             if (_exportEntry != null)
             {
@@ -97,16 +125,11 @@ namespace HashRelationalResearch.GUI.ViewModels
                     HashLabel = label.Label;
                 }
 
-                var firstFile = _exportEntry.CFiles?.FirstOrDefault();
-                if (firstFile != null)
-                {
-                    var function = JSONDB.GetFunctions(firstFile.File, firstFile.Instances.Select(p => p.FunctionId));
-                    CodeEditorText = function[0].Content;
-                }
+                _nroVM.LoadFiles(_exportEntry.CFiles);
+                _prcVM.LoadFiles(_exportEntry.PRCFiles);
             }
         }
 
-        #region Commands
         private void LoadNewHash()
         {
             var hash = _hashValue?.Trim().ToLower();
@@ -140,10 +163,5 @@ namespace HashRelationalResearch.GUI.ViewModels
                 }
             }
         }
-
-        private void LoggedIn(string parameter)
-        {
-        }
-        #endregion
     }
 }

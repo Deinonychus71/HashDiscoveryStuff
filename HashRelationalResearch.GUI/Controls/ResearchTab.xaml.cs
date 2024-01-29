@@ -1,4 +1,4 @@
-﻿namespace HashRelationalResearch.GUI
+﻿namespace HashRelationalResearch.GUI.Controls
 {
     /// <summary>
     /// Interaction logic for ResearchTab.xaml

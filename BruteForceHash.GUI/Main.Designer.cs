@@ -571,9 +571,9 @@ namespace BruteForceHash.GUI
             grpSizeFiltering.Controls.Add(lblMinDelim);
             grpSizeFiltering.Controls.Add(cbMinDelim);
             grpSizeFiltering.Location = new System.Drawing.Point(7, 164);
-            grpSizeFiltering.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            grpSizeFiltering.Margin = new System.Windows.Forms.Padding(2);
             grpSizeFiltering.Name = "grpSizeFiltering";
-            grpSizeFiltering.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            grpSizeFiltering.Padding = new System.Windows.Forms.Padding(2);
             grpSizeFiltering.Size = new System.Drawing.Size(364, 182);
             grpSizeFiltering.TabIndex = 86;
             grpSizeFiltering.TabStop = false;
@@ -637,7 +637,7 @@ namespace BruteForceHash.GUI
             cbAtMostUnderNbrWords.DropDownWidth = 80;
             cbAtMostUnderNbrWords.FormattingEnabled = true;
             cbAtMostUnderNbrWords.Items.AddRange(new object[] { "0 word", "1 word", "2 words", "3 words", "4 words", "5 words", "6 words", "7 words", "8 words", "9 words", "10 words" });
-            cbAtMostUnderNbrWords.Location = new System.Drawing.Point(242, 153);
+            cbAtMostUnderNbrWords.Location = new System.Drawing.Point(227, 153);
             cbAtMostUnderNbrWords.Name = "cbAtMostUnderNbrWords";
             cbAtMostUnderNbrWords.Size = new System.Drawing.Size(45, 23);
             cbAtMostUnderNbrWords.TabIndex = 96;
@@ -648,7 +648,7 @@ namespace BruteForceHash.GUI
             cbAtMostAboveNbrWords.DropDownWidth = 80;
             cbAtMostAboveNbrWords.FormattingEnabled = true;
             cbAtMostAboveNbrWords.Items.AddRange(new object[] { "0 word", "1 word", "2 words", "3 words", "4 words", "5 words", "6 words", "7 words", "8 words", "9 words", "10 words" });
-            cbAtMostAboveNbrWords.Location = new System.Drawing.Point(242, 127);
+            cbAtMostAboveNbrWords.Location = new System.Drawing.Point(228, 127);
             cbAtMostAboveNbrWords.Name = "cbAtMostAboveNbrWords";
             cbAtMostAboveNbrWords.Size = new System.Drawing.Size(45, 23);
             cbAtMostAboveNbrWords.TabIndex = 95;
@@ -688,7 +688,7 @@ namespace BruteForceHash.GUI
             cbAtLeastUnderNbrWords.DropDownWidth = 80;
             cbAtLeastUnderNbrWords.FormattingEnabled = true;
             cbAtLeastUnderNbrWords.Items.AddRange(new object[] { "0 word", "1 word", "2 words", "3 words", "4 words", "5 words", "6 words", "7 words", "8 words", "9 words", "10 words" });
-            cbAtLeastUnderNbrWords.Location = new System.Drawing.Point(242, 101);
+            cbAtLeastUnderNbrWords.Location = new System.Drawing.Point(232, 101);
             cbAtLeastUnderNbrWords.Name = "cbAtLeastUnderNbrWords";
             cbAtLeastUnderNbrWords.Size = new System.Drawing.Size(45, 23);
             cbAtLeastUnderNbrWords.TabIndex = 87;
@@ -719,7 +719,7 @@ namespace BruteForceHash.GUI
             cbAtLeastAboveNbrWords.DropDownWidth = 80;
             cbAtLeastAboveNbrWords.FormattingEnabled = true;
             cbAtLeastAboveNbrWords.Items.AddRange(new object[] { "0 word", "1 word", "2 words", "3 words", "4 words", "5 words", "6 words", "7 words", "8 words", "9 words", "10 words" });
-            cbAtLeastAboveNbrWords.Location = new System.Drawing.Point(242, 75);
+            cbAtLeastAboveNbrWords.Location = new System.Drawing.Point(223, 75);
             cbAtLeastAboveNbrWords.Name = "cbAtLeastAboveNbrWords";
             cbAtLeastAboveNbrWords.Size = new System.Drawing.Size(45, 23);
             cbAtLeastAboveNbrWords.TabIndex = 86;
@@ -948,9 +948,9 @@ namespace BruteForceHash.GUI
             grpWordFiltering.Controls.Add(chkIncludeWordNotFirst);
             grpWordFiltering.Controls.Add(txtIncludeWord);
             grpWordFiltering.Location = new System.Drawing.Point(7, 4);
-            grpWordFiltering.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            grpWordFiltering.Margin = new System.Windows.Forms.Padding(2);
             grpWordFiltering.Name = "grpWordFiltering";
-            grpWordFiltering.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            grpWordFiltering.Padding = new System.Windows.Forms.Padding(2);
             grpWordFiltering.Size = new System.Drawing.Size(364, 155);
             grpWordFiltering.TabIndex = 85;
             grpWordFiltering.TabStop = false;
@@ -1339,7 +1339,7 @@ namespace BruteForceHash.GUI
             tabControl.Controls.Add(tabPage2);
             tabControl.Controls.Add(tabPage3);
             tabControl.Location = new System.Drawing.Point(5, 11);
-            tabControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tabControl.Margin = new System.Windows.Forms.Padding(2);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
             tabControl.Size = new System.Drawing.Size(444, 578);
@@ -1348,11 +1348,11 @@ namespace BruteForceHash.GUI
             // tabPage1
             // 
             tabPage1.Controls.Add(tabMainDictionaries);
-            tabPage1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            tabPage1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             tabPage1.Location = new System.Drawing.Point(4, 24);
-            tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tabPage1.Margin = new System.Windows.Forms.Padding(2);
             tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tabPage1.Padding = new System.Windows.Forms.Padding(2);
             tabPage1.Size = new System.Drawing.Size(436, 550);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Main Dictionary";
@@ -1388,7 +1388,7 @@ namespace BruteForceHash.GUI
             tabMainDictionariesCommon.Controls.Add(chkDictSkipDigits);
             tabMainDictionariesCommon.Location = new System.Drawing.Point(4, 22);
             tabMainDictionariesCommon.Name = "tabMainDictionariesCommon";
-            tabMainDictionariesCommon.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabMainDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
             tabMainDictionariesCommon.Size = new System.Drawing.Size(428, 524);
             tabMainDictionariesCommon.TabIndex = 0;
             tabMainDictionariesCommon.Text = "Common Dictionaries";
@@ -1453,7 +1453,7 @@ namespace BruteForceHash.GUI
             // btnDictUnselected
             // 
             btnDictUnselected.Location = new System.Drawing.Point(4, 497);
-            btnDictUnselected.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnDictUnselected.Margin = new System.Windows.Forms.Padding(2);
             btnDictUnselected.Name = "btnDictUnselected";
             btnDictUnselected.Size = new System.Drawing.Size(102, 22);
             btnDictUnselected.TabIndex = 55;
@@ -1464,7 +1464,7 @@ namespace BruteForceHash.GUI
             // tvDictMain
             // 
             tvDictMain.Location = new System.Drawing.Point(109, 2);
-            tvDictMain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tvDictMain.Margin = new System.Windows.Forms.Padding(2);
             tvDictMain.Name = "tvDictMain";
             tvDictMain.Size = new System.Drawing.Size(317, 520);
             tvDictMain.TabIndex = 84;
@@ -1559,7 +1559,7 @@ namespace BruteForceHash.GUI
             tabMainDictionariesCustom.Controls.Add(txtDictCustWords);
             tabMainDictionariesCustom.Location = new System.Drawing.Point(4, 22);
             tabMainDictionariesCustom.Name = "tabMainDictionariesCustom";
-            tabMainDictionariesCustom.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabMainDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
             tabMainDictionariesCustom.Size = new System.Drawing.Size(428, 524);
             tabMainDictionariesCustom.TabIndex = 1;
             tabMainDictionariesCustom.Text = "Custom Words";
@@ -1680,7 +1680,7 @@ namespace BruteForceHash.GUI
             // txtDictCustWords
             // 
             txtDictCustWords.Location = new System.Drawing.Point(109, 2);
-            txtDictCustWords.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtDictCustWords.Margin = new System.Windows.Forms.Padding(2);
             txtDictCustWords.Multiline = true;
             txtDictCustWords.Name = "txtDictCustWords";
             txtDictCustWords.Size = new System.Drawing.Size(317, 520);
@@ -1731,7 +1731,7 @@ namespace BruteForceHash.GUI
             // txtDictExcludeWords
             // 
             txtDictExcludeWords.Location = new System.Drawing.Point(109, 2);
-            txtDictExcludeWords.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtDictExcludeWords.Margin = new System.Windows.Forms.Padding(2);
             txtDictExcludeWords.Multiline = true;
             txtDictExcludeWords.Name = "txtDictExcludeWords";
             txtDictExcludeWords.Size = new System.Drawing.Size(317, 520);
@@ -1740,11 +1740,11 @@ namespace BruteForceHash.GUI
             // tabPage2
             // 
             tabPage2.Controls.Add(tabFirstWordDictionaries);
-            tabPage2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            tabPage2.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             tabPage2.Location = new System.Drawing.Point(4, 24);
-            tabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tabPage2.Margin = new System.Windows.Forms.Padding(2);
             tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tabPage2.Padding = new System.Windows.Forms.Padding(2);
             tabPage2.Size = new System.Drawing.Size(436, 550);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "First Word Overrides";
@@ -1775,7 +1775,7 @@ namespace BruteForceHash.GUI
             tabFirstWordDictionariesCommon.Controls.Add(chkDictFirstSkipDigits);
             tabFirstWordDictionariesCommon.Location = new System.Drawing.Point(4, 22);
             tabFirstWordDictionariesCommon.Name = "tabFirstWordDictionariesCommon";
-            tabFirstWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabFirstWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
             tabFirstWordDictionariesCommon.Size = new System.Drawing.Size(428, 524);
             tabFirstWordDictionariesCommon.TabIndex = 0;
             tabFirstWordDictionariesCommon.Text = "Common Dictionaries";
@@ -1793,7 +1793,7 @@ namespace BruteForceHash.GUI
             // tvDictFirstWord
             // 
             tvDictFirstWord.Location = new System.Drawing.Point(109, 2);
-            tvDictFirstWord.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tvDictFirstWord.Margin = new System.Windows.Forms.Padding(2);
             tvDictFirstWord.Name = "tvDictFirstWord";
             tvDictFirstWord.Size = new System.Drawing.Size(317, 520);
             tvDictFirstWord.TabIndex = 58;
@@ -1812,7 +1812,7 @@ namespace BruteForceHash.GUI
             // btnCopyToDictFirst
             // 
             btnCopyToDictFirst.Location = new System.Drawing.Point(4, 471);
-            btnCopyToDictFirst.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnCopyToDictFirst.Margin = new System.Windows.Forms.Padding(2);
             btnCopyToDictFirst.Name = "btnCopyToDictFirst";
             btnCopyToDictFirst.Size = new System.Drawing.Size(102, 22);
             btnCopyToDictFirst.TabIndex = 57;
@@ -1823,7 +1823,7 @@ namespace BruteForceHash.GUI
             // btnDictFirstUnselected
             // 
             btnDictFirstUnselected.Location = new System.Drawing.Point(4, 497);
-            btnDictFirstUnselected.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnDictFirstUnselected.Margin = new System.Windows.Forms.Padding(2);
             btnDictFirstUnselected.Name = "btnDictFirstUnselected";
             btnDictFirstUnselected.Size = new System.Drawing.Size(102, 22);
             btnDictFirstUnselected.TabIndex = 56;
@@ -1893,7 +1893,7 @@ namespace BruteForceHash.GUI
             tabFirstWordDictionariesCustom.Controls.Add(txtDictFirstCustWords);
             tabFirstWordDictionariesCustom.Location = new System.Drawing.Point(4, 22);
             tabFirstWordDictionariesCustom.Name = "tabFirstWordDictionariesCustom";
-            tabFirstWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabFirstWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
             tabFirstWordDictionariesCustom.Size = new System.Drawing.Size(428, 524);
             tabFirstWordDictionariesCustom.TabIndex = 1;
             tabFirstWordDictionariesCustom.Text = "Custom Words";
@@ -1902,7 +1902,7 @@ namespace BruteForceHash.GUI
             // btnCopyToDictCustomFirst
             // 
             btnCopyToDictCustomFirst.Location = new System.Drawing.Point(4, 497);
-            btnCopyToDictCustomFirst.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnCopyToDictCustomFirst.Margin = new System.Windows.Forms.Padding(2);
             btnCopyToDictCustomFirst.Name = "btnCopyToDictCustomFirst";
             btnCopyToDictCustomFirst.Size = new System.Drawing.Size(102, 22);
             btnCopyToDictCustomFirst.TabIndex = 106;
@@ -1978,7 +1978,7 @@ namespace BruteForceHash.GUI
             // txtDictFirstCustWords
             // 
             txtDictFirstCustWords.Location = new System.Drawing.Point(109, 2);
-            txtDictFirstCustWords.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtDictFirstCustWords.Margin = new System.Windows.Forms.Padding(2);
             txtDictFirstCustWords.Multiline = true;
             txtDictFirstCustWords.Name = "txtDictFirstCustWords";
             txtDictFirstCustWords.Size = new System.Drawing.Size(317, 520);
@@ -2001,7 +2001,7 @@ namespace BruteForceHash.GUI
             // btnCopyToDictExcludeFirst
             // 
             btnCopyToDictExcludeFirst.Location = new System.Drawing.Point(4, 497);
-            btnCopyToDictExcludeFirst.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnCopyToDictExcludeFirst.Margin = new System.Windows.Forms.Padding(2);
             btnCopyToDictExcludeFirst.Name = "btnCopyToDictExcludeFirst";
             btnCopyToDictExcludeFirst.Size = new System.Drawing.Size(102, 22);
             btnCopyToDictExcludeFirst.TabIndex = 98;
@@ -2012,7 +2012,7 @@ namespace BruteForceHash.GUI
             // txtDictFirstWordExcludeWords
             // 
             txtDictFirstWordExcludeWords.Location = new System.Drawing.Point(109, 2);
-            txtDictFirstWordExcludeWords.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtDictFirstWordExcludeWords.Margin = new System.Windows.Forms.Padding(2);
             txtDictFirstWordExcludeWords.Multiline = true;
             txtDictFirstWordExcludeWords.Name = "txtDictFirstWordExcludeWords";
             txtDictFirstWordExcludeWords.Size = new System.Drawing.Size(317, 520);
@@ -2050,9 +2050,9 @@ namespace BruteForceHash.GUI
             // tabPage3
             // 
             tabPage3.Controls.Add(tabLastWordDictionaries);
-            tabPage3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            tabPage3.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             tabPage3.Location = new System.Drawing.Point(4, 24);
-            tabPage3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tabPage3.Margin = new System.Windows.Forms.Padding(2);
             tabPage3.Name = "tabPage3";
             tabPage3.Size = new System.Drawing.Size(436, 550);
             tabPage3.TabIndex = 2;
@@ -2084,7 +2084,7 @@ namespace BruteForceHash.GUI
             tabLastWordDictionariesCommon.Controls.Add(chkDictLastReverseOrder);
             tabLastWordDictionariesCommon.Location = new System.Drawing.Point(4, 22);
             tabLastWordDictionariesCommon.Name = "tabLastWordDictionariesCommon";
-            tabLastWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabLastWordDictionariesCommon.Padding = new System.Windows.Forms.Padding(3);
             tabLastWordDictionariesCommon.Size = new System.Drawing.Size(428, 524);
             tabLastWordDictionariesCommon.TabIndex = 0;
             tabLastWordDictionariesCommon.Text = "Common Dictionaries";
@@ -2102,7 +2102,7 @@ namespace BruteForceHash.GUI
             // tvDictLastWord
             // 
             tvDictLastWord.Location = new System.Drawing.Point(109, 2);
-            tvDictLastWord.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            tvDictLastWord.Margin = new System.Windows.Forms.Padding(2);
             tvDictLastWord.Name = "tvDictLastWord";
             tvDictLastWord.Size = new System.Drawing.Size(317, 520);
             tvDictLastWord.TabIndex = 59;
@@ -2121,7 +2121,7 @@ namespace BruteForceHash.GUI
             // btnCopyToDictLast
             // 
             btnCopyToDictLast.Location = new System.Drawing.Point(4, 471);
-            btnCopyToDictLast.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnCopyToDictLast.Margin = new System.Windows.Forms.Padding(2);
             btnCopyToDictLast.Name = "btnCopyToDictLast";
             btnCopyToDictLast.Size = new System.Drawing.Size(102, 22);
             btnCopyToDictLast.TabIndex = 58;
@@ -2132,7 +2132,7 @@ namespace BruteForceHash.GUI
             // btnDictLastUnselected
             // 
             btnDictLastUnselected.Location = new System.Drawing.Point(4, 497);
-            btnDictLastUnselected.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnDictLastUnselected.Margin = new System.Windows.Forms.Padding(2);
             btnDictLastUnselected.Name = "btnDictLastUnselected";
             btnDictLastUnselected.Size = new System.Drawing.Size(102, 22);
             btnDictLastUnselected.TabIndex = 57;
@@ -2202,7 +2202,7 @@ namespace BruteForceHash.GUI
             tabLastWordDictionariesCustom.Controls.Add(txtDictLastCustWords);
             tabLastWordDictionariesCustom.Location = new System.Drawing.Point(4, 22);
             tabLastWordDictionariesCustom.Name = "tabLastWordDictionariesCustom";
-            tabLastWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabLastWordDictionariesCustom.Padding = new System.Windows.Forms.Padding(3);
             tabLastWordDictionariesCustom.Size = new System.Drawing.Size(428, 524);
             tabLastWordDictionariesCustom.TabIndex = 1;
             tabLastWordDictionariesCustom.Text = "Custom Words";
@@ -2211,7 +2211,7 @@ namespace BruteForceHash.GUI
             // btnCopyToDictCustomLast
             // 
             btnCopyToDictCustomLast.Location = new System.Drawing.Point(4, 497);
-            btnCopyToDictCustomLast.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnCopyToDictCustomLast.Margin = new System.Windows.Forms.Padding(2);
             btnCopyToDictCustomLast.Name = "btnCopyToDictCustomLast";
             btnCopyToDictCustomLast.Size = new System.Drawing.Size(102, 22);
             btnCopyToDictCustomLast.TabIndex = 106;
@@ -2287,7 +2287,7 @@ namespace BruteForceHash.GUI
             // txtDictLastCustWords
             // 
             txtDictLastCustWords.Location = new System.Drawing.Point(109, 2);
-            txtDictLastCustWords.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtDictLastCustWords.Margin = new System.Windows.Forms.Padding(2);
             txtDictLastCustWords.Multiline = true;
             txtDictLastCustWords.Name = "txtDictLastCustWords";
             txtDictLastCustWords.Size = new System.Drawing.Size(317, 520);
@@ -2310,7 +2310,7 @@ namespace BruteForceHash.GUI
             // btnCopyToDictExcludeLast
             // 
             btnCopyToDictExcludeLast.Location = new System.Drawing.Point(4, 497);
-            btnCopyToDictExcludeLast.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnCopyToDictExcludeLast.Margin = new System.Windows.Forms.Padding(2);
             btnCopyToDictExcludeLast.Name = "btnCopyToDictExcludeLast";
             btnCopyToDictExcludeLast.Size = new System.Drawing.Size(102, 22);
             btnCopyToDictExcludeLast.TabIndex = 98;
@@ -2321,7 +2321,7 @@ namespace BruteForceHash.GUI
             // txtDictLastWordExcludeWords
             // 
             txtDictLastWordExcludeWords.Location = new System.Drawing.Point(109, 2);
-            txtDictLastWordExcludeWords.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtDictLastWordExcludeWords.Margin = new System.Windows.Forms.Padding(2);
             txtDictLastWordExcludeWords.Multiline = true;
             txtDictLastWordExcludeWords.Name = "txtDictLastWordExcludeWords";
             txtDictLastWordExcludeWords.Size = new System.Drawing.Size(317, 520);
@@ -2484,7 +2484,7 @@ namespace BruteForceHash.GUI
             // btnQuickSave
             // 
             btnQuickSave.Location = new System.Drawing.Point(284, 73);
-            btnQuickSave.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnQuickSave.Margin = new System.Windows.Forms.Padding(2);
             btnQuickSave.Name = "btnQuickSave";
             btnQuickSave.Size = new System.Drawing.Size(46, 20);
             btnQuickSave.TabIndex = 37;
@@ -2494,7 +2494,7 @@ namespace BruteForceHash.GUI
             // btnQuickLoad
             // 
             btnQuickLoad.Location = new System.Drawing.Point(330, 73);
-            btnQuickLoad.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            btnQuickLoad.Margin = new System.Windows.Forms.Padding(2);
             btnQuickLoad.Name = "btnQuickLoad";
             btnQuickLoad.Size = new System.Drawing.Size(47, 20);
             btnQuickLoad.TabIndex = 38;
@@ -2528,7 +2528,7 @@ namespace BruteForceHash.GUI
             tabBruteforceMain.Controls.Add(grpCharsetPreview);
             tabBruteforceMain.Location = new System.Drawing.Point(4, 24);
             tabBruteforceMain.Name = "tabBruteforceMain";
-            tabBruteforceMain.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabBruteforceMain.Padding = new System.Windows.Forms.Padding(3);
             tabBruteforceMain.Size = new System.Drawing.Size(438, 404);
             tabBruteforceMain.TabIndex = 0;
             tabBruteforceMain.Text = "Bruteforce Characters";
@@ -2608,7 +2608,7 @@ namespace BruteForceHash.GUI
             tabBruteforceDict.Controls.Add(pnlHybridDict);
             tabBruteforceDict.Location = new System.Drawing.Point(4, 24);
             tabBruteforceDict.Name = "tabBruteforceDict";
-            tabBruteforceDict.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            tabBruteforceDict.Padding = new System.Windows.Forms.Padding(3);
             tabBruteforceDict.Size = new System.Drawing.Size(438, 404);
             tabBruteforceDict.TabIndex = 1;
             tabBruteforceDict.Text = "Dictionnary";
@@ -2764,7 +2764,7 @@ namespace BruteForceHash.GUI
             // txtHybridDictWords
             // 
             txtHybridDictWords.Location = new System.Drawing.Point(137, 2);
-            txtHybridDictWords.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtHybridDictWords.Margin = new System.Windows.Forms.Padding(2);
             txtHybridDictWords.Multiline = true;
             txtHybridDictWords.Name = "txtHybridDictWords";
             txtHybridDictWords.Size = new System.Drawing.Size(297, 394);
@@ -2811,7 +2811,7 @@ namespace BruteForceHash.GUI
             // txtHybridDictFirstWord
             // 
             txtHybridDictFirstWord.Location = new System.Drawing.Point(137, 2);
-            txtHybridDictFirstWord.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtHybridDictFirstWord.Margin = new System.Windows.Forms.Padding(2);
             txtHybridDictFirstWord.Multiline = true;
             txtHybridDictFirstWord.Name = "txtHybridDictFirstWord";
             txtHybridDictFirstWord.Size = new System.Drawing.Size(318, 394);
@@ -2859,7 +2859,7 @@ namespace BruteForceHash.GUI
             // txtHybridDictLastWord
             // 
             txtHybridDictLastWord.Location = new System.Drawing.Point(137, 2);
-            txtHybridDictLastWord.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            txtHybridDictLastWord.Margin = new System.Windows.Forms.Padding(2);
             txtHybridDictLastWord.Multiline = true;
             txtHybridDictLastWord.Name = "txtHybridDictLastWord";
             txtHybridDictLastWord.Size = new System.Drawing.Size(318, 394);
