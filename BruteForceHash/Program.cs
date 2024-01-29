@@ -56,7 +56,7 @@ namespace BruteForceHash
                 logger.Log($"Description: {o.Description}");
 
                 var split = input.Split("x".ToCharArray());
-                var lengthStr = split[1].Substring(0, 2);
+                var lengthStr = split[1][..2];
                 var valueStr = split[1][2..];
                 var length = Convert.ToInt32(lengthStr, 16);
                 logger.Log($"Length: {length}");

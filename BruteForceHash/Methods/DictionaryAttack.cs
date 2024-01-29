@@ -29,8 +29,8 @@ namespace BruteForceHash.Methods
         private readonly string _delimiter;
         private readonly int _minWordLength;
         private readonly int _maxWordLength;
-        private readonly Regex _specialCharactersRegex = new Regex("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
-        private CombinationGeneratorBase _combinationGeneration;
+        private readonly Regex _specialCharactersRegex = new("^[a-zA-Z0-9_]*$", RegexOptions.Compiled);
+        private readonly CombinationGeneratorBase _combinationGeneration;
         private int _foundResult = 0;
 
         public DictionaryAttack(Logger logger, Options options, int stringLength, uint hexValue)
@@ -333,14 +333,14 @@ namespace BruteForceHash.Methods
 
             _options.Prefix = _options.Prefix?.Trim();
             _options.Suffix = _options.Suffix?.Trim();
-            var prefixBytes = !string.IsNullOrEmpty(_options.Prefix) ? Encoding.UTF8.GetBytes(_options.Prefix) : new byte[0];
-            var suffixBytes = !string.IsNullOrEmpty(_options.Suffix) ? Encoding.UTF8.GetBytes(_options.Suffix) : new byte[0];
+            var prefixBytes = !string.IsNullOrEmpty(_options.Prefix) ? Encoding.UTF8.GetBytes(_options.Prefix) : [];
+            var suffixBytes = !string.IsNullOrEmpty(_options.Suffix) ? Encoding.UTF8.GetBytes(_options.Suffix) : [];
 
             foreach (var combinationPattern in _combinationPatterns)
             {
                 var compiledCombination = _combinationGeneration.CompileCombination(combinationPattern);
                 var isFirstWordDict = compiledCombination[0] == 0;
-                var isLastWordDict = compiledCombination[compiledCombination.Length - 2] == 0;
+                var isLastWordDict = compiledCombination[^2] == 0;
                 var firstDict = isFirstWordDict ? _dictionariesFirst : _dictionaries;
                 var lastDict = isLastWordDict ? _dictionariesLast : _dictionaries;
 
@@ -381,7 +381,7 @@ namespace BruteForceHash.Methods
                 tasks.Add(AddTaskToTaskScheduler(factory, combinationPattern, compiledCombination, prefixBytes, suffixBytes, firstDict, lastDict));
             }
 
-            WaitForDictionariesToRun(tasks.ToArray(), _cancellationTokenSource.Token);
+            WaitForDictionariesToRun([.. tasks], _cancellationTokenSource.Token);
 
             //_cancellationTokenSource.Dispose(); //For Hashcat
 
@@ -399,9 +399,9 @@ namespace BruteForceHash.Methods
         private void RunSuffixOptimized(TaskFactory taskFactory, List<Task> tasks, byte[] compiledCombination, byte[] prefixBytes, byte[] suffixBytes,
             Dictionary<byte, byte[][]> firstDict, Dictionary<byte, byte[][]> lastDict, bool runPrefixOptimization)
         {
-            if (compiledCombination[compiledCombination.Length - 2] == 0)
+            if (compiledCombination[^2] == 0)
             {
-                var size = compiledCombination[compiledCombination.Length - 1];
+                var size = compiledCombination[^1];
                 if (lastDict[size].Length == 0)
                     return;
 
@@ -421,9 +421,9 @@ namespace BruteForceHash.Methods
                     Buffer.BlockCopy(lastWord, 0, fullSuffix, strippedMidWordSize, size);
 
                     if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
-                        RunPrefixOptimized(taskFactory, tasks, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries, false);
+                        RunPrefixOptimized(taskFactory, tasks, strippedCompiledCombination, prefixBytes, [.. fullSuffix], firstDict, _dictionaries, false);
                     else
-                        tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries));
+                        tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, prefixBytes, [.. fullSuffix], firstDict, _dictionaries));
                 }
             }
             else
@@ -441,9 +441,9 @@ namespace BruteForceHash.Methods
                 Buffer.BlockCopy(suffixBytes, 0, fullSuffix, strippedMidWordSize, suffixBytes.Length);
 
                 if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
-                    RunPrefixOptimized(taskFactory, tasks, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries, false);
+                    RunPrefixOptimized(taskFactory, tasks, strippedCompiledCombination, prefixBytes, [.. fullSuffix], firstDict, _dictionaries, false);
                 else
-                    tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, prefixBytes, fullSuffix.ToArray(), firstDict, _dictionaries));
+                    tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, prefixBytes, [.. fullSuffix], firstDict, _dictionaries));
             }
         }
 
@@ -473,9 +473,9 @@ namespace BruteForceHash.Methods
                     Buffer.BlockCopy(firstWord, 0, fullPrefix, prefixBytes.Length, size);
 
                     if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
-                        RunSuffixOptimized(taskFactory, tasks, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict, false);
+                        RunSuffixOptimized(taskFactory, tasks, strippedCompiledCombination, [.. fullPrefix], suffixBytes, _dictionaries, lastDict, false);
                     else
-                        tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict));
+                        tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, [.. fullPrefix], suffixBytes, _dictionaries, lastDict));
                 }
             }
             else
@@ -493,9 +493,9 @@ namespace BruteForceHash.Methods
                 Buffer.BlockCopy(compiledCombination, 0, fullPrefix, prefixBytes.Length, nextWordEndPos);
 
                 if (runPrefixOptimization && strippedCompiledCombination.Length > 2)
-                    RunSuffixOptimized(taskFactory, tasks, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict, false);
+                    RunSuffixOptimized(taskFactory, tasks, strippedCompiledCombination, [.. fullPrefix], suffixBytes, _dictionaries, lastDict, false);
                 else
-                    tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, fullPrefix.ToArray(), suffixBytes, _dictionaries, lastDict));
+                    tasks.Add(AddTaskToTaskScheduler(taskFactory, null, strippedCompiledCombination, [.. fullPrefix], suffixBytes, _dictionaries, lastDict));
             }
         }
 
@@ -592,12 +592,12 @@ namespace BruteForceHash.Methods
             string dictionariesCustom, bool customSkipDigits, bool customSkipSpecials, bool customForceLowerCase, bool customAddTypos, bool reverseOrder,
             string dictionariesExclude, bool excludePartialWords)
         {
-            Dictionary<byte, HashSet<string>> dictionaryHashRef = new Dictionary<byte, HashSet<string>>();
+            Dictionary<byte, HashSet<string>> dictionaryHashRef = [];
             var output = new Dictionary<byte, byte[][]>();
 
             //Fill if no data present
             for (byte i = 1; i <= 100; i++)
-                dictionaryHashRef.Add(i, new HashSet<string>());
+                dictionaryHashRef.Add(i, []);
 
             FillDictionaries(dictionaryHashRef, dictionaries, dictionariesFilterFirstFrom, dictionariesFilterFirstTo, skipDigits, skipSpecials, forceLowerCase, addTypos);
             FillDictionaries(dictionaryHashRef, dictionariesCustom, dictionariesFilterFirstFrom, dictionariesFilterFirstTo, customSkipDigits, customSkipSpecials, customForceLowerCase, customAddTypos);
@@ -704,8 +704,7 @@ namespace BruteForceHash.Methods
                         if (byteCount < _minWordLength || byteCount > _maxWordLength)
                             continue;
 
-                        if (!dictionaryHashRef[byteCount].Contains(wordToAdd))
-                            dictionaryHashRef[byteCount].Add(wordToAdd);
+                        dictionaryHashRef[byteCount].Add(wordToAdd);
                     }
                 }
             }

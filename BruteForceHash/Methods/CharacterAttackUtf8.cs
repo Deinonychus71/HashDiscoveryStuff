@@ -34,8 +34,8 @@ namespace BruteForceHash.Methods
             var tasks = new List<Task>();
 
             // Create a TaskFactory and pass it our custom scheduler.
-            TaskFactory factory = new TaskFactory(taskScheduler);
-            CancellationTokenSource cts = new CancellationTokenSource();
+            TaskFactory factory = new(taskScheduler);
+            CancellationTokenSource cts = new();
 
             //Valid bytes
             if (string.IsNullOrEmpty(_options.ValidChars))
@@ -75,7 +75,7 @@ namespace BruteForceHash.Methods
             RunCharacterBruteForce(tasks, factory, _validStartCharsString, _options.Prefix);
 
             // Wait for the tasks to complete before displaying a completion message.
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll([.. tasks]);
             cts.Dispose();
         }
 
@@ -113,8 +113,8 @@ namespace BruteForceHash.Methods
             int levelp = level + 1;
 
             byte[] charsetBytes;
-            if (currentUtf8Value > 127 && _mappingBytes.ContainsKey(currentUtf8Value))
-                charsetBytes = _mappingBytes[currentUtf8Value];
+            if (currentUtf8Value > 127 && _mappingBytes.TryGetValue(currentUtf8Value, out byte[] valueCharset))
+                charsetBytes = valueCharset;
             else
             {
                 charsetBytes = _validBytes;
@@ -136,7 +136,7 @@ namespace BruteForceHash.Methods
             }
         }
 
-        private Tuple<byte[], Dictionary<int, byte[]>> GetBytesMappingUtf8(string chars)
+        private static Tuple<byte[], Dictionary<int, byte[]>> GetBytesMappingUtf8(string chars)
         {
             var validBytesList = new List<byte>();
             var mappingBytesList = new Dictionary<int, List<byte>>();
@@ -151,7 +151,7 @@ namespace BruteForceHash.Methods
                 {
                     byteChar2 = byteChars[1];
                     if (!mappingBytesList.ContainsKey(byteChar1))
-                        mappingBytesList.Add(byteChar1, new List<byte>());
+                        mappingBytesList.Add(byteChar1, []);
                     if (!mappingBytesList[byteChar1].Contains(byteChar2))
                         mappingBytesList[byteChar1].Add(byteChar2);
                 }
@@ -159,12 +159,12 @@ namespace BruteForceHash.Methods
                 {
                     var first2Bytes = (byteChar1 << 8) + byteChar2;
                     if (!mappingBytesList.ContainsKey(first2Bytes))
-                        mappingBytesList.Add(first2Bytes, new List<byte>());
+                        mappingBytesList.Add(first2Bytes, []);
                     if (!mappingBytesList[first2Bytes].Contains(byteChars[2]))
                         mappingBytesList[first2Bytes].Add(byteChars[2]);
                 }
             }
-            return new Tuple<byte[], Dictionary<int, byte[]>>(validBytesList.ToArray(), mappingBytesList.ToDictionary(p => p.Key, p => p.Value.ToArray()));
+            return new Tuple<byte[], Dictionary<int, byte[]>>([.. validBytesList], mappingBytesList.ToDictionary(p => p.Key, p => p.Value.ToArray()));
         }
     }
 }

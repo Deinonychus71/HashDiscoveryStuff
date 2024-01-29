@@ -26,4 +26,13 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="PatternSamples\exclude_patterns.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="PatternSamples\include_patterns.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

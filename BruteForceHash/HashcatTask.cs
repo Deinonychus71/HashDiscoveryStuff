@@ -23,7 +23,7 @@ namespace BruteForceHash
 
         public void Run(string arguments, bool verbose = false)
         {
-            Run(new List<string>() { arguments }, verbose, true);
+            Run([arguments], verbose, true);
         }
 
         public void RunWithWrapper(string arguments, bool monitor)
@@ -41,10 +41,12 @@ namespace BruteForceHash
 
             using (var process = new Process())
             {
-                var processInfo = new ProcessStartInfo("cmd.exe");
-                processInfo.Arguments = arg;
-                processInfo.CreateNoWindow = true;
-                processInfo.UseShellExecute = true;
+                var processInfo = new ProcessStartInfo("cmd.exe")
+                {
+                    Arguments = arg,
+                    CreateNoWindow = true,
+                    UseShellExecute = true
+                };
                 process.StartInfo = processInfo;
                 process.Start();
                 process.WaitForExit();
@@ -65,16 +67,14 @@ namespace BruteForceHash
                 if (verbose)
                     _logger.Log($"Running hashcat with arguments {arguments}.", false);
 
-                using (var process = new Process())
-                {
-                    process.StartInfo.FileName = _options.PathHashCat;
-                    process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
-                    process.StartInfo.Arguments = arguments;
-                    process.StartInfo.CreateNoWindow = false;
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close();
-                }
+                using var process = new Process();
+                process.StartInfo.FileName = _options.PathHashCat;
+                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(_options.PathHashCat);
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.CreateNoWindow = false;
+                process.Start();
+                process.WaitForExit();
+                process.Close();
             }
 
             _hashCatProcessDone = true;
@@ -101,28 +101,26 @@ namespace BruteForceHash
                                 var fileSize = new FileInfo(output).Length;
                                 if (fileSize > lastReadLength)
                                 {
-                                    using (var fs = new FileStream(output, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                                    using var fs = new FileStream(output, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                                    fs.Seek(lastReadLength, SeekOrigin.Begin);
+                                    var buffer = new byte[1024];
+
+                                    while (true)
                                     {
-                                        fs.Seek(lastReadLength, SeekOrigin.Begin);
-                                        var buffer = new byte[1024];
+                                        var bytesRead = fs.Read(buffer, 0, buffer.Length);
+                                        lastReadLength += bytesRead;
 
-                                        while (true)
+                                        if (bytesRead == 0)
+                                            break;
+
+                                        var text = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+
+                                        if (!string.IsNullOrEmpty(text))
                                         {
-                                            var bytesRead = fs.Read(buffer, 0, buffer.Length);
-                                            lastReadLength += bytesRead;
-
-                                            if (bytesRead == 0)
-                                                break;
-
-                                            var text = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
-                                            if (!string.IsNullOrEmpty(text))
+                                            var textLines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                                            foreach (var line in textLines)
                                             {
-                                                var textLines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-                                                foreach (var line in textLines)
-                                                {
-                                                    _logger.LogResult($"{_options.Prefix}{line[(line.LastIndexOf(':') + 1)..].Trim()}{_options.Suffix}");
-                                                }
+                                                _logger.LogResult($"{_options.Prefix}{line[(line.LastIndexOf(':') + 1)..].Trim()}{_options.Suffix}");
                                             }
                                         }
                                     }

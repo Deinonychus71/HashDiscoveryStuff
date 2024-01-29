@@ -52,7 +52,7 @@ namespace BruteForceHash
 
             _started = true;
 
-            if (_combinationPatterns.Count() == 0)
+            if (_combinationPatterns.Count == 0)
             {
                 _logger.Log($"No pattern found. Aborting operation.");
                 return;
@@ -101,7 +101,7 @@ namespace BruteForceHash
             var tasksCrack = new List<Task>();
 
             //CPU will focus on combinations beginning with a known word as Hashcat is much slower dealing with these
-            if (compiledHashCatCombinations.Count() > 0)
+            if (compiledHashCatCombinations.Any())
             {
                 tasksCrack.Add(taskFactory.StartNew(() =>
                 {

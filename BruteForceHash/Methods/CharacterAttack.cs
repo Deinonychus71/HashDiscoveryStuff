@@ -32,8 +32,8 @@ namespace BruteForceHash.Methods
             var tasks = new List<Task>();
 
             // Create a TaskFactory and pass it our custom scheduler.
-            TaskFactory factory = new TaskFactory(taskScheduler);
-            CancellationTokenSource cts = new CancellationTokenSource();
+            TaskFactory factory = new(taskScheduler);
+            CancellationTokenSource cts = new();
 
             //Valid bytes
             string inputValidChars;
@@ -77,7 +77,7 @@ namespace BruteForceHash.Methods
             RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix);
 
             // Wait for the tasks to complete before displaying a completion message.
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll([.. tasks]);
             cts.Dispose();
         }
 

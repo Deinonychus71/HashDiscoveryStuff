@@ -14,7 +14,7 @@ namespace BruteForceHash.Helpers
         private static bool _currentThreadIsProcessingItems;
 
         // The list of tasks to be executed
-        private readonly LinkedList<Task> _tasks = new LinkedList<Task>(); // protected by lock(_tasks)
+        private readonly LinkedList<Task> _tasks = new(); // protected by lock(_tasks)
 
         // The maximum concurrency level allowed by this scheduler.
         private readonly int _maxDegreeOfParallelism;
@@ -25,7 +25,7 @@ namespace BruteForceHash.Helpers
         // Creates a new instance with the specified degree of parallelism.
         public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
         {
-            if (maxDegreeOfParallelism < 1) throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
+            ArgumentOutOfRangeException.ThrowIfLessThan(maxDegreeOfParallelism, 1);
             _maxDegreeOfParallelism = maxDegreeOfParallelism;
         }
 

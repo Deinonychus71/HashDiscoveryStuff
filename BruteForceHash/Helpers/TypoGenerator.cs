@@ -15,7 +15,7 @@ namespace BruteForceHash.Helpers
         {
             _options = options;
 
-            _letterSwapPatterns = new List<Tuple<char, char>>();
+            _letterSwapPatterns = [];
             if (!string.IsNullOrEmpty(_options.TyposEnableLetterSwap))
             {
                 foreach (var pattern in _options.TyposEnableLetterSwap.Split(",", StringSplitOptions.RemoveEmptyEntries))
@@ -26,7 +26,7 @@ namespace BruteForceHash.Helpers
                 }
             }
 
-            _letterAppendPatterns = new List<string>();
+            _letterAppendPatterns = [];
             if (!string.IsNullOrEmpty(_options.TyposEnableAppendLetters))
             {
                 foreach (var pattern in _options.TyposEnableAppendLetters.Split(",", StringSplitOptions.RemoveEmptyEntries))
@@ -49,9 +49,9 @@ namespace BruteForceHash.Helpers
             for (var j = wordLength - 1; j >= 0; j--)
             {
                 if (_options.TyposEnableSkipLetter)
-                    typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip letter
+                    typo.Add(string.Concat(word.AsSpan(0, j), word.AsSpan(j + 1))); // Skip letter
                 else if (_options.TyposEnableSkipDoubleLetter && j > 0 && word[j] == word[j - 1])
-                    typo.Add(word.Substring(0, j) + word.Substring(j + 1)); // Skip double letter
+                    typo.Add(string.Concat(word.AsSpan(0, j), word.AsSpan(j + 1))); // Skip double letter
                 if (_options.TyposEnableDoubleLetter)
                     typo.Add(word.Insert(j, word[j].ToString())); // Double Letter
 
@@ -62,7 +62,7 @@ namespace BruteForceHash.Helpers
                     if (_options.TyposEnableExtraLetter)
                         typo.Add(word.Insert(j, keyboardChars[k].ToString())); // Extra letter
                     if (_options.TyposEnableWrongLetter)
-                        typo.Add(word.Substring(0, j) + keyboardChars[k] + word.Substring(j + 1)); //Wrong letter
+                        typo.Add(word[..j] + keyboardChars[k] + word[(j + 1)..]); //Wrong letter
                 }
 
                 if (_options.TyposEnableReverseLetter)
@@ -98,14 +98,14 @@ namespace BruteForceHash.Helpers
             return typo;
         }
 
-        private IEnumerable<string> GenerateLetterSwapTypos(string input, char char1, char char2)
+        private static IEnumerable<string> GenerateLetterSwapTypos(string input, char char1, char char2)
         {
             var head = input[0] == char1 || input[0] == char2
                 ? new[] { char1.ToString(), char2.ToString() }
                 : new[] { input[0].ToString() };
 
             var tails = Encoding.UTF8.GetByteCount(input) > 1
-                ? GenerateLetterSwapTypos(input.Substring(1), char1, char2)
+                ? GenerateLetterSwapTypos(input[1..], char1, char2)
                 : new[] { "" };
 
             return
@@ -114,29 +114,29 @@ namespace BruteForceHash.Helpers
                 select h + t;
         }
 
-        private string SwapCharacter(string input, char insertChar, int index)
+        private static string SwapCharacter(string input, char insertChar, int index)
         {
-            string f = input.Substring(0, index);
-            string l = input.Substring(index + 1);
+            string f = input[..index];
+            string l = input[(index + 1)..];
 
             return f + insertChar + l;
         }
 
-        private char[][] GetKeyboardMapping()
+        private static char[][] GetKeyboardMapping()
         {
             var keyboardMapping = new char[3][];
-            keyboardMapping[0] = new char[] { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' };
-            keyboardMapping[1] = new char[] { 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l' };
-            keyboardMapping[2] = new char[] { 'z', 'x', 'c', 'v', 'b', 'n', 'm' };
+            keyboardMapping[0] = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
+            keyboardMapping[1] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
+            keyboardMapping[2] = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
             return keyboardMapping;
         }
 
-        private bool IsArraySizeValid<T>(IEnumerable<T> array, int size)
+        private static bool IsArraySizeValid<T>(IEnumerable<T> array, int size)
         {
             return size >= 0 && array.Count() > size;
         }
 
-        private List<char> IsItemInArrayNearest(char[][] keyboard, char character)
+        private static List<char> IsItemInArrayNearest(char[][] keyboard, char character)
         {
             var nearKeys = new List<char>();
             for (var i = 0; i < keyboard.Length; i++)
@@ -183,14 +183,14 @@ namespace BruteForceHash.Helpers
             return nearKeys;
         }
 
-        private string RemoveConsLetterDuplicates(string input)
+        private static string RemoveConsLetterDuplicates(string input)
         {
             if (input.Length <= 1)
                 return input;
             if (input[0] == input[1])
-                return RemoveConsLetterDuplicates(input.Substring(1));
+                return RemoveConsLetterDuplicates(input[1..]);
             else
-                return input[0] + RemoveConsLetterDuplicates(input.Substring(1));
+                return input[0] + RemoveConsLetterDuplicates(input[1..]);
         }
     }
 }

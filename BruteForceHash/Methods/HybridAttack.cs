@@ -144,7 +144,7 @@ namespace BruteForceHash
                 _logger.Log($"Only Last Two Words Concatenated: {_options.ConcatenateLastTwoWords}");
             }
 
-            _logger.Log($"Combinations found: {_combinationPatterns.Count()}");
+            _logger.Log($"Combinations found: {_combinationPatterns.Count}");
             _logger.Log($"Combination Order Algorithm: {_options.Order}");
             _logger.Log($"Combination Order Longer words first: {_options.OrderLongerWordsFirst}");
 
@@ -230,7 +230,7 @@ namespace BruteForceHash
 
             try
             {
-                Task.WaitAll(tasks.ToArray());
+                Task.WaitAll([.. tasks]);
             }
             catch { }
         }

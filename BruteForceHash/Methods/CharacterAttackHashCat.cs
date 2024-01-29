@@ -82,7 +82,7 @@ namespace BruteForceHash.Methods
                 var cts = new CancellationTokenSource();
                 RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix, true);
                 // Wait for the tasks to complete before displaying a completion message.
-                Task.WaitAll(tasks.ToArray());
+                Task.WaitAll([.. tasks]);
                 cts.Dispose();
 
                 if (_hexExtract == 0)
@@ -120,7 +120,7 @@ namespace BruteForceHash.Methods
                 {
                     try
                     {
-                        ByteString strBuilder = new ByteString(_stringLength, _hexValue, prefix, _options.Suffix);
+                        ByteString strBuilder = new(_stringLength, _hexValue, prefix, _options.Suffix);
                         strBuilder.Append(startingCharacter);
                         DiveByteSimple(strBuilder, 0, searchLength, shouldInterruptAtFirstResult);
                     }
