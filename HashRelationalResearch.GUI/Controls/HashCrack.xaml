@@ -9,10 +9,6 @@
              xmlns:uc="clr-namespace:HashRelationalResearch.GUI.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="1050" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <vm:HashCrackVM />
-    </UserControl.DataContext>
-
     <Grid Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" MinWidth="400" MaxWidth="500"/>
@@ -20,9 +16,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
-            <RowDefinition Height="250"/>
-            <RowDefinition Height="250"/>
-            <RowDefinition Height="250"/>
+            <RowDefinition Height="160"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="160"/>
             <RowDefinition Height="150"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -31,26 +27,23 @@
         <GroupBox Header="Hash Crack" Grid.Row="0" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Width="Auto">
                 <Label Content="Attack Type:"/>
-                <ComboBox>
+                <ComboBox ItemsSource="{Binding AttackTypeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AttackType, Mode=TwoWay}">
                     <i:Interaction.Behaviors>
                         <h:ComboBoxWidthBehavior />
                     </i:Interaction.Behaviors>
-                    <ComboBoxItem Content="Dictionary"/>
-                    <ComboBoxItem Content="Character"/>
-                    <ComboBoxItem Content="Hybrid"/>
                 </ComboBox>
                 <Label Content="Threads:"/>
-                <ComboBox>
+                <ComboBox ItemsSource="{Binding NbrThreadsList, Mode=OneTime}" SelectedItem="{Binding HbtFile.NbrThreads, Mode=TwoWay}">
                     <i:Interaction.Behaviors>
                         <h:ComboBoxWidthBehavior />
                     </i:Interaction.Behaviors>
                 </ComboBox>
                 <Label Content="Prefix:"/>
-                <TextBox Width="150"/>
+                <TextBox Width="150" Text="{Binding HbtFile.Prefix, Mode=TwoWay}"/>
                 <Label Content="Suffix:"/>
-                <TextBox Width="150"/>
+                <TextBox Width="150" Text="{Binding HbtFile.Suffix, Mode=TwoWay}"/>
                 <Label Content="Verbose:"/>
-                <CheckBox/>
+                <CheckBox IsChecked="{Binding HbtFile.Verbose, Mode=TwoWay}"/>
             </StackPanel>
         </GroupBox>
 
@@ -59,9 +52,10 @@
         <GroupBox Header="Word Filtering" Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition Width="2*" MinWidth="100"/>
-                    <ColumnDefinition Width="*"  MinWidth="130"/>
+                    <ColumnDefinition Width="125"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -70,33 +64,29 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Content="Exclude Patterns:"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Width="Auto"></TextBox>
-                <ComboBox Grid.Row="0" Grid.Column="2" Width="Auto"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Width="Auto" Text="{Binding HbtFile.WordFiltering.ExcludePatterns, Mode=TwoWay}"/>
+                <ComboBox Grid.Row="0" Grid.Column="3" Width="Auto" ItemsSource="{Binding ExcludePatternsList, Mode=OneTime}" SelectedItem="{Binding SelectedExcludePattern, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="0" Content="Include Patterns:"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Width="Auto"></TextBox>
-                <ComboBox Grid.Row="1" Grid.Column="2" Width="Auto"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Width="Auto" Text="{Binding HbtFile.WordFiltering.IncludePatterns, Mode=TwoWay}"/>
+                <ComboBox Grid.Row="1" Grid.Column="3" Width="Auto" ItemsSource="{Binding IncludePatternsList, Mode=OneTime}" SelectedItem="{Binding SelectedIncludePattern, Mode=TwoWay}"/>
                 <Label Grid.Row="2" Grid.Column="0" Content="Include Word:"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Width="Auto"></TextBox>
-                <Grid Grid.Row="2" Grid.Column="2">
+                <TextBox Grid.Row="2" Grid.Column="1" Width="Auto" Text="{Binding HbtFile.WordFiltering.IncludeWordDict, Mode=TwoWay}"/>
+                <Grid Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" VerticalAlignment="Top" >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Content="Not 1st word:"/>
-                    <CheckBox Grid.Row="0" Grid.Column="1" />
-                    <Label Grid.Row="1" Grid.Column="0" Content="Not last word:"/>
-                    <CheckBox Grid.Row="1" Grid.Column="1" />
+                    <Label Grid.Row="0" Grid.Column="0" Content="Not 1st word:" HorizontalAlignment="Right"/>
+                    <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding HbtFile.WordFiltering.IncludeWordNotFirst, Mode=TwoWay}"/>
+                    <Label Grid.Row="1" Grid.Column="0" Content="Not last word:" HorizontalAlignment="Right"/>
+                    <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding HbtFile.WordFiltering.IncludeWordNotLast, Mode=TwoWay}"/>
                 </Grid>
                 <Label Grid.Row="3" Grid.Column="0" Content="Order:"/>
-                <ComboBox Grid.Row="3" Grid.Column="1" Width="Auto"/>
-                <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="2" >
-                    <Label Content="Words Limit:"/>
-                    <ComboBox Width="Auto"/>
-                </StackPanel>
+                <ComboBox Grid.Row="3" Grid.Column="1" Width="Auto" ItemsSource="{Binding CombinationOrdersList, Mode=OneTime}" SelectedValue="{Binding HbtFile.WordFiltering.Order, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
             </Grid>
         </GroupBox>
         <!-- Size Filtering -->
@@ -121,55 +111,55 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="Max Delimiters:"/>
-                <ComboBox Grid.Row="0" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="0" Grid.Column="3" Width="Auto" ItemsSource="{Binding DelimitersList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MaxDelimiters, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Content="Max Word Length:"/>
-                <ComboBox Grid.Row="1" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="1" Grid.Column="3" Width="Auto" ItemsSource="{Binding MaxWordLengthList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MaxWordLength, Mode=TwoWay}"/>
                 <Label Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Content="Min Delimiters:"/>
-                <ComboBox Grid.Row="0" Grid.Column="7" Width="Auto"/>
+                <ComboBox Grid.Row="0" Grid.Column="7" Width="Auto" ItemsSource="{Binding DelimitersList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MinDelimiters, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="3" Content="Min Word Length:"/>
-                <ComboBox Grid.Row="1" Grid.Column="7" Width="Auto"/>
+                <ComboBox Grid.Row="1" Grid.Column="7" Width="Auto" ItemsSource="{Binding MinWordLengthList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MinWordLength, Mode=TwoWay}"/>
                 <Label Grid.Row="2" Grid.Column="0" Content="Ones:"/>
-                <ComboBox Grid.Row="2" Grid.Column="1" Width="Auto"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MinOnes, Mode=TwoWay}"/>
                 <Label Grid.Row="2" Grid.Column="2" Content="to"/>
-                <ComboBox Grid.Row="2" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="2" Grid.Column="3" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MaxOnes, Mode=TwoWay}"/>
                 <Label Grid.Row="3" Grid.Column="0" Content="Twos:"/>
-                <ComboBox Grid.Row="3" Grid.Column="1" Width="Auto"/>
+                <ComboBox Grid.Row="3" Grid.Column="1" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MinTwos, Mode=TwoWay}"/>
                 <Label Grid.Row="3" Grid.Column="2" Content="to"/>
-                <ComboBox Grid.Row="3" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="3" Grid.Column="3" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MaxTwos, Mode=TwoWay}"/>
                 <Label Grid.Row="4" Grid.Column="0" Content="Threes:"/>
-                <ComboBox Grid.Row="4" Grid.Column="1" Width="Auto"/>
+                <ComboBox Grid.Row="4" Grid.Column="1" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MinThrees, Mode=TwoWay}"/>
                 <Label Grid.Row="4" Grid.Column="2" Content="to"/>
-                <ComboBox Grid.Row="4" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="4" Grid.Column="3" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MaxThrees, Mode=TwoWay}"/>
                 <Label Grid.Row="5" Grid.Column="0" Content="Fours:"/>
-                <ComboBox Grid.Row="5" Grid.Column="1" Width="Auto"/>
+                <ComboBox Grid.Row="5" Grid.Column="1" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MinFours, Mode=TwoWay}"/>
                 <Label Grid.Row="5" Grid.Column="2" Content="to"/>
-                <ComboBox Grid.Row="5" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="5" Grid.Column="3" Width="Auto" ItemsSource="{Binding WordSizeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.SizeFiltering.MaxFours, Mode=TwoWay}"/>
                 <Label Grid.Row="2" Grid.Column="4" Content="At least:"/>
-                <ComboBox Grid.Row="2" Grid.Column="5" Width="Auto"/>
+                <ComboBox Grid.Row="2" Grid.Column="5" Width="Auto" ItemsSource="{Binding WordsList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtLeastNbrGteWords, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
                 <Label Grid.Row="2" Grid.Column="6" Content="≥"/>
-                <ComboBox Grid.Row="2" Grid.Column="7" Width="Auto"/>
+                <ComboBox Grid.Row="2" Grid.Column="7" Width="Auto" ItemsSource="{Binding CharactersList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtLeastNbrGteCharacters, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
                 <Label Grid.Row="3" Grid.Column="4" Content="At least:"/>
-                <ComboBox Grid.Row="3" Grid.Column="5" Width="Auto"/>
+                <ComboBox Grid.Row="3" Grid.Column="5" Width="Auto" ItemsSource="{Binding WordsList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtLeastNbrLteWords, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
                 <Label Grid.Row="3" Grid.Column="6" Content="≤"/>
-                <ComboBox Grid.Row="3" Grid.Column="7" Width="Auto"/>
+                <ComboBox Grid.Row="3" Grid.Column="7" Width="Auto" ItemsSource="{Binding CharactersList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtLeastNbrLteCharacters, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
                 <Label Grid.Row="4" Grid.Column="4" Content="At most:"/>
-                <ComboBox Grid.Row="4" Grid.Column="5" Width="Auto"/>
+                <ComboBox Grid.Row="4" Grid.Column="5" Width="Auto" ItemsSource="{Binding WordsList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtMostNbrGteWords, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
                 <Label Grid.Row="4" Grid.Column="6" Content="≥"/>
-                <ComboBox Grid.Row="4" Grid.Column="7" Width="Auto"/>
+                <ComboBox Grid.Row="4" Grid.Column="7" Width="Auto" ItemsSource="{Binding CharactersList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtMostNbrGteCharacters, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
                 <Label Grid.Row="5" Grid.Column="4" Content="At most:"/>
-                <ComboBox Grid.Row="5" Grid.Column="5" Width="Auto"/>
+                <ComboBox Grid.Row="5" Grid.Column="5" Width="Auto" ItemsSource="{Binding WordsList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtMostNbrLteWords, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
                 <Label Grid.Row="5" Grid.Column="6" Content="≤"/>
-                <ComboBox Grid.Row="5" Grid.Column="7" Width="Auto"/>
+                <ComboBox Grid.Row="5" Grid.Column="7" Width="Auto" ItemsSource="{Binding CharactersList, Mode=OneTime}" SelectedValue="{Binding HbtFile.SizeFiltering.AtMostNbrLteCharacters, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
             </Grid>
             
         </GroupBox>
         <!-- Advanced Attack -->
-        <GroupBox Header="      Advanced Attack" Grid.Row="3">
+        <GroupBox Header="      Advanced Attack" Grid.Row="3" IsEnabled="{Binding HbtFile.AdvancedAttack.UseDictionaryAdvanced, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="125"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="125"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -179,25 +169,25 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Content="Max Concat. Words:"/>
-                <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto"/>
+                <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" ItemsSource="{Binding AdvancedConcatWordsList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AdvancedAttack.MaxConcatenatedWords, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="0" Content="Max Cons. Concat:"/>
-                <ComboBox Grid.Row="1" Grid.Column="1" Width="Auto"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" Width="Auto" ItemsSource="{Binding AdvancedConsecutiveList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AdvancedAttack.MaxConsecutiveConcatenation, Mode=TwoWay}"/>
                 <Label Grid.Row="2" Grid.Column="0" Content="Max Cons. Ones:"/>
-                <ComboBox Grid.Row="2" Grid.Column="1" Width="Auto"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" Width="Auto" ItemsSource="{Binding AdvancedConsecutiveList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AdvancedAttack.MaxConsecutiveOnes, Mode=TwoWay}"/>
                 <Label Grid.Row="3" Grid.Column="0" Content="First 2 Words Concat.:"/>
-                <ComboBox Grid.Row="3" Grid.Column="1" Width="Auto"/>
+                <CheckBox Grid.Row="3" Grid.Column="1" Width="Auto" IsChecked="{Binding HbtFile.AdvancedAttack.ConcatenateFirstTwoWords, Mode=TwoWay}"/>
 
                 <Label Grid.Row="0" Grid.Column="2" Content="Min Concat. Words:"/>
-                <ComboBox Grid.Row="0" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="0" Grid.Column="3" Width="Auto" ItemsSource="{Binding AdvancedConcatWordsList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AdvancedAttack.MinConcatenatedWords, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="2" Content="Min Cons. Concat:"/>
-                <ComboBox Grid.Row="1" Grid.Column="3" Width="Auto"/>
-                <Label Grid.Row="2" Grid.Column="2" Content="Min Cons. Ones:"/>
-                <ComboBox Grid.Row="2" Grid.Column="3" Width="Auto"/>
+                <ComboBox Grid.Row="1" Grid.Column="3" Width="Auto" ItemsSource="{Binding AdvancedConsecutiveList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AdvancedAttack.MinConsecutiveConcatenation, Mode=TwoWay}"/>
+                <Label Grid.Row="2" Grid.Column="2" Content="Min Words Limit:"/>
+                <ComboBox Grid.Row="2" Grid.Column="3" Width="Auto" ItemsSource="{Binding AdvancedMinWordsList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AdvancedAttack.MinWordsLimit, Mode=TwoWay}"/>
                 <Label Grid.Row="3" Grid.Column="2" Content="Last 2 Words Concat.:"/>
-                <ComboBox Grid.Row="3" Grid.Column="3" Width="Auto"/>
+                <CheckBox Grid.Row="3" Grid.Column="3" Width="Auto" IsChecked="{Binding HbtFile.AdvancedAttack.ConcatenateLastTwoWords, Mode=TwoWay}"/>
             </Grid>
         </GroupBox>
-        <CheckBox Grid.Row="3" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,3"/>
+        <CheckBox Grid.Row="3" VerticalAlignment="Top" IsChecked="{Binding HbtFile.AdvancedAttack.UseDictionaryAdvanced, Mode=TwoWay}" HorizontalAlignment="Left" Margin="8,3"/>
         <!-- Typos -->
         <GroupBox Header="Typos" Grid.Row="4">
             <Grid>
@@ -215,17 +205,17 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="1" Content="Extra Letter"/>
-                <CheckBox Grid.Row="0" Grid.Column="0"/>
+                <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding HbtFile.Typos.TyposEnableExtraLetter, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="1" Content="Skip Letter"/>
-                <CheckBox Grid.Row="1" Grid.Column="0"/>
+                <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding HbtFile.Typos.TyposEnableSkipLetter, Mode=TwoWay}"/>
                 <Label Grid.Row="0" Grid.Column="3" Content="Reverse Letter"/>
-                <CheckBox Grid.Row="0" Grid.Column="2"/>
+                <CheckBox Grid.Row="0" Grid.Column="2" IsChecked="{Binding HbtFile.Typos.TyposEnableReverseLetter, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="3" Content="Wrong Letter"/>
-                <CheckBox Grid.Row="1" Grid.Column="2"/>
+                <CheckBox Grid.Row="1" Grid.Column="2" IsChecked="{Binding HbtFile.Typos.TyposEnableWrongLetter, Mode=TwoWay}"/>
                 <Label Grid.Row="0" Grid.Column="5" Content="Double Letter"/>
-                <CheckBox Grid.Row="0" Grid.Column="4"/>
+                <CheckBox Grid.Row="0" Grid.Column="4" IsChecked="{Binding HbtFile.Typos.TyposEnableDoubleLetter, Mode=TwoWay}"/>
                 <Label Grid.Row="1" Grid.Column="5" Content="Skip Double Letter"/>
-                <CheckBox Grid.Row="1" Grid.Column="4"/>
+                <CheckBox Grid.Row="1" Grid.Column="4" IsChecked="{Binding HbtFile.Typos.TyposEnableSkipDoubleLetter, Mode=TwoWay}"/>
                 <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
@@ -234,15 +224,15 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Letter swap:" Grid.Row="0"  Grid.Column="0"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Width="Auto"/>
-                    <Label Content="Letter swap:" Grid.Row="0"  Grid.Column="2"/>
-                    <TextBox Grid.Row="0" Grid.Column="3" Width="Auto"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Width="Auto" Text="{Binding HbtFile.Typos.TyposEnableLetterSwap, Mode=TwoWay}"/>
+                    <Label Content="Append letter:" Grid.Row="0"  Grid.Column="2"/>
+                    <TextBox Grid.Row="0" Grid.Column="3" Width="Auto" Text="{Binding HbtFile.Typos.TyposEnableAppendLetter, Mode=TwoWay}"/>
                 </Grid>
             </Grid>
         </GroupBox>
         
         <!-- Right Panel -->
-        <TabControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="4">
+        <TabControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="5">
             <TabItem Header="Main Dictionary">
                 <uc:HashCrackDictionaryTab DataContext="{Binding MainDictionaryVM, Mode=OneWay}"/>
             </TabItem>

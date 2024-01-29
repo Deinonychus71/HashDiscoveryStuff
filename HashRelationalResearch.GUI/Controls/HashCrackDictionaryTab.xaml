@@ -9,9 +9,6 @@
              xmlns:uc="clr-namespace:HashRelationalResearch.GUI.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="500">
-    <UserControl.DataContext>
-        <vm:HashCrackDictionaryTabVM />
-    </UserControl.DataContext>
     <TabControl>
         <TabItem Header="Common Dictionaries">
             <Grid>

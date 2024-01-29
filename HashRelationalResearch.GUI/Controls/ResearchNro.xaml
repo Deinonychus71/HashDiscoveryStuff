@@ -8,10 +8,6 @@
              xmlns:h="clr-namespace:HashRelationalResearch.GUI.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <vm:ResearchNroVM />
-    </UserControl.DataContext>
-    
     <Grid Grid.Column="2" Background="WhiteSmoke">
         <Grid.RowDefinitions>
             <RowDefinition Height="30px"/>

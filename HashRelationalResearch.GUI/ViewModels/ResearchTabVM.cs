@@ -1,7 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashCommon;
 using HashRelationalResearch.GUI.Helpers;
+using HashRelationalResearch.GUI.Services;
+using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
@@ -9,10 +14,13 @@ namespace HashRelationalResearch.GUI.ViewModels
     public class ResearchTabVM : ViewModelBase
     {
         #region Members
+        private const string DEFAULT_TAB_NAME = "Blank";
+        private readonly IHashDBService _hashDBService;
         private ResearchNroVM _nroVM;
         private ResearchPrcVM _prcVM;
         private HashCrackVM _hashCrackVM;
 
+        private string _tabLabel = DEFAULT_TAB_NAME;
         private string? _hashValue;
         private string? _hashLabel;
         private string? _hashLabelSaved;
@@ -57,6 +65,19 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
+        public string TabLabel
+        {
+            get => _tabLabel;
+            set
+            {
+                _tabLabel = value;
+                if (string.IsNullOrEmpty(_tabLabel)){
+                    _tabLabel = DEFAULT_TAB_NAME;
+                }
+                OnPropertyChanged(nameof(TabLabel));
+            }
+        }
+
         public string? HashValue
         {
             get => _hashValue;
@@ -66,7 +87,8 @@ namespace HashRelationalResearch.GUI.ViewModels
                 if (valueTemp != null && valueTemp.Length == 11 && valueTemp.StartsWith("0x"))
                     valueTemp = valueTemp.Replace("0x", "0x0");
                 _hashValue = valueTemp;
-                OnPropertyChanged(nameof(HashValue));
+                TabLabel = valueTemp ?? DEFAULT_TAB_NAME;
+                OnPropertyChanged(nameof(TabLabel));
             }
         }
 
@@ -101,11 +123,12 @@ namespace HashRelationalResearch.GUI.ViewModels
         }
         #endregion
 
-        public ResearchTabVM()
+        public ResearchTabVM(IHashDBService hashDBService, ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
         {
-            _nroVM = new ResearchNroVM();
-            _prcVM = new ResearchPrcVM();
-            _hashCrackVM = new HashCrackVM();
+            _hashDBService = hashDBService;
+            _nroVM = researchNroVM;
+            _prcVM = researchPrcVM;
+            _hashCrackVM = hashCrackVM;
             HashValueChanged = new RelayCommand(LoadNewHash);
             HashLabelChanged = new RelayCommand(TestHashLabel);
         }
@@ -134,7 +157,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         {
             var hash = _hashValue?.Trim().ToLower();
             if (hash != null && hash.StartsWith("0x"))
-                _exportEntry = JSONDB.GetEntry(hash) ?? null;
+                _exportEntry = _hashDBService.GetEntry(hash) ?? null;
             else
                 _exportEntry = null;
 

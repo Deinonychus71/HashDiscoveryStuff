@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:uc="clr-namespace:HashRelationalResearch.GUI.Controls"
+                    xmlns:vm="clr-namespace:HashRelationalResearch.GUI.ViewModels" >
+    <DataTemplate DataType="{x:Type vm:ResearchTabVM}">
+        <uc:ResearchTab />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ResearchPrcVM}">
+        <uc:ResearchPrc />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ResearchNroVM}">
+        <uc:ResearchNro />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:HashCrackVM}">
+        <uc:HashCrack />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:HashCrackDictionaryTabVM}">
+        <uc:HashCrackDictionaryTab />
+    </DataTemplate>
+</ResourceDictionary>

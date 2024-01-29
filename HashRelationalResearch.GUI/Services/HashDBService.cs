@@ -1,19 +1,20 @@
-﻿using HashRelationalResearch.Models;
+﻿using HashRelationalResearch.GUI.Services.Interfaces;
+using HashRelationalResearch.Models;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace HashRelationalResearch.GUI.Helpers
+namespace HashRelationalResearch.GUI.Services
 {
-    public static class JSONDB
+    public class HashDBService: IHashDBService
     {
-        private static Dictionary<string, ExportEntry> _entries = [];
-        private static Dictionary<string, List<ExportFunctionEntry>> _functions = [];
-        private static Dictionary<string, string> _labels = [];
+        private Dictionary<string, ExportEntry> _entries = [];
+        private Dictionary<string, List<ExportFunctionEntry>> _functions = [];
+        private Dictionary<string, string> _labels = [];
 
-        public static void Init(string filename)
+        public void Init(string filename)
         {
             try
             {
@@ -40,21 +41,21 @@ namespace HashRelationalResearch.GUI.Helpers
             }
         }
 
-        public static ExportEntry? GetEntry(string hash)
+        public ExportEntry? GetEntry(string hash)
         {
             if (hash.StartsWith("0x") && _entries.TryGetValue(hash, out ExportEntry? value))
                 return value;
             return null;
         }
 
-        public static ExportFunctionEntry? GetFunction(string file, int functionId)
+        public ExportFunctionEntry? GetFunction(string file, int functionId)
         {
             if (_functions.TryGetValue(file, out List<ExportFunctionEntry>? value))
                 return value[functionId];
             return null;
         }
 
-        public static List<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds)
+        public List<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds)
         {
             var output = new List<ExportFunctionEntry>();
             if (functionIds != null && _functions.TryGetValue(file, out List<ExportFunctionEntry>? value))
@@ -67,7 +68,7 @@ namespace HashRelationalResearch.GUI.Helpers
             return output;
         }
 
-        public static string? GetLabel(string hash40)
+        public string? GetLabel(string hash40)
         {
             if (_labels.TryGetValue(hash40, out string? value))
                 return value;

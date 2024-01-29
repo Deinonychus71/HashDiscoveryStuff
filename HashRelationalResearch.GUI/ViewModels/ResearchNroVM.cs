@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashRelationalResearch.GUI.Helpers;
+using HashRelationalResearch.GUI.Services;
+using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,8 @@ namespace HashRelationalResearch.GUI.ViewModels
     public class ResearchNroVM : ViewModelBase
     {
         #region Members
+        private readonly IHashDBService _hashDBService;
+
         private string? _codeEditorText;
         private bool _shouldDisplayKnownLabels;
         private ExportCFileEntry? _selectedCFileEntry;
@@ -67,12 +71,13 @@ namespace HashRelationalResearch.GUI.ViewModels
         public WpfObservableRangeCollection<ExportFunctionEntry> CFunctionEntries { get; set; }
         #endregion
 
-        public ResearchNroVM()
+        public ResearchNroVM(IHashDBService hashDBService)
         {
+            _hashDBService = hashDBService;
             CFileEntries = [];
             CFunctionEntries = [];
             CFileSelected = new RelayCommand(LoadFunctionInstances);
-            CFunctionSelected = new RelayCommand(LoadFunction);
+            CFunctionSelected = new RelayCommand<ExportFunctionEntry?>(LoadFunction);
             ShouldDisplayKnownLabels = true;
         }
 
@@ -99,23 +104,24 @@ namespace HashRelationalResearch.GUI.ViewModels
             if (_selectedCFileEntry != null)
             {
                 CFunctionEntries.Clear();
-                var functions = JSONDB.GetFunctions(_selectedCFileEntry.File, _selectedCFileEntry.Instances.Select(p => p.FunctionId).Distinct());
+                var functions = _hashDBService.GetFunctions(_selectedCFileEntry.File, _selectedCFileEntry.Instances.Select(p => p.FunctionId).Distinct());
                 CFunctionEntries.AddRange(functions);
-                SelectedCFunctionEntry = CFunctionEntries.First();
-
+                var firstCFunction = CFunctionEntries.First();
+                SelectedCFunctionEntry = firstCFunction;
+                LoadFunction(firstCFunction);
             }
         }
 
-        private void LoadFunction()
+        private void LoadFunction(ExportFunctionEntry? cFunctionEntry)
         {
-            if (_selectedCFunctionEntry != null)
+            if (cFunctionEntry != null)
             {
                 if (ShouldDisplayKnownLabels)
                 {
-                    var content = _selectedCFunctionEntry.Content;
-                    foreach (var hash40 in _selectedCFunctionEntry.Hashes)
+                    var content = cFunctionEntry.Content;
+                    foreach (var hash40 in cFunctionEntry.Hashes)
                     {
-                        var label = JSONDB.GetLabel(hash40);
+                        var label = _hashDBService.GetLabel(hash40);
                         if (label != null)
                             content = content.Replace(hash40.Replace("0x0", "0x"), $"\"{label}\"");
                     }
@@ -123,7 +129,7 @@ namespace HashRelationalResearch.GUI.ViewModels
                 }
                 else
                 {
-                    CodeEditorText = _selectedCFunctionEntry.Content;
+                    CodeEditorText = cFunctionEntry.Content;
                 }
             }
         }

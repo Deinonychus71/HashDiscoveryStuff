@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashRelationalResearch.GUI.Helpers;
+using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
 using paracobNET;
 using prcEditor.Windows;
@@ -15,6 +16,8 @@ namespace HashRelationalResearch.GUI.ViewModels
     public class ResearchPrcVM : ViewModelBase
     {
         #region Members
+        private readonly IConfigurationService _configurationService;
+        private string? _loadedPrcFile;
         private ExportPRCFileEntry? _selectedPrcFileEntry;
         private ParamControl? _prcFile;
         #endregion
@@ -45,14 +48,16 @@ namespace HashRelationalResearch.GUI.ViewModels
         public WpfObservableRangeCollection<ExportPRCFileEntry> PrcFileEntries { get; set; }
         #endregion
 
-        public ResearchPrcVM()
+        public ResearchPrcVM(IConfigurationService configurationService)
         {
+            _configurationService = configurationService;
             PrcFileEntries = [];
-            PrcFileSelected = new RelayCommand(LoadPRCFile);
+            PrcFileSelected = new RelayCommand<string?>(LoadPRCFile);
         }
 
         public void ClearData()
         {
+            _loadedPrcFile = null;
             SelectedPrcFileEntry = null;
             PRCFile = null;
             PrcFileEntries.Clear();
@@ -63,19 +68,21 @@ namespace HashRelationalResearch.GUI.ViewModels
             if (prcFiles != null && prcFiles.Count > 0)
             {
                 PrcFileEntries.AddRange(prcFiles);
-                SelectedPrcFileEntry = prcFiles.First();
+                var firstPrcFile = prcFiles.First();
+                SelectedPrcFileEntry = firstPrcFile;
+                LoadPRCFile(firstPrcFile.File);
             }
         }
 
-        public void LoadPRCFile()
+        public void LoadPRCFile(string? prcFile)
         {
-            if (_selectedPrcFileEntry != null)
+            if (prcFile != null && _loadedPrcFile != prcFile)
             {
                 var t = new ParamFile();
-                var file = _selectedPrcFileEntry.File;
-                if (file.StartsWith("/"))
-                    file = file.Substring(1);
-                t.Open(Path.Combine("C:\\Users\\deihn\\Desktop\\bruteforcepublish\\smash13.1", file.Replace('/', Path.DirectorySeparatorChar)));
+                var file = prcFile;
+                if (file.StartsWith('/'))
+                    file = file[1..];
+                t.Open(Path.Combine(_configurationService.PrcRootPath, file.Replace('/', Path.DirectorySeparatorChar)));
                 PRCFile = new ParamControl(t.Root);
                 Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                 {
@@ -86,8 +93,7 @@ namespace HashRelationalResearch.GUI.ViewModels
                             var childControl = treeView.ItemContainerGenerator.ContainerFromItem(item);
                             if (childControl != null)
                             {
-                                var treeViewItem = childControl as TreeViewItem;
-                                if (treeViewItem != null)
+                                if (childControl is TreeViewItem treeViewItem)
                                 {
                                     treeViewItem.IsExpanded = true;
                                     //Do further expanding
@@ -96,6 +102,7 @@ namespace HashRelationalResearch.GUI.ViewModels
                         }
                     }
                 });
+                _loadedPrcFile = prcFile;
 
             }
         }

@@ -8,9 +8,6 @@
              xmlns:uc="clr-namespace:HashRelationalResearch.GUI.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="1050" d:DesignWidth="1900">
-    <UserControl.DataContext>
-        <vm:ResearchTabVM />
-    </UserControl.DataContext>
     <UserControl.Resources>
         <Style x:Key="LabelStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="Background" Value="White"/>
@@ -29,7 +26,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" MinWidth="760"/>
             <ColumnDefinition Width="2"/>
-            <ColumnDefinition Width="*" MinWidth="1500"/>
+            <ColumnDefinition Width="*" MinWidth="1000"/>
         </Grid.ColumnDefinitions>
 
         <!-- Info -->
@@ -62,11 +59,11 @@
                 </StackPanel>
             </GroupBox>
             <TabControl Grid.Row="1">
-                <TabItem Header="PRC">
-                    <uc:ResearchPrc Grid.Row="1" Grid.ColumnSpan="2" DataContext="{Binding NROPRC, Mode=OneWay}" />
-                </TabItem>
                 <TabItem Header="NRO">
-                    <uc:ResearchNro Grid.Column="2" DataContext="{Binding NROVM, Mode=OneWay}" />
+                    <ContentControl Content="{Binding NROVM}" />
+                </TabItem>
+                <TabItem Header="PRC">
+                    <ContentControl Content="{Binding NROPRC}" />
                 </TabItem>
             </TabControl>
             
@@ -79,6 +76,6 @@
                       ResizeBehavior="PreviousAndNext" />
 
         <!-- HashCrack -->
-        <uc:HashCrack Grid.Column="2" DataContext="{Binding HackCrackVM, Mode=OneWay}" />
+        <ContentControl Grid.Column="2" Content="{Binding HackCrackVM}" />
     </Grid>
 </UserControl>

@@ -5,11 +5,11 @@ namespace HashRelationalResearch.GUI.Models
     public class HbtFile
     {
         public string HexValue { get; set; } = string.Empty;
-        public int NbrThreads { get; set; }
-        public string Method { get; set; } = string.Empty;
+        public int NbrThreads { get; set; } = 8;
+        public string AttackType { get; set; } = "Dictionary";
         public string Prefix { get; set; } = string.Empty;
         public string Suffix { get; set; } = string.Empty;
-        public bool Verbose { get; set; }
+        public bool Verbose { get; set; } = false;
 
         public HbtFileWordFiltering WordFiltering { get; set; } = new();
 
@@ -31,56 +31,56 @@ namespace HashRelationalResearch.GUI.Models
         public string IncludeWordDict { get; set; } = string.Empty;
         public bool IncludeWordNotFirst { get; set; }
         public bool IncludeWordNotLast { get; set; }
-        public string Order { get; set; } = string.Empty;
+        public string Order { get; set; } = "fewer_words_first_long";
     }
 
     public class HbtFileSizeFiltering
     {
-        public int MinDelimiters { get; set; }
-        public int MaxDelimiters { get; set; }
-        public int MinWordLength { get; set; }
-        public int MaxWordLength { get; set; }
-        public int MinOnes { get; set; }
-        public int MaxOnes { get; set; }
-        public int MinTwos { get; set; }
-        public int MaxTwos { get; set; }
-        public int MinThrees { get; set; }
-        public int MaxThrees { get; set; }
-        public int MinFours { get; set; }
-        public int MaxFours { get; set; }
-        public int AtLeastNbrGteWords { get; set; }
-        public int AtLeastNbrGteCharacters { get; set; }
-        public int AtLeastNbrLteWords { get; set; }
-        public int AtLeastNbrLteCharacters { get; set; }
-        public int AtMostNbrGteWords { get; set; }
-        public int AtMostNbrGteCharacters { get; set; }
-        public int AtMostNbrLteWords { get; set; }
-        public int AtMostNbrLteCharacters { get; set; }
+        public int MinDelimiters { get; set; } = -1;
+        public int MaxDelimiters { get; set; } = -1;
+        public int MinWordLength { get; set; } = 1;
+        public int MaxWordLength { get; set; } = 50;
+        public int MinOnes { get; set; } = 0;
+        public int MaxOnes { get; set; } = 2;
+        public int MinTwos { get; set; } = 0;
+        public int MaxTwos { get; set; } = 2;
+        public int MinThrees { get; set; } = 0;
+        public int MaxThrees { get; set; } = 2;
+        public int MinFours { get; set; } = 0;
+        public int MaxFours { get; set; } = 2;
+        public int AtLeastNbrGteWords { get; set; } = 0;
+        public int AtLeastNbrGteCharacters { get; set; } = 0;
+        public int AtLeastNbrLteWords { get; set; } = 0;
+        public int AtLeastNbrLteCharacters { get; set; } = 0;
+        public int AtMostNbrGteWords { get; set; } = 0;
+        public int AtMostNbrGteCharacters { get; set; } = 0;
+        public int AtMostNbrLteWords { get; set; } = 0;
+        public int AtMostNbrLteCharacters { get; set; } = 0;
     }
 
     public class HbtAdvancedAttack
     {
-        public bool UseDictionaryAdvanced { get; set; }
-        public int MinConcatenatedWords { get; set; }
-        public int MaxConcatenatedWords { get; set; }
-        public int MinConsecutiveConcatenation { get; set; }
-        public int MaxConsecutiveConcatenation { get; set; }
-        public int MaxConsecutiveOnes { get; set; }
-        public int MinWordsLimit { get; set; }
-        public bool ConcatenateFirstTwoWords { get; set; }
-        public bool ConcatenateLastTwoWords { get; set; }
+        public bool UseDictionaryAdvanced { get; set; } = false;
+        public int MinConcatenatedWords { get; set; } = 0;
+        public int MaxConcatenatedWords { get; set; } = 2;
+        public int MinConsecutiveConcatenation { get; set; } = 1;
+        public int MaxConsecutiveConcatenation { get; set; } = 2;
+        public int MaxConsecutiveOnes { get; set; } = 2;
+        public int MinWordsLimit { get; set; } = 1;
+        public bool ConcatenateFirstTwoWords { get; set; } = false;
+        public bool ConcatenateLastTwoWords { get; set; } = false;
     }
 
     public class HbtFileTypos
     {
-        public string TyposEnableLetterSwap { get; set; } = string.Empty;
-        public string TyposEnableAppendLetter { get; set; } = string.Empty;
-        public bool TyposEnableSkipDoubleLetter { get; set; }
-        public bool TyposEnableSkipLetter { get; set; }
-        public bool TyposEnableDoubleLetter { get; set; }
-        public bool TyposEnableExtraLetter { get; set; }
-        public bool TyposEnableWrongLetter { get; set; }
-        public bool TyposEnableReverseLetter { get; set; }
+        public string TyposEnableLetterSwap { get; set; } = "l-r,a-e";
+        public string TyposEnableAppendLetter { get; set; } = "s,ed";
+        public bool TyposEnableSkipDoubleLetter { get; set; } = false;
+        public bool TyposEnableSkipLetter { get; set; } = false;
+        public bool TyposEnableDoubleLetter { get; set; } = false;
+        public bool TyposEnableExtraLetter { get; set; } = false;
+        public bool TyposEnableWrongLetter { get; set; } = false;
+        public bool TyposEnableReverseLetter { get; set; } = false;
     }
 
     public class HbtFileDictionaryAttack

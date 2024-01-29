@@ -2,15 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:HashRelationalResearch.GUI.Controls"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:HashRelationalResearch.GUI.ViewModels"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="1050" Height="1050" MinWidth="1800" Width="1800">
-    <Window.DataContext>
-        <vm:MainWindowVM />
-    </Window.DataContext>
-    
+    <Window.Resources>
+        <CollectionViewSource x:Key="researchTabs" Source="{Binding ResearchTabs}"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -19,13 +18,56 @@
 
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open" Click="MenuItem_Click" />
+                <MenuItem Header="_New" Command="{Binding NewResearchTabCommand}" CommandParameter="NEW" />
                 <Separator />
-                <MenuItem Header="_Exit" />
+                <MenuItem Header="_Refresh" Click="RefreshClick" />
+                <Separator />
+                <MenuItem Header="Quick Load" Click="QuickLoadClick" />
+                <MenuItem Header="Quick Save" Click="QuickSaveClick" />
+                <MenuItem Header="Quick Clean" Click="QuickCleanClick" />
+                <Separator />
+                <MenuItem Header="_Load" Click="LoadClick" />
+                <MenuItem Header="_Save" Click="SaveClick" />
+                <Separator />
+                <MenuItem Header="_Exit" Command="{Binding ExitApplicationCommand}" />
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Pick DB File" Click="PickDBFileClick" />
+                <MenuItem Header="Pick PRC Root Folder" Click="PickPRCRootFolderClick" />
+                <MenuItem Header="Pick Hashcat Folder" Click="PickHashcatFolderClick" />
+                <Separator />
+                <MenuItem Header="Print latest command" />
             </MenuItem>
         </Menu>
-        <controls:ResearchTab Grid.Row="1" Margin="0,0,-507,-354"></controls:ResearchTab>
+
+        <TabControl Grid.Row="1" SelectedItem="{Binding SelectedResearchTab, Mode=TwoWay}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding NewResearchTabCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TabControl}, Path=SelectedItem.Tag}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:ResearchTabVM}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding TabLabel}"/>
+                        <Button FontSize="10" Margin="5,0,0,0" Padding="2,0" Content="X" VerticalAlignment="Top"
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveResearchTabCommand}" 
+                                CommandParameter="{Binding .}">
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ItemsSource>
+                <CompositeCollection>
+                    <CollectionContainer Collection="{Binding Source={StaticResource researchTabs}}"/>
+                    <TabItem Tag="NEW">
+                        <TabItem.Header>
+                            <Label Content="+"/>
+                        </TabItem.Header>
+                    </TabItem>
+                </CompositeCollection>
+            </TabControl.ItemsSource>
+        </TabControl>
     </Grid>
-    
-    
+
 </Window>
