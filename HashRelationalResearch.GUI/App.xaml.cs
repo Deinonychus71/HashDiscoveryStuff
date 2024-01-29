@@ -49,6 +49,7 @@ namespace HashRelationalResearch.GUI
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IHashDBService, HashDBService>();
             services.AddSingleton<IDictionaryService, DictionaryService>();
+            services.AddSingleton<IBruteForceHashService, BruteForceHashService>();
 
             services.AddScoped<MainWindow>();
             services.AddScoped<MainWindowVM>();

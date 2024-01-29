@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace HashRelationalResearch.GUI.Services
 {
@@ -16,9 +14,40 @@ namespace HashRelationalResearch.GUI.Services
         [GeneratedRegex(@"\[(.*?)\]", RegexOptions.Compiled)]
         private static partial Regex DictionaryFilesRegex();
 
-        public ObservableCollection<TreeViewItem> LoadDictionaries()
+        private readonly List<TreeViewItemModel> _treeViewData = [];
+
+        public DictionaryService()
         {
-            var output = new ObservableCollection<TreeViewItem>();
+            InitDictionariesInCache();
+        }
+
+        public List<TreeViewItemModel> GetDictionaries()
+        {
+            return GetDictionaries(_treeViewData);
+        }
+
+        public void RefreshDictionaries()
+        {
+            _treeViewData.Clear();
+            InitDictionariesInCache();
+        }
+
+        private List<TreeViewItemModel> GetDictionaries(List<TreeViewItemModel> treeViewItems, TreeViewItemModel? parentTreeViewItem = null)
+        {
+            var output = new List<TreeViewItemModel>();
+            foreach (var item in treeViewItems)
+            {
+                var newItem = new TreeViewItemModel(parentTreeViewItem, item.Key, item.Name, item.FullPathName);
+                output.Add(newItem);
+                if (item.Children.Count > 0)
+                    newItem.Children.AddRange(GetDictionaries(item.Children, newItem));
+            }
+            return output;
+        }
+
+        private void InitDictionariesInCache()
+        {
+            var output = new List<TreeViewItemModel>();
 
             if (Directory.Exists("Dictionaries"))
             {
@@ -29,7 +58,8 @@ namespace HashRelationalResearch.GUI.Services
                 foreach (var dictionaryPath in allDictionaries)
                 {
                     var filename = Path.GetFileName(dictionaryPath);
-                    var currentNodeCollection = output;
+                    var currentNodeCollection = _treeViewData;
+                    TreeViewItemModel? parentNode = null;
 
                     //Path from Dictionary Names
                     var dictionaryFiles = DictionaryFilesRegex().Split(filename).Where(p => !string.IsNullOrEmpty(p)).ToArray();
@@ -47,9 +77,10 @@ namespace HashRelationalResearch.GUI.Services
                             var currentNode = FindTreeItem(currentNodeCollection, key);
                             if (currentNode == null)
                             {
-                                currentNode = new TreeViewItem(key, $" -{label}-");
-                                currentNodeCollection.Add(currentNode);
+                                currentNode = new TreeViewItemModel(parentNode, key, $" -{label}-");
+                                currentNodeCollection.Insert(currentNodeCollection.Where(p => p.Children.Count > 0).Count(), currentNode);
                             }
+                            parentNode = currentNode;
                             currentNodeCollection = currentNode.Children;
                             continue;
                         }
@@ -57,8 +88,7 @@ namespace HashRelationalResearch.GUI.Services
                         if (last)
                         {
                             var nbrLines = File.ReadAllLines(dictionaryPath).Length;
-                            var lastNode = new TreeViewItem(key, $" {label.Replace(".dic", "", StringComparison.InvariantCultureIgnoreCase)} ~{nbrLines} words");
-                            lastNode.FullPathName = dictionaryPath;
+                            var lastNode = new TreeViewItemModel(parentNode, key, $" {label.Replace(".dic", "", StringComparison.InvariantCultureIgnoreCase)} ~{nbrLines} words", dictionaryPath);
                             currentNodeCollection.Add(lastNode);
                         }
                     }
@@ -68,14 +98,12 @@ namespace HashRelationalResearch.GUI.Services
             {
                 Directory.CreateDirectory("Dictionaries");
             }
-
-            return output;
         }
 
-        private TreeViewItem? FindTreeItem(ObservableCollection<TreeViewItem> items, string key)
+        private TreeViewItemModel? FindTreeItem(IList<TreeViewItemModel> items, string key)
         {
             var output = items.FirstOrDefault(p => p.Key == key);
-            if(output == null)
+            if (output == null)
             {
                 foreach (var item in items)
                 {

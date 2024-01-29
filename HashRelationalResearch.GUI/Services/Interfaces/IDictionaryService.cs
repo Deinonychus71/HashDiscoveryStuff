@@ -12,6 +12,7 @@ namespace HashRelationalResearch.GUI.Services.Interfaces
 {
     public interface IDictionaryService
     {
-        ObservableCollection<TreeViewItem> LoadDictionaries();
+        List<TreeViewItemModel> GetDictionaries();
+        void RefreshDictionaries();
     }
 }

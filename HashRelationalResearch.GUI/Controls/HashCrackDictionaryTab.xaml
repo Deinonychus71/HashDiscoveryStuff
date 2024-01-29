@@ -3,13 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dw="clr-namespace:HashRelationalResearch.GUI.Controls.TreeView"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TreeViewItemStyle" TargetType="TreeViewItem">
+                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                <Setter Property="IsSelected" Value="{Binding IsInitiallySelected, Mode=OneTime}" />
+                <Setter Property="KeyboardNavigation.AcceptsReturn" Value="True" />
+                <Setter Property="dw:VirtualToggleButton.IsVirtualToggleButton" Value="True" />
+                <Setter Property="dw:VirtualToggleButton.IsChecked" Value="{Binding IsChecked}" />
+            </Style>
+            <HierarchicalDataTemplate x:Key="CheckBoxItemTemplate" ItemsSource="{Binding Children, Mode=OneTime}">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                    <ContentPresenter Content="{Binding Name, Mode=OneTime}" Margin="2,0" />
+                </StackPanel>
+            </HierarchicalDataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <TabControl>
         <TabItem Header="Common Dictionaries">
-            <Grid>
+            <Grid Margin="10,2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="120"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -44,16 +64,9 @@
                 <Button Grid.Row="10" Grid.Column="0" Content="Unselect All" Margin="10,0" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
 
                 <!-- Right Panel -->
-                <TreeView Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" ItemsSource="{Binding TreeViewItems, Mode=OneWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
-                                <Label Content="{Binding Name}"/>
-                            </StackPanel>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
+                <TreeView Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" 
+                          ItemsSource="{Binding TreeViewItems, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"
+                          ItemContainerStyle="{StaticResource TreeViewItemStyle}" ItemTemplate="{StaticResource CheckBoxItemTemplate}"/>
             </Grid>
         </TabItem>
         <TabItem Header="Custom Words"/>

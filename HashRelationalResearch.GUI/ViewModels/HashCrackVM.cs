@@ -1,4 +1,5 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using CommunityToolkit.Mvvm.Input;
+using CsvHelper.Configuration.Attributes;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services;
 using HashRelationalResearch.GUI.Services.Interfaces;
@@ -6,12 +7,14 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
     public class HashCrackVM : ViewModelBase
     {
         private readonly IConfigurationService _configurationService;
+        private readonly IBruteForceHashService _bruteforceForceHashService;
 
         private HashCrackDictionaryTabVM _mainDictionaryVM;
         private HashCrackDictionaryTabVM _firstWordVM;
@@ -107,12 +110,16 @@ namespace HashRelationalResearch.GUI.ViewModels
         public int[] AdvancedConcatWordsList { get; set; } = GetIntegerList(0, 10);
         public int[] AdvancedConsecutiveList { get; set; } = GetIntegerList(1, 10);
         public int[] AdvancedMinWordsList { get; set; } = GetIntegerList(1, 10);
+
+        public ICommand StartBruteforceCommand { get => new RelayCommand(() => StartBruteforce(false)); }
+        public ICommand StartBruteforceHashcatCommand { get => new RelayCommand(() => StartBruteforce(true)); }
         #endregion
 
-        public HashCrackVM(IConfigurationService configurationService, HashCrackDictionaryTabVM mainDictionaryVM, 
-            HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
+        public HashCrackVM(IConfigurationService configurationService, IBruteForceHashService bruteforceForceHashService,
+            HashCrackDictionaryTabVM mainDictionaryVM, HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
         {
             _configurationService = configurationService;
+            _bruteforceForceHashService = bruteforceForceHashService;
 
             //Set arrays
             ExcludePatternsList = configurationService.GetExcludePatterns();
@@ -130,6 +137,11 @@ namespace HashRelationalResearch.GUI.ViewModels
             _mainDictionaryVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryMain);
             _firstWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryFirstWord);
             _lastWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryLastWord);
+        }
+
+        private void StartBruteforce(bool useHashcat)
+        {
+            var dictionaries = _mainDictionaryVM.RetrieveDictionaries();
         }
 
         private static int[] GetIntegerList(int minValue, int maxValue)
