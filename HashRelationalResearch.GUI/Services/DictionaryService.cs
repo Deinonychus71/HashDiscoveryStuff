@@ -1,6 +1,7 @@
 ﻿using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,23 +21,24 @@ namespace HashRelationalResearch.GUI.Services
             InitDictionariesInCache();
         }
 
-        public List<TreeViewItemModel> GetDictionaries()
-        {
-            return GetDictionaries(_treeViewData);
-        }
-
         public void RefreshDictionaries()
         {
             _treeViewData.Clear();
             InitDictionariesInCache();
         }
 
+
+        //TODO: Test recursive versus queue
+        public List<TreeViewItemModel> GetDictionaries()
+        {
+            return GetDictionaries(_treeViewData);
+        }
         private List<TreeViewItemModel> GetDictionaries(List<TreeViewItemModel> treeViewItems, TreeViewItemModel? parentTreeViewItem = null)
         {
             var output = new List<TreeViewItemModel>();
             foreach (var item in treeViewItems)
             {
-                var newItem = new TreeViewItemModel(parentTreeViewItem, item.Key, item.Name, item.FullPathName);
+                var newItem = new TreeViewItemModel(parentTreeViewItem, item.Key, item.Name, item.Value);
                 output.Add(newItem);
                 if (item.Children.Count > 0)
                     newItem.Children.AddRange(GetDictionaries(item.Children, newItem));
@@ -57,7 +59,7 @@ namespace HashRelationalResearch.GUI.Services
                 foreach (var dictionaryPath in allDictionaries)
                 {
                     var filename = Path.GetFileName(dictionaryPath);
-                    var currentNodeCollection = _treeViewData;
+                    IList<TreeViewItemModel> currentNodeCollection = _treeViewData;
                     TreeViewItemModel? parentNode = null;
 
                     //Path from Dictionary Names
@@ -99,6 +101,7 @@ namespace HashRelationalResearch.GUI.Services
             }
         }
 
+        //TODO: Test recursive versus queue
         private TreeViewItemModel? FindTreeItem(IList<TreeViewItemModel> items, string key)
         {
             var output = items.FirstOrDefault(p => p.Key == key);

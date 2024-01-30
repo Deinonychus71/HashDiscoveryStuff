@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:dw="clr-namespace:HashRelationalResearch.GUI.Controls.TreeView"
-             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="500">
     <UserControl.Resources>
@@ -18,7 +19,16 @@
             </Style>
             <HierarchicalDataTemplate x:Key="CheckBoxItemTemplate" ItemsSource="{Binding Children, Mode=OneTime}">
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                    <CheckBox Focusable="False" IsChecked="{Binding IsChecked}" VerticalAlignment="Center">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Checked">
+                                <i:InvokeCommandAction Command="{Binding Path=DataContext.TreeViewItemCheckedCommand, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}" />
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="Unchecked">
+                                <i:InvokeCommandAction Command="{Binding Path=DataContext.TreeViewItemCheckedCommand, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneTime}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </CheckBox>
                     <ContentPresenter Content="{Binding Name, Mode=OneTime}" Margin="2,0" />
                 </StackPanel>
             </HierarchicalDataTemplate>
@@ -27,7 +37,7 @@
 
     <TabControl>
         <TabItem Header="Common Dictionaries">
-            <Grid Margin="10,2">
+            <Grid Margin="10,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -41,11 +51,11 @@
                     <RowDefinition Height="25"></RowDefinition>
                     <RowDefinition Height="125"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="25"></RowDefinition>
-                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
                 </Grid.RowDefinitions>
-                
+
                 <!-- Left Panel -->
                 <CheckBox Grid.Row="0" Grid.Column="0" Content="Use" IsChecked="{Binding HbtFileDictionary.UseDictionary, Mode=TwoWay}"/>
                 <CheckBox Grid.Row="1" Grid.Column="0" Content="Skip Digits" IsChecked="{Binding HbtFileDictionary.SkipDigits, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
@@ -59,17 +69,84 @@
                     <Label Content="to:"/>
                     <TextBox Width="Auto" Text="{Binding HbtFileDictionary.MainFilterFirstTo, Mode=TwoWay}"/>
                 </StackPanel>
-                <CheckBox Grid.Row="8" Grid.Column="0" Content="Cache Prefix" IsChecked="{Binding HbtFileDictionary.MainCacheDynamicPrefix, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{Binding IsMainDictionary, Converter={StaticResource Bool2Visibility}}"/>
-                <CheckBox Grid.Row="9" Grid.Column="0" Content="Cache Suffix" IsChecked="{Binding HbtFileDictionary.MainCacheDynamicSuffix, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{Binding IsMainDictionary, Converter={StaticResource Bool2Visibility}}"/>
-                <Button Grid.Row="10" Grid.Column="0" Content="Unselect All" Margin="10,0" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
+                <CheckBox Grid.Row="8" Grid.Column="0" Content="Cache Prefix" IsChecked="{Binding HbtFileDictionary.MainCacheDynamicPrefix, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{c:Binding IsMainDictionary, FalseToVisibility=Hidden}"/>
+                <CheckBox Grid.Row="9" Grid.Column="0" Content="Cache Suffix" IsChecked="{Binding HbtFileDictionary.MainCacheDynamicSuffix, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{c:Binding IsMainDictionary, FalseToVisibility=Hidden}"/>
+                <Button Grid.Row="8" Grid.RowSpan="2" Grid.Column="0" Content="Copy from Main" Height="30" Margin="10,0" Command="{Binding CopyTreeViewFromViewCommand, Mode=OneTime}"  IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}" Visibility="{c:Binding !IsMainDictionary, FalseToVisibility=Hidden}"/>
+                <Button Grid.Row="10" Grid.Column="0" Content="Unselect All" Height="30" Margin="10,0" Command="{Binding UnselectAllCommand, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"/>
 
                 <!-- Right Panel -->
-                <TreeView Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" 
+                <TreeView Grid.Row="0" Grid.Column="1" Grid.RowSpan="11"
                           ItemsSource="{Binding TreeViewItems, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseDictionary, Mode=OneWay}"
                           ItemContainerStyle="{StaticResource TreeViewItemStyle}" ItemTemplate="{StaticResource CheckBoxItemTemplate}"/>
             </Grid>
         </TabItem>
-        <TabItem Header="Custom Words"/>
-        <TabItem Header="Exclude Words"/>
+        <TabItem Header="Custom Words">
+            <Grid Margin="10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="125"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <!-- Left Panel -->
+                <CheckBox Grid.Row="0" Grid.Column="0" Content="Use" IsChecked="{Binding HbtFileDictionary.UseCustomWords, Mode=TwoWay}"/>
+                <CheckBox Grid.Row="1" Grid.Column="0" Content="Skip Digits" IsChecked="{Binding HbtFileDictionary.CustomWordsSkipDigits, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
+                <CheckBox Grid.Row="2" Grid.Column="0" Content="Skip Specials" IsChecked="{Binding HbtFileDictionary.CustomWordsSkipSpecials, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
+                <CheckBox Grid.Row="3" Grid.Column="0" Content="Force Lowercase" IsChecked="{Binding HbtFileDictionary.CustomWordsForceLowercase, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
+                <CheckBox Grid.Row="4" Grid.Column="0" Content="Add Typos" IsChecked="{Binding HbtFileDictionary.CustomWordsAddTypos, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
+                <StackPanel Grid.Row="6" Grid.Column="0" Orientation="Vertical" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}" Visibility="{Binding IsMainDictionary, Converter={StaticResource Bool2Visibility}}">
+                    <Label Content="Filtering (slow):"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="At least"/>
+                        <ComboBox Width="Auto" ItemsSource="{Binding HashWordsList, Mode=OneTime}" SelectedItem="{Binding HbtFileDictionary.MainCustomWordsMinimumInHash, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <Label Content="words in hash"/>
+                    <CheckBox Margin="0,5,0,0" Content="Add Typos" IsChecked="{Binding HbtFileDictionary.MainCustomWordsMinimumInHashUseTypos, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
+                </StackPanel>
+                <Button Grid.Row="10" Grid.Column="0" Content="Copy from Main" Height="30" Margin="10,0" Command="{Binding CopyCustomWordsFromViewCommand, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}" Visibility="{c:Binding !IsMainDictionary, FalseToVisibility=Hidden}"/>
+                <!-- Right Panel -->
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" Height="Auto" Width="Auto" VerticalContentAlignment="Top" VerticalAlignment="Stretch" AcceptsReturn="True" Text="{Binding CustomWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Exclude Words">
+            <Grid Margin="10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="125"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <!-- Left Panel -->
+                <CheckBox Grid.Row="0" Grid.Column="0" Content="Use" IsChecked="{Binding HbtFileDictionary.UseExcludeWords, Mode=TwoWay}"/>
+                <CheckBox Grid.Row="1" Grid.Column="0" Content="Partial Words" IsChecked="{Binding HbtFileDictionary.ExcludePartialWords, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseExcludeWords, Mode=OneWay}"/>
+                <Button Grid.Row="10" Grid.Column="0" Content="Copy from Main" Height="30" Margin="10,0" Command="{Binding CopyExcludeWordsCopyFromViewCommand, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseExcludeWords, Mode=OneWay}" Visibility="{c:Binding !IsMainDictionary, FalseToVisibility=Hidden}"/>
+                <!-- Right Panel -->
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" Height="Auto" Width="Auto" VerticalContentAlignment="Top" VerticalAlignment="Stretch" AcceptsReturn="True" Text="{Binding ExcludeWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HbtFileDictionary.UseExcludeWords, Mode=OneWay}"/>
+            </Grid>
+        </TabItem>
     </TabControl>
 </UserControl>

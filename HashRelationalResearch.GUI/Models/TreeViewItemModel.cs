@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace HashRelationalResearch.GUI.Models
 {
@@ -14,7 +18,7 @@ namespace HashRelationalResearch.GUI.Models
         public List<TreeViewItemModel> Children { get; } = [];
         public bool IsInitiallySelected { get; private set; }
         public string Key { get; private set; }
-        public string? FullPathName { get; private set; }
+        public string? Value { get; private set; }
         public string Name { get; private set; }
         public bool? IsChecked
         {
@@ -34,12 +38,66 @@ namespace HashRelationalResearch.GUI.Models
         public bool HasChildren { get { return Children.Count > 0; } }
         #endregion
 
-        public TreeViewItemModel(TreeViewItemModel? parent, string key, string name, string? fullPathName = null)
+        public TreeViewItemModel(TreeViewItemModel? parent, string key, string name, string? value = null)
         {
             _parent = parent;
             Key = key;
             Name = name;
-            FullPathName = fullPathName;
+            Value = value;
+        }
+
+        public void UnselectAll()
+        {
+            var nodeQueue = new Queue<TreeViewItemModel>();
+            nodeQueue.Enqueue(this);
+            while (nodeQueue.Count != 0)
+            {
+                var item = nodeQueue.Dequeue();
+                foreach (var child in item.Children)
+                {
+                    nodeQueue.Enqueue(child);
+                }
+                item.IsChecked = false;
+            }
+        }
+
+        public void CheckValues(List<string> valuesToCheck)
+        {
+            var nodeQueue = new Queue<TreeViewItemModel>();
+            nodeQueue.Enqueue(this);
+            while (nodeQueue.Count != 0)
+            {
+                var item = nodeQueue.Dequeue();
+                foreach (var child in item.Children)
+                {
+                    nodeQueue.Enqueue(child);
+                }
+                if (!string.IsNullOrEmpty(item.Value))
+                    item.SetIsChecked(valuesToCheck.Contains(item.Value), false, true);
+            }
+        }
+
+        public List<string> GetSelectedNodes()
+        {
+            var output = new List<string>();
+            return GetSelectedNodes(ref output);
+        }
+        public List<string> GetSelectedNodes(ref List<string> output)
+        {
+            var nodeQueue = new Queue<TreeViewItemModel>();
+            nodeQueue.Enqueue(this);
+            while (nodeQueue.Count != 0)
+            {
+                var item = nodeQueue.Dequeue();
+                foreach (var child in item.Children)
+                {
+                    nodeQueue.Enqueue(child);
+                }
+                if (item.IsChecked.HasValue && item.IsChecked.Value && !string.IsNullOrEmpty(item.Value))
+                    output.Add(item.Value);
+            }
+
+            return output;
         }
 
         private void SetIsChecked(bool? value, bool updateChildren, bool updateParent)
@@ -50,12 +108,12 @@ namespace HashRelationalResearch.GUI.Models
             _isChecked = value;
 
             if (updateChildren && _isChecked.HasValue)
-                this.Children.ForEach(c => c.SetIsChecked(_isChecked, true, false));
+                Children.ForEach(c => c.SetIsChecked(_isChecked, true, false));
 
             if (updateParent && _parent != null)
                 _parent.VerifyCheckState();
 
-            this.OnPropertyChanged("IsChecked");
+            OnPropertyChanged(nameof(IsChecked));
         }
 
         private void VerifyCheckState()

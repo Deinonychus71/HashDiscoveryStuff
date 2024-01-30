@@ -130,13 +130,13 @@ namespace HashRelationalResearch.GUI.ViewModels
         {
             HbtFile = hbtFile;
             _mainDictionaryVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryMain);
-            _firstWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryFirstWord);
-            _lastWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryLastWord);
+            _firstWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryFirstWord, hbtFile.DictionaryAttack.DictionaryMain);
+            _lastWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryLastWord, hbtFile.DictionaryAttack.DictionaryMain);
         }
 
         private void StartBruteforce(bool useHashcat)
         {
-            var dictionaries = _mainDictionaryVM.RetrieveDictionaries();
+            //var dictionaries = _mainDictionaryVM.RetrieveDictionaries();
         }
 
         private static int[] GetIntegerList(int minValue, int maxValue)

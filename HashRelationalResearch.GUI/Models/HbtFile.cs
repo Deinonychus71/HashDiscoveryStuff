@@ -96,23 +96,23 @@ namespace HashRelationalResearch.GUI.Models
     public class HbtFileDictionary
     {
         public bool UseDictionary { get; set; } = false;
-        public string? Dictionaries { get; set; }
+        public List<string> Dictionaries { get; set; } = [];
         public bool SkipDigits { get; set; } = false;
         public bool SkipSpecials { get; set; } = true;
         public bool ForceLowercase { get; set; } = true;
         public bool AddTypos { get; set; } = false;
         public bool ReverseOrder { get; set; } = false;
 
-        public bool UseCustomWords { get; set; }
-        public bool CustomWords { get; set; }
-        public bool CustomWordsSkipDigits { get; set; }
-        public bool CustomWordsSkipSpecials { get; set; }
-        public bool CustomWordsForceLowercase { get; set; }
-        public bool CustomWordsAddTypos { get; set; }
+        public bool UseCustomWords { get; set; } = false;
+        public List<string> CustomWords { get; set; } = [];
+        public bool CustomWordsSkipDigits { get; set; } = false;
+        public bool CustomWordsSkipSpecials { get; set; } = true;
+        public bool CustomWordsForceLowercase { get; set; } = true;
+        public bool CustomWordsAddTypos { get; set; } = false;
 
-        public bool UseExcludeWords { get; set; }
+        public bool UseExcludeWords { get; set; } = false;
         public List<string> ExcludeWords { get; set; } = [];
-        public bool ExcludePartialWords { get; set; }
+        public bool ExcludePartialWords { get; set; } = false;
 
         //Only for Main
         public string MainFilterFirstFrom { get; set; } = string.Empty;
