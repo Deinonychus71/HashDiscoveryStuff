@@ -3,7 +3,7 @@
     public interface IConfigurationService
     {
         string HashDBFilePath { get; set; }
-        string HashcatPath { get; set; }
+        string HashcatFilePath { get; set; }
         string PrcRootPath { get; set; }
 
         string[] GetExcludePatterns();

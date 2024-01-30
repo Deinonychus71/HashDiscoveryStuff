@@ -55,7 +55,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
-                    <Button Content="Save Changes" IsEnabled="{Binding IsLabelChangedSuccess, Mode=OneWay}"/>
+                    <Button Content="Save Label" Command="{Binding SaveLabelCommand}" IsEnabled="{Binding IsLabelChangedSuccess, Mode=OneWay}"/>
                 </StackPanel>
             </GroupBox>
             <TabControl Grid.Row="1">

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Hashing;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HashCommon
 {
@@ -14,6 +15,11 @@ namespace HashCommon
         public HashHelper(string inputFileParamLabels)
         {
             _paramLabels = GetParamLabels(inputFileParamLabels);
+        }
+
+        public static bool IsValidHash40Value(string hash40)
+        {
+            return !string.IsNullOrEmpty(hash40) && hash40.Length == 12 && Regex.Match(hash40, "0[xX[0-9a-fA-F]{10}").Success;
         }
 
         public static ParamFile OpenParamFile(string inputFile)

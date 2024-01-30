@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using HashCommon;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
@@ -10,6 +12,7 @@ namespace HashRelationalResearch.GUI.ViewModels
     {
         private readonly IConfigurationService _configurationService;
         private readonly IBruteForceHashService _bruteforceForceHashService;
+        private readonly IHbtFileService _hbtFileService;
 
         private HashCrackDictionaryTabVM _mainDictionaryVM;
         private HashCrackDictionaryTabVM _firstWordVM;
@@ -106,15 +109,18 @@ namespace HashRelationalResearch.GUI.ViewModels
         public int[] AdvancedConsecutiveList { get; set; } = GetIntegerList(1, 10);
         public int[] AdvancedMinWordsList { get; set; } = GetIntegerList(1, 10);
 
+        public ICommand QuickSaveCommand { get => new RelayCommand(QuickSave, CanQuickSave); }
+        public ICommand QuickLoadCommand { get => new RelayCommand(QuickLoad, CanQuickLoad); }
         public ICommand StartBruteforceCommand { get => new RelayCommand(() => StartBruteforce(false)); }
         public ICommand StartBruteforceHashcatCommand { get => new RelayCommand(() => StartBruteforce(true)); }
         #endregion
 
-        public HashCrackVM(IConfigurationService configurationService, IBruteForceHashService bruteforceForceHashService,
+        public HashCrackVM(IConfigurationService configurationService, IBruteForceHashService bruteforceForceHashService, IHbtFileService hbtFileService,
             HashCrackDictionaryTabVM mainDictionaryVM, HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
         {
             _configurationService = configurationService;
             _bruteforceForceHashService = bruteforceForceHashService;
+            _hbtFileService = hbtFileService;
 
             //Set arrays
             ExcludePatternsList = configurationService.GetExcludePatterns();
@@ -137,6 +143,40 @@ namespace HashRelationalResearch.GUI.ViewModels
         private void StartBruteforce(bool useHashcat)
         {
             //var dictionaries = _mainDictionaryVM.RetrieveDictionaries();
+        }
+
+        private void QuickLoad()
+        {
+            //FIX
+            var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
+            var loadedHbtFile = _hbtFileService.LoadHbrFile(quickSaveFile);
+            if(loadedHbtFile != null)
+                LoadHbtFile(loadedHbtFile);
+        }
+
+        private bool CanQuickLoad()
+        {
+            var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
+            return File.Exists(quickSaveFile);
+        }
+
+        private void QuickSave()
+        {
+            //FIX
+            if(_hbtFile != null)
+            {
+                _hbtFileService.GetQuickDirectory(_hbtFile, true);
+                var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
+                if (quickSaveFile != null)
+                {
+                    _hbtFileService.SaveHbrFile(quickSaveFile, _hbtFile);
+                }
+            }
+        }
+
+        private bool CanQuickSave()
+        {
+            return HashHelper.IsValidHash40Value(HbtFile?.HexValue);
         }
 
         private static int[] GetIntegerList(int minValue, int maxValue)

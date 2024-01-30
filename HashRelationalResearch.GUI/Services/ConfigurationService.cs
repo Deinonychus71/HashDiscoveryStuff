@@ -14,7 +14,7 @@ namespace HashRelationalResearch.GUI.Services
         private readonly AppConfiguration _configuration;
 
         public string HashDBFilePath { get => _configuration.HashDBFilePath; set { _configuration.HashDBFilePath = value; } }
-        public string HashcatPath { get => _configuration.HashcatPath; set { _configuration.HashcatPath = value; } }
+        public string HashcatFilePath { get => _configuration.HashcatFilePath; set { _configuration.HashcatFilePath = value; } }
         public string PrcRootPath { get => _configuration.PrcRootPath; set { _configuration.PrcRootPath = value; } }
 
         public ConfigurationService(IOptions<AppConfiguration> configuration)

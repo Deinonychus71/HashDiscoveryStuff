@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashRelationalResearch.GUI.Models;
+using HashRelationalResearch.GUI.Services;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
@@ -13,6 +13,8 @@ namespace HashRelationalResearch.GUI.ViewModels
     {
         #region Members
         private const string TEXT_SEPARATOR = "\r\n";
+
+        private readonly IDictionaryService _dictionaryService;
         private HbtFileDictionary? _hbtFileDictionary;
         private HbtFileDictionary? _parentHbtFileDictionary;
         private string? _customWords;
@@ -59,7 +61,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        public ObservableCollection<TreeViewItemModel> TreeViewItems { get; set; }
+        public ObservableCollection<TreeViewItemModel> TreeViewItems { get; set; } = [];
 
         public bool IsMainDictionary
         {
@@ -86,15 +88,16 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         public HashCrackDictionaryTabVM(IDictionaryService dictionaryService)
         {
+            _dictionaryService = dictionaryService;
             _isMainDictionary = false;
-
-            TreeViewItems = new ObservableCollection<TreeViewItemModel>(dictionaryService.GetDictionaries());
         }
 
         public void LoadHbtFileDictionary(HbtFileDictionary hbtFileDictionary, HbtFileDictionary? parentHbtFileDictionary = null)
         {
             _parentHbtFileDictionary = parentHbtFileDictionary;
             HbtFileDictionary = hbtFileDictionary;
+            LoadTreeView();
+            LoadTreeViewFromDictionaries(hbtFileDictionary.Dictionaries);
             CustomWords = string.Join(TEXT_SEPARATOR, hbtFileDictionary.CustomWords);
             ExcludeWords = string.Join(TEXT_SEPARATOR, hbtFileDictionary.ExcludeWords);
         }
@@ -105,6 +108,17 @@ namespace HashRelationalResearch.GUI.ViewModels
             {
                 foreach (var treeViewItem in TreeViewItems)
                     treeViewItem.CheckValues(dictionaries);
+            }
+        }
+
+        private void LoadTreeView()
+        {
+            var nodes = _dictionaryService.GetDictionaries();
+
+            TreeViewItems.Clear();
+            foreach(var node in nodes)
+            {
+                TreeViewItems.Add(node);
             }
         }
 

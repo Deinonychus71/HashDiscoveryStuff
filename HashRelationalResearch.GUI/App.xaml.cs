@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
+using System.Windows.Ink;
 
 namespace HashRelationalResearch.GUI
 {
@@ -48,8 +49,11 @@ namespace HashRelationalResearch.GUI
             services.Configure<AppConfiguration>(configuration);
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IHashDBService, HashDBService>();
+            services.AddSingleton<IDiscoveryDBService, DiscoveryDBService>();
             services.AddSingleton<IDictionaryService, DictionaryService>();
             services.AddSingleton<IBruteForceHashService, BruteForceHashService>();
+            services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<IHbtFileService, HbtFileService>();
 
             services.AddScoped<MainWindow>();
             services.AddScoped<MainWindowVM>();

@@ -20,21 +20,18 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{Binding NewResearchTabCommand}" CommandParameter="NEW" />
                 <Separator />
-                <MenuItem Header="_Refresh" Click="RefreshClick" />
+                <MenuItem Header="Refresh Dictionaries" Command="{Binding RefreshDictionariesCommand, Mode=OneTime}" />
+                <MenuItem Header="Clean Current Hash Folder" Command="{Binding CleanHashFolderCommand, Mode=OneTime}" />
                 <Separator />
-                <MenuItem Header="Quick Load" Click="QuickLoadClick" />
-                <MenuItem Header="Quick Save" Click="QuickSaveClick" />
-                <MenuItem Header="Quick Clean" Click="QuickCleanClick" />
-                <Separator />
-                <MenuItem Header="_Load" Click="LoadClick" />
-                <MenuItem Header="_Save" Click="SaveClick" />
+                <MenuItem Header="_Load" Command="{Binding LoadFileCommand, Mode=OneTime}" />
+                <MenuItem Header="_Save" Command="{Binding SaveFileCommand, Mode=OneTime}" />
                 <Separator />
                 <MenuItem Header="_Exit" Command="{Binding ExitApplicationCommand}" />
             </MenuItem>
             <MenuItem Header="Tools">
-                <MenuItem Header="Pick DB File" Click="PickDBFileClick" />
-                <MenuItem Header="Pick PRC Root Folder" Click="PickPRCRootFolderClick" />
-                <MenuItem Header="Pick Hashcat Folder" Click="PickHashcatFolderClick" />
+                <MenuItem Header="Pick DB File" Command="{Binding PickHashDBFileCommand, Mode=OneTime}" />
+                <MenuItem Header="Pick PRC Root Folder" Command="{Binding PickPRCRootFolderCommand, Mode=OneTime}" />
+                <MenuItem Header="Pick Hashcat Folder" Command="{Binding PickHashDBFileCommand, Mode=OneTime}" />
                 <Separator />
                 <MenuItem Header="Print latest command" />
             </MenuItem>

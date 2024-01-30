@@ -1,7 +1,6 @@
 ﻿using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,8 +47,6 @@ namespace HashRelationalResearch.GUI.Services
 
         private void InitDictionariesInCache()
         {
-            var output = new List<TreeViewItemModel>();
-
             if (Directory.Exists("Dictionaries"))
             {
                 //Retrieve all dictionary files

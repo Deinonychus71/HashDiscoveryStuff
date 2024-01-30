@@ -12,6 +12,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         #region Members
         private const string DEFAULT_TAB_NAME = "Blank";
         private readonly IHashDBService _hashDBService;
+        private readonly IDiscoveryDBService _discoveryDBService;
         private ResearchNroVM _nroVM;
         private ResearchPrcVM _prcVM;
         private HashCrackVM _hashCrackVM;
@@ -28,9 +29,15 @@ namespace HashRelationalResearch.GUI.ViewModels
         #endregion
 
         #region Properties
-        public ICommand HashValueChanged { get; }
-
-        public ICommand HashLabelChanged { get; }
+        public HbtFile? HbtFile
+        {
+            get => _hbtFile;
+            set
+            {
+                _hbtFile = value;
+                OnPropertyChanged(nameof(HbtFile));
+            }
+        }
 
         public ResearchPrcVM NROPRC
         {
@@ -82,11 +89,26 @@ namespace HashRelationalResearch.GUI.ViewModels
             set
             {
                 var valueTemp = value;
-                if (valueTemp != null && valueTemp.Length == 11 && valueTemp.StartsWith("0x"))
+                if (valueTemp != null && valueTemp.Length == 11 && valueTemp.StartsWith("0x") && !valueTemp.StartsWith("0x0"))
                     valueTemp = valueTemp.Replace("0x", "0x0");
                 _hashValue = valueTemp;
+                if (_hbtFile != null)
+                    _hbtFile.HexValue = valueTemp ?? string.Empty;
                 TabLabel = valueTemp ?? DEFAULT_TAB_NAME;
+                OnPropertyChanged(nameof(HashValue));
                 OnPropertyChanged(nameof(TabLabel));
+            }
+        }
+
+        public string? HashLabel
+        {
+            get => _hashLabel;
+            set
+            {
+                _hashLabel = value;
+                if (_hbtFile != null)
+                    _hbtFile.HexLabel = _hashLabel;
+                OnPropertyChanged(nameof(HashLabel));
             }
         }
 
@@ -110,29 +132,37 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        public string? HashLabel
-        {
-            get => _hashLabel;
-            set
-            {
-                _hashLabel = value;
-                OnPropertyChanged(nameof(HashLabel));
-            }
-        }
+        public ICommand SaveLabelCommand { get => new RelayCommand(SaveLabel); }
+
+        public ICommand HashValueChanged { get => new RelayCommand(LoadNewHash); }
+
+        public ICommand HashLabelChanged { get => new RelayCommand(TestHashLabel); }
         #endregion
 
-        public ResearchTabVM(IHashDBService hashDBService, ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
+        public ResearchTabVM(IHashDBService hashDBService, IDiscoveryDBService discoveryDBService,
+            ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
         {
-            _hbtFile = new HbtFile();
-
             _hashDBService = hashDBService;
+            _discoveryDBService = discoveryDBService;
             _nroVM = researchNroVM;
             _prcVM = researchPrcVM;
             _hashCrackVM = hashCrackVM;
-            HashValueChanged = new RelayCommand(LoadNewHash);
-            HashLabelChanged = new RelayCommand(TestHashLabel);
+        }
 
-            _hashCrackVM.LoadHbtFile(_hbtFile);
+        public void LoadHbtFile(HbtFile? hbtFile)
+        {
+            if (hbtFile != null)
+            {
+                HbtFile = hbtFile;
+                HashLabel = hbtFile.HexLabel;
+                HashValue = hbtFile.HexValue;
+                _hashCrackVM.LoadHbtFile(hbtFile);
+            }
+        }
+
+        public void SaveLabel()
+        {
+            //TODO
         }
 
         private void RefreshHash()

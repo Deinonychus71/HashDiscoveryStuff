@@ -5,6 +5,7 @@ namespace HashRelationalResearch.GUI.Models
     public class HbtFile
     {
         public string HexValue { get; set; } = string.Empty;
+        public string? HexLabel { get; set; } = null;
         public int NbrThreads { get; set; } = 8;
         public string AttackType { get; set; } = "Dictionary";
         public string Prefix { get; set; } = string.Empty;
