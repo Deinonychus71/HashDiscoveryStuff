@@ -79,10 +79,11 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         public void ClearData()
         {
-            CodeEditorText = string.Empty;
             SelectedCFileEntry = null;
+            SelectedCFunctionEntry = null;
             CFileEntries.Clear();
             CFunctionEntries.Clear();
+            CodeEditorText = string.Empty;
         }
 
         public void LoadFiles(List<ExportCFileEntry>? cFiles)

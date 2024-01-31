@@ -116,6 +116,9 @@ namespace HashRelationalResearch.GUI.ViewModels
         {
             if (researchTabVM != null && ResearchTabs.Count > 1)
             {
+                var index = ResearchTabs.IndexOf(researchTabVM);
+                if (index == ResearchTabs.Count - 1 && index > 0)
+                    SelectedResearchTab = ResearchTabs[index - 1];
                 ResearchTabs.Remove(researchTabVM);
             }
         }
