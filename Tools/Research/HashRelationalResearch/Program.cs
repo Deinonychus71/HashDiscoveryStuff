@@ -96,7 +96,7 @@ namespace HashRelationalResearch
             var cachedFile = $"{input}.hash";
             if (useCache && File.Exists(cachedFile))
             {
-                var cachedLines = File.ReadAllLines(input);
+                var cachedLines = File.ReadAllLines(cachedFile);
                 return cachedLines.Select(p => p.Split(',', StringSplitOptions.RemoveEmptyEntries)).Where(p => p.Length > 1).ToDictionary(p => p[0], p => p[1]);
             }
 

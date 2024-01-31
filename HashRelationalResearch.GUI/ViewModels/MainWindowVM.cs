@@ -17,6 +17,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         private readonly IServiceProvider _serviceProvider;
         private readonly IHashDBService _hashDBService;
         private readonly IConfigurationService _configurationService;
+        private readonly IBruteForceHashService _bruteForceHasService;
         private readonly IDictionaryService _dictionaryService;
         private readonly IHbtFileService _hbtFileService;
         private readonly IDialogService _dialogService;
@@ -48,9 +49,10 @@ namespace HashRelationalResearch.GUI.ViewModels
         public IRelayCommand LoadFileCommand { get; private set; }
         public IRelayCommand CleanHashFolderCommand { get; private set; }
         public IRelayCommand RefreshDictionariesCommand { get; private set; }
+        public IRelayCommand PrintLastCommandCommand { get; private set; }
         #endregion
 
-        public MainWindowVM(IServiceProvider serviceProvider, IHashDBService hashDBService, IHbtFileService hbtFileService,
+        public MainWindowVM(IServiceProvider serviceProvider, IHashDBService hashDBService, IHbtFileService hbtFileService, IBruteForceHashService bruteForceHasService,
             IDialogService dialogService, IDictionaryService dictionaryService, IConfigurationService configurationService)
         {
             _serviceProvider = serviceProvider;
@@ -58,6 +60,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             _configurationService = configurationService;
             _hbtFileService = hbtFileService;
             _dialogService = dialogService;
+            _bruteForceHasService = bruteForceHasService;
             _dictionaryService = dictionaryService;
 
 
@@ -72,6 +75,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             LoadFileCommand = new RelayCommand(LoadFile);
             CleanHashFolderCommand = new RelayCommand(CleanHashFolder);
             RefreshDictionariesCommand = new RelayCommand(RefreshDictionaries);
+            PrintLastCommandCommand = new RelayCommand(PrintLastCommand);
 
             var hbtFiles = hbtFileService.LoadHbtWorkspace();
             if (hbtFiles != null && hbtFiles.Any())
@@ -126,6 +130,14 @@ namespace HashRelationalResearch.GUI.ViewModels
                     researchTabs.LoadHbtFile(researchTabs.HbtFile);
                 }
             }
+        }
+
+        private void PrintLastCommand()
+        {
+            if (!string.IsNullOrEmpty(_bruteForceHasService.LastCommand))
+                _dialogService.ShowMessage(_bruteForceHasService.LastCommand);
+            else
+                _dialogService.ShowMessage("Please run an attack first");
         }
 
         #region File Manipulation
@@ -205,7 +217,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         {
             var hbtFile = SelectedResearchTab?.HbtFile;
             var hash40 = hbtFile?.HexValue;
-            var hexPath = _hbtFileService.GetQuickDirectory(hbtFile);
+            var hexPath = _hbtFileService.GetQuickDirectoryPath(hbtFile);
             if (!string.IsNullOrEmpty(hexPath) && !string.IsNullOrEmpty(hash40))
             {
                 if (_dialogService.ShowYesNoQuestion($"Are you sure you wish to clean folder '{hexPath}'"))

@@ -7,7 +7,7 @@ namespace HashRelationalResearch.GUI.ViewModels
     public class HashCrackVM : ViewModelBase
     {
         private readonly IConfigurationService _configurationService;
-        private readonly IBruteForceHashService _bruteforceForceHashService;
+        private readonly IHashDBService _hashDBService;
 
         private HashCrackDictionaryTabVM _mainDictionaryVM;
         private HashCrackDictionaryTabVM _firstWordVM;
@@ -93,6 +93,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         public int[] DelimitersList { get; private set; } = ListGenerators.GetIntegerList(-1, 10);
         public int[] MinWordLengthList { get; private set; } = ListGenerators.GetIntegerList(1, 10);
         public int[] MaxWordLengthList { get; private set; } = ListGenerators.GetIntegerList(1, 50);
+        public int[] WordsLimitList { get; private set; } = ListGenerators.GetIntegerList(1, 10);
         public int[] WordSizeList { get; set; } = ListGenerators.GetIntegerList(0, 10);
         public ListItem<int>[] WordsList { get; set; } = ListGenerators.GetIntegerListWithLabel("words", 0, 10);
         public ListItem<int>[] CharactersList { get; set; } = ListGenerators.GetIntegerListWithLabel("characters", 0, 10);
@@ -101,11 +102,11 @@ namespace HashRelationalResearch.GUI.ViewModels
         public int[] AdvancedMinWordsList { get; set; } = ListGenerators.GetIntegerList(1, 10);
         #endregion
 
-        public HashCrackVM(IConfigurationService configurationService, IBruteForceHashService bruteforceForceHashService,
-            HashCrackDictionaryTabVM mainDictionaryVM, HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
+        public HashCrackVM(IConfigurationService configurationService, IHashDBService hashDBService, HashCrackDictionaryTabVM mainDictionaryVM,
+            HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
         {
             _configurationService = configurationService;
-            _bruteforceForceHashService = bruteforceForceHashService;
+            _hashDBService = hashDBService;
 
             //Set arrays
             ExcludePatternsList = configurationService.GetExcludePatterns();
@@ -125,16 +126,30 @@ namespace HashRelationalResearch.GUI.ViewModels
             _lastWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryLastWord, hbtFile.DictionaryAttack.DictionaryMain);
         }
 
+        public void RefreshHash()
+        {
+            var isUseResearchWordsEnabled = false;
+
+            if (!string.IsNullOrEmpty(_hbtFile?.HexValue))
+            {
+                var entry = _hashDBService.GetEntry(_hbtFile.HexValue);
+                isUseResearchWordsEnabled = entry != null && (entry.PRCFiles.Count > 0 || entry.CFiles.Count > 0);
+            }
+            _mainDictionaryVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
+            _firstWordVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
+            _lastWordVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
+        }
+
         private static ListItem<string>[] GetCombinationOrders()
         {
             return
             [
-                new ListItem<string>("Interval short/long", "interval_short"),
-                new ListItem<string>("Interval long/short", "interval_long"),
-                new ListItem<string>("Fewer/shorter words first", "fewer_words_first_short"),
-                new ListItem<string>("Fewer/longer words first", "fewer_words_first_long"),
-                new ListItem<string>("Greater/shorter words first", "more_words_first_short"),
-                new ListItem<string>("Greater/longer words first", "more_words_first_long"),
+                new ListItem<string>("Interval short/long", "interval|short"),
+                new ListItem<string>("Interval long/short", "interval|long"),
+                new ListItem<string>("Fewer/shorter words first", "fewer_words_first|short"),
+                new ListItem<string>("Fewer/longer words first", "fewer_words_first|long"),
+                new ListItem<string>("Greater/shorter words first", "more_words_first|short"),
+                new ListItem<string>("Greater/longer words first", "more_words_first|long"),
             ];
         }
     }

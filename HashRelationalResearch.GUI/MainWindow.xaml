@@ -34,7 +34,7 @@
                 <MenuItem Header="Pick PRC Root Folder" Command="{Binding PickPRCRootFolderCommand, Mode=OneTime}" />
                 <MenuItem Header="Pick Discovery Folder" Command="{Binding PickDiscoveryFolderCommand, Mode=OneTime}" />
                 <Separator />
-                <MenuItem Header="Print latest command" />
+                <MenuItem Header="Print Latest Command" Command="{Binding PrintLastCommandCommand, Mode=OneTime}" />
             </MenuItem>
         </Menu>
 

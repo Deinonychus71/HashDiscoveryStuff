@@ -43,14 +43,7 @@ namespace HashRelationalResearch.GUI.Services
                         _entries = file.ExportEntries;
                         _functions = file.ExportFunctions;
                         _labels = file.HashLabels.ToDictionary(p => p.Key, p => p.Value.Label);
-                        prcEditor.MainWindow.HashToStringLabels.Clear();
-                        prcEditor.MainWindow.StringToHashLabels.Clear();
-                        foreach (var label in _labels)
-                        {
-                            prcEditor.MainWindow.HashToStringLabels.Add(ulong.Parse(label.Key[2..], NumberStyles.HexNumber), label.Value);
-                            prcEditor.MainWindow.StringToHashLabels.Add(label.Value, ulong.Parse(label.Key[2..], NumberStyles.HexNumber));
-                        }
-
+                        RefreshPRCLabels();
                     }
                     return true;
                 }
@@ -63,6 +56,17 @@ namespace HashRelationalResearch.GUI.Services
             return false;
         }
 
+        public void RefreshPRCLabels()
+        {
+            prcEditor.MainWindow.HashToStringLabels.Clear();
+            prcEditor.MainWindow.StringToHashLabels.Clear();
+            foreach (var label in _labels)
+            {
+                prcEditor.MainWindow.HashToStringLabels.Add(ulong.Parse(label.Key[2..], NumberStyles.HexNumber), label.Value);
+                prcEditor.MainWindow.StringToHashLabels.Add(label.Value, ulong.Parse(label.Key[2..], NumberStyles.HexNumber));
+            }
+        }
+
         public void LoadDiscoveryFiles()
         {
             _discoveredLabels.Clear();
@@ -71,7 +75,7 @@ namespace HashRelationalResearch.GUI.Services
             LoadDiscoveryFile(DiscoverySource.NROFightersLabels);
         }
 
-        public List<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds)
+        public IEnumerable<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds)
         {
             var output = new List<ExportFunctionEntry>();
             if (functionIds != null && _functions.TryGetValue(file, out List<ExportFunctionEntry>? value))
@@ -98,6 +102,11 @@ namespace HashRelationalResearch.GUI.Services
             return null;
         }
 
+        public IEnumerable<ExportEntry> GetEntriesByPRCFile(string file)
+        {
+            return _entries.Values.Where(p => p.PRCFiles.Any(p2 => p2.File == file));
+        }
+
         public string? GetLabel(string hash40)
         {
             if (_labels.TryGetValue(hash40, out string? value))
@@ -105,8 +114,9 @@ namespace HashRelationalResearch.GUI.Services
             return null;
         }
 
-        public bool AddOrUpdateLabel(DiscoverySource source, string hash40, string label)
+        public bool AddOrUpdateLabel(string hash40, string label)
         {
+            var source = PickBestSource(hash40);
             if (!_discoveredLabels.TryGetValue(source, out Dictionary<string, string>? dictDiscovery))
             {
                 dictDiscovery = [];
@@ -175,6 +185,32 @@ namespace HashRelationalResearch.GUI.Services
                 DiscoverySource.Unknown => Path.Combine(folderPath, "UnsortedLabels.csv"),
                 _ => null,
             };
+        }
+
+        private DiscoverySource PickBestSource(string hash40)
+        {
+            DiscoverySource source;
+            var entry = GetEntry(hash40);
+            if (entry != null)
+            {
+                if (entry.PRCFiles.Count > 0)
+                {
+                    source = DiscoverySource.ParamLabels;
+                }
+                else if (entry.CFiles.Count > 0)
+                {
+                    if (entry.CFiles.Any(p => !p.File.Contains("main", StringComparison.OrdinalIgnoreCase)))
+                        source = DiscoverySource.NROFightersLabels;
+                    else
+                        source = DiscoverySource.NROMainLabels;
+                }
+                else
+                    source = DiscoverySource.Unknown;
+            }
+            else
+                source = DiscoverySource.Unknown;
+
+            return source;
         }
 
         private static ExportContainer? Deserialize(string filePath)

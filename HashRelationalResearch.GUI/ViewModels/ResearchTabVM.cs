@@ -4,7 +4,6 @@ using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
-using System.Linq;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -12,6 +11,7 @@ namespace HashRelationalResearch.GUI.ViewModels
     {
         #region Members
         private const string DEFAULT_TAB_NAME = "Blank";
+        private readonly IBruteForceHashService _bruteForceHashService;
         private readonly IHashDBService _hashDBService;
         private readonly IHbtFileService _hbtFileService;
         private readonly IDialogService _dialogService;
@@ -85,7 +85,7 @@ namespace HashRelationalResearch.GUI.ViewModels
                 if (_hbtFile != null)
                     _hbtFile.HexValue = valueTemp ?? string.Empty;
                 TabLabel = !string.IsNullOrEmpty(_hashLabel) ? _hashLabel : !string.IsNullOrEmpty(_hashValue) ? _hashValue : DEFAULT_TAB_NAME;
-                QuickPathExist = _hbtFileService.QuickDirectoryExists(_hbtFile);
+                QuickSaveExists = _hbtFileService.QuickSaveExists(_hbtFile);
                 IsValidHash40 = HashHelper.IsValidHash40Value(_hbtFile?.HexValue);
                 OnPropertyChanged(nameof(HashValue));
                 OnPropertyChanged(nameof(TabLabel));
@@ -150,14 +150,14 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        public bool QuickPathExist
+        public bool QuickSaveExists
         {
             get => _quickSavePathExists;
             set
             {
                 _quickSavePathExists = value;
                 QuickLoadCommand.NotifyCanExecuteChanged();
-                OnPropertyChanged(nameof(QuickPathExist));
+                OnPropertyChanged(nameof(QuickSaveExists));
             }
         }
 
@@ -175,8 +175,9 @@ namespace HashRelationalResearch.GUI.ViewModels
         #endregion
 
         public ResearchTabVM(IHashDBService hashDBService, IHbtFileService hbtFileService, IDialogService dialogService,
-            ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
+           IBruteForceHashService bruteForceHashService, ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
         {
+            _bruteForceHashService = bruteForceHashService;
             _hashDBService = hashDBService;
             _hbtFileService = hbtFileService;
             _dialogService = dialogService;
@@ -185,7 +186,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             _hashCrackVM = hashCrackVM;
 
             QuickSaveCommand = new RelayCommand(QuickSave, () => IsValidHash40);
-            QuickLoadCommand = new RelayCommand(QuickLoad, () => QuickPathExist);
+            QuickLoadCommand = new RelayCommand(QuickLoad, () => QuickSaveExists);
             SaveLabelCommand = new RelayCommand(SaveLabel);
             HashValueChanged = new RelayCommand(LoadNewHash);
             HashLabelChanged = new RelayCommand(TestHashLabel);
@@ -210,45 +211,28 @@ namespace HashRelationalResearch.GUI.ViewModels
         {
             if (_hbtFile?.HexLabel != null && IsLabelChangedSuccess && HashHelper.IsValidHash40Value(_hbtFile.HexValue))
             {
-                DiscoverySource source;
-                var entry = _hashDBService.GetEntry(_hbtFile.HexValue);
-                if (entry != null)
+                if (_hashDBService.AddOrUpdateLabel(_hbtFile.HexValue, _hbtFile.HexLabel))
                 {
-                    if (entry.PRCFiles.Count > 0)
-                        source = DiscoverySource.ParamLabels;
-                    else if (entry.CFiles.Count > 0)
-                    {
-                        if (entry.CFiles.Any(p => !p.File.Contains("main", System.StringComparison.OrdinalIgnoreCase)))
-                            source = DiscoverySource.NROFightersLabels;
-                        else
-                            source = DiscoverySource.NROMainLabels;
-                    }
-                    else
-                        source = DiscoverySource.Unknown;
-                }
-                else
-                    source = DiscoverySource.Unknown;
-
-                if (_hashDBService.AddOrUpdateLabel(source, _hbtFile.HexValue, _hbtFile.HexLabel))
-                {
-                    _dialogService.ShowMessage($"Successfully saved '{_hbtFile.HexValue},{_hbtFile.HexLabel}' into source: {source}.");
+                    _dialogService.ShowMessage($"Successfully saved '{_hbtFile.HexValue},{_hbtFile.HexLabel}'.");
                     _hashLabelSaved = _hbtFile.HexLabel;
+                    _nroVM.RefreshCurrentFunction();
                     TestHashLabel();
                 }
                 else
-                    _dialogService.ShowMessage($"Error saving '{_hbtFile.HexValue},{_hbtFile.HexLabel}' into source: {source}.", true);
+                    _dialogService.ShowMessage($"Error saving '{_hbtFile.HexValue},{_hbtFile.HexLabel}'.", true);
             }
         }
 
         private void StartBruteforce(bool useHashcat)
         {
-            //TODO
+            if (_hbtFile != null)
+                _bruteForceHashService.StartProcess(_hbtFile, useHashcat);
         }
 
         private void QuickLoad()
         {
-            var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
-            var loadedHbtFile = _hbtFileService.LoadHbrFile(quickSaveFile);
+            var quickSaveFilePath = _hbtFileService.GetQuickSaveFilePath(_hbtFile);
+            var loadedHbtFile = _hbtFileService.LoadHbrFile(quickSaveFilePath);
             if (loadedHbtFile != null)
                 LoadHbtFile(loadedHbtFile);
         }
@@ -257,11 +241,10 @@ namespace HashRelationalResearch.GUI.ViewModels
         {
             if (_hbtFile != null)
             {
-                _hbtFileService.GetQuickDirectory(_hbtFile, true);
-                var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
+                var quickSaveFile = _hbtFileService.GetQuickSaveFilePath(_hbtFile);
                 if (quickSaveFile != null)
                 {
-                    QuickPathExist = _hbtFileService.SaveHbrFile(quickSaveFile, _hbtFile);
+                    QuickSaveExists = _hbtFileService.SaveHbrFile(quickSaveFile, _hbtFile);
                 }
             }
         }
@@ -299,6 +282,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             else
                 _exportEntry = null;
 
+            _hashCrackVM.RefreshHash();
             RefreshHash();
         }
 

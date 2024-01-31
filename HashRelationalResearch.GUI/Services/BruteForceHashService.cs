@@ -1,216 +1,353 @@
-﻿using HashRelationalResearch.GUI.Services.Interfaces;
+﻿using CommandLine;
+using HashCommon;
+using HashRelationalResearch.GUI.Models;
+using HashRelationalResearch.GUI.Services.Interfaces;
+using HashRelationalResearch.Models;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace HashRelationalResearch.GUI.Services
 {
     public class BruteForceHashService : IBruteForceHashService
     {
-        public void StartProcess(bool useHashCat = false)
+        private const string DEFAULT_ORDER_ALGORITHM = "fewer_words_first";
+        private const string DEFAULT_DELIMITER = "_";
+        private const bool DEFAULT_CONFIRM_END = true;
+
+        private readonly IConfigurationService _configurationService;
+        private readonly IHashDBService _hashDBService;
+        private readonly IHbtFileService _hbtFileService;
+
+        public string LastCommand { get; private set; } = string.Empty;
+
+        public BruteForceHashService(IHashDBService hashDBService, IHbtFileService hbtFileService, IConfigurationService configurationService)
         {
-            /*var hex = GetHex();
-            var hexFolder = GetHexFolder();
+            _configurationService = configurationService;
+            _hashDBService = hashDBService;
+            _hbtFileService = hbtFileService;
+        }
 
-            var dictionaries = string.Empty;
-            var dictionariesCustom = string.Empty;
-            var dictionariesExclude = string.Empty;
-            var dictionariesFirstWordCustom = string.Empty;
-            var dictionariesFirstWordExclude = string.Empty;
-            var dictionariesLastWordCustom = string.Empty;
-            var dictionariesLastWordExclude = string.Empty;
-            var dictionariesFirstWord = string.Empty;
-            var dictionariesLastWord = string.Empty;
-            var dictionaryHybrid = string.Empty;
-            var dictionaryHybridFirstWord = string.Empty;
-            var dictionaryHybridLastWord = string.Empty;
+        public bool StartProcess(HbtFile hbtFile, bool useHashCat)
+        {
+            if (string.IsNullOrEmpty(hbtFile?.HexValue))
+                return false;
 
-            SaveCustomDictionaries();
-            if (chkDictionariesUse.Checked)
-                dictionaries = GetDictionary(tvDictMain);
-            if (chkDictionariesCustomWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}].dic"))
-                dictionariesCustom = $"{hexFolder}\\[{hex}].dic";
-            if (chkDictionariesExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Exclude].dic"))
-                dictionariesExclude = $"{hexFolder}\\[{hex}][Exclude].dic";
+            var hash40 = hbtFile.HexValue;
+            var hashEntry = _hashDBService.GetEntry(hash40);
 
-            if (chkUseDictFirst.Checked)
-                dictionariesFirstWord = GetDictionary(tvDictFirstWord);
-            if (chkDictionariesFirstWordCustomWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][1st].dic"))
-                dictionariesFirstWordCustom = $"{hexFolder}\\[{hex}][1st].dic";
-            if (chkDictionariesFirstWordExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][1st][Exclude].dic"))
-                dictionariesFirstWordExclude = $"{hexFolder}\\[{hex}][1st][Exclude].dic";
+            var useMethodDictionary = hbtFile.AttackType == "Dictionary";
+            var useMethodHybrid = hbtFile.AttackType == "Hybrid";
+            var useMethodCharacter = hbtFile.AttackType == "Character";
 
-            if (chkUseDictLast.Checked)
-                dictionariesLastWord = GetDictionary(tvDictLastWord);
-            if (chkDictionariesLastWordCustomWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Last].dic"))
-                dictionariesLastWordCustom = $"{hexFolder}\\[{hex}][Last].dic";
-            if (chkDictionariesLastWordExcludeWordsUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Last][Exclude].dic"))
-                dictionariesLastWordExclude = $"{hexFolder}\\[{hex}][Last][Exclude].dic";
+            var researchDictionaryContent = GenerateResearchDictionary(hashEntry);
 
-            if (chkHybridDictUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Hybrid].dic"))
-                dictionaryHybrid = $"{hexFolder}\\[{hex}][Hybrid].dic";
-            if (chkHybridDictFirstWordUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Hybrid][1st].dic"))
-                dictionaryHybridFirstWord = $"{hexFolder}\\[{hex}][Hybrid][1st].dic";
-            if (chkHybridDictLastWordUse.Checked && File.Exists($"{hexFolder}\\[{hex}][Hybrid][Last].dic"))
-                dictionaryHybridLastWord = $"{hexFolder}\\[{hex}][Hybrid][Last].dic";
+            var options = new BruteForceHash.Options()
+            {
+                ConfirmEnd = DEFAULT_CONFIRM_END,
+                PathHashCat = _configurationService.HashcatFilePath,
+                HexValue = hash40,
+                NbrThreads = hbtFile.NbrThreads,
+                Method = hbtFile.AttackType,
+                Verbose = hbtFile.Verbose,
+                Prefix = hbtFile.Prefix,
+                Suffix = hbtFile.Suffix,
+            };
 
-            var useUtf8 = !useHashCat && chkUtf8Toggle.Checked;
-            var useMethodDictionary = cbMethod.SelectedItem.ToString() == "Dictionary";
-            var useMethodCharacter = cbMethod.SelectedItem.ToString() == "Character";
-            var useMethodHybrid = cbMethod.SelectedItem.ToString() == "Hybrid";
-            var useDictAdvanced = chkDictionaryAdvanced.Checked;
-
-            //Common All
-            string arguments = $"--nbr_threads {cbNbThreads.SelectedItem} " +
-                                $"--method {(useMethodDictionary ? "dictionary" : useMethodCharacter ? "character" : useMethodHybrid ? "hybrid" : string.Empty)} " +
-                                $"{(chkVerbose.Checked ? "--verbose" : "")} " +
-                                $"--confirm_end " +
-                                $"--prefix \"{txtPrefix.Text.Trim()}\" " +
-                                $"--suffix \"{txtSuffix.Text.Trim()}\" " +
-                                $"--path_hashcat \"{txtHashCatPath.Text.Trim()}\" " +
-                                $"--hex_value \"{txtHexValues.Text.Trim()}\" ";
-
-            //Common Dictionary & Hybrid
+            //Dictionary & Hybrid
             if (useMethodDictionary || useMethodHybrid)
             {
-                arguments += $"--words_limit {cbWordsLimit.SelectedItem} " +
-                                $"--max_delimiters {cbMaxDelim.SelectedItem} " +
-                                $"--min_delimiters {cbMinDelim.SelectedItem} " +
-                                $"--max_word_length {cbMaxWordLength.SelectedItem} " +
-                                $"--min_word_length {cbMinWordLength.SelectedItem} " +
-                                $"--max_ones {cbMaxOnes.SelectedItem} " +
-                                $"--min_ones {cbMinOnes.SelectedItem} " +
-                                $"--max_twos {cbMaxTwos.SelectedItem} " +
-                                $"--min_twos {cbMinTwos.SelectedItem} " +
-                                $"--max_threes {cbMaxThrees.SelectedItem} " +
-                                $"--min_threes {cbMinThrees.SelectedItem} " +
-                                $"--max_fours {cbMaxFours.SelectedItem} " +
-                                $"--min_fours {cbMinFours.SelectedItem} " +
-                                (cbAtLeastAboveNbrChars.SelectedIndex > 0 ? $"--at_least_gte_chars {cbAtLeastAboveNbrChars.SelectedIndex} " +
-                                $"--at_least_gte_words {cbAtLeastAboveNbrWords.SelectedIndex} " : string.Empty) +
-                                (cbAtLeastUnderNbrChars.SelectedIndex > 0 ? $"--at_least_lte_chars {cbAtLeastUnderNbrChars.SelectedIndex} " +
-                                $"--at_least_lte_words {cbAtLeastUnderNbrWords.SelectedItem} " : string.Empty) +
-                                (cbAtMostAboveNbrChars.SelectedIndex > 0 ? $"--at_most_gte_chars {cbAtMostAboveNbrChars.SelectedIndex} " +
-                                $"--at_most_gte_words {cbAtMostAboveNbrWords.SelectedIndex} " : string.Empty) +
-                                (cbAtMostUnderNbrChars.SelectedIndex > 0 ? $"--at_most_lte_chars {cbAtMostUnderNbrChars.SelectedIndex} " +
-                                $"--at_most_lte_words {cbAtMostUnderNbrWords.SelectedItem} " : string.Empty) +
-                                $"--order_algorithm {GetCombinationOrderName()} " +
-                                $"{(GetCombinationOrderLongerFirst() ? "--order_longer_words_first" : "")} " +
-                                $"--include_word \"{txtIncludeWord.Text.Trim()}\" " +
-                                $"{(chkIncludeWordNotFirst.Checked ? "--include_word_not_first" : "")} " +
-                                $"{(chkIncludeWordNotLast.Checked ? "--include_word_not_last" : "")} " +
-                                $"--include_patterns \"{txtIncludePatterns.Text.Trim()}\" " +
-                                $"--exclude_patterns \"{txtExcludePatterns.Text.Trim()}\" " +
-                                $"--delimiter \"{txtDelimiter.Text.Trim()}\" ";
+                options.WordsLimit = hbtFile.WordFiltering.WordsLimit;
+                options.Delimiter = DEFAULT_DELIMITER;
+
+                options.Order = GetOrderAlgorithm(hbtFile.WordFiltering.Order);
+                options.OrderLongerWordsFirst = GetOrderLongFirst(hbtFile.WordFiltering.Order);
+                options.IncludeWordNotFirst = hbtFile.WordFiltering.IncludeWordNotFirst;
+                options.IncludeWordNotLast = hbtFile.WordFiltering.IncludeWordNotLast;
+                options.IncludeWord = hbtFile.WordFiltering.IncludeWordDict;
+                options.IncludePatterns = hbtFile.WordFiltering.IncludePatterns;
+                options.ExcludePatterns = hbtFile.WordFiltering.ExcludePatterns;
+
+                options.MinDelimiters = hbtFile.SizeFiltering.MinDelimiters;
+                options.MaxDelimiters = hbtFile.SizeFiltering.MaxDelimiters;
+                options.MinWordLength = hbtFile.SizeFiltering.MinWordLength;
+                options.MaxWordLength = hbtFile.SizeFiltering.MaxWordLength;
+                options.MinOnes = hbtFile.SizeFiltering.MinOnes;
+                options.MaxOnes = hbtFile.SizeFiltering.MaxOnes;
+                options.MinTwos = hbtFile.SizeFiltering.MinTwos;
+                options.MaxTwos = hbtFile.SizeFiltering.MaxTwos;
+                options.MinThrees = hbtFile.SizeFiltering.MinThrees;
+                options.MaxThrees = hbtFile.SizeFiltering.MaxThrees;
+                options.MinFours = hbtFile.SizeFiltering.MinFours;
+                options.MaxFours = hbtFile.SizeFiltering.MaxFours;
+                options.AtLeastAboveChars = hbtFile.SizeFiltering.AtLeastNbrGteCharacters;
+                options.AtLeastAboveWords = hbtFile.SizeFiltering.AtLeastNbrGteWords;
+                options.AtLeastUnderChars = hbtFile.SizeFiltering.AtLeastNbrLteCharacters;
+                options.AtLeastUnderWords = hbtFile.SizeFiltering.AtLeastNbrLteWords;
+                options.AtMostAboveChars = hbtFile.SizeFiltering.AtMostNbrGteCharacters;
+                options.AtMostAboveWords = hbtFile.SizeFiltering.AtMostNbrGteWords;
+                options.AtMostUnderChars = hbtFile.SizeFiltering.AtMostNbrLteCharacters;
+                options.AtMostUnderWords = hbtFile.SizeFiltering.AtMostNbrLteWords;
             }
 
-            //Common Dictionary & Hybrid Avanced
-            if (useDictAdvanced && (useMethodDictionary || (useMethodHybrid && !chkHybridIgnoreSizeFilters.Checked)))
+            if (hbtFile.AdvancedAttack.UseDictionaryAdvanced && (useMethodDictionary || (useMethodHybrid && !hbtFile.HybridAttack.IgnoreSizeFilters)))
             {
-                arguments += $"--min_words_limit {cbMinWordsLimit.SelectedItem} " +
-                    $"--max_concatenated_words {cbMaxConcatWords.SelectedItem} " +
-                    $"--min_concatenated_words {cbMinConcatWords.SelectedItem} " +
-                    $"{(chkOnlyLastTwoWordsConcat.Checked ? "--only_last_two_concatenated" : "")} " +
-                    $"{(chkOnlyFirstTwoWordsConcat.Checked ? "--only_first_two_concatenated" : "")} " +
-                    $"--max_consecutive_concatenation_limit {cbMaxConsecutiveConcat.SelectedItem} " +
-                    $"--min_consecutive_concatenation_limit {cbMinConsecutiveConcat.SelectedItem} " +
-                    $"--max_consecutive_ones {cbMaxConsecutiveOnes.SelectedItem} ";
+                options.MinWordsLimit = hbtFile.AdvancedAttack.MinWordsLimit;
+                options.MinConcatenatedWords = hbtFile.AdvancedAttack.MinConcatenatedWords;
+                options.MaxConcatenatedWords = hbtFile.AdvancedAttack.MaxConcatenatedWords;
+                options.MinConsecutiveConcatenation = hbtFile.AdvancedAttack.MinConsecutiveConcatenation;
+                options.MaxConsecutiveConcatenation = hbtFile.AdvancedAttack.MaxConsecutiveConcatenation;
+                options.MaxConsecutiveOnes = hbtFile.AdvancedAttack.MaxConsecutiveOnes;
+                options.ConcatenateFirstTwoWords = hbtFile.AdvancedAttack.ConcatenateFirstTwoWords;
+                options.ConcatenateLastTwoWords = hbtFile.AdvancedAttack.ConcatenateLastTwoWords;
             }
 
             //Dictionary Only
             if (useMethodDictionary)
             {
-                arguments += $"{(chkDictCachePrefix.Checked ? "--enable_dynamic_prefix_cache" : "")} " +
-                                $"{(chkDictCacheSuffix.Checked ? "--enable_dynamic_suffix_cache" : "")} " +
-                                $"{(chkDictionariesUse.Checked && chkDictSkipDigits.Checked ? "--dictionaries_skip_digits" : "")} " +
-                                $"{(chkDictionariesUse.Checked && chkDictSkipSpecials.Checked ? "--dictionaries_skip_specials" : "")} " +
-                                $"{(chkDictionariesUse.Checked && chkDictForceLowercase.Checked ? "--dictionaries_force_lowercase" : "")} " +
-                                $"{(chkDictionariesUse.Checked && chkDictAddTypos.Checked ? "--dictionaries_add_typos" : "")} " +
-                                $"{(chkDictionariesUse.Checked && chkDictReverseOrder.Checked ? "--dictionaries_reverse_order" : "")} " +
-                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipDigits.Checked ? "--dictionaries_custom_skip_digits" : "")} " +
-                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsSkipSpecials.Checked ? "--dictionaries_custom_skip_specials" : "")} " +
-                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsForceLowercase.Checked ? "--dictionaries_custom_force_lowercase" : "")} " +
-                                $"{(chkDictionariesCustomWordsUse.Checked && chkDictCustomWordsAddTypos.Checked ? "--dictionaries_custom_add_typos" : "")} " +
-                                (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom_min_words_hash {cbDictionariesCustomWordsMinimumInHash.SelectedItem} " : string.Empty) +
-                                (chkDictionariesCustomWordsUse.Checked && chkDictionariesCustomWordsMinimumInHashUseTypos.Checked ? "--dictionaries_custom_min_words_hash_use_typos" : string.Empty) +
-                                $"{(chkUseDictFirst.Checked && chkDictFirstSkipDigits.Checked ? "--dictionaries_first_skip_digits" : "")} " +
-                                $"{(chkUseDictFirst.Checked && chkDictFirstSkipSpecials.Checked ? "--dictionaries_first_skip_specials" : "")} " +
-                                $"{(chkUseDictFirst.Checked && chkDictFirstForceLowercase.Checked ? "--dictionaries_first_force_lowercase" : "")} " +
-                                $"{(chkUseDictFirst.Checked && chkDictFirstAddTypos.Checked ? "--dictionaries_first_add_typos" : "")} " +
-                                $"{(chkUseDictFirst.Checked && chkDictFirstReverseOrder.Checked ? "--dictionaries_first_reverse_order" : "")} " +
-                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipDigits.Checked ? "--dictionaries_first_custom_skip_digits" : "")} " +
-                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsSkipSpecials.Checked ? "--dictionaries_first_custom_skip_specials" : "")} " +
-                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsForceLowercase.Checked ? "--dictionaries_first_custom_force_lowercase" : "")} " +
-                                $"{(chkDictionariesFirstWordCustomWordsUse.Checked && chkDictFirstWordCustomWordsAddTypos.Checked ? "--dictionaries_first_custom_add_typos" : "")} " +
-                                $"{(chkUseDictLast.Checked && chkDictLastSkipDigits.Checked ? "--dictionaries_last_skip_digits" : "")} " +
-                                $"{(chkUseDictLast.Checked && chkDictLastSkipSpecials.Checked ? "--dictionaries_last_skip_specials" : "")} " +
-                                $"{(chkUseDictLast.Checked && chkDictLastForceLowercase.Checked ? "--dictionaries_last_force_lowercase" : "")} " +
-                                $"{(chkUseDictLast.Checked && chkDictLastAddTypos.Checked ? "--dictionaries_last_add_typos" : "")} " +
-                                $"{(chkUseDictLast.Checked && chkDictLastReverseOrder.Checked ? "--dictionaries_last_reverse_order" : "")} " +
-                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipDigits.Checked ? "--dictionaries_last_custom_skip_digits" : "")} " +
-                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsSkipSpecials.Checked ? "--dictionaries_last_custom_skip_specials" : "")} " +
-                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsForceLowercase.Checked ? "--dictionaries_last_custom_force_lowercase" : "")} " +
-                                $"{(chkDictionariesLastWordCustomWordsUse.Checked && chkDictLastWordCustomWordsAddTypos.Checked ? "--dictionaries_last_custom_add_typos" : "")} " +
-                                $"{(chkTyposSkipDoubleLetter.Checked ? "--typos_enable_skip_double_letter" : "")} " +
-                                $"{(chkTyposSkipLetter.Checked ? "--typos_enable_skip_letter" : "")} " +
-                                $"{(chkTyposDoubleLetter.Checked ? "--typos_enable_double_letter" : "")} " +
-                                $"{(chkTyposExtraLetter.Checked ? "--typos_enable_extra_letter" : "")} " +
-                                $"{(chkTyposWrongLetter.Checked ? "--typos_enable_wrong_letter" : "")} " +
-                                $"{(chkTyposReverseLetter.Checked ? "--typos_enable_reverse_letter" : "")} " +
-                                (!string.IsNullOrEmpty(txtTyposSwapLetters.Text.Trim()) ? $"--typos_enable_letter_swap \"{txtTyposSwapLetters.Text.Trim()}\" " : string.Empty) +
-                                (!string.IsNullOrEmpty(txtTyposAppendLetters.Text.Trim()) ? $"--typos_enable_append_letters \"{txtTyposAppendLetters.Text.Trim()}\" " : string.Empty) +
-                                (chkDictionariesUse.Checked ? $"--dictionaries \"{dictionaries}\" " : string.Empty) +
-                                (chkUseDictFirst.Checked ? $"--dictionaries_first_word \"{dictionariesFirstWord}\" " : string.Empty) +
-                                (chkUseDictLast.Checked ? $"--dictionaries_last_word \"{dictionariesLastWord}\" " : string.Empty) +
-                                (chkDictionariesCustomWordsUse.Checked ? $"--dictionaries_custom \"{dictionariesCustom}\" " : string.Empty) +
-                                (chkDictionariesFirstWordCustomWordsUse.Checked ? $"--dictionaries_first_word_custom \"{dictionariesFirstWordCustom}\" " : string.Empty) +
-                                (chkDictionariesLastWordCustomWordsUse.Checked ? $"--dictionaries_last_word_custom \"{dictionariesLastWordCustom}\" " : string.Empty) +
-                                (chkDictionariesExcludeWordsUse.Checked ? $"--dictionaries_exclude \"{dictionariesExclude}\" " : string.Empty) +
-                                $"{(chkDictionariesExcludeWordsUse.Checked && chkDictExcludePartialWords.Checked ? "--dictionaries_exclude_partial" : "")} " +
-                                (chkDictionariesFirstWordExcludeWordsUse.Checked ? $"--dictionaries_first_word_exclude \"{dictionariesFirstWordExclude}\" " : string.Empty) +
-                                $"{(chkDictionariesFirstWordExcludeWordsUse.Checked && chkDictFirstWordExcludePartialWords.Checked ? "--dictionaries_first_word_exclude_partial" : "")} " +
-                                (chkDictionariesLastWordExcludeWordsUse.Checked ? $"--dictionaries_last_word_exclude \"{dictionariesLastWordExclude}\" " : string.Empty) +
-                                $"{(chkDictionariesLastWordExcludeWordsUse.Checked && chkDictLastWordExcludePartialWords.Checked ? "--dictionaries_last_word_exclude_partial" : "")} " +
-                                (!string.IsNullOrEmpty(txtDictionaryFilterFirstFrom.Text.Trim()) ? $"--dictionary_filter_first_from \"{txtDictionaryFilterFirstFrom.Text.Trim()}\" " : string.Empty) +
-                                (!string.IsNullOrEmpty(txtDictionaryFilterFirstTo.Text.Trim()) ? $"--dictionary_filter_first_to \"{txtDictionaryFilterFirstTo.Text.Trim()}\" " : string.Empty);
+                options.EnableDynamicPrefixCache = hbtFile.DictionaryAttack.DictionaryMain.MainCacheDynamicPrefix;
+                options.EnableDynamicSuffixCache = hbtFile.DictionaryAttack.DictionaryMain.MainCacheDynamicSuffix;
+
+                options.TyposEnableSkipDoubleLetter = hbtFile.Typos.TyposEnableSkipDoubleLetter;
+                options.TyposEnableSkipLetter = hbtFile.Typos.TyposEnableSkipLetter;
+                options.TyposEnableSkipLetter = hbtFile.Typos.TyposEnableSkipLetter;
+                options.TyposEnableExtraLetter = hbtFile.Typos.TyposEnableExtraLetter;
+                options.TyposEnableWrongLetter = hbtFile.Typos.TyposEnableWrongLetter;
+                options.TyposEnableReverseLetter = hbtFile.Typos.TyposEnableReverseLetter;
+                options.TyposEnableAppendLetters = hbtFile.Typos.TyposEnableAppendLetters.Trim();
+                options.TyposEnableLetterSwap = hbtFile.Typos.TyposEnableLetterSwap.Trim();
+
+                //Main Dictionary
+                options.Dictionaries = GetAllDictionaries(hbtFile, hbtFile.DictionaryAttack.DictionaryMain, researchDictionaryContent);
+                options.DictionariesCustom = GetCustomDictionary(hbtFile, hbtFile.DictionaryAttack.DictionaryMain, "[Main][Custom]", researchDictionaryContent);
+                options.DictionariesExclude = GetExcludeDictionary(hbtFile, hbtFile.DictionaryAttack.DictionaryMain, "[Main][Exclude]");
+                options.DictionariesExcludePartialWords = hbtFile.DictionaryAttack.DictionaryMain.ExcludePartialWords;
+                options.DictionaryFilterFirstFrom = hbtFile.DictionaryAttack.DictionaryMain.MainFilterFirstFrom;
+                options.DictionaryFilterFirstTo = hbtFile.DictionaryAttack.DictionaryMain.MainFilterFirstTo;
+                options.DictionariesSkipDigits = hbtFile.DictionaryAttack.DictionaryMain.SkipDigits;
+                options.DictionariesSkipSpecials = hbtFile.DictionaryAttack.DictionaryMain.SkipSpecials;
+                options.DictionariesForceLowercase = hbtFile.DictionaryAttack.DictionaryMain.ForceLowercase;
+                options.DictionariesAddTypos = hbtFile.DictionaryAttack.DictionaryMain.AddTypos;
+                options.DictionariesReverseOrder = hbtFile.DictionaryAttack.DictionaryMain.ReverseOrder;
+                options.DictionariesCustomSkipDigits = hbtFile.DictionaryAttack.DictionaryMain.CustomWordsSkipDigits;
+                options.DictionariesCustomSkipSpecials = hbtFile.DictionaryAttack.DictionaryMain.CustomWordsSkipSpecials;
+                options.DictionariesCustomForceLowercase = hbtFile.DictionaryAttack.DictionaryMain.CustomWordsForceLowercase;
+                options.DictionariesCustomAddTypos = hbtFile.DictionaryAttack.DictionaryMain.CustomWordsAddTypos;
+                options.DictionariesCustomMinWordsHash = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHash;
+                options.DictionariesCustomMinWordsHashUseTypos = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHashUseTypos;
+
+                //First Dictionary
+                options.DictionariesFirstWord = GetAllDictionaries(hbtFile, hbtFile.DictionaryAttack.DictionaryFirstWord, researchDictionaryContent);
+                options.DictionariesFirstWordCustom = GetCustomDictionary(hbtFile, hbtFile.DictionaryAttack.DictionaryFirstWord, "[1st][Custom]", researchDictionaryContent);
+                options.DictionariesFirstWordExclude = GetExcludeDictionary(hbtFile, hbtFile.DictionaryAttack.DictionaryFirstWord, "[1st][Exclude]");
+                options.DictionariesFirstWordExcludePartialWords = hbtFile.DictionaryAttack.DictionaryFirstWord.ExcludePartialWords;
+                options.DictionariesFirstSkipDigits = hbtFile.DictionaryAttack.DictionaryFirstWord.SkipDigits;
+                options.DictionariesFirstSkipSpecials = hbtFile.DictionaryAttack.DictionaryFirstWord.SkipSpecials;
+                options.DictionariesFirstForceLowercase = hbtFile.DictionaryAttack.DictionaryFirstWord.ForceLowercase;
+                options.DictionariesFirstAddTypos = hbtFile.DictionaryAttack.DictionaryFirstWord.AddTypos;
+                options.DictionariesFirstReverseOrder = hbtFile.DictionaryAttack.DictionaryFirstWord.ReverseOrder;
+                options.DictionariesFirstCustomSkipDigits = hbtFile.DictionaryAttack.DictionaryFirstWord.CustomWordsSkipDigits;
+                options.DictionariesFirstCustomSkipSpecials = hbtFile.DictionaryAttack.DictionaryFirstWord.CustomWordsSkipSpecials;
+                options.DictionariesFirstCustomForceLowercase = hbtFile.DictionaryAttack.DictionaryFirstWord.CustomWordsForceLowercase;
+                options.DictionariesFirstCustomAddTypos = hbtFile.DictionaryAttack.DictionaryFirstWord.CustomWordsAddTypos;
+
+                //Last Dictionary
+                options.DictionariesLastWord = GetAllDictionaries(hbtFile, hbtFile.DictionaryAttack.DictionaryLastWord, researchDictionaryContent);
+                options.DictionariesLastWordCustom = GetCustomDictionary(hbtFile, hbtFile.DictionaryAttack.DictionaryLastWord, "[Last][Custom]", researchDictionaryContent);
+                options.DictionariesLastWordExclude = GetExcludeDictionary(hbtFile, hbtFile.DictionaryAttack.DictionaryLastWord, "[Last][Exclude]");
+                options.DictionariesLastWordExcludePartialWords = hbtFile.DictionaryAttack.DictionaryLastWord.ExcludePartialWords;
+                options.DictionariesLastSkipDigits = hbtFile.DictionaryAttack.DictionaryLastWord.SkipDigits;
+                options.DictionariesLastSkipSpecials = hbtFile.DictionaryAttack.DictionaryLastWord.SkipSpecials;
+                options.DictionariesLastForceLowercase = hbtFile.DictionaryAttack.DictionaryLastWord.ForceLowercase;
+                options.DictionariesLastAddTypos = hbtFile.DictionaryAttack.DictionaryLastWord.AddTypos;
+                options.DictionariesLastReverseOrder = hbtFile.DictionaryAttack.DictionaryLastWord.ReverseOrder;
+                options.DictionariesLastCustomSkipDigits = hbtFile.DictionaryAttack.DictionaryLastWord.CustomWordsSkipDigits;
+                options.DictionariesLastCustomSkipSpecials = hbtFile.DictionaryAttack.DictionaryLastWord.CustomWordsSkipSpecials;
+                options.DictionariesLastCustomForceLowercase = hbtFile.DictionaryAttack.DictionaryLastWord.CustomWordsForceLowercase;
+                options.DictionariesLastCustomAddTypos = hbtFile.DictionaryAttack.DictionaryLastWord.CustomWordsAddTypos;
             }
 
-            //Common Character & Hybrid
+            //Character & Hybrid
             if (useMethodCharacter || useMethodHybrid)
             {
-                arguments += $"--valid_chars \"{txtValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                $"--valid_starting_chars \"{txtStartingValidCharsPreview.Text.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"")}\" " +
-                                $"{(useHashCat ? "--use_hashcat" : "")} ";
+                options.ValidChars = hbtFile.CharacterAttack.ValidChars;
+                options.ValidStartingChars = hbtFile.CharacterAttack.ValidStartingChars;
+                options.UseHashcat = useHashCat;
             }
 
             //Character only
             if (useMethodCharacter)
             {
-                arguments += $"{(useUtf8 ? "--use_utf8" : "")} ";
+                options.UseUTF8 = hbtFile.CharacterAttack.EnableUtf8;
             }
 
             //Hybrid only
             if (useMethodHybrid)
             {
-                arguments += $" --hybrid_words_hash {cbHybridWordsInHash.SelectedItem} " +
-                                $"--hybrid_min_characters {cbHybridBruteForceMinCharacters.SelectedItem} " +
-                                $"--hybrid_max_characters {cbHybridBruteForceMaxCharacters.SelectedItem} " +
-                                (useHashCat ? $"--hybrid_min_char_hashcat_threshold {cbHybridHashcatThreshold.SelectedItem} " : string.Empty) +
-                                (chkHybridIgnoreSizeFilters.Checked ? $"--hybrid_ignore_size_filters " : string.Empty) +
-                                (chkHybridDictUse.Checked ? $"--hybrid_dictionary \"{dictionaryHybrid}\" " : string.Empty) +
-                                (chkHybridDictFirstWordUse.Checked ? $"--hybrid_dictionary_first_word \"{dictionaryHybridFirstWord}\" " : string.Empty) +
-                                (chkHybridDictLastWordUse.Checked ? $"--hybrid_dictionary_last_word \"{dictionaryHybridLastWord}\" " : string.Empty);
+                options.HybridWordsHash = hbtFile.HybridAttack.WordsInHash;
+                options.HybridMinCharacters = hbtFile.HybridAttack.BruteforceMinChars;
+                options.HybridMaxCharacters = hbtFile.HybridAttack.BruteforceMaxChars;
+                options.HybridMinCharHashcatThreshold = hbtFile.HybridAttack.MinCharHashcatThreshold;
+                options.HybridIgnoreSizeFilters = hbtFile.HybridAttack.IgnoreSizeFilters;
+
+                options.HybridDictionary = GetHybridDictionary(hbtFile, hbtFile.HybridAttack.Dictionary, "[Main][Hybrid]", researchDictionaryContent);
+                options.HybridDictionaryFirstWord = GetHybridDictionary(hbtFile, hbtFile.HybridAttack.DictionaryFirstWord, "[1st][Hybrid]", researchDictionaryContent);
+                options.HybridDictionaryLastWord = GetHybridDictionary(hbtFile, hbtFile.HybridAttack.DictionaryLastWord, "[Last][Hybrid]", researchDictionaryContent);
             }
 
+            //Start Bruteforce
+            using var process = new Process();
+            process.StartInfo.FileName = "BruteForceHash.exe";
+            process.StartInfo.Arguments = Parser.Default.FormatCommandLine(options);
+            LastCommand = process.StartInfo.Arguments;
 
-            using (var process = new Process())
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
+            process.WaitForExit();
+            process.Close();
+
+            return true;
+        }
+
+        private string? GetAllDictionaries(HbtFile hbtFile, HbtFileDictionary dictionary, IEnumerable<string> researchDictionaryContent)
+        {
+            if (dictionary.UseDictionary)
             {
-                process.StartInfo.FileName = "BruteForceHash.exe";
-                process.StartInfo.Arguments = arguments;
-                _lastCommand = process.StartInfo.Arguments;
+                var dictionaries = new List<string>();
+                dictionaries.AddRange(dictionary.Words);
 
-                process.StartInfo.UseShellExecute = false;
-                process.Start();
-                process.WaitForExit();
-                process.Close();
-            }*/
+                if (dictionary.UseResearchWords)
+                {
+                    var researchDictionaryPath = SaveCustomDictionary(hbtFile, $"[Research]", researchDictionaryContent);
+                    if (researchDictionaryPath != null)
+                        dictionaries.Add(researchDictionaryPath);
+                }
+                return string.Join(';', dictionaries);
+            }
+            return null;
+        }
+
+        private string? GetCustomDictionary(HbtFile hbtFile, HbtFileDictionary dictionary, string dictName, IEnumerable<string> researchDictionary)
+        {
+            if (dictionary.UseCustomWords)
+            {
+                var dictionaries = new List<string>();
+                dictionaries.AddRange(GenerateCustomDictionary(dictionary.CustomWords));
+
+                if (dictionary.CustomWordsUseResearchWords)
+                    dictionaries.AddRange(researchDictionary);
+
+                return SaveCustomDictionary(hbtFile, dictName, dictionaries);
+            }
+            return null;
+        }
+
+        private string? GetHybridDictionary(HbtFile hbtFile, HbtFileHybridDictionary dictionary, string dictName, IEnumerable<string> researchDictionary)
+        {
+            if (dictionary.UseDictionary)
+            {
+                var dictionaries = new List<string>();
+                dictionaries.AddRange(GenerateCustomDictionary(dictionary.Words));
+                if (dictionary.UseResearchWords)
+                    dictionaries.AddRange(researchDictionary);
+
+                return SaveCustomDictionary(hbtFile, dictName, dictionaries);
+            }
+            return null;
+        }
+
+        private string? GetExcludeDictionary(HbtFile hbtFile, HbtFileDictionary dictionary, string dictName)
+        {
+            if (dictionary.UseExcludeWords)
+            {
+                return SaveCustomDictionary(hbtFile, dictName, dictionary.ExcludeWords);
+            }
+            return null;
+        }
+
+        private string? SaveCustomDictionary(HbtFile hbtFile, string dictionaryName, IEnumerable<string> dictionaryContent)
+        {
+            var folderPath = _hbtFileService.GetQuickDirectoryPath(hbtFile, true);
+            if (Directory.Exists(folderPath))
+            {
+                var filePath = Path.Combine(folderPath, $"[{hbtFile.HexValue}]{dictionaryName}.dic");
+                File.WriteAllLines(filePath, dictionaryContent);
+                return filePath;
+            }
+            return null;
+        }
+
+        private IEnumerable<string> GenerateResearchDictionary(ExportEntry? hashEntry)
+        {
+            var word = new List<string>();
+
+            if (hashEntry != null)
+            {
+                //Create dictionary based on CFiles
+                foreach (var cFile in hashEntry.CFiles)
+                {
+                    var functionIds = cFile.Instances.Select(p => p.FunctionId);
+                    var functionHashes = _hashDBService.GetFunctions(cFile.File, functionIds);
+                    if (functionHashes != null)
+                    {
+                        var hashes = functionHashes.SelectMany(p => p.Hashes);
+                        if (hashes != null)
+                        {
+                            foreach (var hash40 in hashes)
+                            {
+                                var label = _hashDBService.GetLabel(hash40);
+                                if (!string.IsNullOrEmpty(label))
+                                {
+                                    word.AddRange(WordsParsing.SplitWords(label));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Create dictionary based on PRC
+                foreach (var prc in hashEntry.PRCFiles)
+                {
+                    var entriesWithSameFilePath = _hashDBService.GetEntriesByPRCFile(prc.File);
+                    if (entriesWithSameFilePath != null)
+                    {
+                        foreach (var prcEntry in entriesWithSameFilePath)
+                        {
+                            var label = _hashDBService.GetLabel(prcEntry.Hash40Hex);
+                            if (!string.IsNullOrEmpty(label))
+                            {
+                                word.AddRange(WordsParsing.SplitWords(label));
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+            return word.Distinct().OrderBy(p => p);
+        }
+
+        private static IEnumerable<string> GenerateCustomDictionary(List<string> words)
+        {
+            return words.Distinct().OrderBy(p => p);
+        }
+
+        private static string GetOrderAlgorithm(string order)
+        {
+            var orderAlgorithm = order.Split("|");
+            if (orderAlgorithm.Length == 2)
+                return orderAlgorithm[0];
+            return DEFAULT_ORDER_ALGORITHM;
+        }
+
+        private static bool GetOrderLongFirst(string order)
+        {
+            var orderAlgorithm = order.Split("|");
+            if (orderAlgorithm.Length == 2)
+                return orderAlgorithm[1] == "long";
+            return true;
         }
     }
 }

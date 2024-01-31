@@ -1,5 +1,4 @@
-﻿using HashRelationalResearch.GUI.Helpers;
-using HashRelationalResearch.Models;
+﻿using HashRelationalResearch.Models;
 using System.Collections.Generic;
 
 namespace HashRelationalResearch.GUI.Services.Interfaces
@@ -9,8 +8,9 @@ namespace HashRelationalResearch.GUI.Services.Interfaces
         bool LoadHashDBFile(string filename);
         ExportEntry? GetEntry(string hash40);
         ExportFunctionEntry? GetFunction(string file, int functionId);
-        List<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds);
+        IEnumerable<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds);
+        IEnumerable<ExportEntry> GetEntriesByPRCFile(string file);
         string? GetLabel(string hash40);
-        bool AddOrUpdateLabel(DiscoverySource source, string hash40, string label);
+        bool AddOrUpdateLabel(string hash40, string label);
     }
 }

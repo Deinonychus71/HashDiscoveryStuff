@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BruteForceHash\BruteForceHash.csproj" />
     <ProjectReference Include="..\Tools\Research\HashRelationalResearch\HashRelationalResearch.csproj" />
   </ItemGroup>
 

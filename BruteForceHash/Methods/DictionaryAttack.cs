@@ -207,6 +207,7 @@ namespace BruteForceHash.Methods
             {
                 _logger.Log($"Include Word: {_options.IncludeWord}");
                 _logger.Log($"Include Word - Skip first word: {_options.IncludeWordNotFirst}");
+                _logger.Log($"Include Word - Skip last word: {_options.IncludeWordNotLast}");
             }
 
             if (_options.MaxConcatenatedWords > 0)

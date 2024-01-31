@@ -23,16 +23,19 @@ namespace HashRelationalResearch.GUI.Models
         public HbtFileDictionaryAttack DictionaryAttack { get; set; } = new();
 
         public HbtFileCharacterAttack CharacterAttack { get; set; } = new();
+
+        public HbtFileHybridAttack HybridAttack { get; set; } = new();
     }
 
     public class HbtFileWordFiltering
     {
+        public int WordsLimit { get; set; } = 4;
         public string ExcludePatterns { get; set; } = string.Empty;
         public string IncludePatterns { get; set; } = string.Empty;
         public string IncludeWordDict { get; set; } = string.Empty;
         public bool IncludeWordNotFirst { get; set; }
         public bool IncludeWordNotLast { get; set; }
-        public string Order { get; set; } = "fewer_words_first_long";
+        public string Order { get; set; } = "fewer_words_first|long";
     }
 
     public class HbtFileSizeFiltering
@@ -75,7 +78,7 @@ namespace HashRelationalResearch.GUI.Models
     public class HbtFileTypos
     {
         public string TyposEnableLetterSwap { get; set; } = "l-r,a-e";
-        public string TyposEnableAppendLetter { get; set; } = "s,ed";
+        public string TyposEnableAppendLetters { get; set; } = "s,ed";
         public bool TyposEnableSkipDoubleLetter { get; set; } = false;
         public bool TyposEnableSkipLetter { get; set; } = false;
         public bool TyposEnableDoubleLetter { get; set; } = false;
@@ -97,11 +100,12 @@ namespace HashRelationalResearch.GUI.Models
     public class HbtFileDictionary
     {
         public bool UseDictionary { get; set; } = false;
-        public List<string> Dictionaries { get; set; } = [];
+        public List<string> Words { get; set; } = [];
         public bool SkipDigits { get; set; } = false;
         public bool SkipSpecials { get; set; } = true;
         public bool ForceLowercase { get; set; } = true;
         public bool AddTypos { get; set; } = false;
+        public bool UseResearchWords { get; set; } = true;
         public bool ReverseOrder { get; set; } = false;
 
         public bool UseCustomWords { get; set; } = false;
@@ -109,6 +113,7 @@ namespace HashRelationalResearch.GUI.Models
         public bool CustomWordsSkipDigits { get; set; } = false;
         public bool CustomWordsSkipSpecials { get; set; } = true;
         public bool CustomWordsForceLowercase { get; set; } = true;
+        public bool CustomWordsUseResearchWords { get; set; } = false;
         public bool CustomWordsAddTypos { get; set; } = false;
 
         public bool UseExcludeWords { get; set; } = false;
@@ -118,8 +123,8 @@ namespace HashRelationalResearch.GUI.Models
         //Only for Main
         public string MainFilterFirstFrom { get; set; } = string.Empty;
         public string MainFilterFirstTo { get; set; } = string.Empty;
-        public bool MainCacheDynamicPrefix { get; set; } = true;
-        public bool MainCacheDynamicSuffix { get; set; } = true;
+        public bool MainCacheDynamicPrefix { get; set; } = false;
+        public bool MainCacheDynamicSuffix { get; set; } = false;
 
         public int MainCustomWordsMinimumInHash { get; set; } = 0;
         public bool MainCustomWordsMinimumInHashUseTypos { get; set; } = false;
@@ -131,20 +136,24 @@ namespace HashRelationalResearch.GUI.Models
         public string ValidChars { get; set; } = string.Empty;
         public string ValidStartingChars { get; set; } = string.Empty;
         public List<string> Charsets { get; set; } = [];
-        public string PathHashCat { get; set; } = string.Empty;
-        public HbtFileHybridDictionary HybridDictionary { get; set; } = new();
-        public int HybridBruteforceMinChars { get; set; }
-        public int HybridBruteforceMaxChars { get; set; }
-        public int HybridWordsInHash { get; set; }
-        public HbtFileHybridDictionary HybridDictionaryFirstWord { get; set; } = new();
-        public HbtFileHybridDictionary HybridDictionaryLastWord { get; set; } = new();
-        public bool HybridIgnoreSizeFilters { get; set; }
-        public int HybridMinCharHashcatThreshold { get; set; }
+    }
+
+    public class HbtFileHybridAttack
+    {
+        public bool IgnoreSizeFilters { get; set; } = false;
+        public int BruteforceMinChars { get; set; }
+        public int BruteforceMaxChars { get; set; }
+        public int WordsInHash { get; set; }
+        public int MinCharHashcatThreshold { get; set; }
+        public HbtFileHybridDictionary Dictionary { get; set; } = new();
+        public HbtFileHybridDictionary DictionaryFirstWord { get; set; } = new();
+        public HbtFileHybridDictionary DictionaryLastWord { get; set; } = new();
     }
 
     public class HbtFileHybridDictionary
     {
         public bool UseDictionary { get; set; }
-        public List<string> HybridDictionariesWords { get; set; } = [];
+        public bool UseResearchWords { get; set; } = false;
+        public List<string> Words { get; set; } = [];
     }
 }

@@ -18,6 +18,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         private string? _customWords;
         private string? _excludeWords;
         private bool _isMainDictionary;
+        private bool _isUseResearchWordsEnabled = false;
         #endregion
 
         #region Properties
@@ -71,6 +72,16 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
+        public bool IsUseResearchWordsEnabled
+        {
+            get => _isUseResearchWordsEnabled;
+            set
+            {
+                _isUseResearchWordsEnabled = value;
+                OnPropertyChanged(nameof(IsUseResearchWordsEnabled));
+            }
+        }
+
         public int[] HashWordsList { get; private set; } = ListGenerators.GetIntegerList(0, 4);
 
         public IRelayCommand UnselectAllCommand { get; private set; }
@@ -86,7 +97,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             _isMainDictionary = false;
 
             UnselectAllCommand = new RelayCommand(UnselectAll);
-            CopyTreeViewFromViewCommand = new RelayCommand(() => LoadTreeViewFromDictionaries(_parentHbtFileDictionary?.Dictionaries));
+            CopyTreeViewFromViewCommand = new RelayCommand(CopyDictionariesFromMain);
             CopyCustomWordsFromViewCommand = new RelayCommand(CopyCustomWordsFromMain);
             CopyExcludeWordsCopyFromViewCommand = new RelayCommand(CopyExcludeWordsFromMain);
             TreeViewItemCheckedCommand = new RelayCommand(SaveDictionaries);
@@ -97,17 +108,45 @@ namespace HashRelationalResearch.GUI.ViewModels
             _parentHbtFileDictionary = parentHbtFileDictionary;
             HbtFileDictionary = hbtFileDictionary;
             LoadTreeView();
-            LoadTreeViewFromDictionaries(hbtFileDictionary.Dictionaries);
+            LoadTreeViewFromDictionaries(hbtFileDictionary.Words);
             CustomWords = string.Join(TEXT_SEPARATOR, hbtFileDictionary.CustomWords);
             ExcludeWords = string.Join(TEXT_SEPARATOR, hbtFileDictionary.ExcludeWords);
         }
 
-        public void LoadTreeViewFromDictionaries(List<string>? dictionaries)
+        private void LoadTreeViewFromDictionaries(List<string>? dictionaries)
         {
             if (dictionaries != null)
             {
                 foreach (var treeViewItem in TreeViewItems)
                     treeViewItem.CheckValues(dictionaries);
+            }
+        }
+
+        private void UnselectAll()
+        {
+            foreach (var treeViewItem in TreeViewItems)
+                treeViewItem.UnselectAll();
+        }
+
+        private void CopyDictionariesFromMain()
+        {
+            LoadTreeViewFromDictionaries(_parentHbtFileDictionary?.Words);
+            SaveDictionaries();
+        }
+
+        private void CopyCustomWordsFromMain()
+        {
+            if (_hbtFileDictionary != null && _parentHbtFileDictionary != null)
+            {
+                CustomWords = string.Join(TEXT_SEPARATOR, _parentHbtFileDictionary.CustomWords);
+            }
+        }
+
+        private void CopyExcludeWordsFromMain()
+        {
+            if (_hbtFileDictionary != null && _parentHbtFileDictionary != null)
+            {
+                ExcludeWords = string.Join(TEXT_SEPARATOR, _parentHbtFileDictionary.ExcludeWords);
             }
         }
 
@@ -129,29 +168,7 @@ namespace HashRelationalResearch.GUI.ViewModels
                 var output = new List<string>();
                 foreach (var treeViewItem in TreeViewItems)
                     treeViewItem.GetSelectedNodes(ref output);
-                _hbtFileDictionary.Dictionaries = output;
-            }
-        }
-
-        public void UnselectAll()
-        {
-            foreach (var treeViewItem in TreeViewItems)
-                treeViewItem.UnselectAll();
-        }
-
-        public void CopyCustomWordsFromMain()
-        {
-            if (_hbtFileDictionary != null && _parentHbtFileDictionary != null)
-            {
-                CustomWords = string.Join(TEXT_SEPARATOR, _parentHbtFileDictionary.CustomWords);
-            }
-        }
-
-        public void CopyExcludeWordsFromMain()
-        {
-            if (_hbtFileDictionary != null && _parentHbtFileDictionary != null)
-            {
-                ExcludeWords = string.Join(TEXT_SEPARATOR, _parentHbtFileDictionary.ExcludeWords);
+                _hbtFileDictionary.Words = output;
             }
         }
     }

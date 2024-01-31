@@ -11,6 +11,7 @@ namespace HashRelationalResearch.GUI.Services
     public class HbtFileService : IHbtFileService
     {
         private const string QUICK_PATH = "HexData\\[{0}]";
+        private const string QUICK_SAVE_PATH = "HexData\\[{0}]\\{0}.hbt";
         private const string WORKSPACE_FILEPATH = "workspace.json";
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
@@ -45,6 +46,9 @@ namespace HashRelationalResearch.GUI.Services
         {
             try
             {
+                var directory = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directory) && !string.IsNullOrEmpty(directory))
+                    Directory.CreateDirectory(directory);
                 var fileContent = JsonSerializer.Serialize(hbtFile, _jsonSerializerOptions);
                 File.WriteAllText(filePath, fileContent);
                 return true;
@@ -82,12 +86,12 @@ namespace HashRelationalResearch.GUI.Services
             return false;
         }
 
-        public string? GetQuickDirectory(HbtFile? hbtFile, bool create = false)
+        public string? GetQuickDirectoryPath(HbtFile? hbtFile, bool create = false)
         {
             var hex = hbtFile?.HexValue;
             if (HashHelper.IsValidHash40Value(hex))
             {
-                var path = GetPath(hex);
+                var path = string.Format(QUICK_PATH, hex);
                 if (create && !Directory.Exists(path))
                     Directory.CreateDirectory(path);
                 return path;
@@ -95,19 +99,19 @@ namespace HashRelationalResearch.GUI.Services
             return null;
         }
 
-        public bool QuickDirectoryExists(HbtFile? hbtFile)
+        public bool QuickSaveExists(HbtFile? hbtFile)
         {
             var hex = hbtFile?.HexValue;
             if (HashHelper.IsValidHash40Value(hex))
-                return Directory.Exists(GetPath(hex));
+                return File.Exists(GetQuickSavePath(hex));
             return false;
         }
 
-        public string? GetQuickSaveFile(HbtFile? hbtFile)
+        public string? GetQuickSaveFilePath(HbtFile? hbtFile)
         {
             var hex = hbtFile?.HexValue;
-            var path = GetPath(hex);
-            if (HashHelper.IsValidHash40Value(hex) && File.Exists(path))
+            var path = GetQuickSavePath(hex);
+            if (HashHelper.IsValidHash40Value(hex))
                 return path;
             return null;
         }
@@ -115,34 +119,50 @@ namespace HashRelationalResearch.GUI.Services
         public bool DeleteQuickDirectory(HbtFile? hbtFile)
         {
             var hash40 = hbtFile?.HexValue;
-            var hexPath = GetQuickDirectory(hbtFile);
+            var hexPath = GetQuickDirectoryPath(hbtFile);
             if (!string.IsNullOrEmpty(hexPath) && !string.IsNullOrEmpty(hash40))
             {
                 try
                 {
-                    if (File.Exists($"{hexPath}\\[{hash40}].hbt"))
+                    if (File.Exists(GetQuickSavePath(hash40)))
                     {
-                        File.Delete($"{hexPath}\\[{hash40}].hbt");
+                        File.Delete(GetQuickSavePath(hash40));
                     }
-                    if (File.Exists($"{hexPath}\\[{hash40}].dic"))
+                    if (File.Exists($"{hexPath}\\[{hash40}][Research].dic"))
                     {
-                        File.Delete($"{hexPath}\\[{hash40}].dic");
+                        File.Delete($"{hexPath}\\[{hash40}][Research].dic");
                     }
-                    if (File.Exists($"{hexPath}\\[{hash40}][Exclude].dic"))
+                    if (File.Exists($"{hexPath}\\[{hash40}][Main][Custom].dic"))
                     {
-                        File.Delete($"{hexPath}\\[{hash40}][Exclude].dic");
+                        File.Delete($"{hexPath}\\[{hash40}][Main][Custom].dic");
                     }
-                    if (File.Exists($"{hexPath}\\[{hash40}][1st].dic"))
+                    if (File.Exists($"{hexPath}\\[{hash40}][Main][Hybrid].dic"))
                     {
-                        File.Delete($"{hexPath}\\[{hash40}][1st].dic");
+                        File.Delete($"{hexPath}\\[{hash40}][Main][Hybrid].dic");
+                    }
+                    if (File.Exists($"{hexPath}\\[{hash40}][Main][Exclude].dic"))
+                    {
+                        File.Delete($"{hexPath}\\[{hash40}][Main][Exclude].dic");
+                    }
+                    if (File.Exists($"{hexPath}\\[{hash40}][1st][Custom].dic"))
+                    {
+                        File.Delete($"{hexPath}\\[{hash40}][1st][Custom].dic");
+                    }
+                    if (File.Exists($"{hexPath}\\[{hash40}][1st][Hybrid].dic"))
+                    {
+                        File.Delete($"{hexPath}\\[{hash40}][1st][Hybrid].dic");
                     }
                     if (File.Exists($"{hexPath}\\[{hash40}][1st][Exclude].dic"))
                     {
                         File.Delete($"{hexPath}\\[{hash40}][1st][Exclude].dic");
                     }
-                    if (File.Exists($"{hexPath}\\[{hash40}][Last].dic"))
+                    if (File.Exists($"{hexPath}\\[{hash40}][Last][Custom].dic"))
                     {
-                        File.Delete($"{hexPath}\\[{hash40}][Last].dic");
+                        File.Delete($"{hexPath}\\[{hash40}][Last][Custom].dic");
+                    }
+                    if (File.Exists($"{hexPath}\\[{hash40}][Last][Hybrid].dic"))
+                    {
+                        File.Delete($"{hexPath}\\[{hash40}][Last][Hybrid].dic");
                     }
                     if (File.Exists($"{hexPath}\\[{hash40}][Last][Exclude].dic"))
                     {
@@ -158,9 +178,9 @@ namespace HashRelationalResearch.GUI.Services
             return true;
         }
 
-        private static string GetPath(string? hash40)
+        private static string GetQuickSavePath(string? hash40)
         {
-            return string.Format(QUICK_PATH, hash40);
+            return string.Format(QUICK_SAVE_PATH, hash40);
         }
     }
 }

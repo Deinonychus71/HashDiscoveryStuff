@@ -81,28 +81,31 @@ namespace HashRelationalResearch.GUI.ViewModels
                 var file = prcFile;
                 if (file.StartsWith('/'))
                     file = file[1..];
-                t.Open(Path.Combine(_configurationService.PrcRootPath, file.Replace('/', Path.DirectorySeparatorChar)));
-                PRCFile = new ParamControl(t.Root);
-                Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+                var filePath = Path.Combine(_configurationService.PrcRootPath, file.Replace('/', Path.DirectorySeparatorChar));
+                if (File.Exists(filePath))
                 {
-                    if (PRCFile.FindName("Param_TreeView") is TreeView treeView)
+                    t.Open(filePath);
+                    PRCFile = new ParamControl(t.Root);
+                    Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                     {
-                        foreach (var item in treeView.Items)
+                        if (PRCFile.FindName("Param_TreeView") is TreeView treeView)
                         {
-                            var childControl = treeView.ItemContainerGenerator.ContainerFromItem(item);
-                            if (childControl != null)
+                            foreach (var item in treeView.Items)
                             {
-                                if (childControl is TreeViewItem treeViewItem)
+                                var childControl = treeView.ItemContainerGenerator.ContainerFromItem(item);
+                                if (childControl != null)
                                 {
-                                    treeViewItem.IsExpanded = true;
-                                    //Do further expanding
+                                    if (childControl is TreeViewItem treeViewItem)
+                                    {
+                                        treeViewItem.IsExpanded = true;
+                                        //Do further expanding
+                                    }
                                 }
                             }
                         }
-                    }
-                });
-                _loadedPrcFile = prcFile;
-
+                    });
+                    _loadedPrcFile = prcFile;
+                }
             }
         }
     }

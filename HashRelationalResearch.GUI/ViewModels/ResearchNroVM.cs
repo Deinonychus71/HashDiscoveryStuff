@@ -95,6 +95,11 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
+        public void RefreshCurrentFunction()
+        {
+            LoadFunction(SelectedCFunctionEntry);
+        }
+
         private void LoadFunctionInstances()
         {
             if (_selectedCFileEntry != null)
