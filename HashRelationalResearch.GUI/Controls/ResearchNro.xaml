@@ -26,12 +26,12 @@
             <ComboBox ItemsSource="{Binding CFunctionEntries, Mode=OneWay}" SelectedItem="{Binding SelectedCFunctionEntry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Function" Width="200">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding CFunctionSelected}" />
+                        <i:InvokeCommandAction Command="{Binding CFunctionSelected}" CommandParameter="{Binding SelectedCFunctionEntry, Mode=OneWay}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
             <Label Content="Display Labels:" />
-            <CheckBox IsChecked="{Binding ShouldDisplayKnownLabels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding CFunctionSelected}"/>
+            <CheckBox IsChecked="{Binding ShouldDisplayKnownLabels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding CFunctionSelected}" CommandParameter="{Binding SelectedCFunctionEntry, Mode=OneWay}"/>
         </StackPanel>
 
         <h:MvvmTextEditor Grid.Row="1" IsReadOnly="True" ShowLineNumbers="true" Text="{Binding CodeEditorText, Mode=OneWay}" SyntaxHighlighting="C++" FontFamily="Consolas" FontSize="10pt" />

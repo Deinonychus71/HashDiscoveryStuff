@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using HashCommon;
+using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
-using System.IO;
-using System.Linq;
 using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
@@ -12,7 +10,6 @@ namespace HashRelationalResearch.GUI.ViewModels
     {
         private readonly IConfigurationService _configurationService;
         private readonly IBruteForceHashService _bruteforceForceHashService;
-        private readonly IHbtFileService _hbtFileService;
 
         private HashCrackDictionaryTabVM _mainDictionaryVM;
         private HashCrackDictionaryTabVM _firstWordVM;
@@ -89,38 +86,31 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        //Common
-        public string[] AttackTypeList { get; private set; } = ["Dictionary", "Character", "Hybrid"];
-        public int[] NbrThreadsList { get; private set; } = GetIntegerList(1, 64);
-
         //Word Filtering
         public string[] ExcludePatternsList { get; private set; }
         public string[] IncludePatternsList { get; private set; }
         public ListItem<string>[] CombinationOrdersList { get; private set; } = GetCombinationOrders();
 
         //Size Filtering
-        public int[] DelimitersList { get; private set; } = GetIntegerList(-1, 10);
-        public int[] MinWordLengthList { get; private set; } = GetIntegerList(1, 10);
-        public int[] MaxWordLengthList { get; private set; } = GetIntegerList(1, 50);
-        public int[] WordSizeList { get; set; } = GetIntegerList(0, 10);
-        public ListItem<int>[] WordsList { get; set; } = GetIntegerListWithLabel("words", 0, 10);
-        public ListItem<int>[] CharactersList { get; set; } = GetIntegerListWithLabel("characters", 0, 10);
-        public int[] AdvancedConcatWordsList { get; set; } = GetIntegerList(0, 10);
-        public int[] AdvancedConsecutiveList { get; set; } = GetIntegerList(1, 10);
-        public int[] AdvancedMinWordsList { get; set; } = GetIntegerList(1, 10);
+        public int[] DelimitersList { get; private set; } = ListGenerators.GetIntegerList(-1, 10);
+        public int[] MinWordLengthList { get; private set; } = ListGenerators.GetIntegerList(1, 10);
+        public int[] MaxWordLengthList { get; private set; } = ListGenerators.GetIntegerList(1, 50);
+        public int[] WordSizeList { get; set; } = ListGenerators.GetIntegerList(0, 10);
+        public ListItem<int>[] WordsList { get; set; } = ListGenerators.GetIntegerListWithLabel("words", 0, 10);
+        public ListItem<int>[] CharactersList { get; set; } = ListGenerators.GetIntegerListWithLabel("characters", 0, 10);
+        public int[] AdvancedConcatWordsList { get; set; } = ListGenerators.GetIntegerList(0, 10);
+        public int[] AdvancedConsecutiveList { get; set; } = ListGenerators.GetIntegerList(1, 10);
+        public int[] AdvancedMinWordsList { get; set; } = ListGenerators.GetIntegerList(1, 10);
 
-        public ICommand QuickSaveCommand { get => new RelayCommand(QuickSave, CanQuickSave); }
-        public ICommand QuickLoadCommand { get => new RelayCommand(QuickLoad, CanQuickLoad); }
         public ICommand StartBruteforceCommand { get => new RelayCommand(() => StartBruteforce(false)); }
         public ICommand StartBruteforceHashcatCommand { get => new RelayCommand(() => StartBruteforce(true)); }
         #endregion
 
-        public HashCrackVM(IConfigurationService configurationService, IBruteForceHashService bruteforceForceHashService, IHbtFileService hbtFileService,
+        public HashCrackVM(IConfigurationService configurationService, IBruteForceHashService bruteforceForceHashService,
             HashCrackDictionaryTabVM mainDictionaryVM, HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
         {
             _configurationService = configurationService;
             _bruteforceForceHashService = bruteforceForceHashService;
-            _hbtFileService = hbtFileService;
 
             //Set arrays
             ExcludePatternsList = configurationService.GetExcludePatterns();
@@ -142,51 +132,7 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         private void StartBruteforce(bool useHashcat)
         {
-            //var dictionaries = _mainDictionaryVM.RetrieveDictionaries();
-        }
-
-        private void QuickLoad()
-        {
-            //FIX
-            var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
-            var loadedHbtFile = _hbtFileService.LoadHbrFile(quickSaveFile);
-            if(loadedHbtFile != null)
-                LoadHbtFile(loadedHbtFile);
-        }
-
-        private bool CanQuickLoad()
-        {
-            var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
-            return File.Exists(quickSaveFile);
-        }
-
-        private void QuickSave()
-        {
-            //FIX
-            if(_hbtFile != null)
-            {
-                _hbtFileService.GetQuickDirectory(_hbtFile, true);
-                var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
-                if (quickSaveFile != null)
-                {
-                    _hbtFileService.SaveHbrFile(quickSaveFile, _hbtFile);
-                }
-            }
-        }
-
-        private bool CanQuickSave()
-        {
-            return HashHelper.IsValidHash40Value(HbtFile?.HexValue);
-        }
-
-        private static int[] GetIntegerList(int minValue, int maxValue)
-        {
-            return Enumerable.Range(minValue, maxValue).ToArray();
-        }
-
-        private static ListItem<int>[] GetIntegerListWithLabel(string label, int minValue, int maxValue)
-        {
-            return Enumerable.Range(minValue, maxValue).Select(p => new ListItem<int>($"{p} {label}", p)).ToArray();
+            //TODO
         }
 
         private static ListItem<string>[] GetCombinationOrders()

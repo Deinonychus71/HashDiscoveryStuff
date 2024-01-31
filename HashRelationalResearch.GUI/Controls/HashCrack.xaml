@@ -7,13 +7,12 @@
              xmlns:h="clr-namespace:HashRelationalResearch.GUI.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="1050" d:DesignWidth="800">
-    <Grid Background="WhiteSmoke">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" MinWidth="400" MaxWidth="500"/>
             <ColumnDefinition Width="5*" MinWidth="600"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
             <RowDefinition Height="160"/>
             <RowDefinition Height="200"/>
             <RowDefinition Height="160"/>
@@ -22,40 +21,9 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <GroupBox Header="Hash Crack" Grid.Row="0" Grid.ColumnSpan="2">
-            <DockPanel>
-                <StackPanel Orientation="Horizontal" Margin="10" DockPanel.Dock="Right">
-                    <Button Width="50" Margin="0,0,5,0" Content="Save" Command="{Binding QuickSaveCommand, Mode=OneTime}"/>
-                    <Button Width="50" Content="Load" Command="{Binding QuickLoadCommand, Mode=OneTime}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Width="Auto" DockPanel.Dock="Left">
-                    <Label Content="Attack Type:"/>
-                    <ComboBox ItemsSource="{Binding AttackTypeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AttackType, Mode=TwoWay}">
-                        <i:Interaction.Behaviors>
-                            <h:ComboBoxWidthBehavior />
-                        </i:Interaction.Behaviors>
-                    </ComboBox>
-                    <Label Content="Threads:"/>
-                    <ComboBox ItemsSource="{Binding NbrThreadsList, Mode=OneTime}" SelectedItem="{Binding HbtFile.NbrThreads, Mode=TwoWay}">
-                        <i:Interaction.Behaviors>
-                            <h:ComboBoxWidthBehavior />
-                        </i:Interaction.Behaviors>
-                    </ComboBox>
-                    <Label Content="Prefix:"/>
-                    <TextBox Width="150" Text="{Binding HbtFile.Prefix, Mode=TwoWay}"/>
-                    <Label Content="Suffix:"/>
-                    <TextBox Width="150" Text="{Binding HbtFile.Suffix, Mode=TwoWay}"/>
-                    <Label Content="Verbose:"/>
-                    <CheckBox IsChecked="{Binding HbtFile.Verbose, Mode=TwoWay}"/>
-                </StackPanel>
-                
-            </DockPanel>
-        </GroupBox>
-
         <!-- Left Panel -->
         <!-- Word Filtering -->
-        <GroupBox Header="Word Filtering" Grid.Row="1">
+        <GroupBox Header="Word Filtering" Grid.Row="0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="125"/>
@@ -96,7 +64,7 @@
             </Grid>
         </GroupBox>
         <!-- Size Filtering -->
-        <GroupBox Header="Size Filtering" Grid.Row="2">
+        <GroupBox Header="Size Filtering" Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"/>
@@ -160,7 +128,7 @@
 
         </GroupBox>
         <!-- Advanced Attack -->
-        <GroupBox Header="      Advanced Attack" Grid.Row="3" IsEnabled="{Binding HbtFile.AdvancedAttack.UseDictionaryAdvanced, Mode=OneWay}">
+        <GroupBox Header="      Advanced Attack" Grid.Row="2" IsEnabled="{Binding HbtFile.AdvancedAttack.UseDictionaryAdvanced, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="125"/>
@@ -193,9 +161,9 @@
                 <CheckBox Grid.Row="3" Grid.Column="3" Width="Auto" IsChecked="{Binding HbtFile.AdvancedAttack.ConcatenateLastTwoWords, Mode=TwoWay}"/>
             </Grid>
         </GroupBox>
-        <CheckBox Grid.Row="3" VerticalAlignment="Top" IsChecked="{Binding HbtFile.AdvancedAttack.UseDictionaryAdvanced, Mode=TwoWay}" HorizontalAlignment="Left" Margin="8,3"/>
+        <CheckBox Grid.Row="2" VerticalAlignment="Top" IsChecked="{Binding HbtFile.AdvancedAttack.UseDictionaryAdvanced, Mode=TwoWay}" HorizontalAlignment="Left" Margin="8,3"/>
         <!-- Typos -->
-        <GroupBox Header="Typos" Grid.Row="4">
+        <GroupBox Header="Typos" Grid.Row="3">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="20"/>
@@ -238,14 +206,14 @@
         </GroupBox>
 
         <!-- Right Panel -->
-        <TabControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="5">
+        <TabControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="5" Margin="4,5,2,0">
             <TabItem Header="Main Dictionary" Content="{Binding MainDictionaryVM, Mode=OneWay}"/>
             <TabItem Header="First Word Overrides" Content="{Binding FirstWordVM, Mode=OneWay}"/>
             <TabItem Header="Last Word Overrides" Content="{Binding LastWordVM, Mode=OneWay}"/>
         </TabControl>
 
         <!-- Bottom -->
-        <Grid Grid.Row="6" Grid.ColumnSpan="2" Margin="30">
+        <Grid Grid.Row="5" Grid.ColumnSpan="2" Margin="30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>

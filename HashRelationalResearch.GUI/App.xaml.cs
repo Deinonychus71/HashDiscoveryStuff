@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
-using System.Windows.Ink;
 
 namespace HashRelationalResearch.GUI
 {

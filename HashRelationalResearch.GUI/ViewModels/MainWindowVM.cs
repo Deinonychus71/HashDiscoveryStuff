@@ -61,8 +61,6 @@ namespace HashRelationalResearch.GUI.ViewModels
             _selectedResearchTab = researchTabVM;
             researchTabVM.LoadHbtFile(hbtFileService.NewHbrFile());
             ResearchTabs = [researchTabVM];
-
-            //OpenHashDBFile(_configurationService.HashDBFilePath);
         }
 
         public void NewResearchTab()
@@ -123,20 +121,14 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        private void OpenHashDBFile(string? filePath)
-        {
-            if (filePath != null && File.Exists(filePath))
-                _hashDBService.Init(filePath);
-        }
-
         private void PickHashDBFile()
         {
-            var filePath = _dialogService.OpenFileDialog(Helpers.FileTypes.Json, "db", Helpers.FileTypes.Json);
+            var filePath = _dialogService.OpenFileDialog(Helpers.FileTypes.Json | Helpers.FileTypes.Bin, "db", Helpers.FileTypes.Json);
             if (filePath != null && _configurationService.HashDBFilePath != filePath)
             {
                 _configurationService.HashDBFilePath = filePath;
                 _configurationService.SaveGlobalConfiguration();
-                OpenHashDBFile(filePath);
+                _hashDBService.LoadHashDBFile(filePath);
                 _dialogService.ShowMessage($"HashDB loaded: '{filePath}'");
             }
         }

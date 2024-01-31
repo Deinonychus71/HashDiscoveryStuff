@@ -85,17 +85,17 @@ namespace HashRelationalResearch.GUI.Services
         {
             var output = new List<string>();
             if (extension.HasFlag(FileTypes.Json))
-                output.Add("JSON File|*.json");
+                output.Add("JSON File (*.json)|*.json");
             if (extension.HasFlag(FileTypes.Hbt))
-                output.Add("BruteforceHash File|*.hbt");
+                output.Add("BruteforceHash File (*.hbt)|*.hbt");
             if (extension.HasFlag(FileTypes.Exe))
-                output.Add("Application File|*.exe");
+                output.Add("Application File (*.exe)|*.exe");
             if (extension.HasFlag(FileTypes.Bin))
-                output.Add("Binary File|*.bin");
+                output.Add("Binary File (*.bin)|*.bin");
             if (extension.HasFlag(FileTypes.All))
                 output.Add("All Files (.)|.");
 
-            return string.Join(';', output);
+            return string.Join('|', output);
         }
 
         private static string? GetFlagToExtension(FileTypes extension)

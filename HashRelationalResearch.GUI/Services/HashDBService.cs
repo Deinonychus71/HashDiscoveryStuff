@@ -1,5 +1,6 @@
 ﻿using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
+using ProtoBuf;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -14,24 +15,33 @@ namespace HashRelationalResearch.GUI.Services
         private Dictionary<string, List<ExportFunctionEntry>> _functions = [];
         private Dictionary<string, string> _labels = [];
 
-        public void Init(string filename)
+        public HashDBService(IConfigurationService configurationService)
+        {
+            LoadHashDBFile(configurationService.HashDBFilePath);
+        }
+
+        public bool LoadHashDBFile(string filePath)
         {
             try
             {
-                var file = JsonSerializer.Deserialize<ExportContainer>(File.ReadAllText(filename));
-                if (file != null)
+                if (filePath != null && File.Exists(filePath))
                 {
-                    _entries = file.ExportEntries;
-                    _functions = file.ExportFunctions;
-                    _labels = _entries.Values.Where(p => p.Label != null).ToDictionary(p => p.Hash40Hex, p => p.Label.Label);
-                    prcEditor.MainWindow.HashToStringLabels.Clear();
-                    prcEditor.MainWindow.StringToHashLabels.Clear();
-                    foreach (var label in _labels)
+                    var file = Deserialize(filePath);
+                    if (file != null)
                     {
-                        prcEditor.MainWindow.HashToStringLabels.Add(ulong.Parse(label.Key[2..], NumberStyles.HexNumber), label.Value);
-                        prcEditor.MainWindow.StringToHashLabels.Add(label.Value, ulong.Parse(label.Key[2..], NumberStyles.HexNumber));
-                    }
+                        _entries = file.ExportEntries;
+                        _functions = file.ExportFunctions;
+                        _labels = file.HashLabels.ToDictionary(p => p.Key, p => p.Value.Label);
+                        prcEditor.MainWindow.HashToStringLabels.Clear();
+                        prcEditor.MainWindow.StringToHashLabels.Clear();
+                        foreach (var label in _labels)
+                        {
+                            prcEditor.MainWindow.HashToStringLabels.Add(ulong.Parse(label.Key[2..], NumberStyles.HexNumber), label.Value);
+                            prcEditor.MainWindow.StringToHashLabels.Add(label.Value, ulong.Parse(label.Key[2..], NumberStyles.HexNumber));
+                        }
 
+                    }
+                    return true;
                 }
             }
             catch
@@ -39,6 +49,7 @@ namespace HashRelationalResearch.GUI.Services
                 _entries = [];
                 _functions = [];
             }
+            return false;
         }
 
         public ExportEntry? GetEntry(string hash)
@@ -72,6 +83,22 @@ namespace HashRelationalResearch.GUI.Services
         {
             if (_labels.TryGetValue(hash40, out string? value))
                 return value;
+            return null;
+        }
+
+        private static ExportContainer? Deserialize(string filePath)
+        {
+            if (filePath.EndsWith("json", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return JsonSerializer.Deserialize<ExportContainer>(File.ReadAllText(filePath));
+            }
+            else if (filePath.EndsWith("bin", System.StringComparison.OrdinalIgnoreCase))
+            {
+                using (var file = File.OpenRead(filePath))
+                {
+                    return Serializer.Deserialize<ExportContainer>(file);
+                }
+            }
             return null;
         }
     }

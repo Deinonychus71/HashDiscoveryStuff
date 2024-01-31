@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HashCommon;
+using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
-using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -13,6 +13,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         private const string DEFAULT_TAB_NAME = "Blank";
         private readonly IHashDBService _hashDBService;
         private readonly IDiscoveryDBService _discoveryDBService;
+        private readonly IHbtFileService _hbtFileService;
         private ResearchNroVM _nroVM;
         private ResearchPrcVM _prcVM;
         private HashCrackVM _hashCrackVM;
@@ -22,6 +23,8 @@ namespace HashRelationalResearch.GUI.ViewModels
         private string? _hashValue;
         private string? _hashLabel;
         private string? _hashLabelSaved;
+        private bool _quickSavePathExists;
+        private bool _isValidHash40;
         private bool _isLabelChangedSuccess;
         private bool _isLabelChangedFailure;
 
@@ -69,6 +72,31 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
+        public string[] AttackTypeList { get; private set; } = ["Dictionary", "Character", "Hybrid"];
+        public int[] NbrThreadsList { get; private set; } = ListGenerators.GetIntegerList(1, 64);
+
+        public bool QuickPathExist
+        {
+            get => _quickSavePathExists;
+            set
+            {
+                _quickSavePathExists = value;
+                QuickLoadCommand.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(QuickPathExist));
+            }
+        }
+
+        public bool IsValidHash40
+        {
+            get => _isValidHash40;
+            set
+            {
+                _isValidHash40 = value;
+                QuickSaveCommand.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(IsValidHash40));
+            }
+        }
+
         public string TabLabel
         {
             get => _tabLabel;
@@ -95,6 +123,8 @@ namespace HashRelationalResearch.GUI.ViewModels
                 if (_hbtFile != null)
                     _hbtFile.HexValue = valueTemp ?? string.Empty;
                 TabLabel = valueTemp ?? DEFAULT_TAB_NAME;
+                QuickPathExist = _hbtFileService.QuickDirectoryExists(_hbtFile);
+                IsValidHash40 = HashHelper.IsValidHash40Value(_hbtFile?.HexValue);
                 OnPropertyChanged(nameof(HashValue));
                 OnPropertyChanged(nameof(TabLabel));
             }
@@ -132,21 +162,32 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        public ICommand SaveLabelCommand { get => new RelayCommand(SaveLabel); }
+        public IRelayCommand SaveLabelCommand { get; private set; }
 
-        public ICommand HashValueChanged { get => new RelayCommand(LoadNewHash); }
+        public IRelayCommand HashValueChanged { get; private set; }
 
-        public ICommand HashLabelChanged { get => new RelayCommand(TestHashLabel); }
+        public IRelayCommand HashLabelChanged { get; private set; }
+
+        public IRelayCommand QuickSaveCommand { get; private set; }
+
+        public IRelayCommand QuickLoadCommand { get; private set; }
         #endregion
 
-        public ResearchTabVM(IHashDBService hashDBService, IDiscoveryDBService discoveryDBService,
+        public ResearchTabVM(IHashDBService hashDBService, IDiscoveryDBService discoveryDBService, IHbtFileService hbtFileService,
             ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
         {
             _hashDBService = hashDBService;
+            _hbtFileService = hbtFileService;
             _discoveryDBService = discoveryDBService;
             _nroVM = researchNroVM;
             _prcVM = researchPrcVM;
             _hashCrackVM = hashCrackVM;
+
+            QuickSaveCommand = new RelayCommand(QuickSave, () => IsValidHash40);
+            QuickLoadCommand = new RelayCommand(QuickLoad, () => QuickPathExist);
+            SaveLabelCommand = new RelayCommand(SaveLabel);
+            HashValueChanged = new RelayCommand(LoadNewHash);
+            HashLabelChanged = new RelayCommand(TestHashLabel);
         }
 
         public void LoadHbtFile(HbtFile? hbtFile)
@@ -165,6 +206,32 @@ namespace HashRelationalResearch.GUI.ViewModels
             //TODO
         }
 
+        private void QuickLoad()
+        {
+            var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
+            var loadedHbtFile = _hbtFileService.LoadHbrFile(quickSaveFile);
+            if (loadedHbtFile != null)
+                LoadHbtFile(loadedHbtFile);
+        }
+
+        private void QuickSave()
+        {
+            if (_hbtFile != null)
+            {
+                _hbtFileService.GetQuickDirectory(_hbtFile, true);
+                var quickSaveFile = _hbtFileService.GetQuickSaveFile(_hbtFile);
+                if (quickSaveFile != null)
+                {
+                    QuickPathExist = _hbtFileService.SaveHbrFile(quickSaveFile, _hbtFile);
+                }
+            }
+        }
+
+        private bool CanQuickSave()
+        {
+            return HashHelper.IsValidHash40Value(HbtFile?.HexValue);
+        }
+
         private void RefreshHash()
         {
             HashLabel = string.Empty;
@@ -173,11 +240,11 @@ namespace HashRelationalResearch.GUI.ViewModels
 
             if (_exportEntry != null)
             {
-                var label = _exportEntry.Label;
+                var label = _hashDBService.GetLabel(_exportEntry.Hash40Hex);
                 if (label != null)
                 {
-                    _hashLabelSaved = label.Label;
-                    HashLabel = label.Label;
+                    _hashLabelSaved = label;
+                    HashLabel = label;
                 }
 
                 _nroVM.LoadFiles(_exportEntry.CFiles);

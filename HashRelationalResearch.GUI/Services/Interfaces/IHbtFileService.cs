@@ -6,9 +6,10 @@ namespace HashRelationalResearch.GUI.Services.Interfaces
     {
         HbtFile NewHbrFile();
         HbtFile? LoadHbrFile(string? filePath);
-        void SaveHbrFile(string filePath, HbtFile hbtFile);
+        bool SaveHbrFile(string filePath, HbtFile hbtFile);
         string? GetQuickDirectory(HbtFile? hbtFile, bool create = false);
         string? GetQuickSaveFile(HbtFile? hbtFile);
+        bool QuickDirectoryExists(HbtFile? hbtFile);
         bool DeleteQuickDirectory(HbtFile? hbtFile);
     }
 }

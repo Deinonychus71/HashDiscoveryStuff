@@ -2,13 +2,13 @@
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using System.IO;
-using System.Security.Policy;
 using System.Text.Json;
 
 namespace HashRelationalResearch.GUI.Services
 {
     public class HbtFileService : IHbtFileService
     {
+        private const string QUICK_PATH = "HexData\\[{0}]";
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public HbtFileService()
@@ -38,35 +38,45 @@ namespace HashRelationalResearch.GUI.Services
             return null;
         }
 
-        public void SaveHbrFile(string filePath, HbtFile hbtFile)
+        public bool SaveHbrFile(string filePath, HbtFile hbtFile)
         {
             try
             {
                 var fileContent = JsonSerializer.Serialize(hbtFile, _jsonSerializerOptions);
                 File.WriteAllText(filePath, fileContent);
+                return true;
             }
             catch { }
+            return false;
         }
 
         public string? GetQuickDirectory(HbtFile? hbtFile, bool create = false)
         {
-            var hex = hbtFile?.HexLabel;
+            var hex = hbtFile?.HexValue;
             if (HashHelper.IsValidHash40Value(hex))
             {
-                if (create && !Directory.Exists($"HexData\\[{hex}]"))
-                    Directory.CreateDirectory($"HexData\\[{hex}]");
-                return $"HexData\\[{hex}]";
+                var path = GetPath(hex);
+                if (create && !Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                return path;
             }
             return null;
         }
 
+        public bool QuickDirectoryExists(HbtFile? hbtFile)
+        {
+            var hex = hbtFile?.HexValue;
+            if (HashHelper.IsValidHash40Value(hex))
+                return Directory.Exists(GetPath(hex));
+            return false;
+        }
+
         public string? GetQuickSaveFile(HbtFile? hbtFile)
         {
-            var hex = hbtFile?.HexLabel;
-            if (HashHelper.IsValidHash40Value(hex) && File.Exists($"HexData\\[{hex}]"))
-            {
-                return $"HexData\\[{hex}]";
-            }
+            var hex = hbtFile?.HexValue;
+            var path = GetPath(hex);
+            if (HashHelper.IsValidHash40Value(hex) && File.Exists(path))
+                return path;
             return null;
         }
 
@@ -114,6 +124,11 @@ namespace HashRelationalResearch.GUI.Services
                 }
             }
             return true;
+        }
+
+        private static string GetPath(string? hash40)
+        {
+            return string.Format(QUICK_PATH, hash40);
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
-using HashRelationalResearch.GUI.Services;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
@@ -73,7 +72,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        public int[] HashWordsList { get; private set; } = GetIntegerList(0, 4);
+        public int[] HashWordsList { get; private set; } = ListGenerators.GetIntegerList(0, 4);
 
         public ICommand UnselectAllCommand { get => new RelayCommand(UnselectAll); }
 
@@ -116,7 +115,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             var nodes = _dictionaryService.GetDictionaries();
 
             TreeViewItems.Clear();
-            foreach(var node in nodes)
+            foreach (var node in nodes)
             {
                 TreeViewItems.Add(node);
             }
@@ -153,11 +152,6 @@ namespace HashRelationalResearch.GUI.ViewModels
             {
                 ExcludeWords = string.Join(TEXT_SEPARATOR, _parentHbtFileDictionary.ExcludeWords);
             }
-        }
-
-        private static int[] GetIntegerList(int minValue, int maxValue)
-        {
-            return Enumerable.Range(minValue, maxValue).ToArray();
         }
     }
 }

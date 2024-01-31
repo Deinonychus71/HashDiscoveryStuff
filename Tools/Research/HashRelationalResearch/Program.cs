@@ -3,6 +3,7 @@ using CsvHelper;
 using HashCommon;
 using HashCommon.Models;
 using HashRelationalResearch.Models;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -58,13 +59,28 @@ namespace HashRelationalResearch
             var exportFunctions = new Dictionary<string, List<ExportFunctionEntry>>();
             ProcessCFiles(o, dictHashInfo, exportEntries, exportFunctions);
 
+            //Export file
+            var exportContainer = new ExportContainer() { ExportEntries = exportEntries, ExportFunctions = exportFunctions, HashLabels = dictHashInfo };
+
             //Generate Json
-            Console.WriteLine($"Writing to JSON '{o.OutputFileJSON}'...");
-            var container = new ExportContainer() { ExportEntries = exportEntries, ExportFunctions = exportFunctions };
-            File.WriteAllText(o.OutputFileJSON, JsonSerializer.Serialize(new ExportContainer() { ExportEntries = exportEntries, ExportFunctions = exportFunctions }));
+            if (!string.IsNullOrEmpty(o.OutputFileJSON))
+            {
+                Console.WriteLine($"Writing to JSON '{o.OutputFileJSON}'...");
+                File.WriteAllText(o.OutputFileJSON, JsonSerializer.Serialize(exportContainer));
+            }
+
+            //Generate Bin
+            if (!string.IsNullOrEmpty(o.OutputFileBIN))
+            {
+                Console.WriteLine($"Writing to BIN '{o.OutputFileBIN}'...");
+                using (var file = File.Create(o.OutputFileBIN))
+                {
+                    Serializer.Serialize(file, exportContainer);
+                }
+            }
 
             //Generate CSV
-            GenerateCSV(o, dictHashInfo, container);
+            GenerateCSV(o, dictHashInfo, exportContainer);
 
             Console.WriteLine($"Found {exportEntries.Count} hashes");
             Console.WriteLine("DONE!");
@@ -175,13 +191,11 @@ namespace HashRelationalResearch
 
                     if (!addedHashes.Contains(hashKeyFormatted))
                     {
-                        dictHashInfo.TryGetValue(hashKeyFormatted, out HashInfo hashInfoKey);
                         if (!exportEntries.TryGetValue(hashKeyFormatted, out ExportEntry exportKeyEntry))
                         {
                             exportKeyEntry = new ExportEntry()
                             {
-                                Hash40Hex = hashKeyFormatted,
-                                Label = hashInfoKey
+                                Hash40Hex = hashKeyFormatted
                             };
                             exportEntries.Add(hashKeyFormatted, exportKeyEntry);
                         }
@@ -202,13 +216,11 @@ namespace HashRelationalResearch
                         if (addedHashes.Contains(hash40Formatted))
                             continue;
 
-                        dictHashInfo.TryGetValue(hash40Formatted, out HashInfo hashInfoValue);
                         if (!exportEntries.TryGetValue(hash40Formatted, out ExportEntry exportValueEntry))
                         {
                             exportValueEntry = new ExportEntry()
                             {
-                                Hash40Hex = hash40Formatted,
-                                Label = hashInfoValue
+                                Hash40Hex = hash40Formatted
                             };
                             exportEntries.Add(hash40Formatted, exportValueEntry);
                         }
@@ -344,7 +356,6 @@ namespace HashRelationalResearch
                             exportEntry = new ExportEntry()
                             {
                                 Hash40Hex = word,
-                                Label = label,
                                 SuspiciousHex = label == null && suspiciousHex
                             };
                             exportEntries.Add(word, exportEntry);
@@ -405,11 +416,12 @@ namespace HashRelationalResearch
                 var relatedUnknownHashes = function != null ? function.Hashes.Where(p => !dictHashInfo.ContainsKey(p) && !exportEntries[p].SuspiciousHex) : new List<string>();
                 var relatedSuspiciousHashes = function != null ? function.Hashes.Where(p => !dictHashInfo.ContainsKey(p) && exportEntries[p].SuspiciousHex) : new List<string>();
 
+                dictHashInfo.TryGetValue(entry.Hash40Hex, out HashInfo label);
                 var csvEntry = new CSVEntry()
                 {
                     Hash = hash40,
-                    Label = entry.Label?.Label,
-                    LabelSources = entry.Label?.Sources != null ? string.Join(", ", entry.Label.Sources) : null,
+                    Label = label?.Label,
+                    LabelSources = label?.Sources != null ? string.Join(", ", label.Sources) : null,
                     PRCSources = string.Join(", ", entry.PRCFiles.Select(p => p.File).Distinct().OrderBy(p => p).Take(5)),
                     PRCType = prc != null && prc.IsKey ? "Key" : prc?.Type,
                     PRCFirstPath = entry.PRCFiles.FirstOrDefault()?.Path,

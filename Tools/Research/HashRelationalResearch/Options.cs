@@ -31,6 +31,9 @@ namespace HashRelationalResearch
         [Option('o', "output_file_json", Required = false, Default = "export.json", HelpText = "Output JSON")]
         public string OutputFileJSON { get; set; }
 
+        [Option('o', "output_file_bin", Required = false, Default = "export.bin", HelpText = "Output BIN")]
+        public string OutputFileBIN { get; set; }
+
         [Option('o', "output_file_csv", Required = false, Default = "export.csv", HelpText = "Output CSV")]
         public string OutputFileCSV { get; set; }
     }
