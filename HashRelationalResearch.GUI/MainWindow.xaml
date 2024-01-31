@@ -30,8 +30,9 @@
             </MenuItem>
             <MenuItem Header="Tools">
                 <MenuItem Header="Pick DB File" Command="{Binding PickHashDBFileCommand, Mode=OneTime}" />
+                <MenuItem Header="Pick Hashcat File" Command="{Binding PickHashcatFileCommand, Mode=OneTime}" />
                 <MenuItem Header="Pick PRC Root Folder" Command="{Binding PickPRCRootFolderCommand, Mode=OneTime}" />
-                <MenuItem Header="Pick Hashcat Folder" Command="{Binding PickHashDBFileCommand, Mode=OneTime}" />
+                <MenuItem Header="Pick Discovery Folder" Command="{Binding PickDiscoveryFolderCommand, Mode=OneTime}" />
                 <Separator />
                 <MenuItem Header="Print latest command" />
             </MenuItem>

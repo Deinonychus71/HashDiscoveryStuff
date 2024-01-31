@@ -99,7 +99,20 @@
                   ResizeBehavior="PreviousAndNext" />
 
             <!-- HashCrack -->
-            <ContentControl Grid.Column="2" Content="{Binding HackCrackVM}" />
+            <StackPanel Grid.Column="2" Orientation="Vertical">
+                <ContentControl  Content="{Binding HackCrackVM}" />
+                <Grid Margin="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" Content="START" Command="{Binding StartBruteforceCommand}"/>
+                    <Button Grid.Column="3" Content="START HASHCAT" Command="{Binding StartBruteforceHashcatCommand}"/>
+                </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

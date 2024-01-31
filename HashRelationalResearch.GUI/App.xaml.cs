@@ -5,6 +5,7 @@ using HashRelationalResearch.GUI.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace HashRelationalResearch.GUI
@@ -36,8 +37,21 @@ namespace HashRelationalResearch.GUI
         private static IConfiguration GetConfiguration()
         {
             return new ConfigurationBuilder()
+                .AddInMemoryCollection(GetDefaultConfiguration())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
+        }
+
+        private static Dictionary<string, string?> GetDefaultConfiguration()
+        {
+            var output = new Dictionary<string, string?>
+            {
+                { "DiscoveredHashesPath", "DiscoveredHashes" },
+                { "PrcRootPath", "root" },
+                { "HashDBFilePath", "db.bin" },
+                { "HashcatFilePath", "Hashcat/hashcat.exe" }
+            };
+            return output;
         }
 
         private static IServiceCollection GetServices(IConfiguration configuration)
@@ -48,7 +62,6 @@ namespace HashRelationalResearch.GUI
             services.Configure<AppConfiguration>(configuration);
             services.AddSingleton<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IHashDBService, HashDBService>();
-            services.AddSingleton<IDiscoveryDBService, DiscoveryDBService>();
             services.AddSingleton<IDictionaryService, DictionaryService>();
             services.AddSingleton<IBruteForceHashService, BruteForceHashService>();
             services.AddSingleton<IDialogService, DialogService>();

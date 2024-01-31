@@ -12,14 +12,20 @@ namespace HashRelationalResearch.GUI.Services
         private string[]? _excludePatterns = null;
         private string[]? _includePatterns = null;
         private readonly AppConfiguration _configuration;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public string HashDBFilePath { get => _configuration.HashDBFilePath; set { _configuration.HashDBFilePath = value; } }
         public string HashcatFilePath { get => _configuration.HashcatFilePath; set { _configuration.HashcatFilePath = value; } }
         public string PrcRootPath { get => _configuration.PrcRootPath; set { _configuration.PrcRootPath = value; } }
+        public string DiscoveredHashesPath { get => _configuration.DiscoveredHashesPath; set { _configuration.DiscoveredHashesPath = value; } }
 
         public ConfigurationService(IOptions<AppConfiguration> configuration)
         {
             _configuration = configuration.Value;
+            _jsonSerializerOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            };
         }
 
         public string[] GetExcludePatterns()
@@ -42,7 +48,7 @@ namespace HashRelationalResearch.GUI.Services
 
         public void SaveGlobalConfiguration()
         {
-            File.WriteAllText(FILE_GLOBAL_CONFIG, JsonSerializer.Serialize(_configuration));
+            File.WriteAllText(FILE_GLOBAL_CONFIG, JsonSerializer.Serialize(_configuration, _jsonSerializerOptions));
         }
     }
 }

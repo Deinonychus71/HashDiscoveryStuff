@@ -4,7 +4,6 @@ using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -20,11 +19,6 @@ namespace HashRelationalResearch.GUI.ViewModels
         #endregion
 
         #region Properties
-
-        public ICommand CFileSelected { get; }
-
-        public ICommand CFunctionSelected { get; }
-
         public string? CodeEditorText
         {
             get => _codeEditorText;
@@ -68,6 +62,9 @@ namespace HashRelationalResearch.GUI.ViewModels
         public WpfObservableRangeCollection<ExportCFileEntry> CFileEntries { get; set; }
 
         public WpfObservableRangeCollection<ExportFunctionEntry> CFunctionEntries { get; set; }
+
+        public IRelayCommand CFileSelected { get; }
+        public IRelayCommand CFunctionSelected { get; }
         #endregion
 
         public ResearchNroVM(IHashDBService hashDBService)

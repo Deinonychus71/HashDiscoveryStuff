@@ -1,4 +1,5 @@
 ﻿using HashRelationalResearch.GUI.Models;
+using System.Collections.Generic;
 
 namespace HashRelationalResearch.GUI.Services.Interfaces
 {
@@ -11,5 +12,7 @@ namespace HashRelationalResearch.GUI.Services.Interfaces
         string? GetQuickSaveFile(HbtFile? hbtFile);
         bool QuickDirectoryExists(HbtFile? hbtFile);
         bool DeleteQuickDirectory(HbtFile? hbtFile);
+        IEnumerable<HbtFile>? LoadHbtWorkspace();
+        bool SaveHbtWorkspace(IEnumerable<HbtFile?>? hbtFiles);
     }
 }

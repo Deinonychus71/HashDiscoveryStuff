@@ -30,18 +30,18 @@ namespace HashRelationalResearch.GUI.Services
             _openFolderDialog = new OpenFolderDialog();
         }
 
-        public string OpenFolderDialog(string? placerHolder = null, bool multiselect = false)
+        public string? OpenFolderDialog(string? placerHolder = null, bool multiselect = false)
         {
             _openFolderDialog.Multiselect = multiselect;
             _openFolderDialog.FolderName = placerHolder ?? null;
 
             if (_openFolderDialog.ShowDialog() == true)
-                return _openFolderDialog.FolderName ?? string.Empty;
+                return _openFolderDialog.FolderName ?? null;
 
-            return string.Empty;
+            return null;
         }
 
-        public string OpenFileDialog(FileTypes fileTypes, string? placerHolder = null, FileTypes defaultExt = FileTypes.None, bool multiselect = false)
+        public string? OpenFileDialog(FileTypes fileTypes, string? placerHolder = null, FileTypes defaultExt = FileTypes.None, bool multiselect = false)
         {
             _openFileDialog.Multiselect = multiselect;
             _openFileDialog.FileName = placerHolder ?? null;
@@ -50,12 +50,12 @@ namespace HashRelationalResearch.GUI.Services
             _openFileDialog.Filter = GetFlagToFilter(fileTypes);
 
             if (_openFileDialog.ShowDialog() == true)
-                return _openFileDialog.FileName ?? string.Empty;
+                return _openFileDialog.FileName ?? null;
 
-            return string.Empty;
+            return null;
         }
 
-        public string SaveFileDialog(FileTypes fileTypes, string? placerHolder = null, FileTypes defaultExt = FileTypes.None)
+        public string? SaveFileDialog(FileTypes fileTypes, string? placerHolder = null, FileTypes defaultExt = FileTypes.None)
         {
             _saveFileDialog.FileName = placerHolder ?? null;
             _saveFileDialog.DefaultExt = GetFlagToExtension(defaultExt);
@@ -63,9 +63,9 @@ namespace HashRelationalResearch.GUI.Services
             _saveFileDialog.Filter = GetFlagToFilter(fileTypes);
 
             if (_saveFileDialog.ShowDialog() == true)
-                return _saveFileDialog.FileName ?? string.Empty;
+                return _saveFileDialog.FileName ?? null;
 
-            return string.Empty;
+            return null;
         }
 
         public void ShowMessage(string message, bool isError = false)
@@ -84,14 +84,14 @@ namespace HashRelationalResearch.GUI.Services
         private static string? GetFlagToFilter(FileTypes extension)
         {
             var output = new List<string>();
-            if (extension.HasFlag(FileTypes.Json))
-                output.Add("JSON File (*.json)|*.json");
-            if (extension.HasFlag(FileTypes.Hbt))
-                output.Add("BruteforceHash File (*.hbt)|*.hbt");
-            if (extension.HasFlag(FileTypes.Exe))
-                output.Add("Application File (*.exe)|*.exe");
             if (extension.HasFlag(FileTypes.Bin))
                 output.Add("Binary File (*.bin)|*.bin");
+            if (extension.HasFlag(FileTypes.Exe))
+                output.Add("Application File (*.exe)|*.exe");
+            if (extension.HasFlag(FileTypes.Hbt))
+                output.Add("BruteforceHash File (*.hbt)|*.hbt");
+            if (extension.HasFlag(FileTypes.Json))
+                output.Add("JSON File (*.json)|*.json");
             if (extension.HasFlag(FileTypes.All))
                 output.Add("All Files (.)|.");
 

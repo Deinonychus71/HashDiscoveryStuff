@@ -1,8 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using HashRelationalResearch.GUI.Helpers;
+﻿using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
-using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -101,9 +99,6 @@ namespace HashRelationalResearch.GUI.ViewModels
         public int[] AdvancedConcatWordsList { get; set; } = ListGenerators.GetIntegerList(0, 10);
         public int[] AdvancedConsecutiveList { get; set; } = ListGenerators.GetIntegerList(1, 10);
         public int[] AdvancedMinWordsList { get; set; } = ListGenerators.GetIntegerList(1, 10);
-
-        public ICommand StartBruteforceCommand { get => new RelayCommand(() => StartBruteforce(false)); }
-        public ICommand StartBruteforceHashcatCommand { get => new RelayCommand(() => StartBruteforce(true)); }
         #endregion
 
         public HashCrackVM(IConfigurationService configurationService, IBruteForceHashService bruteforceForceHashService,
@@ -128,11 +123,6 @@ namespace HashRelationalResearch.GUI.ViewModels
             _mainDictionaryVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryMain);
             _firstWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryFirstWord, hbtFile.DictionaryAttack.DictionaryMain);
             _lastWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryLastWord, hbtFile.DictionaryAttack.DictionaryMain);
-        }
-
-        private void StartBruteforce(bool useHashcat)
-        {
-            //TODO
         }
 
         private static ListItem<string>[] GetCombinationOrders()

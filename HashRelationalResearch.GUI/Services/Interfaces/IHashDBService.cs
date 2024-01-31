@@ -1,4 +1,5 @@
-﻿using HashRelationalResearch.Models;
+﻿using HashRelationalResearch.GUI.Helpers;
+using HashRelationalResearch.Models;
 using System.Collections.Generic;
 
 namespace HashRelationalResearch.GUI.Services.Interfaces
@@ -10,5 +11,6 @@ namespace HashRelationalResearch.GUI.Services.Interfaces
         ExportFunctionEntry? GetFunction(string file, int functionId);
         List<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds);
         string? GetLabel(string hash40);
+        bool AddOrUpdateLabel(DiscoverySource source, string hash40, string label);
     }
 }

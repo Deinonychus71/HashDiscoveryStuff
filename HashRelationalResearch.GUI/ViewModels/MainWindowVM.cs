@@ -2,10 +2,11 @@
 using HashRelationalResearch.GUI.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace HashRelationalResearch.GUI.ViewModels
@@ -24,17 +25,6 @@ namespace HashRelationalResearch.GUI.ViewModels
         #endregion
 
         #region Properties
-        public static ICommand ExitApplicationCommand { get => new RelayCommand(Application.Current.Shutdown); }
-        public ICommand NewResearchTabCommand { get => new RelayCommand<string?>((s) => { if (s == "NEW") NewResearchTab(); }); }
-        public ICommand RemoveResearchTabCommand { get => new RelayCommand<ResearchTabVM?>(RemoveResearchTab); }
-        public ICommand PickHashDBFileCommand { get => new RelayCommand(PickHashDBFile); }
-        public ICommand PickPRCRootFolderCommand { get => new RelayCommand(PickPRCRootFolder); }
-        public ICommand PickHashcatFolderCommand { get => new RelayCommand(PickHashcatFile); }
-        public ICommand SaveFileCommand { get => new RelayCommand(SaveFile); }
-        public ICommand LoadFileCommand { get => new RelayCommand(LoadFile); }
-        public ICommand CleanHashFolderCommand { get => new RelayCommand(CleanHashFolder); }
-        public ICommand RefreshDictionariesCommand { get => new RelayCommand(RefreshDictionaries); }
-
         public ObservableCollection<ResearchTabVM> ResearchTabs { get; set; }
 
         public ResearchTabVM SelectedResearchTab
@@ -46,11 +36,22 @@ namespace HashRelationalResearch.GUI.ViewModels
                 OnPropertyChanged(nameof(SelectedResearchTab));
             }
         }
+
+        public IRelayCommand ExitApplicationCommand { get; private set; }
+        public IRelayCommand NewResearchTabCommand { get; private set; }
+        public IRelayCommand RemoveResearchTabCommand { get; private set; }
+        public IRelayCommand PickHashDBFileCommand { get; private set; }
+        public IRelayCommand PickHashcatFileCommand { get; private set; }
+        public IRelayCommand PickPRCRootFolderCommand { get; private set; }
+        public IRelayCommand PickDiscoveryFolderCommand { get; private set; }
+        public IRelayCommand SaveFileCommand { get; private set; }
+        public IRelayCommand LoadFileCommand { get; private set; }
+        public IRelayCommand CleanHashFolderCommand { get; private set; }
+        public IRelayCommand RefreshDictionariesCommand { get; private set; }
         #endregion
 
         public MainWindowVM(IServiceProvider serviceProvider, IHashDBService hashDBService, IHbtFileService hbtFileService,
-            IDialogService dialogService, IDictionaryService dictionaryService, IConfigurationService configurationService,
-            ResearchTabVM researchTabVM)
+            IDialogService dialogService, IDictionaryService dictionaryService, IConfigurationService configurationService)
         {
             _serviceProvider = serviceProvider;
             _hashDBService = hashDBService;
@@ -58,9 +59,37 @@ namespace HashRelationalResearch.GUI.ViewModels
             _hbtFileService = hbtFileService;
             _dialogService = dialogService;
             _dictionaryService = dictionaryService;
-            _selectedResearchTab = researchTabVM;
-            researchTabVM.LoadHbtFile(hbtFileService.NewHbrFile());
-            ResearchTabs = [researchTabVM];
+
+
+            ExitApplicationCommand = new RelayCommand(Application.Current.Shutdown);
+            NewResearchTabCommand = new RelayCommand<string?>((s) => { if (s == "NEW") NewResearchTab(); });
+            RemoveResearchTabCommand = new RelayCommand<ResearchTabVM?>(RemoveResearchTab);
+            PickHashDBFileCommand = new RelayCommand(PickHashDBFile);
+            PickHashcatFileCommand = new RelayCommand(PickHashcatFile);
+            PickPRCRootFolderCommand = new RelayCommand(PickPRCRootFolder);
+            PickDiscoveryFolderCommand = new RelayCommand(PickDiscoveryFolder);
+            SaveFileCommand = new RelayCommand(SaveFile);
+            LoadFileCommand = new RelayCommand(LoadFile);
+            CleanHashFolderCommand = new RelayCommand(CleanHashFolder);
+            RefreshDictionariesCommand = new RelayCommand(RefreshDictionaries);
+
+            var hbtFiles = hbtFileService.LoadHbtWorkspace();
+            if (hbtFiles != null && hbtFiles.Any())
+            {
+                var listVMToLoad = new List<ResearchTabVM>();
+                foreach (var hbtFile in hbtFiles)
+                {
+                    var researchTabVM = _serviceProvider.GetRequiredService<ResearchTabVM>();
+                    researchTabVM.LoadHbtFile(hbtFile);
+                    listVMToLoad.Add(researchTabVM);
+                }
+                ResearchTabs = new ObservableCollection<ResearchTabVM>(listVMToLoad);
+            }
+            else
+            {
+                ResearchTabs = [_serviceProvider.GetRequiredService<ResearchTabVM>()];
+            }
+            _selectedResearchTab = ResearchTabs.First();
         }
 
         public void NewResearchTab()
@@ -81,7 +110,7 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         public void RemoveResearchTab(ResearchTabVM? researchTabVM)
         {
-            if (researchTabVM != null && SelectedResearchTab != researchTabVM)
+            if (researchTabVM != null && ResearchTabs.Count > 1)
             {
                 ResearchTabs.Remove(researchTabVM);
             }
@@ -100,6 +129,12 @@ namespace HashRelationalResearch.GUI.ViewModels
         }
 
         #region File Manipulation
+        public void SaveWorkspace()
+        {
+            var hbtFiles = ResearchTabs.Select(p => p.HbtFile);
+            _hbtFileService.SaveHbtWorkspace(hbtFiles);
+        }
+
         private void SaveFile()
         {
             var label = _selectedResearchTab?.HashValue ?? "research";
@@ -123,13 +158,24 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         private void PickHashDBFile()
         {
-            var filePath = _dialogService.OpenFileDialog(Helpers.FileTypes.Json | Helpers.FileTypes.Bin, "db", Helpers.FileTypes.Json);
-            if (filePath != null && _configurationService.HashDBFilePath != filePath)
+            var filePath = _dialogService.OpenFileDialog(Helpers.FileTypes.Json | Helpers.FileTypes.Bin, "db", Helpers.FileTypes.Bin);
+            if (filePath != null && _configurationService.HashDBFilePath != filePath && File.Exists(filePath))
             {
                 _configurationService.HashDBFilePath = filePath;
-                _configurationService.SaveGlobalConfiguration();
                 _hashDBService.LoadHashDBFile(filePath);
-                _dialogService.ShowMessage($"HashDB loaded: '{filePath}'");
+                _configurationService.SaveGlobalConfiguration();
+                _dialogService.ShowMessage($"HashDB File loaded: '{filePath}'");
+            }
+        }
+
+        private void PickHashcatFile()
+        {
+            var filePath = _dialogService.OpenFileDialog(Helpers.FileTypes.Exe, "hashcat", Helpers.FileTypes.Exe);
+            if (filePath != null && _configurationService.HashcatFilePath != filePath && File.Exists(filePath))
+            {
+                _configurationService.HashcatFilePath = filePath;
+                _configurationService.SaveGlobalConfiguration();
+                _dialogService.ShowMessage($"Hashcat Path loaded: '{filePath}'");
             }
         }
 
@@ -144,14 +190,14 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        private void PickHashcatFile()
+        private void PickDiscoveryFolder()
         {
-            var filePath = _dialogService.OpenFileDialog(Helpers.FileTypes.Exe, "hashcat", Helpers.FileTypes.Exe);
-            if (filePath != null && _configurationService.HashcatFilePath != filePath && File.Exists(filePath))
+            var folderPath = _dialogService.OpenFolderDialog();
+            if (folderPath != null && _configurationService.DiscoveredHashesPath != folderPath)
             {
-                _configurationService.HashcatFilePath = filePath;
+                _configurationService.DiscoveredHashesPath = folderPath;
                 _configurationService.SaveGlobalConfiguration();
-                _dialogService.ShowMessage($"Hashcat Path loaded: '{filePath}'");
+                _dialogService.ShowMessage($"Discovery Folder loaded: '{folderPath}'");
             }
         }
 

@@ -4,7 +4,6 @@ using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -74,21 +73,23 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         public int[] HashWordsList { get; private set; } = ListGenerators.GetIntegerList(0, 4);
 
-        public ICommand UnselectAllCommand { get => new RelayCommand(UnselectAll); }
-
-        public ICommand CopyTreeViewFromViewCommand { get => new RelayCommand(() => LoadTreeViewFromDictionaries(_parentHbtFileDictionary?.Dictionaries)); }
-
-        public ICommand CopyCustomWordsFromViewCommand { get => new RelayCommand(CopyCustomWordsFromMain); }
-
-        public ICommand CopyExcludeWordsCopyFromViewCommand { get => new RelayCommand(CopyExcludeWordsFromMain); }
-
-        public ICommand TreeViewItemCheckedCommand { get => new RelayCommand(SaveDictionaries); }
+        public IRelayCommand UnselectAllCommand { get; private set; }
+        public IRelayCommand CopyTreeViewFromViewCommand { get; private set; }
+        public IRelayCommand CopyCustomWordsFromViewCommand { get; private set; }
+        public IRelayCommand CopyExcludeWordsCopyFromViewCommand { get; private set; }
+        public IRelayCommand TreeViewItemCheckedCommand { get; private set; }
         #endregion
 
         public HashCrackDictionaryTabVM(IDictionaryService dictionaryService)
         {
             _dictionaryService = dictionaryService;
             _isMainDictionary = false;
+
+            UnselectAllCommand = new RelayCommand(UnselectAll);
+            CopyTreeViewFromViewCommand = new RelayCommand(() => LoadTreeViewFromDictionaries(_parentHbtFileDictionary?.Dictionaries));
+            CopyCustomWordsFromViewCommand = new RelayCommand(CopyCustomWordsFromMain);
+            CopyExcludeWordsCopyFromViewCommand = new RelayCommand(CopyExcludeWordsFromMain);
+            TreeViewItemCheckedCommand = new RelayCommand(SaveDictionaries);
         }
 
         public void LoadHbtFileDictionary(HbtFileDictionary hbtFileDictionary, HbtFileDictionary? parentHbtFileDictionary = null)

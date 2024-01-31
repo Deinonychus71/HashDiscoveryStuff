@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 
@@ -15,7 +16,7 @@ namespace HashRelationalResearch
 {
     class Program
     {
-        private static readonly string[] _functionExclude = ["{", "}", "//", "#", " ", "LAB", "joined", "code"];
+        private static readonly string[] _functionExclude = ["{", "}", "//", "#", " ", "LAB", "joined", "code", "switch"];
         private static readonly char[] _seekHexSeparators = [' ', ',', ')', '(', '[', ']', '{', '}', ';', ':', 'U'];
 
         static void Main(string[] args)
@@ -73,9 +74,12 @@ namespace HashRelationalResearch
             if (!string.IsNullOrEmpty(o.OutputFileBIN))
             {
                 Console.WriteLine($"Writing to BIN '{o.OutputFileBIN}'...");
-                using (var file = File.Create(o.OutputFileBIN))
+                using (var fileStream = File.Create(o.OutputFileBIN))
                 {
-                    Serializer.Serialize(file, exportContainer);
+                    using (var compressionStream = new GZipStream(fileStream, CompressionLevel.SmallestSize))
+                    {
+                        Serializer.Serialize(compressionStream, exportContainer);
+                    }
                 }
             }
 
@@ -379,8 +383,7 @@ namespace HashRelationalResearch
                         {
                             FunctionId = functionDefinitions.Count,
                             FileLine = i,
-                            FunctionLine = currentFunctionLine,
-                            LineCode = fileContent[i].Trim()
+                            FunctionLine = currentFunctionLine
                         });
                     }
                 }
@@ -412,6 +415,7 @@ namespace HashRelationalResearch
                 var fileFunctions = functionInstance != null && functionsDefinitions.TryGetValue(c.File, out List<ExportFunctionEntry> fileFunctionsValue) ? fileFunctionsValue : [];
                 var function = fileFunctions != null && functionInstance != null ? fileFunctions[functionInstance.FunctionId] : null;
                 var functionName = function?.Function;
+                var functionCode = function?.Content?.Split("\r\n")[functionInstance.FunctionLine]?.Trim();
                 var relatedKnownHashes = function != null ? function.Hashes.Where(dictHashInfo.ContainsKey).Select(p => dictHashInfo[p].Label) : new List<string>();
                 var relatedUnknownHashes = function != null ? function.Hashes.Where(p => !dictHashInfo.ContainsKey(p) && !exportEntries[p].SuspiciousHex) : new List<string>();
                 var relatedSuspiciousHashes = function != null ? function.Hashes.Where(p => !dictHashInfo.ContainsKey(p) && exportEntries[p].SuspiciousHex) : new List<string>();
@@ -428,7 +432,7 @@ namespace HashRelationalResearch
                     CSources = string.Join(", ", entry.CFiles.Select(p => p.File).Distinct().OrderBy(p => p).Take(5)),
                     CFirstFunction = functionName,
                     CFirstLine = functionInstance?.FileLine.ToString(),
-                    CFirstCode = functionInstance?.LineCode,
+                    CFirstCode = functionCode,
                     RelatedKnownHashes = string.Join(", ", relatedKnownHashes.OrderBy(p => p).Take(50)),
                     RelatedUnknownHashes = string.Join(", ", relatedUnknownHashes.OrderBy(p => p).Take(50)),
                     RelatedSuspiciousHashes = string.Join(", ", relatedSuspiciousHashes.OrderBy(p => p).Take(50)),

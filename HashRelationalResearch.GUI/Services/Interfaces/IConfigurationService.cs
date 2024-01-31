@@ -5,6 +5,7 @@
         string HashDBFilePath { get; set; }
         string HashcatFilePath { get; set; }
         string PrcRootPath { get; set; }
+        string DiscoveredHashesPath { get; set; }
 
         string[] GetExcludePatterns();
         string[] GetIncludePatterns();

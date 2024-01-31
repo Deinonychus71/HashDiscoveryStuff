@@ -88,9 +88,6 @@ namespace HashRelationalResearch.Models
 
         [ProtoMember(3)]
         public int FunctionLine { get; set; }
-
-        [ProtoMember(4)]
-        public string LineCode { get; set; }
     }
 
     [ProtoContract]

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace HashRelationalResearch.GUI.ViewModels
@@ -23,8 +22,6 @@ namespace HashRelationalResearch.GUI.ViewModels
         #endregion
 
         #region Properties
-        public ICommand PrcFileSelected { get; }
-
         public ExportPRCFileEntry? SelectedPrcFileEntry
         {
             get => _selectedPrcFileEntry;
@@ -46,6 +43,8 @@ namespace HashRelationalResearch.GUI.ViewModels
         }
 
         public WpfObservableRangeCollection<ExportPRCFileEntry> PrcFileEntries { get; set; }
+
+        public IRelayCommand PrcFileSelected { get; }
         #endregion
 
         public ResearchPrcVM(IConfigurationService configurationService)

@@ -4,6 +4,7 @@ using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
+using System.Linq;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -12,8 +13,8 @@ namespace HashRelationalResearch.GUI.ViewModels
         #region Members
         private const string DEFAULT_TAB_NAME = "Blank";
         private readonly IHashDBService _hashDBService;
-        private readonly IDiscoveryDBService _discoveryDBService;
         private readonly IHbtFileService _hbtFileService;
+        private readonly IDialogService _dialogService;
         private ResearchNroVM _nroVM;
         private ResearchPrcVM _prcVM;
         private HashCrackVM _hashCrackVM;
@@ -72,45 +73,6 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
-        public string[] AttackTypeList { get; private set; } = ["Dictionary", "Character", "Hybrid"];
-        public int[] NbrThreadsList { get; private set; } = ListGenerators.GetIntegerList(1, 64);
-
-        public bool QuickPathExist
-        {
-            get => _quickSavePathExists;
-            set
-            {
-                _quickSavePathExists = value;
-                QuickLoadCommand.NotifyCanExecuteChanged();
-                OnPropertyChanged(nameof(QuickPathExist));
-            }
-        }
-
-        public bool IsValidHash40
-        {
-            get => _isValidHash40;
-            set
-            {
-                _isValidHash40 = value;
-                QuickSaveCommand.NotifyCanExecuteChanged();
-                OnPropertyChanged(nameof(IsValidHash40));
-            }
-        }
-
-        public string TabLabel
-        {
-            get => _tabLabel;
-            set
-            {
-                _tabLabel = value;
-                if (string.IsNullOrEmpty(_tabLabel))
-                {
-                    _tabLabel = DEFAULT_TAB_NAME;
-                }
-                OnPropertyChanged(nameof(TabLabel));
-            }
-        }
-
         public string? HashValue
         {
             get => _hashValue;
@@ -122,7 +84,7 @@ namespace HashRelationalResearch.GUI.ViewModels
                 _hashValue = valueTemp;
                 if (_hbtFile != null)
                     _hbtFile.HexValue = valueTemp ?? string.Empty;
-                TabLabel = valueTemp ?? DEFAULT_TAB_NAME;
+                TabLabel = !string.IsNullOrEmpty(_hashLabel) ? _hashLabel : !string.IsNullOrEmpty(_hashValue) ? _hashValue : DEFAULT_TAB_NAME;
                 QuickPathExist = _hbtFileService.QuickDirectoryExists(_hbtFile);
                 IsValidHash40 = HashHelper.IsValidHash40Value(_hbtFile?.HexValue);
                 OnPropertyChanged(nameof(HashValue));
@@ -138,7 +100,22 @@ namespace HashRelationalResearch.GUI.ViewModels
                 _hashLabel = value;
                 if (_hbtFile != null)
                     _hbtFile.HexLabel = _hashLabel;
+                TabLabel = !string.IsNullOrEmpty(_hashLabel) ? _hashLabel : !string.IsNullOrEmpty(_hashValue) ? _hashValue : DEFAULT_TAB_NAME;
                 OnPropertyChanged(nameof(HashLabel));
+            }
+        }
+
+        public string TabLabel
+        {
+            get => _tabLabel;
+            set
+            {
+                _tabLabel = value;
+                if (string.IsNullOrEmpty(_tabLabel))
+                {
+                    _tabLabel = DEFAULT_TAB_NAME;
+                }
+                OnPropertyChanged(nameof(TabLabel));
             }
         }
 
@@ -162,23 +139,47 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
+        public bool IsValidHash40
+        {
+            get => _isValidHash40;
+            set
+            {
+                _isValidHash40 = value;
+                QuickSaveCommand.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(IsValidHash40));
+            }
+        }
+
+        public bool QuickPathExist
+        {
+            get => _quickSavePathExists;
+            set
+            {
+                _quickSavePathExists = value;
+                QuickLoadCommand.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(QuickPathExist));
+            }
+        }
+
+        public string[] AttackTypeList { get; private set; } = ["Dictionary", "Character", "Hybrid"];
+
+        public int[] NbrThreadsList { get; private set; } = ListGenerators.GetIntegerList(1, 64);
+
         public IRelayCommand SaveLabelCommand { get; private set; }
-
         public IRelayCommand HashValueChanged { get; private set; }
-
         public IRelayCommand HashLabelChanged { get; private set; }
-
         public IRelayCommand QuickSaveCommand { get; private set; }
-
         public IRelayCommand QuickLoadCommand { get; private set; }
+        public IRelayCommand StartBruteforceCommand { get; private set; }
+        public IRelayCommand StartBruteforceHashcatCommand { get; private set; }
         #endregion
 
-        public ResearchTabVM(IHashDBService hashDBService, IDiscoveryDBService discoveryDBService, IHbtFileService hbtFileService,
+        public ResearchTabVM(IHashDBService hashDBService, IHbtFileService hbtFileService, IDialogService dialogService,
             ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
         {
             _hashDBService = hashDBService;
             _hbtFileService = hbtFileService;
-            _discoveryDBService = discoveryDBService;
+            _dialogService = dialogService;
             _nroVM = researchNroVM;
             _prcVM = researchPrcVM;
             _hashCrackVM = hashCrackVM;
@@ -188,6 +189,9 @@ namespace HashRelationalResearch.GUI.ViewModels
             SaveLabelCommand = new RelayCommand(SaveLabel);
             HashValueChanged = new RelayCommand(LoadNewHash);
             HashLabelChanged = new RelayCommand(TestHashLabel);
+
+            StartBruteforceCommand = new RelayCommand(() => StartBruteforce(false));
+            StartBruteforceHashcatCommand = new RelayCommand(() => StartBruteforce(true));
         }
 
         public void LoadHbtFile(HbtFile? hbtFile)
@@ -198,10 +202,45 @@ namespace HashRelationalResearch.GUI.ViewModels
                 HashLabel = hbtFile.HexLabel;
                 HashValue = hbtFile.HexValue;
                 _hashCrackVM.LoadHbtFile(hbtFile);
+                LoadNewHash();
             }
         }
 
-        public void SaveLabel()
+        private void SaveLabel()
+        {
+            if (_hbtFile?.HexLabel != null && IsLabelChangedSuccess && HashHelper.IsValidHash40Value(_hbtFile.HexValue))
+            {
+                DiscoverySource source;
+                var entry = _hashDBService.GetEntry(_hbtFile.HexValue);
+                if (entry != null)
+                {
+                    if (entry.PRCFiles.Count > 0)
+                        source = DiscoverySource.ParamLabels;
+                    else if (entry.CFiles.Count > 0)
+                    {
+                        if (entry.CFiles.Any(p => !p.File.Contains("main", System.StringComparison.OrdinalIgnoreCase)))
+                            source = DiscoverySource.NROFightersLabels;
+                        else
+                            source = DiscoverySource.NROMainLabels;
+                    }
+                    else
+                        source = DiscoverySource.Unknown;
+                }
+                else
+                    source = DiscoverySource.Unknown;
+
+                if (_hashDBService.AddOrUpdateLabel(source, _hbtFile.HexValue, _hbtFile.HexLabel))
+                {
+                    _dialogService.ShowMessage($"Successfully saved '{_hbtFile.HexValue},{_hbtFile.HexLabel}' into source: {source}.");
+                    _hashLabelSaved = _hbtFile.HexLabel;
+                    TestHashLabel();
+                }
+                else
+                    _dialogService.ShowMessage($"Error saving '{_hbtFile.HexValue},{_hbtFile.HexLabel}' into source: {source}.", true);
+            }
+        }
+
+        private void StartBruteforce(bool useHashcat)
         {
             //TODO
         }

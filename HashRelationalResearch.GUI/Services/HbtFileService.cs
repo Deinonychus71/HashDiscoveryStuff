@@ -1,7 +1,9 @@
 ﻿using HashCommon;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace HashRelationalResearch.GUI.Services
@@ -9,6 +11,7 @@ namespace HashRelationalResearch.GUI.Services
     public class HbtFileService : IHbtFileService
     {
         private const string QUICK_PATH = "HexData\\[{0}]";
+        private const string WORKSPACE_FILEPATH = "workspace.json";
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public HbtFileService()
@@ -45,6 +48,35 @@ namespace HashRelationalResearch.GUI.Services
                 var fileContent = JsonSerializer.Serialize(hbtFile, _jsonSerializerOptions);
                 File.WriteAllText(filePath, fileContent);
                 return true;
+            }
+            catch { }
+            return false;
+        }
+
+        public IEnumerable<HbtFile>? LoadHbtWorkspace()
+        {
+            try
+            {
+                if (File.Exists(WORKSPACE_FILEPATH))
+                {
+                    var fileContent = File.ReadAllText(WORKSPACE_FILEPATH);
+                    return JsonSerializer.Deserialize<List<HbtFile>>(fileContent, _jsonSerializerOptions);
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        public bool SaveHbtWorkspace(IEnumerable<HbtFile?>? hbtFiles)
+        {
+            try
+            {
+                if (hbtFiles != null)
+                {
+                    var fileContent = JsonSerializer.Serialize(hbtFiles.Where(p => p != null), _jsonSerializerOptions);
+                    File.WriteAllText(WORKSPACE_FILEPATH, fileContent);
+                    return true;
+                }
             }
             catch { }
             return false;
