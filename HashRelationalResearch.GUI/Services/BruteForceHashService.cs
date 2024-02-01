@@ -1,5 +1,7 @@
-﻿using CommandLine;
+﻿using BruteForceHash.Helpers;
+using CommandLine;
 using HashCommon;
+using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
 using HashRelationalResearch.Models;
@@ -7,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace HashRelationalResearch.GUI.Services
 {
@@ -37,9 +40,9 @@ namespace HashRelationalResearch.GUI.Services
             var hash40 = hbtFile.HexValue;
             var hashEntry = _hashDBService.GetEntry(hash40);
 
-            var useMethodDictionary = hbtFile.AttackType == "Dictionary";
-            var useMethodHybrid = hbtFile.AttackType == "Hybrid";
-            var useMethodCharacter = hbtFile.AttackType == "Character";
+            var useMethodDictionary = hbtFile.AttackType == AttackTypes.ATTACK_DICTIONARY;
+            var useMethodHybrid = hbtFile.AttackType == AttackTypes.ATTACK_HYBRID;
+            var useMethodCharacter = hbtFile.AttackType == AttackTypes.ATTACK_CHARACTER;
 
             var researchDictionaryContent = GenerateResearchDictionary(hashEntry);
 
@@ -168,23 +171,30 @@ namespace HashRelationalResearch.GUI.Services
                 options.DictionariesLastCustomAddTypos = hbtFile.DictionaryAttack.DictionaryLastWord.CustomWordsAddTypos;
             }
 
-            //Character & Hybrid
-            if (useMethodCharacter || useMethodHybrid)
-            {
-                options.ValidChars = hbtFile.CharacterAttack.ValidChars;
-                options.ValidStartingChars = hbtFile.CharacterAttack.ValidStartingChars;
-                options.UseHashcat = useHashCat;
-            }
-
             //Character only
             if (useMethodCharacter)
             {
-                options.UseUTF8 = hbtFile.CharacterAttack.EnableUtf8;
+                if(!useHashCat)
+                    options.UseUTF8 = hbtFile.CharacterAttack.EnableUtf8;
+                options.UseHashcat = useHashCat;
+
+                var selectedCharsets = Charsets.GetCharsetList().Where(p => hbtFile.CharacterAttack.Charsets.Contains(p.Name));
+                options.ValidChars = Charsets.GetAllValidChars(hbtFile.CharacterAttack.ValidChars, selectedCharsets);
+                options.ValidStartingChars = Charsets.GetAllValidChars(hbtFile.CharacterAttack.ValidStartingChars, selectedCharsets);
+                options.IncludeWord = hbtFile.CharacterAttack.IncludeWord;
+                options.StartPosition = hbtFile.CharacterAttack.StartPosition;
+                options.EndPosition = hbtFile.CharacterAttack.EndPosition;
             }
 
             //Hybrid only
             if (useMethodHybrid)
             {
+                options.UseHashcat = useHashCat;
+
+                var selectedCharsets = Charsets.GetCharsetList().Where(p => hbtFile.HybridAttack.Charsets.Contains(p.Name));
+                options.ValidChars = Charsets.GetAllValidChars(hbtFile.HybridAttack.ValidChars, selectedCharsets);
+                options.ValidStartingChars = Charsets.GetAllValidChars(hbtFile.HybridAttack.ValidStartingChars, selectedCharsets);
+
                 options.HybridWordsHash = hbtFile.HybridAttack.WordsInHash;
                 options.HybridMinCharacters = hbtFile.HybridAttack.BruteforceMinChars;
                 options.HybridMaxCharacters = hbtFile.HybridAttack.BruteforceMaxChars;
@@ -199,7 +209,7 @@ namespace HashRelationalResearch.GUI.Services
             //Start Bruteforce
             using var process = new Process();
             process.StartInfo.FileName = "BruteForceHash.exe";
-            process.StartInfo.Arguments = Parser.Default.FormatCommandLine(options);
+            process.StartInfo.Arguments = FormatCommandLineWithBugHandling(options);
             LastCommand = process.StartInfo.Arguments;
 
             process.StartInfo.UseShellExecute = false;
@@ -208,6 +218,32 @@ namespace HashRelationalResearch.GUI.Services
             process.Close();
 
             return true;
+        }
+
+        private static string? FormatCommandLineWithBugHandling(BruteForceHash.Options options)
+        {
+            var args = Parser.Default.FormatCommandLine(options);
+            var props = typeof(BruteForceHash.Options).GetProperties();
+            foreach (var prop in props)
+            {
+                if (prop.PropertyType == typeof(int))
+                {
+                    var attrs = prop.GetCustomAttributes(true);
+                    foreach (object attr in attrs)
+                    {
+                        if (attr is OptionAttribute attribute)
+                        {
+                            var longName = $"--{attribute.LongName}";
+                            if (!args.Contains(longName) && (int)attribute.Default != 0)
+                            {
+                                args += $" {longName} 0";
+                            }
+                        }
+                    }
+                }
+            }
+
+            return args;
         }
 
         private string? GetAllDictionaries(HbtFile hbtFile, HbtFileDictionary dictionary, IEnumerable<string> researchDictionaryContent)

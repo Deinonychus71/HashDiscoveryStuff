@@ -36,7 +36,7 @@ namespace BruteForceHash.CombinationGenerator
             return combinationsPattern.Select(p => CompileCombinationJoin(p)).Distinct(new SequenceEqualityComparer<byte>());
         }
 
-        public string DecompileCombination(byte[] compiledCombinationPattern)
+        public static string DecompileCombination(byte[] compiledCombinationPattern)
         {
             var output = string.Empty;
             for (var i = 0; i < compiledCombinationPattern.Length; i++)
@@ -59,25 +59,25 @@ namespace BruteForceHash.CombinationGenerator
             return output;
         }
 
-        protected List<string> OrderList(List<string> patterns, bool longestWordFirst = false)
+        protected static List<string> OrderList(List<string> patterns, bool longestWordFirst = false)
         {
-            Dictionary<string, double> PatternToScore = new Dictionary<string, double>();
+            var PatternToScore = new Dictionary<string, double>();
 
             foreach (var pattern in patterns)
             {
                 var tempPattern = pattern;
-                List<int> differences = new List<int>();
+                var differences = new List<int>();
                 int lastInteger = 0;
-                while (tempPattern.IndexOf('{') != -1)
+                while (tempPattern.Contains('{'))
                 {
                     int firstOpenBracket = tempPattern.IndexOf('{');
                     int firstCloseBracket = tempPattern.IndexOf('}');
                     var test = tempPattern.Substring(firstOpenBracket + 1, firstCloseBracket - 1);
-                    var currentInteger = Int32.Parse(tempPattern.Substring(firstOpenBracket + 1, firstCloseBracket - firstOpenBracket - 1));
+                    var currentInteger = int.Parse(tempPattern.Substring(firstOpenBracket + 1, firstCloseBracket - firstOpenBracket - 1));
                     if (lastInteger != 0)
                         differences.Add(lastInteger - currentInteger);
                     lastInteger = currentInteger;
-                    tempPattern = tempPattern.Substring(firstCloseBracket + 1);
+                    tempPattern = tempPattern[(firstCloseBracket + 1)..];
                 }
                 if (differences.Count == 0)
                     PatternToScore.Add(pattern, 1.0);
@@ -117,7 +117,7 @@ namespace BruteForceHash.CombinationGenerator
         protected List<List<string>> GenerateWordCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
         {
             //Get combinations of custom words
-            List<List<string>> combinationsCustom = new List<List<string>>();
+            var combinationsCustom = new List<List<string>>();
             if (combinationDeepLevel > 0 && !string.IsNullOrEmpty(customWordsDictionariesPaths))
             {
                 var splitPaths = customWordsDictionariesPaths.Split(";", StringSplitOptions.RemoveEmptyEntries);

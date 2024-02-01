@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              mc:Ignorable="d" 
              d:DesignHeight="1050" d:DesignWidth="1900">
     <UserControl.Resources>
@@ -59,8 +60,14 @@
                     <Button Width="50" Content="Load" Command="{Binding QuickLoadCommand, Mode=OneTime}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Width="Auto" DockPanel.Dock="Left">
-                    <Label Content="Attack Type:"/>
-                    <ComboBox Width="90" ItemsSource="{Binding AttackTypeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AttackType, Mode=TwoWay}"/>
+                    <Label Content="Attack Type:"/> 
+                    <ComboBox Width="90" ItemsSource="{Binding AttackTypeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AttackType, Mode=TwoWay}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding AttackTypeChanged}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
                     <Label Content="Threads:"/>
                     <ComboBox Width="45" ItemsSource="{Binding NbrThreadsList, Mode=OneTime}" SelectedItem="{Binding HbtFile.NbrThreads, Mode=TwoWay}"/>
                     <Label Content="Prefix:"/>
@@ -114,7 +121,7 @@
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="1" Content="START USING CPU" Command="{Binding StartBruteforceCommand}"/>
-                    <Button Grid.Column="3" Content="START USING HASHCAT" Command="{Binding StartBruteforceHashcatCommand}"/>
+                    <Button Grid.Column="3" Content="START USING HASHCAT" Command="{Binding StartBruteforceHashcatCommand}" IsEnabled="{c:Binding 'SelectedAttackType != \'Dictionary\''}" />
                 </Grid>
             </Grid>
         </Grid>

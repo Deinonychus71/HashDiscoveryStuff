@@ -21,4 +21,12 @@
     <DataTemplate DataType="{x:Type vm:HashCrackDictionaryTabVM}">
         <uc:HashCrackDictionaryTab />
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:HashCrackCharacterTabVM}">
+        <uc:HashCrackCharacterTab />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:HashCrackHybridTabVM}">
+        <uc:HashCrackHybridTab />
+    </DataTemplate>
 </ResourceDictionary>

@@ -81,7 +81,7 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     index++;
                     bytes.Add(0);
-                    var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
+                    var valueStr = combinationPattern.Substring(index, combinationPattern[index..].IndexOf('}'));
                     bytes.Add(Convert.ToByte(valueStr));
                     index += valueStr.Length + 1;
                 }
@@ -95,7 +95,7 @@ namespace BruteForceHash.CombinationGenerator
                     bytes.Add(Encoding.UTF8.GetBytes(new char[] { chara })[0]);
                 }
             }
-            return bytes.ToArray();
+            return [.. bytes];
         }
 
         public override byte[] CompileCombinationJoin(string combinationPattern)
@@ -110,15 +110,15 @@ namespace BruteForceHash.CombinationGenerator
                     while (chara == '{')
                     {
                         index++;
-                        var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
-                        if (bytes.Count <= 1 || bytes[bytes.Count - 2] != 0)
+                        var valueStr = combinationPattern.Substring(index, combinationPattern[index..].IndexOf('}'));
+                        if (bytes.Count <= 1 || bytes[^2] != 0)
                         {
                             bytes.Add(0);
                             bytes.Add(Convert.ToByte(valueStr));
                         }
                         else
                         {
-                            bytes[bytes.Count - 1] += Convert.ToByte(valueStr);
+                            bytes[^1] += Convert.ToByte(valueStr);
                         }
                         index += valueStr.Length + 1;
                         if (index >= combinationPattern.Length)
@@ -142,7 +142,7 @@ namespace BruteForceHash.CombinationGenerator
                     bytes.Add(Encoding.UTF8.GetBytes(new char[] { chara })[0]);
                 }
             }
-            return bytes.ToArray();
+            return [.. bytes];
         }
 
         public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
@@ -175,10 +175,10 @@ namespace BruteForceHash.CombinationGenerator
                     inputList = OrderList(inputList, _options.OrderLongerWordsFirst);
                     break;
                 case "fewer_words_first":
-                    inputList = inputList.OrderBy(p => p.Length).ToList();
+                    inputList = [.. inputList.OrderBy(p => p.Length)];
                     break;
                 case "more_words_first":
-                    inputList = inputList.OrderByDescending(p => p.Length).ToList();
+                    inputList = [.. inputList.OrderByDescending(p => p.Length)];
                     break;
             }
 
@@ -187,23 +187,23 @@ namespace BruteForceHash.CombinationGenerator
             var includePatterns = _options.IncludePatterns.Split(",", StringSplitOptions.RemoveEmptyEntries);
             foreach (var combination in inputList.Select(p => $"${p}^"))
             {
-                List<string> nbrChar = new List<string>();
-                string reducedCombination = combination;
-                while (reducedCombination.IndexOf('}') != -1)
+                var nbrChar = new List<string>();
+                var reducedCombination = combination;
+                while (reducedCombination.Contains('}'))
                 {
-                    nbrChar.Add(reducedCombination.Substring(0, reducedCombination.IndexOf('}') + 1));
-                    reducedCombination = reducedCombination.Substring(reducedCombination.IndexOf('}') + 1);
+                    nbrChar.Add(reducedCombination[..(reducedCombination.IndexOf('}') + 1)]);
+                    reducedCombination = reducedCombination[(reducedCombination.IndexOf('}') + 1)..];
                 }
                 if (nbrChar.Count <= _maxWords &&
-                    !excludePatterns.Any(p => combination.Contains(p)) &&
-                    (includePatterns.Length == 0 || includePatterns.All(p => combination.Contains(p))))
+                    !excludePatterns.Any(combination.Contains) &&
+                    (includePatterns.Length == 0 || includePatterns.All(combination.Contains)))
                 {
                     if (hasCombinationsCustom)
                     {
                         foreach (var combinationCustom in combinationsCustom)
                         {
                             var wordCandidates = GenerateIncludeWordCombinations(combination, combinationCustom);
-                            if (wordCandidates.Count() > 0)
+                            if (wordCandidates.Any())
                             {
                                 output.AddRange(wordCandidates);
                             }
@@ -314,17 +314,11 @@ namespace BruteForceHash.CombinationGenerator
                         {
                             if (j == 1)
                             {
-                                remainingLength = remainingLength - _delimiterLength;
+                                remainingLength -= _delimiterLength;
                                 soFar++;
                             }
 
-
-                            List<string> subCombinations;
-                            if (alreadyFoundMap.ContainsKey(remainingLength))
-                            {
-                                subCombinations = alreadyFoundMap[remainingLength];
-                            }
-                            else
+                            if(!alreadyFoundMap.TryGetValue(remainingLength, out List<string> subCombinations))
                             {
                                 subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength, wordsSoFar + 1, longerWordsFirst, soFar);
                             }
@@ -360,7 +354,7 @@ namespace BruteForceHash.CombinationGenerator
 
         private List<string> Filter(List<string> inputList)
         {
-            List<string> finalList = new List<string>();
+            var finalList = new List<string>();
             foreach (string pattern in inputList)
             {
                 if (_concatenateOnlyFirstTwo && !(pattern.Length - pattern.Replace("|", "").Length == 1 && (pattern.IndexOf('|') < pattern.IndexOf(_delimiter) || pattern.IndexOf(_delimiter) == -1 || _delimiterLength == 0)))
@@ -410,11 +404,11 @@ namespace BruteForceHash.CombinationGenerator
                 int maxNumberOfConsecutiveWords = 0;
                 int minNumberOfConsecutiveWords = 0;
                 int maxOnesInARow = 0;
-                while (tempPattern.IndexOf('{') != -1)
+                while (tempPattern.Contains('{'))
                 {
                     if (tempPattern.StartsWith(_delimiter) && _delimiter != "|")
                     {
-                        tempPattern = tempPattern.Substring(_delimiterLength);
+                        tempPattern = tempPattern[_delimiterLength..];
                         if (numberOfConsecutive > maxNumberOfConsecutiveWords)
                             maxNumberOfConsecutiveWords = numberOfConsecutive;
                         if (numberOfConsecutive < minNumberOfConsecutiveWords || minNumberOfConsecutiveWords == 0)
@@ -422,21 +416,21 @@ namespace BruteForceHash.CombinationGenerator
                         numberOfConsecutive = 0;
                     }
                     else if (tempPattern.StartsWith('|'))
-                        tempPattern = tempPattern.Substring(1);
+                        tempPattern = tempPattern[1..];
                     else
                     {
                         numberOfConsecutive++;
                         if (tempPattern.StartsWith("{1}"))
                         {
                             numberOfOnes++;
-                            tempPattern = tempPattern.Substring(3);
+                            tempPattern = tempPattern[3..];
                         }
                         else
                         {
                             if (numberOfOnes > maxOnesInARow)
                                 maxOnesInARow = numberOfOnes;
                             numberOfOnes = 0;
-                            tempPattern = tempPattern.Substring(tempPattern.IndexOf('}') + 1);
+                            tempPattern = tempPattern[(tempPattern.IndexOf('}') + 1)..];
                         }
                     }
                 }

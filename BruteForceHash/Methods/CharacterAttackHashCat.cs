@@ -69,6 +69,13 @@ namespace BruteForceHash.Methods
             }
 
             var maskSize = _stringLength - _options.Prefix.Length - _options.Suffix.Length;
+            if (!string.IsNullOrEmpty(_options.IncludeWord))
+            {
+                _logger.Log($"Include Word: {_options.IncludeWord}");
+                _logger.Log($"Start Position: {_options.StartPosition}");
+                if (_options.EndPosition < 0)
+                    _logger.Log($"End Position: {_options.EndPosition}");
+            }
             _logger.Log($"Valid Characters: {inputValidChars}");
             _logger.Log($"Valid Starting Characters: {inputValidStartChars} for first characters");
             _logger.Log($"Search on: {maskSize} characters");
@@ -99,15 +106,73 @@ namespace BruteForceHash.Methods
             // Launch HashCat
             var output = Path.GetFullPath(_logger.PathFile).Replace(".txt", "_hashcat.txt");
 
-            var mask = "?1";
-            for (int i = 1; i < maskSize; i++)
-                mask += "?2";
+            if (string.IsNullOrEmpty(_options.IncludeWord))
+            {
+                var mask = "?1";
+                for (int i = 1; i < maskSize; i++)
+                    mask += "?2";
 
-            var quiet = string.Empty;
-            if (!_options.Verbose)
-                quiet = " --quiet";
-            string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3{quiet}";
-            new HashcatTask(_logger, _options).Run(args, _options.Verbose);
+                var quiet = string.Empty;
+                if (!_options.Verbose)
+                    quiet = " --quiet";
+                string args = $"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3{quiet}";
+                new HashcatTask(_logger, _options).Run(args, _options.Verbose);
+            }
+            else
+            {
+                _interruptThreads = false;
+                var tasks = new List<Task>();
+                var cts = new CancellationTokenSource();
+
+                var words = _options.IncludeWord.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                var masks = new List<string>();
+                foreach (var word in words)
+                {
+                    var trimmedWord = word.Trim();
+                    var wordLength = trimmedWord.Length;
+
+                    //Create all available masks
+                    for (var i = _options.StartPosition; i <= maskSize - wordLength + _options.EndPosition; i++)
+                    {
+                        if (i == 0)
+                        {
+                            RunCharacterBruteForce(tasks, factory, validStartBytes, _options.Prefix + trimmedWord, false);
+                            continue;
+                        }
+
+                        var mask = string.Empty;
+                        for (var s = 0; s < i; s++)
+                        {
+                            if (s == 0)
+                                mask += "?1";
+                            else
+                                mask += "?2";
+                        }
+                        mask += trimmedWord;
+                        for (var s = i + wordLength; s < maskSize; s++)
+                        {
+                            mask += "?2";
+                        }
+
+                        masks.Add(mask);
+                    }
+                }
+
+                //Running HashCat
+                var quiet = string.Empty;
+                if (!_options.Verbose)
+                    quiet = " --quiet";
+                var argumentLists = new List<string>();
+                foreach (var mask in masks)
+                {
+                    argumentLists.Add($"--hash-type 11500 -a 3 {_hexExtract:x8}:00000000 -1 {inputValidStartChars} -2 {inputValidChars} {mask} --outfile \"{output}\" --keep-guessing -w 3{quiet}");
+                }
+                new HashcatTask(_logger, _options).Run(argumentLists, _options.Verbose, true);
+
+                Task.WaitAll(tasks.ToArray());
+                cts.Dispose();
+            }
+
         }
 
         private void RunCharacterBruteForce(List<Task> tasks, TaskFactory factory, byte[] validStartBytes, string prefix, bool shouldInterruptAtFirstResult = false)

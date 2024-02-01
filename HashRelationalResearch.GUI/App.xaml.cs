@@ -74,6 +74,8 @@ namespace HashRelationalResearch.GUI
             services.AddTransient<ResearchPrcVM>();
             services.AddTransient<HashCrackVM>();
             services.AddTransient<HashCrackDictionaryTabVM>();
+            services.AddTransient<HashCrackCharacterTabVM>();
+            services.AddTransient<HashCrackHybridTabVM>();
 
             return services;
         }

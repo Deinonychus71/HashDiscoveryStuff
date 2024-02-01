@@ -7,7 +7,7 @@ namespace BruteForceHash.CombinationGenerator
 {
     public class CombinationGeneratorHybrid : CombinationGeneratorBase
     {
-        private char[] _startingChars;
+        private readonly char[] _startingChars;
 
         public CombinationGeneratorHybrid(Options options, int stringLength) :
             base(options, stringLength)
@@ -26,7 +26,7 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     index++;
                     bytes.Add(0);
-                    var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
+                    var valueStr = combinationPattern.Substring(index, combinationPattern[index..].IndexOf('}'));
                     bytes.Add(Convert.ToByte(valueStr));
                     index += valueStr.Length + 1;
                 }
@@ -36,7 +36,7 @@ namespace BruteForceHash.CombinationGenerator
                     bytes.Add(Encoding.UTF8.GetBytes(new char[] { chara })[0]);
                 }
             }
-            return bytes.ToArray();
+            return [.. bytes];
         }
 
         public override byte[] CompileCombinationJoin(string combinationPattern)

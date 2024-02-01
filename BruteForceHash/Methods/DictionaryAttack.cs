@@ -509,7 +509,7 @@ namespace BruteForceHash.Methods
                 if (_options.Verbose)
                 {
                     if (string.IsNullOrEmpty(combinationPattern))
-                        _logger.Log($"Running Optimized Pattern: {_combinationGeneration.DecompileCombination(compiledCombination)}", false);
+                        _logger.Log($"Running Optimized Pattern: {CombinationGeneratorBase.DecompileCombination(compiledCombination)}", false);
                     else
                         _logger.Log($"Running Pattern: {combinationPattern}", false);
                 }

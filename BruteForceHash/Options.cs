@@ -229,6 +229,10 @@ namespace BruteForceHash
         public string ValidChars { get; set; }
         [Option('C', "valid_starting_chars", Required = false, Default = "etainoshrdlucmfwygpbvkqjxz_", HelpText = "All the characters to start with for bruteforce (for character attack).")]
         public string ValidStartingChars { get; set; }
+        [Option('0', "start_position", Required = false, Default = 0, HelpText = "Start position when searching for a word (for character attack).")]
+        public int StartPosition { get; set; }
+        [Option('1', "end_position", Required = false, Default = -1, HelpText = "End position when searching for a word (for character attack).")]
+        public int EndPosition { get; set; }
         [Option('h', "path_hashcat", Required = false, Default = "Tools\\Hashcat\\hashcat.exe", HelpText = "Path for HashCat (for character attack).")]
         public string PathHashCat { get; set; }
 

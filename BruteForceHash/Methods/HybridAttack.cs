@@ -220,7 +220,7 @@ namespace BruteForceHash
 
                     var strBuilder = new ByteString(_stringLength, _hexValue, _options.Prefix + prefixByteStr, suffixByteStr + _options.Suffix, true);
                     if (_options.Verbose && verbose)
-                        _logger.Log($"Running Pattern: {_combinationGeneration.DecompileCombination(combinationPattern)}", false);
+                        _logger.Log($"Running Pattern: {CombinationGeneratorBase.DecompileCombination(combinationPattern)}", false);
 
                     RunHybridAttack(strBuilder, compiledCombination, _validStartBytes, 0, 0, _cancellationTokenSource.Token);
 

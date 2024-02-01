@@ -75,14 +75,14 @@ namespace BruteForceHash
                 else
                 {
                     //Run script
-                    if (o.Method.Equals("dictionary", StringComparison.OrdinalIgnoreCase))
+                    if (o.Method.Equals(AttackTypes.ATTACK_DICTIONARY, StringComparison.OrdinalIgnoreCase))
                     {
                         if (o.UseHashcat)
                             new DictionaryAttackHashcat(logger, o, length, hexToFind).Run();
                         else
                             new DictionaryAttack(logger, o, length, hexToFind).Run();
                     }
-                    else if (o.Method.Equals("character", StringComparison.OrdinalIgnoreCase))
+                    else if (o.Method.Equals(AttackTypes.ATTACK_CHARACTER, StringComparison.OrdinalIgnoreCase))
                     {
                         if (o.UseUTF8)
                             new CharacterAttackUtf8(logger, o, length, hexToFind).Run();
@@ -91,7 +91,7 @@ namespace BruteForceHash
                         else
                             new CharacterAttack(logger, o, length, hexToFind).Run();
                     }
-                    else if (o.Method.Equals("hybrid", StringComparison.OrdinalIgnoreCase))
+                    else if (o.Method.Equals(AttackTypes.ATTACK_HYBRID, StringComparison.OrdinalIgnoreCase))
                     {
                         if (o.UseHashcat)
                             new HybridAttackHashCat(logger, o, length, hexToFind).Run();

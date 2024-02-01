@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace HashRelationalResearch.GUI.Models
 {
@@ -133,8 +134,11 @@ namespace HashRelationalResearch.GUI.Models
     public class HbtFileCharacterAttack
     {
         public bool EnableUtf8 { get; set; }
-        public string ValidChars { get; set; } = string.Empty;
-        public string ValidStartingChars { get; set; } = string.Empty;
+        public string ValidChars { get; set; } = "etainoshrdlucmfwygpbvkqjxz_";
+        public string ValidStartingChars { get; set; } = "etainoshrdlucmfwygpbvkqjxz";
+        public string IncludeWord { get; set; } = string.Empty;
+        public int StartPosition { get; set; } = 0;
+        public int EndPosition { get; set; } = 0;
         public List<string> Charsets { get; set; } = [];
     }
 
@@ -143,6 +147,9 @@ namespace HashRelationalResearch.GUI.Models
         public bool IgnoreSizeFilters { get; set; } = false;
         public int BruteforceMinChars { get; set; }
         public int BruteforceMaxChars { get; set; }
+        public string ValidChars { get; set; } = "etainoshrdlucmfwygpbvkqjxz_";
+        public string ValidStartingChars { get; set; } = "etainoshrdlucmfwygpbvkqjxz";
+        public List<string> Charsets { get; set; } = [];
         public int WordsInHash { get; set; }
         public int MinCharHashcatThreshold { get; set; }
         public HbtFileHybridDictionary Dictionary { get; set; } = new();

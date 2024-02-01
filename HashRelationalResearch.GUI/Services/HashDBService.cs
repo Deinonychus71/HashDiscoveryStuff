@@ -27,7 +27,7 @@ namespace HashRelationalResearch.GUI.Services
             _configurationService = configurationService;
             _discoveredLabels = [];
 
-            LoadHashDBFile(configurationService.HashDBFilePath);
+            //LoadHashDBFile(configurationService.HashDBFilePath);
             LoadDiscoveryFiles();
         }
 

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using BruteForceHash.Helpers;
+using CommunityToolkit.Mvvm.Input;
 using HashCommon;
 using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
@@ -20,6 +21,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         private HashCrackVM _hashCrackVM;
         private HbtFile? _hbtFile;
 
+        private string _selectedAttackType = AttackTypes.ATTACK_DICTIONARY;
         private string _tabLabel = DEFAULT_TAB_NAME;
         private string? _hashValue;
         private string? _hashLabel;
@@ -161,6 +163,16 @@ namespace HashRelationalResearch.GUI.ViewModels
             }
         }
 
+        public string SelectedAttackType
+        {
+            get => _selectedAttackType;
+            set
+            {
+                _selectedAttackType = value;
+                OnPropertyChanged(nameof(SelectedAttackType));
+            }
+        }
+
         public string[] AttackTypeList { get; private set; } = ["Dictionary", "Character", "Hybrid"];
 
         public int[] NbrThreadsList { get; private set; } = ListGenerators.GetIntegerList(1, 64);
@@ -168,6 +180,7 @@ namespace HashRelationalResearch.GUI.ViewModels
         public IRelayCommand SaveLabelCommand { get; private set; }
         public IRelayCommand HashValueChanged { get; private set; }
         public IRelayCommand HashLabelChanged { get; private set; }
+        public IRelayCommand AttackTypeChanged { get; private set; }
         public IRelayCommand QuickSaveCommand { get; private set; }
         public IRelayCommand QuickLoadCommand { get; private set; }
         public IRelayCommand StartBruteforceCommand { get; private set; }
@@ -190,6 +203,7 @@ namespace HashRelationalResearch.GUI.ViewModels
             SaveLabelCommand = new RelayCommand(SaveLabel);
             HashValueChanged = new RelayCommand(LoadNewHash);
             HashLabelChanged = new RelayCommand(TestHashLabel);
+            AttackTypeChanged = new RelayCommand(ChangeAttackType);
 
             StartBruteforceCommand = new RelayCommand(() => StartBruteforce(false));
             StartBruteforceHashcatCommand = new RelayCommand(() => StartBruteforce(true));
@@ -220,6 +234,15 @@ namespace HashRelationalResearch.GUI.ViewModels
                 }
                 else
                     _dialogService.ShowMessage($"Error saving '{_hbtFile.HexValue},{_hbtFile.HexLabel}'.", true);
+            }
+        }
+
+        private void ChangeAttackType()
+        {
+            if (_hbtFile != null)
+            {
+                SelectedAttackType = _hbtFile.AttackType;
+                _hashCrackVM.SetAttackType(_hbtFile.AttackType);
             }
         }
 

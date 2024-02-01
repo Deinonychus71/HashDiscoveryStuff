@@ -1,6 +1,8 @@
-﻿using HashRelationalResearch.GUI.Helpers;
+﻿using BruteForceHash.Helpers;
+using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
+using System.Runtime.CompilerServices;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -9,11 +11,14 @@ namespace HashRelationalResearch.GUI.ViewModels
         private readonly IConfigurationService _configurationService;
         private readonly IHashDBService _hashDBService;
 
+        private HashCrackCharacterTabVM _characterVM;
+        private HashCrackHybridTabVM _hybridVM;
         private HashCrackDictionaryTabVM _mainDictionaryVM;
         private HashCrackDictionaryTabVM _firstWordVM;
         private HashCrackDictionaryTabVM _lastWordVM;
         private HbtFile? _hbtFile;
 
+        private string _selectedAttackType = AttackTypes.ATTACK_DICTIONARY;
         private string? _selectedExcludePattern;
         private string? _selectedIncludePattern;
 
@@ -51,6 +56,36 @@ namespace HashRelationalResearch.GUI.ViewModels
                     HbtFile.WordFiltering.IncludePatterns = value ?? string.Empty;
                 OnPropertyChanged(nameof(HbtFile));
                 OnPropertyChanged(nameof(SelectedIncludePattern));
+            }
+        }
+
+        public string SelectedAttackType
+        {
+            get => _selectedAttackType;
+            set
+            {
+                _selectedAttackType = value;
+                OnPropertyChanged(nameof(SelectedAttackType));
+            }
+        }
+
+        public HashCrackCharacterTabVM CharacterVM
+        {
+            get => _characterVM;
+            set
+            {
+                _characterVM = value;
+                OnPropertyChanged(nameof(CharacterVM));
+            }
+        }
+
+        public HashCrackHybridTabVM HybridVM
+        {
+            get => _hybridVM;
+            set
+            {
+                _hybridVM = value;
+                OnPropertyChanged(nameof(HybridVM));
             }
         }
 
@@ -102,8 +137,8 @@ namespace HashRelationalResearch.GUI.ViewModels
         public int[] AdvancedMinWordsList { get; set; } = ListGenerators.GetIntegerList(1, 10);
         #endregion
 
-        public HashCrackVM(IConfigurationService configurationService, IHashDBService hashDBService, HashCrackDictionaryTabVM mainDictionaryVM,
-            HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
+        public HashCrackVM(IConfigurationService configurationService, IHashDBService hashDBService, HashCrackCharacterTabVM characterVM, HashCrackHybridTabVM hybridVM,
+            HashCrackDictionaryTabVM mainDictionaryVM, HashCrackDictionaryTabVM firstWordDictionaryVM, HashCrackDictionaryTabVM lastWordDictionaryVM)
         {
             _configurationService = configurationService;
             _hashDBService = hashDBService;
@@ -112,6 +147,8 @@ namespace HashRelationalResearch.GUI.ViewModels
             ExcludePatternsList = configurationService.GetExcludePatterns();
             IncludePatternsList = configurationService.GetIncludePatterns();
 
+            _characterVM = characterVM;
+            _hybridVM = hybridVM;
             _mainDictionaryVM = mainDictionaryVM;
             _mainDictionaryVM.IsMainDictionary = true;
             _firstWordVM = firstWordDictionaryVM;
@@ -121,6 +158,9 @@ namespace HashRelationalResearch.GUI.ViewModels
         public void LoadHbtFile(HbtFile hbtFile)
         {
             HbtFile = hbtFile;
+            SetAttackType(hbtFile.AttackType);
+            _characterVM.LoadHbtFileCharacter(hbtFile.CharacterAttack);
+            _hybridVM.LoadHbtFileHybrid(hbtFile.HybridAttack);
             _mainDictionaryVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryMain);
             _firstWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryFirstWord, hbtFile.DictionaryAttack.DictionaryMain);
             _lastWordVM.LoadHbtFileDictionary(hbtFile.DictionaryAttack.DictionaryLastWord, hbtFile.DictionaryAttack.DictionaryMain);
@@ -138,6 +178,11 @@ namespace HashRelationalResearch.GUI.ViewModels
             _mainDictionaryVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
             _firstWordVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
             _lastWordVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
+        }
+
+        public void SetAttackType(string attackType)
+        {
+            SelectedAttackType = attackType;
         }
 
         private static ListItem<string>[] GetCombinationOrders()
