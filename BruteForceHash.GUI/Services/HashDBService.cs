@@ -1,0 +1,231 @@
+﻿using HashCommon;
+using BruteForceHash.GUI.Helpers;
+using BruteForceHash.GUI.Services.Interfaces;
+using HashRelationalResearch.Models;
+using ProtoBuf;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text.Json;
+
+namespace BruteForceHash.GUI.Services
+{
+    public class HashDBService : IHashDBService
+    {
+        private readonly IConfigurationService _configurationService;
+        private readonly Dictionary<DiscoverySource, Dictionary<string, string>> _discoveredLabels = [];
+
+        private Dictionary<string, ExportEntry> _entries = [];
+        private Dictionary<string, List<ExportFunctionEntry>> _functions = [];
+        private Dictionary<string, string> _labels = [];
+
+        public HashDBService(IConfigurationService configurationService)
+        {
+            _configurationService = configurationService;
+            _discoveredLabels = [];
+
+            LoadHashDBFile(configurationService.HashDBFilePath);
+            LoadDiscoveryFiles();
+        }
+
+        public bool LoadHashDBFile(string filePath)
+        {
+            try
+            {
+                if (filePath != null && File.Exists(filePath))
+                {
+                    var file = Deserialize(filePath);
+                    if (file != null)
+                    {
+                        _entries = file.ExportEntries;
+                        _functions = file.ExportFunctions;
+                        _labels = file.HashLabels.ToDictionary(p => p.Key, p => p.Value.Label);
+                        RefreshPRCLabels();
+                    }
+                    return true;
+                }
+            }
+            catch
+            {
+                _entries = [];
+                _functions = [];
+            }
+            return false;
+        }
+
+        public void RefreshPRCLabels()
+        {
+            prcEditor.MainWindow.HashToStringLabels.Clear();
+            prcEditor.MainWindow.StringToHashLabels.Clear();
+            foreach (var label in _labels)
+            {
+                prcEditor.MainWindow.HashToStringLabels.Add(ulong.Parse(label.Key[2..], NumberStyles.HexNumber), label.Value);
+                prcEditor.MainWindow.StringToHashLabels.Add(label.Value, ulong.Parse(label.Key[2..], NumberStyles.HexNumber));
+            }
+        }
+
+        public void LoadDiscoveryFiles()
+        {
+            _discoveredLabels.Clear();
+            LoadDiscoveryFile(DiscoverySource.ParamLabels);
+            LoadDiscoveryFile(DiscoverySource.NROMainLabels);
+            LoadDiscoveryFile(DiscoverySource.NROFightersLabels);
+        }
+
+        public IEnumerable<ExportFunctionEntry> GetFunctions(string file, IEnumerable<int> functionIds)
+        {
+            var output = new List<ExportFunctionEntry>();
+            if (functionIds != null && _functions.TryGetValue(file, out List<ExportFunctionEntry>? value))
+            {
+                foreach (var functionId in functionIds)
+                {
+                    output.Add(value[functionId]);
+                }
+            }
+            return output;
+        }
+
+        public ExportFunctionEntry? GetFunction(string file, int functionId)
+        {
+            if (_functions.TryGetValue(file, out List<ExportFunctionEntry>? value))
+                return value[functionId];
+            return null;
+        }
+
+        public ExportEntry? GetEntry(string hash)
+        {
+            if (hash.StartsWith("0x") && _entries.TryGetValue(hash, out ExportEntry? value))
+                return value;
+            return null;
+        }
+
+        public IEnumerable<ExportEntry> GetEntriesByPRCFile(string file)
+        {
+            return _entries.Values.Where(p => p.PRCFiles.Any(p2 => p2.File == file));
+        }
+
+        public string? GetLabel(string hash40)
+        {
+            if (_labels.TryGetValue(hash40, out string? value))
+                return value;
+            return null;
+        }
+
+        public bool AddOrUpdateLabel(string hash40, string label)
+        {
+            var source = PickBestSource(hash40);
+            if (!_discoveredLabels.TryGetValue(source, out Dictionary<string, string>? dictDiscovery))
+            {
+                dictDiscovery = [];
+                _discoveredLabels.Add(source, dictDiscovery);
+            }
+
+            // Would rather force saving again
+            //if (dictDiscovery.TryGetValue(hash40, out string? value) && value == label)
+            //    return true;
+
+            if (HashHelper.ToHash40(label) != hash40)
+                return false;
+
+            dictDiscovery[hash40] = label;
+            _labels[hash40] = label;
+            return SaveDiscoveryFile(source);
+        }
+
+        private bool SaveDiscoveryFile(DiscoverySource source)
+        {
+            try
+            {
+                var filePath = GetFilePathFromSource(source);
+                if (filePath != null)
+                    File.WriteAllLines(filePath, _discoveredLabels[source].OrderBy(p => p.Value).Select(p => $"{p.Key},{p.Value}"));
+
+                return true;
+            }
+            catch { }
+            return false;
+        }
+
+        private void LoadDiscoveryFile(DiscoverySource source)
+        {
+            var filePath = GetFilePathFromSource(source);
+
+            if (File.Exists(filePath))
+            {
+                var processFile = new Dictionary<string, string>();
+                _discoveredLabels.Add(source, processFile);
+
+                var fileContent = File.ReadAllLines(filePath);
+                foreach (var fileLine in fileContent)
+                {
+                    var split = fileLine.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    if (split.Length > 1)
+                    {
+                        processFile[split[0]] = split[1];
+                        _labels[split[0]] = split[1];
+                    }
+                }
+            }
+        }
+
+        private string? GetFilePathFromSource(DiscoverySource source)
+        {
+            var folderPath = _configurationService.DiscoveredHashesPath;
+            if (!string.IsNullOrEmpty(folderPath) && !Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            return source switch
+            {
+                DiscoverySource.ParamLabels => Path.Combine(folderPath, "ParamLabels.csv"),
+                DiscoverySource.NROMainLabels => Path.Combine(folderPath, "NROMainLabels.csv"),
+                DiscoverySource.NROFightersLabels => Path.Combine(folderPath, "NROFighterLabels.csv"),
+                DiscoverySource.Unknown => Path.Combine(folderPath, "UnsortedLabels.csv"),
+                _ => null,
+            };
+        }
+
+        private DiscoverySource PickBestSource(string hash40)
+        {
+            DiscoverySource source;
+            var entry = GetEntry(hash40);
+            if (entry != null)
+            {
+                if (entry.PRCFiles.Count > 0)
+                {
+                    source = DiscoverySource.ParamLabels;
+                }
+                else if (entry.CFiles.Count > 0)
+                {
+                    if (entry.CFiles.Any(p => !p.File.Contains("main", StringComparison.OrdinalIgnoreCase)))
+                        source = DiscoverySource.NROFightersLabels;
+                    else
+                        source = DiscoverySource.NROMainLabels;
+                }
+                else
+                    source = DiscoverySource.Unknown;
+            }
+            else
+                source = DiscoverySource.Unknown;
+
+            return source;
+        }
+
+        private static ExportContainer? Deserialize(string filePath)
+        {
+            if (filePath.EndsWith("json", StringComparison.OrdinalIgnoreCase))
+            {
+                return JsonSerializer.Deserialize<ExportContainer>(File.ReadAllText(filePath));
+            }
+            else if (filePath.EndsWith("bin", StringComparison.OrdinalIgnoreCase))
+            {
+                using var fileStream = File.OpenRead(filePath);
+                using var compressionStream = new GZipStream(fileStream, CompressionMode.Decompress);
+                return Serializer.Deserialize<ExportContainer>(compressionStream);
+            }
+            return null;
+        }
+    }
+}

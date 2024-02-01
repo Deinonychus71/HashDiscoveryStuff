@@ -28,10 +28,10 @@ namespace HashRelationalResearch
         [Option('i', "input_file_sqb_labels", Required = false, Default = "Sources\\SQBLabels.txt", HelpText = "Input sqb_labels")]
         public string InputFileSQBLabels { get; set; }
 
-        [Option('o', "output_file_json", Required = false, Default = "export.json", HelpText = "Output JSON")]
+        [Option('o', "output_file_json", Required = false, Default = "", HelpText = "Output JSON")]
         public string OutputFileJSON { get; set; }
 
-        [Option('o', "output_file_bin", Required = false, Default = "export.bin", HelpText = "Output BIN")]
+        [Option('o', "output_file_bin", Required = false, Default = "HASHDB.bin", HelpText = "Output BIN")]
         public string OutputFileBIN { get; set; }
 
         [Option('o', "output_file_csv", Required = false, Default = "export.csv", HelpText = "Output CSV")]

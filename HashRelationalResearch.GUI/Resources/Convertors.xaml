@@ -1,6 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:c="clr-namespace:HashRelationalResearch.GUI.Convertors"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <BooleanToVisibilityConverter x:Key="Bool2Visibility"/>
-    <c:BooleanAndConverter x:Key="booleanAndConverter" />
-</ResourceDictionary>

@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="BruteForceHash.GUI.Controls.ResearchTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             mc:Ignorable="d" 
+             d:DesignHeight="1050" d:DesignWidth="1900">
+    <UserControl.Resources>
+        <Style x:Key="LabelStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Background" Value="White"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsLabelChangedSuccess}" Value="True">
+                    <Setter Property="Foreground" Value="Green"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsLabelChangedFailure}" Value="True">
+                    <Setter Property="Foreground" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Header Information -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70px"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="760"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="*" MinWidth="1000"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Hash Information" Padding="5px">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Hash:" />
+                <TextBox Width="200px" Text="{Binding HashValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding HashValueChanged}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <Label Content="Label:" />
+                <TextBox Width="350px" Style="{StaticResource LabelStyle}" Text="{Binding HashLabel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding HashLabelChanged}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <Button Content="Save Label" Command="{Binding SaveLabelCommand}" IsEnabled="{Binding IsLabelChangedSuccess, Mode=OneWay}"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="0" Grid.Column="2" Header="Attack Parameters" Padding="5px">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <Button Width="50" Margin="0,0,5,0" Content="Save" Command="{Binding QuickSaveCommand, Mode=OneTime}"/>
+                    <Button Width="50" Content="Load" Command="{Binding QuickLoadCommand, Mode=OneTime}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Width="Auto" DockPanel.Dock="Left">
+                    <Label Content="Attack Type:"/> 
+                    <ComboBox Width="90" ItemsSource="{Binding AttackTypeList, Mode=OneTime}" SelectedItem="{Binding HbtFile.AttackType, Mode=TwoWay}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding AttackTypeChanged}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <Label Content="Threads:"/>
+                    <ComboBox Width="45" ItemsSource="{Binding NbrThreadsList, Mode=OneTime}" SelectedItem="{Binding HbtFile.NbrThreads, Mode=TwoWay}"/>
+                    <Label Content="Prefix:"/>
+                    <TextBox Width="150" Text="{Binding HbtFile.Prefix, Mode=TwoWay}"/>
+                    <Label Content="Suffix:"/>
+                    <TextBox Width="150" Text="{Binding HbtFile.Suffix, Mode=TwoWay}"/>
+                    <Label Content="Verbose:"/>
+                    <CheckBox IsChecked="{Binding HbtFile.Verbose, Mode=TwoWay}"/>
+                </StackPanel>
+            </DockPanel>
+        </GroupBox>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="760"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="*" MinWidth="1000"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- NRO/PRC -->
+            <GroupBox Grid.Row="1" Header="File Research" Padding="3">
+                <TabControl>
+                    <TabItem Header="NRO">
+                        <ContentControl Content="{Binding NROVM}" />
+                    </TabItem>
+                    <TabItem Header="PRC">
+                        <ContentControl Content="{Binding NROPRC}" />
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+
+            <!-- Splitter -->
+            <GridSplitter Background="White"  ResizeDirection="Columns" Grid.Column="1"
+    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  ResizeBehavior="PreviousAndNext" />
+
+            <!-- HashCrack -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+                <ContentControl Grid.Row="0" Content="{Binding HackCrackVM}" />
+                <Grid Grid.Row="1" Margin="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" Content="START USING CPU" Command="{Binding StartBruteforceCommand}"/>
+                    <Button Grid.Column="3" Content="START USING HASHCAT" Command="{Binding StartBruteforceHashcatCommand}" IsEnabled="{c:Binding 'SelectedAttackType != \'Dictionary\''}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
