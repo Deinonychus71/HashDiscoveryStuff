@@ -1,6 +1,5 @@
 ﻿using HashRelationalResearch.GUI.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace HashRelationalResearch.GUI.Helpers

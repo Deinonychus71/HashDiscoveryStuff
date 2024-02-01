@@ -318,7 +318,7 @@ namespace BruteForceHash.CombinationGenerator
                                 soFar++;
                             }
 
-                            if(!alreadyFoundMap.TryGetValue(remainingLength, out List<string> subCombinations))
+                            if (!alreadyFoundMap.TryGetValue(remainingLength, out List<string> subCombinations))
                             {
                                 subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength, wordsSoFar + 1, longerWordsFirst, soFar);
                             }

@@ -32,7 +32,7 @@ namespace HashRelationalResearch.GUI.Helpers
         {
             return
             [
-                new CharsetModelView() { Name = nameof(SmashCommon), Value=SmashCommon },
+                new CharsetModelView() { Name = nameof(SmashCommon), Value = SmashCommon },
                 new CharsetModelView() { Name = nameof(ASCIILowerCase), Value = ASCIILowerCase },
                 new CharsetModelView() { Name = nameof(ASCIIUpperCase), Value = ASCIIUpperCase },
                 new CharsetModelView() { Name = nameof(ASCIIDigits), Value = ASCIIDigits },

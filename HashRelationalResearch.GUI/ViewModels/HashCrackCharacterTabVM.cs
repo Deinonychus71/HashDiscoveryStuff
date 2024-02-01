@@ -3,11 +3,7 @@ using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -61,7 +57,6 @@ namespace HashRelationalResearch.GUI.ViewModels
 
         public HashCrackCharacterTabVM()
         {
-            ListGenerators.GetIntegerList(-30, 0);
             CharsetItemCheckedCommand = new RelayCommand(SaveCharsets);
             ValidCharsChanged = new RelayCommand(RefreshPreview);
             ValidStartingCharsChanged = new RelayCommand(RefreshPreview);

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace HashRelationalResearch.GUI.Models
 {
@@ -145,13 +144,13 @@ namespace HashRelationalResearch.GUI.Models
     public class HbtFileHybridAttack
     {
         public bool IgnoreSizeFilters { get; set; } = false;
-        public int BruteforceMinChars { get; set; }
-        public int BruteforceMaxChars { get; set; }
+        public int BruteforceMinChars { get; set; } = 0;
+        public int BruteforceMaxChars { get; set; } = 7;
         public string ValidChars { get; set; } = "etainoshrdlucmfwygpbvkqjxz_";
         public string ValidStartingChars { get; set; } = "etainoshrdlucmfwygpbvkqjxz";
         public List<string> Charsets { get; set; } = [];
-        public int WordsInHash { get; set; }
-        public int MinCharHashcatThreshold { get; set; }
+        public int WordsInHash { get; set; } = 1;
+        public int MinCharHashcatThreshold { get; set; } = 7;
         public HbtFileHybridDictionary Dictionary { get; set; } = new();
         public HbtFileHybridDictionary DictionaryFirstWord { get; set; } = new();
         public HbtFileHybridDictionary DictionaryLastWord { get; set; } = new();
@@ -159,8 +158,8 @@ namespace HashRelationalResearch.GUI.Models
 
     public class HbtFileHybridDictionary
     {
-        public bool UseDictionary { get; set; }
-        public bool UseResearchWords { get; set; } = false;
+        public bool UseDictionary { get; set; } = false;
+        public bool UseResearchWords { get; set; } = true;
         public List<string> Words { get; set; } = [];
     }
 }

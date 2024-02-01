@@ -2,7 +2,6 @@
 using HashRelationalResearch.GUI.Helpers;
 using HashRelationalResearch.GUI.Models;
 using HashRelationalResearch.GUI.Services.Interfaces;
-using System.Runtime.CompilerServices;
 
 namespace HashRelationalResearch.GUI.ViewModels
 {
@@ -175,6 +174,7 @@ namespace HashRelationalResearch.GUI.ViewModels
                 var entry = _hashDBService.GetEntry(_hbtFile.HexValue);
                 isUseResearchWordsEnabled = entry != null && (entry.PRCFiles.Count > 0 || entry.CFiles.Count > 0);
             }
+            _hybridVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
             _mainDictionaryVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
             _firstWordVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;
             _lastWordVM.IsUseResearchWordsEnabled = isUseResearchWordsEnabled;

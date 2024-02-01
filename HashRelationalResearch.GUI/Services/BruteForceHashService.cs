@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace HashRelationalResearch.GUI.Services
 {
@@ -174,7 +173,7 @@ namespace HashRelationalResearch.GUI.Services
             //Character only
             if (useMethodCharacter)
             {
-                if(!useHashCat)
+                if (!useHashCat)
                     options.UseUTF8 = hbtFile.CharacterAttack.EnableUtf8;
                 options.UseHashcat = useHashCat;
 

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
               xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="400">
     <Grid>
@@ -83,13 +84,109 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Dictionary">
+                <Grid Margin="10,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="85"></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="75"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                    </Grid.RowDefinitions>
 
+                    <!-- Left Panel -->
+                    <CheckBox Grid.Row="0" Grid.Column="0" Content="Use" IsChecked="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=TwoWay}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="0" Content="Use Research Words" IsChecked="{Binding HbtFileHybridAttack.Dictionary.UseResearchWords, Mode=TwoWay}">
+                        <CheckBox.IsEnabled>
+                            <MultiBinding Converter="{StaticResource booleanAndConverter}">
+                                <Binding Path="HbtFileHybridAttack.Dictionary.UseDictionary" />
+                                <Binding Path="IsUseResearchWordsEnabled"  />
+                            </MultiBinding>
+                        </CheckBox.IsEnabled>
+                    </CheckBox>
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}">
+                        <Label Content="Bruteforce:"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="from"/>
+                            <ComboBox Width="Auto" ItemsSource="{Binding BruteforceMinCharsList, Mode=OneTime}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding HbtFileHybridAttack.BruteforceMinChars, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="up to"/>
+                            <ComboBox Width="Auto" ItemsSource="{Binding BruteforceMaxCharsList, Mode=OneTime}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding HbtFileHybridAttack.BruteforceMaxChars, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Vertical" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}">
+                        <Label Content="Combinations:"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox Width="Auto" ItemsSource="{Binding WordsInHashList, Mode=OneTime}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding HbtFileHybridAttack.WordsInHash, Mode=TwoWay}"/>
+                            <Label Content="in hash"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Vertical" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}">
+                        <Label Content="Hashcat Threshold:"/>
+                        <ComboBox Width="Auto" ItemsSource="{Binding MinCharHashcatThresholdList, Mode=OneTime}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding HbtFileHybridAttack.MinCharHashcatThreshold, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <CheckBox Grid.Row="6" Grid.Column="0" Content="Bypass Size Filters" IsChecked="{Binding HbtFileHybridAttack.IgnoreSizeFilters, Mode=TwoWay}" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}"/>
+                    <!-- Right Panel -->
+                    <TextBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="12" Height="Auto" Width="Auto" VerticalContentAlignment="Top" VerticalAlignment="Stretch" AcceptsReturn="True" Text="{Binding MainDictWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}"/>
+                </Grid>
             </TabItem>
             <TabItem Header="First Word Overrides">
+                <Grid Margin="10,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
 
+                    <!-- Left Panel -->
+                    <CheckBox Grid.Row="0" Grid.Column="0" Content="Use" IsChecked="{Binding HbtFileHybridAttack.DictionaryFirstWord.UseDictionary, Mode=TwoWay}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="0" Content="Use Research Words" IsChecked="{Binding HbtFileHybridAttack.DictionaryFirstWord.UseResearchWords, Mode=TwoWay}">
+                        <CheckBox.IsEnabled>
+                            <MultiBinding Converter="{StaticResource booleanAndConverter}">
+                                <Binding Path="HbtFileHybridAttack.DictionaryFirstWord.UseDictionary" />
+                                <Binding Path="IsUseResearchWordsEnabled"  />
+                            </MultiBinding>
+                        </CheckBox.IsEnabled>
+                    </CheckBox>
+                    <!-- Right Panel -->
+                    <TextBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="12" Height="Auto" Width="Auto" VerticalContentAlignment="Top" VerticalAlignment="Stretch" AcceptsReturn="True" Text="{Binding FirstDictWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HbtFileHybridAttack.DictionaryFirstWord.UseDictionary, Mode=OneWay}"/>
+                </Grid>
             </TabItem>
             <TabItem Header="Last Word Overrides">
+                <Grid Margin="10,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
 
+                    <!-- Left Panel -->
+                    <CheckBox Grid.Row="0" Grid.Column="0" Content="Use" IsChecked="{Binding HbtFileHybridAttack.DictionaryLastWord.UseDictionary, Mode=TwoWay}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="0" Content="Use Research Words" IsChecked="{Binding HbtFileHybridAttack.DictionaryLastWord.UseResearchWords, Mode=TwoWay}">
+                        <CheckBox.IsEnabled>
+                            <MultiBinding Converter="{StaticResource booleanAndConverter}">
+                                <Binding Path="HbtFileHybridAttack.DictionaryLastWord.UseDictionary" />
+                                <Binding Path="IsUseResearchWordsEnabled"  />
+                            </MultiBinding>
+                        </CheckBox.IsEnabled>
+                    </CheckBox>
+                    <!-- Right Panel -->
+                    <TextBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="12" Height="Auto" Width="Auto" VerticalContentAlignment="Top" VerticalAlignment="Stretch" AcceptsReturn="True" Text="{Binding LastDictWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HbtFileHybridAttack.DictionaryLastWord.UseDictionary, Mode=OneWay}"/>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
