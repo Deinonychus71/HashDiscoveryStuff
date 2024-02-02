@@ -113,7 +113,12 @@ namespace BruteForceHash.GUI.ViewModels
                 var prcFile = entry.PRCFiles.FirstOrDefault();
                 var type = prcFile?.Type;
                 var prcFileName = prcFile?.File;
+                if (entry.PRCFiles.Count > 1)
+                    prcFileName += $" ({entry.PRCFiles.Count} files)";
+
                 var cFileName = entry.CFiles.FirstOrDefault()?.File;
+                if (entry.CFiles.Count > 1)
+                    cFileName += $" ({entry.CFiles.Count} files)";
 
                 string? label = null;
                 if (ShouldOnlyShowRelated)
