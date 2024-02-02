@@ -258,7 +258,7 @@ namespace BruteForceHash.GUI.Services
                     if (researchDictionaryPath != null)
                         dictionaries.Add(researchDictionaryPath);
                 }
-                return string.Join(';', dictionaries);
+                return dictionaries.Count > 0 ? string.Join(';', dictionaries) : ";";
             }
             return null;
         }

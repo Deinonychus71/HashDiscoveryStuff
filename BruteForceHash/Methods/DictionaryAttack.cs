@@ -213,7 +213,7 @@ namespace BruteForceHash.Methods
             if (_options.MaxConcatenatedWords > 0)
             {
                 _logger.Log($"Concatenated Words: Between {_options.MinConcatenatedWords} and {_options.MaxConcatenatedWords}");
-                _logger.Log($"Consecutive Concatenation Limit: Between {_options.MinConsecutiveConcatenation} and  {_options.MaxConsecutiveConcatenation}");
+                _logger.Log($"Consecutive Concatenation Limit: Between {_options.MinConsecutiveConcatenation} and {_options.MaxConsecutiveConcatenation}");
                 _logger.Log($"Max Consecutive Ones: {_options.MaxConsecutiveOnes}");
                 _logger.Log($"Words Limit: Between {_options.MinWordsLimit} and {_options.WordsLimit}");
                 _logger.Log($"Only First Two Words Concatenated: {_options.ConcatenateFirstTwoWords}");

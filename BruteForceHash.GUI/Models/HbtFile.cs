@@ -91,7 +91,8 @@ namespace BruteForceHash.GUI.Models
     {
         public HbtFileDictionary DictionaryMain { get; set; } = new()
         {
-            UseDictionary = true
+            UseDictionary = true,
+            UseResearchWords = true
         };
         public HbtFileDictionary DictionaryFirstWord { get; set; } = new();
         public HbtFileDictionary DictionaryLastWord { get; set; } = new();
@@ -105,7 +106,7 @@ namespace BruteForceHash.GUI.Models
         public bool SkipSpecials { get; set; } = true;
         public bool ForceLowercase { get; set; } = true;
         public bool AddTypos { get; set; } = false;
-        public bool UseResearchWords { get; set; } = true;
+        public bool UseResearchWords { get; set; } = false;
         public bool ReverseOrder { get; set; } = false;
 
         public bool UseCustomWords { get; set; } = false;
@@ -151,7 +152,11 @@ namespace BruteForceHash.GUI.Models
         public List<string> Charsets { get; set; } = [];
         public int WordsInHash { get; set; } = 1;
         public int MinCharHashcatThreshold { get; set; } = 7;
-        public HbtFileHybridDictionary Dictionary { get; set; } = new();
+        public HbtFileHybridDictionary Dictionary { get; set; } = new()
+        {
+            UseDictionary = true,
+            UseResearchWords = true
+        };
         public HbtFileHybridDictionary DictionaryFirstWord { get; set; } = new();
         public HbtFileHybridDictionary DictionaryLastWord { get; set; } = new();
     }
