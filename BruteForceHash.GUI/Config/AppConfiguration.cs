@@ -6,5 +6,6 @@
         public string HashcatFilePath { get; set; } = string.Empty;
         public string PrcRootPath { get; set; } = string.Empty;
         public string DiscoveredHashesPath { get; set; } = string.Empty;
+        public string BlacklistFilePath { get; set; } = string.Empty;
     }
 }

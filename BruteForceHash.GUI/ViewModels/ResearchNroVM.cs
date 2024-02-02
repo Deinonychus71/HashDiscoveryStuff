@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using BruteForceHash.GUI.Helpers;
+﻿using BruteForceHash.GUI.Helpers;
 using BruteForceHash.GUI.Services.Interfaces;
+using CommunityToolkit.Mvvm.Input;
 using HashRelationalResearch.Models;
 using System.Collections.Generic;
 using System.Linq;

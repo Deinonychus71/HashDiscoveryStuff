@@ -50,7 +50,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
-                <Button Content="Save Label" Command="{Binding SaveLabelCommand}" IsEnabled="{Binding IsLabelChangedSuccess, Mode=OneWay}"/>
+                <Button Content="Save Label" Padding="5" Command="{Binding SaveLabelCommand}" IsEnabled="{Binding IsLabelChangedSuccess, Mode=OneWay}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Grid.Row="0" Grid.Column="2" Header="Attack Parameters" Padding="5px">
@@ -91,12 +91,9 @@
             <!-- NRO/PRC -->
             <GroupBox Grid.Row="1" Header="File Research" Padding="3">
                 <TabControl>
-                    <TabItem Header="NRO">
-                        <ContentControl Content="{Binding NROVM}" />
-                    </TabItem>
-                    <TabItem Header="PRC">
-                        <ContentControl Content="{Binding NROPRC}" />
-                    </TabItem>
+                    <TabItem Header="NRO" Content="{Binding NROVM, Mode=OneTime}"/>
+                    <TabItem Header="PRC" Content="{Binding NROPRC, Mode=OneTime}"/>
+                    <TabItem Header="Hashes" Content="{Binding HashesVM, Mode=OneTime}"/>
                 </TabControl>
             </GroupBox>
 

@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using BruteForceHash.GUI.Helpers;
+﻿using BruteForceHash.GUI.Helpers;
 using BruteForceHash.GUI.Models;
 using BruteForceHash.GUI.Services.Interfaces;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 

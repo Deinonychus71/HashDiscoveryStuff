@@ -1,9 +1,9 @@
-﻿using BruteForceHash.Helpers;
-using CommunityToolkit.Mvvm.Input;
-using HashCommon;
-using BruteForceHash.GUI.Helpers;
+﻿using BruteForceHash.GUI.Helpers;
 using BruteForceHash.GUI.Models;
 using BruteForceHash.GUI.Services.Interfaces;
+using BruteForceHash.Helpers;
+using CommunityToolkit.Mvvm.Input;
+using HashCommon;
 using HashRelationalResearch.Models;
 
 namespace BruteForceHash.GUI.ViewModels
@@ -18,6 +18,7 @@ namespace BruteForceHash.GUI.ViewModels
         private readonly IDialogService _dialogService;
         private ResearchNroVM _nroVM;
         private ResearchPrcVM _prcVM;
+        private ResearchHashesGridVM _hashesVM;
         private HashCrackVM _hashCrackVM;
         private HbtFile? _hbtFile;
 
@@ -62,6 +63,16 @@ namespace BruteForceHash.GUI.ViewModels
             {
                 _nroVM = value;
                 OnPropertyChanged(nameof(NROVM));
+            }
+        }
+
+        public ResearchHashesGridVM HashesVM
+        {
+            get => _hashesVM;
+            set
+            {
+                _hashesVM = value;
+                OnPropertyChanged(nameof(HashesVM));
             }
         }
 
@@ -187,10 +198,11 @@ namespace BruteForceHash.GUI.ViewModels
         public IRelayCommand StartBruteforceHashcatCommand { get; private set; }
         #endregion
 
-        public ResearchTabVM(IHashDBService hashDBService, IHbtFileService hbtFileService, IDialogService dialogService,
+        public ResearchTabVM(IHashDBService hashDBService, IHbtFileService hbtFileService, IDialogService dialogService, ResearchHashesGridVM researchHashesGridVM,
            IBruteForceHashService bruteForceHashService, ResearchNroVM researchNroVM, ResearchPrcVM researchPrcVM, HashCrackVM hashCrackVM)
         {
             _bruteForceHashService = bruteForceHashService;
+            _hashesVM = researchHashesGridVM;
             _hashDBService = hashDBService;
             _hbtFileService = hbtFileService;
             _dialogService = dialogService;
@@ -295,6 +307,9 @@ namespace BruteForceHash.GUI.ViewModels
                 _nroVM.LoadFiles(_exportEntry.CFiles);
                 _prcVM.LoadFiles(_exportEntry.PRCFiles);
             }
+
+            if (!string.IsNullOrEmpty(_exportEntry?.Hash40Hex))
+                _hashesVM.SetCurrentHash40(_exportEntry.Hash40Hex);
         }
 
         private void LoadNewHash()

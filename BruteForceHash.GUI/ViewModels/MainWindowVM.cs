@@ -1,5 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using BruteForceHash.GUI.Services.Interfaces;
+﻿using BruteForceHash.GUI.Services.Interfaces;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

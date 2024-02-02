@@ -1,4 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Editing;
+using ICSharpCode.AvalonEdit.Search;
 using System.ComponentModel;
 using System.Windows;
 
@@ -7,7 +9,6 @@ namespace BruteForceHash.GUI.Helpers
 {
     public class MvvmTextEditor : TextEditor, INotifyPropertyChanged
     {
-
         public static DependencyProperty TextProperty =
 
             DependencyProperty.Register("Text", typeof(string), typeof(MvvmTextEditor),
@@ -28,6 +29,11 @@ namespace BruteForceHash.GUI.Helpers
         public void RaisePropertyChanged(string info)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        }
+
+        public MvvmTextEditor() : base(new TextArea())
+        {
+            SearchPanel.Install(TextArea);
         }
     }
 }

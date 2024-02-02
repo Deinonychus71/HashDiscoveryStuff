@@ -29,4 +29,8 @@
     <DataTemplate DataType="{x:Type vm:HashCrackHybridTabVM}">
         <uc:HashCrackHybridTab />
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ResearchHashesGridVM}">
+        <uc:ResearchHashesGrid />
+    </DataTemplate>
 </ResourceDictionary>

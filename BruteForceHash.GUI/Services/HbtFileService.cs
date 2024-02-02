@@ -1,6 +1,6 @@
-﻿using HashCommon;
-using BruteForceHash.GUI.Models;
+﻿using BruteForceHash.GUI.Models;
 using BruteForceHash.GUI.Services.Interfaces;
+using HashCommon;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

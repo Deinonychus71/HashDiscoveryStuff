@@ -1,7 +1,7 @@
-﻿using BruteForceHash.Helpers;
-using BruteForceHash.GUI.Helpers;
+﻿using BruteForceHash.GUI.Helpers;
 using BruteForceHash.GUI.Models;
 using BruteForceHash.GUI.Services.Interfaces;
+using BruteForceHash.Helpers;
 
 namespace BruteForceHash.GUI.ViewModels
 {

@@ -1,9 +1,9 @@
-﻿using BruteForceHash.Helpers;
-using CommandLine;
-using HashCommon;
-using BruteForceHash.GUI.Helpers;
+﻿using BruteForceHash.GUI.Helpers;
 using BruteForceHash.GUI.Models;
 using BruteForceHash.GUI.Services.Interfaces;
+using BruteForceHash.Helpers;
+using CommandLine;
+using HashCommon;
 using HashRelationalResearch.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -319,46 +319,13 @@ namespace BruteForceHash.GUI.Services
 
             if (hashEntry != null)
             {
-                //Create dictionary based on CFiles
-                foreach (var cFile in hashEntry.CFiles)
+                var relatedEntries = _hashDBService.GetEntriesRelatedToHash(hashEntry.Hash40Hex);
+                foreach (var relatedEntry in relatedEntries)
                 {
-                    var functionIds = cFile.Instances.Select(p => p.FunctionId);
-                    var functionHashes = _hashDBService.GetFunctions(cFile.File, functionIds);
-                    if (functionHashes != null)
-                    {
-                        var hashes = functionHashes.SelectMany(p => p.Hashes);
-                        if (hashes != null)
-                        {
-                            foreach (var hash40 in hashes)
-                            {
-                                var label = _hashDBService.GetLabel(hash40);
-                                if (!string.IsNullOrEmpty(label))
-                                {
-                                    word.AddRange(WordsParsing.SplitWords(label));
-                                }
-                            }
-                        }
-                    }
+                    var label = _hashDBService.GetLabel(relatedEntry.Hash40Hex);
+                    if (!string.IsNullOrEmpty(label))
+                        word.AddRange(WordsParsing.SplitWords(label));
                 }
-
-                //Create dictionary based on PRC
-                foreach (var prc in hashEntry.PRCFiles)
-                {
-                    var entriesWithSameFilePath = _hashDBService.GetEntriesByPRCFile(prc.File);
-                    if (entriesWithSameFilePath != null)
-                    {
-                        foreach (var prcEntry in entriesWithSameFilePath)
-                        {
-                            var label = _hashDBService.GetLabel(prcEntry.Hash40Hex);
-                            if (!string.IsNullOrEmpty(label))
-                            {
-                                word.AddRange(WordsParsing.SplitWords(label));
-                            }
-                        }
-                    }
-                }
-
-
             }
 
             return word.Distinct().OrderBy(p => p);

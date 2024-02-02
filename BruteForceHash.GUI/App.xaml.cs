@@ -49,6 +49,7 @@ namespace BruteForceHash.GUI
                 { "DiscoveredHashesPath", "DiscoveredHashes" },
                 { "PrcRootPath", "root" },
                 { "HashDBFilePath", "db.bin" },
+                { "BlacklistFilePath", "blacklist.txt" },
                 { "HashcatFilePath", "Hashcat/hashcat.exe" }
             };
             return output;
@@ -65,6 +66,7 @@ namespace BruteForceHash.GUI
             services.AddSingleton<IDictionaryService, DictionaryService>();
             services.AddSingleton<IBruteForceHashService, BruteForceHashService>();
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<IBlacklistService, BlacklistService>();
             services.AddSingleton<IHbtFileService, HbtFileService>();
 
             services.AddScoped<MainWindow>();
@@ -75,6 +77,7 @@ namespace BruteForceHash.GUI
             services.AddTransient<HashCrackVM>();
             services.AddTransient<HashCrackDictionaryTabVM>();
             services.AddTransient<HashCrackCharacterTabVM>();
+            services.AddTransient<ResearchHashesGridVM>();
             services.AddTransient<HashCrackHybridTabVM>();
 
             return services;

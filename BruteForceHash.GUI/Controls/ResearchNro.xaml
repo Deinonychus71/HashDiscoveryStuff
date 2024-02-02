@@ -7,7 +7,7 @@
              xmlns:h="clr-namespace:BruteForceHash.GUI.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Grid.Column="2" Background="WhiteSmoke">
+    <Grid Grid.Column="2">
         <Grid.RowDefinitions>
             <RowDefinition Height="30px"/>
             <RowDefinition Height="*"/>
@@ -29,10 +29,9 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
-            <Label Content="Display Labels:" />
-            <CheckBox IsChecked="{Binding ShouldDisplayKnownLabels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding CFunctionSelected}" CommandParameter="{Binding SelectedCFunctionEntry, Mode=OneWay}"/>
+            <Label Content="Show Labels:" />
+            <CheckBox IsChecked="{Binding ShouldDisplayKnownLabels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding CFunctionSelected}" CommandParameter="{Binding SelectedCFunctionEntry, Mode=OneWay}" Margin="0,0,10,0"/>
         </StackPanel>
-
         <h:MvvmTextEditor Grid.Row="1" IsReadOnly="True" ShowLineNumbers="true" Text="{Binding CodeEditorText, Mode=OneWay}" SyntaxHighlighting="C++" FontFamily="Consolas" FontSize="10pt" />
     </Grid>
 </UserControl>

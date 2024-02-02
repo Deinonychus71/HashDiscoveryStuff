@@ -1,6 +1,6 @@
-﻿using HashCommon;
-using BruteForceHash.GUI.Helpers;
+﻿using BruteForceHash.GUI.Helpers;
 using BruteForceHash.GUI.Services.Interfaces;
+using HashCommon;
 using HashRelationalResearch.Models;
 using ProtoBuf;
 using System;
@@ -56,6 +56,12 @@ namespace BruteForceHash.GUI.Services
             return false;
         }
 
+        public void RemoveEntry(string hash40)
+        {
+            _entries.Remove(hash40);
+
+        }
+
         public void RefreshPRCLabels()
         {
             prcEditor.MainWindow.HashToStringLabels.Clear();
@@ -100,6 +106,43 @@ namespace BruteForceHash.GUI.Services
             if (hash.StartsWith("0x") && _entries.TryGetValue(hash, out ExportEntry? value))
                 return value;
             return null;
+        }
+
+        public IEnumerable<ExportEntry> GetEntriesRelatedToHash(string hash)
+        {
+            var output = new List<ExportEntry>();
+            var hashEntry = GetEntry(hash);
+
+            if (hashEntry != null)
+            {
+                //Create dictionary based on CFiles
+                foreach (var cFile in hashEntry.CFiles)
+                {
+                    var functionIds = cFile.Instances.Select(p => p.FunctionId);
+                    var functionHashes = GetFunctions(cFile.File, functionIds);
+                    if (functionHashes != null)
+                    {
+                        var hashes = functionHashes.SelectMany(p => p.Hashes.Select(p => GetEntry(p))).Where(p => p != null);
+                        if (hashes != null)
+                            output.AddRange(hashes!);
+                    }
+                }
+
+                //Create dictionary based on PRC
+                foreach (var prc in hashEntry.PRCFiles)
+                {
+                    var entriesWithSameFilePath = GetEntriesByPRCFile(prc.File);
+                    if (entriesWithSameFilePath != null)
+                        output.AddRange(entriesWithSameFilePath);
+                }
+            }
+
+            return output;
+        }
+
+        public IEnumerable<ExportEntry> GetUncrackedEntries()
+        {
+            return _entries.Values.Where(p => !_labels.ContainsKey(p.Hash40Hex));
         }
 
         public IEnumerable<ExportEntry> GetEntriesByPRCFile(string file)
