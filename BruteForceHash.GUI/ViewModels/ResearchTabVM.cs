@@ -230,6 +230,7 @@ namespace BruteForceHash.GUI.ViewModels
                 HashValue = hbtFile.HexValue;
                 _hashCrackVM.LoadHbtFile(hbtFile);
                 LoadNewHash();
+                ChangeAttackType();
             }
         }
 
@@ -242,6 +243,7 @@ namespace BruteForceHash.GUI.ViewModels
                     _dialogService.ShowMessage($"Successfully saved '{_hbtFile.HexValue},{_hbtFile.HexLabel}'.");
                     _hashLabelSaved = _hbtFile.HexLabel;
                     _nroVM.RefreshCurrentFunction();
+                    _hashesVM.RefreshList();
                     TestHashLabel();
                 }
                 else

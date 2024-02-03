@@ -137,7 +137,7 @@ namespace BruteForceHash.GUI.Services
                 }
             }
 
-            return output;
+            return output.Distinct();
         }
 
         public IEnumerable<ExportEntry> GetUncrackedEntries()

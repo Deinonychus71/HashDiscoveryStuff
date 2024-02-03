@@ -8,7 +8,7 @@
         public string? CFile { get; private set; }
         public string? PRCFile { get; private set; }
         public bool IsSuspicious { get; private set; }
-        public bool CanBeBlacklisted { get { return string.IsNullOrEmpty(PRCFile); } }
+        public bool CanBeBlacklisted { get { return string.IsNullOrEmpty(PRCFile) && string.IsNullOrEmpty(Label); } }
 
         public ResearchHashItemView(string hash40, string? label, string? type, string? cFile, string? prcFile, bool isSuspicious)
         {

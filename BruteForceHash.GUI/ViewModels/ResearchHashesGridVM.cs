@@ -15,14 +15,32 @@ namespace BruteForceHash.GUI.ViewModels
         private readonly IBlacklistService _blacklistService;
         private readonly IDialogService _dialogService;
 
+        private string? _cacheSourceType;
+        private string? _cacheCurrentHash40;
+        private bool _cacheShouldShowSuspicious;
+        private bool _cacheShouldOnlyShowRelated;
+
         private string _sourceType;
+        private string _hashesInfo = string.Empty;
+        private int _knownHashes = 0;
         private string? _currentHash40;
         private bool _shouldShowSuspicious = false;
         private bool _shouldOnlyShowRelated = false;
+        private bool _shouldAutoRefresh = true;
         #endregion
 
         #region Properties
         public ObservableCollection<ResearchHashItemView> Items { get; private set; } = [];
+
+        public string HashesInfo
+        {
+            get => _hashesInfo;
+            set
+            {
+                _hashesInfo = value;
+                OnPropertyChanged(nameof(HashesInfo));
+            }
+        }
 
         public string SourceType
         {
@@ -41,6 +59,16 @@ namespace BruteForceHash.GUI.ViewModels
             {
                 _shouldShowSuspicious = value;
                 OnPropertyChanged(nameof(ShouldShowSuspicious));
+            }
+        }
+
+        public bool ShouldAutoRefresh
+        {
+            get => _shouldAutoRefresh;
+            set
+            {
+                _shouldAutoRefresh = value;
+                OnPropertyChanged(nameof(ShouldAutoRefresh));
             }
         }
 
@@ -68,9 +96,9 @@ namespace BruteForceHash.GUI.ViewModels
             _sourceType = "all";
 
             BlacklistClickedCommand = new RelayCommand<ResearchHashItemView?>(WriteToBlacklist);
-            ReloadCommand = new RelayCommand(LoadList);
+            ReloadCommand = new RelayCommand(RefreshList);
 
-            LoadList();
+            RefreshList();
 
         }
 
@@ -78,36 +106,45 @@ namespace BruteForceHash.GUI.ViewModels
         {
             _currentHash40 = hash40;
             if (ShouldOnlyShowRelated)
-                LoadList();
+                RefreshList();
         }
 
-        public void LoadList()
+        public void RefreshList()
         {
+            if (ShouldAutoRefresh || Items.Count == 0)
+            {
+                _cacheSourceType = SourceType;
+                _cacheCurrentHash40 = _currentHash40;
+                _cacheShouldOnlyShowRelated = ShouldOnlyShowRelated;
+                _cacheShouldShowSuspicious = ShouldShowSuspicious;
+            }
+
             Items.Clear();
 
             IEnumerable<ExportEntry> entries;
-            if (ShouldOnlyShowRelated)
+            if (_cacheShouldOnlyShowRelated)
             {
-                if (!string.IsNullOrEmpty(_currentHash40))
-                    entries = _hashDBService.GetEntriesRelatedToHash(_currentHash40);
+                if (!string.IsNullOrEmpty(_cacheCurrentHash40))
+                    entries = _hashDBService.GetEntriesRelatedToHash(_cacheCurrentHash40);
                 else
                     entries = new List<ExportEntry>();
             }
             else
                 entries = _hashDBService.GetUncrackedEntries();
 
+            _knownHashes = 0;
             foreach (var entry in entries)
             {
-                if (!ShouldShowSuspicious && entry.SuspiciousHex)
+                if (!_cacheShouldShowSuspicious && entry.SuspiciousHex)
                     continue;
 
-                if (SourceType == "prc" && entry.PRCFiles.Count == 0)
+                if (_cacheSourceType == "prc" && entry.PRCFiles.Count == 0)
                     continue;
 
-                if (SourceType == "nro" && entry.CFiles.Count == 0)
+                if (_cacheSourceType == "nro" && entry.CFiles.Count == 0)
                     continue;
 
-                if (SourceType == "prc_nro" && (entry.CFiles.Count == 0 || entry.PRCFiles.Count == 0))
+                if (_cacheSourceType == "prc_nro" && (entry.CFiles.Count == 0 || entry.PRCFiles.Count == 0))
                     continue;
 
                 var prcFile = entry.PRCFiles.FirstOrDefault();
@@ -121,11 +158,25 @@ namespace BruteForceHash.GUI.ViewModels
                     cFileName += $" ({entry.CFiles.Count} files)";
 
                 string? label = null;
-                if (ShouldOnlyShowRelated)
+                if (_cacheShouldOnlyShowRelated)
+                {
                     label = _hashDBService.GetLabel(entry.Hash40Hex);
+                    if(!string.IsNullOrEmpty(label))
+                        _knownHashes++;
+                }
 
                 Items.Add(new ResearchHashItemView(entry.Hash40Hex, label, type, cFileName, prcFileName, entry.SuspiciousHex));
             }
+
+            UpdateHashesInfo();
+        }
+
+        private void UpdateHashesInfo()
+        {
+            if (_cacheShouldOnlyShowRelated)
+                HashesInfo = $"{_knownHashes}/{Items.Count} hashes known";
+            else
+                HashesInfo = $"{Items.Count} hashes";
         }
 
         private void WriteToBlacklist(ResearchHashItemView? researchHashItem)
@@ -137,6 +188,7 @@ namespace BruteForceHash.GUI.ViewModels
                     _blacklistService.AddToBlackList(researchHashItem.Hash40);
                     _dialogService.ShowMessage($"'{researchHashItem.Hash40}' was added to the blacklist.");
                     Items.Remove(researchHashItem);
+                    UpdateHashesInfo();
                 }
             }
         }

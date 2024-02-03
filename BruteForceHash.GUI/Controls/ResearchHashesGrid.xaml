@@ -12,31 +12,38 @@
             <RowDefinition Height="30px"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0"  Orientation="Horizontal">
-            <Label Content="File:" />
-            <ComboBox ItemsSource="{Binding SourceList, Mode=OneTime}" SelectedValue="{Binding SourceType, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value" Width="200">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding ReloadCommand, Mode=OneTime}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ComboBox>
-            <Label Content="Show Suspicious:" />
-            <CheckBox IsChecked="{Binding ShouldShowSuspicious, Mode=TwoWay}" Command="{Binding ReloadCommand, Mode=OneTime}" Margin="0,0,10,0"/>
-            <Label Content="Show Related to Hash:" />
-            <CheckBox IsChecked="{Binding ShouldOnlyShowRelated, Mode=TwoWay}" Command="{Binding ReloadCommand, Mode=OneTime}" Margin="0,0,10,0"/>
-        </StackPanel>
+        <DockPanel Grid.Row="0">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <Label Content="File:" />
+                <ComboBox ItemsSource="{Binding SourceList, Mode=OneTime}" SelectedValue="{Binding SourceType, Mode=TwoWay}" IsEnabled="{Binding ShouldAutoRefresh, Mode=OneWay}" DisplayMemberPath="Label" SelectedValuePath="Value" Width="200">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding ReloadCommand, Mode=OneTime}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+                <Label Content="Show Suspicious:" />
+                <CheckBox IsChecked="{Binding ShouldShowSuspicious, Mode=TwoWay}" IsEnabled="{Binding ShouldAutoRefresh, Mode=OneWay}" Command="{Binding ReloadCommand, Mode=OneTime}" Margin="0,0,10,0"/>
+                <Label Content="Show Related to Hash:" />
+                <CheckBox IsChecked="{Binding ShouldOnlyShowRelated, Mode=TwoWay}" IsEnabled="{Binding ShouldAutoRefresh, Mode=OneWay}" Command="{Binding ReloadCommand, Mode=OneTime}" Margin="0,0,10,0"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Label Content="Refresh:" />
+                <CheckBox IsChecked="{Binding ShouldAutoRefresh, Mode=TwoWay}" Margin="0,0,10,0"/>
+                <Label DockPanel.Dock="Right"  HorizontalAlignment="Right" Content="{Binding HashesInfo, Mode=OneWay}"/>
+            </StackPanel>
+        </DockPanel>
         <DataGrid Grid.Row="1" EnableRowVirtualization="True" CanUserSortColumns="True" AutoGenerateColumns="False" CanUserResizeColumns="True" ClipboardCopyMode="ExcludeHeader" ItemsSource="{Binding Items, Mode=OneWay}">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Hash40">
+                <DataGridTemplateColumn Header="Hash40" CanUserSort="True" SortMemberPath="Hash40">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox IsReadOnly="True" Margin="0" Padding="0" BorderThickness="0" Text="{Binding Hash40, Mode=OneTime}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Label, Mode=OneTime}" Visibility="{c:Binding ShouldOnlyShowRelated, FalseToVisibility=Hidden}" IsReadOnly="True" Header="Type" />
-                <DataGridTextColumn Binding="{Binding Type, Mode=OneTime}" IsReadOnly="True" Header="Label" />
+                <DataGridTextColumn Binding="{Binding Label, Mode=OneTime}" IsReadOnly="True" Header="Label" />
+                <DataGridTextColumn Binding="{Binding Type, Mode=OneTime}" IsReadOnly="True" Header="Type" />
                 <DataGridTextColumn Binding="{Binding CFile, Mode=OneTime}" Width="*" IsReadOnly="True" Header="CFile" />
                 <DataGridTextColumn Binding="{Binding PRCFile, Mode=OneTime}" Width="*"  IsReadOnly="True" Header="PRCFile" />
                 <DataGridCheckBoxColumn IsReadOnly="True" Binding="{Binding IsSuspicious, Mode=OneTime}" Header="Suspicious" />
