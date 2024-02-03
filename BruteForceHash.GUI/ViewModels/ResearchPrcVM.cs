@@ -19,6 +19,7 @@ namespace BruteForceHash.GUI.ViewModels
         private string? _loadedPrcFile;
         private ExportPRCFileEntry? _selectedPrcFileEntry;
         private ParamControl? _prcFile;
+        private Dictionary<string, ParamControl> _cachedPrcFiles;
         #endregion
 
         #region Properties
@@ -45,13 +46,16 @@ namespace BruteForceHash.GUI.ViewModels
         public WpfObservableRangeCollection<ExportPRCFileEntry> PrcFileEntries { get; set; }
 
         public IRelayCommand PrcFileSelected { get; }
+        public IRelayCommand PrcFileLoaded { get; }
         #endregion
 
         public ResearchPrcVM(IConfigurationService configurationService)
         {
+            _cachedPrcFiles = new Dictionary<string, ParamControl>();
             _configurationService = configurationService;
             PrcFileEntries = [];
             PrcFileSelected = new RelayCommand<string?>(LoadPRCFile);
+            //PrcFileLoaded = new RelayCommand(ExpandPRCFile);
         }
 
         public void ClearData()
@@ -77,35 +81,53 @@ namespace BruteForceHash.GUI.ViewModels
         {
             if (prcFile != null && _loadedPrcFile != prcFile)
             {
-                var t = new ParamFile();
                 var file = prcFile;
                 if (file.StartsWith('/'))
                     file = file[1..];
                 var filePath = Path.Combine(_configurationService.PrcRootPath, file.Replace('/', Path.DirectorySeparatorChar));
                 if (File.Exists(filePath))
                 {
-                    t.Open(filePath);
-                    PRCFile = new ParamControl(t.Root);
-                    Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+                    if (_cachedPrcFiles.TryGetValue(filePath, out ParamControl? prcControl))
                     {
-                        if (PRCFile.FindName("Param_TreeView") is TreeView treeView)
+                        PRCFile = prcControl;
+                    }
+                    else
+                    {
+                        Dispatcher.CurrentDispatcher.BeginInvoke(() =>
                         {
-                            foreach (var item in treeView.Items)
-                            {
-                                var childControl = treeView.ItemContainerGenerator.ContainerFromItem(item);
-                                if (childControl != null)
-                                {
-                                    if (childControl is TreeViewItem treeViewItem)
-                                    {
-                                        treeViewItem.IsExpanded = true;
-                                        //Do further expanding
-                                    }
-                                }
-                            }
-                        }
-                    });
+                            var t = new ParamFile();
+                            t.Open(filePath);
+                            var paramControl = new ParamControl(t.Root);
+                            paramControl.Loaded += ExpandPRCFile;
+                            _cachedPrcFiles.Add(filePath, paramControl);
+                            PRCFile = paramControl;
+                        });
+                    }
                     _loadedPrcFile = prcFile;
                 }
+            }
+        }
+
+        private void ExpandPRCFile(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (sender is ParamControl paramControl)
+            {
+                if (paramControl.FindName("Param_TreeView") is TreeView treeView)
+                {
+                    foreach (var item in treeView.Items)
+                    {
+                        var childControl = treeView.ItemContainerGenerator.ContainerFromItem(item);
+                        if (childControl != null)
+                        {
+                            if (childControl is TreeViewItem treeViewItem)
+                            {
+                                treeViewItem.IsExpanded = true;
+                                //Do further expanding
+                            }
+                        }
+                    }
+                }
+                paramControl.Loaded -= ExpandPRCFile;
             }
         }
     }

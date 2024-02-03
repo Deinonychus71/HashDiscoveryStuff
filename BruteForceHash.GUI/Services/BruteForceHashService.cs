@@ -21,6 +21,7 @@ namespace BruteForceHash.GUI.Services
         private readonly IConfigurationService _configurationService;
         private readonly IHashDBService _hashDBService;
         private readonly IHbtFileService _hbtFileService;
+        private readonly Dictionary<string, List<string>> _cachedSearchDictionaries = new Dictionary<string, List<string>>();
 
         public string LastCommand { get; private set; } = string.Empty;
 
@@ -29,6 +30,7 @@ namespace BruteForceHash.GUI.Services
             _configurationService = configurationService;
             _hashDBService = hashDBService;
             _hbtFileService = hbtFileService;
+            _cachedSearchDictionaries = [];
         }
 
         public bool StartProcess(HbtFile hbtFile, bool useHashCat)
@@ -313,22 +315,27 @@ namespace BruteForceHash.GUI.Services
             return null;
         }
 
-        private IEnumerable<string> GenerateResearchDictionary(ExportEntry? hashEntry)
+        public IEnumerable<string> GenerateResearchDictionary(ExportEntry? hashEntry, bool forceRefresh = false)
         {
-            var word = new List<string>();
-
             if (hashEntry != null)
             {
+                if (!forceRefresh && _cachedSearchDictionaries.TryGetValue(hashEntry.Hash40Hex, out List<string>? cachedDictionary) && cachedDictionary != null)
+                    return cachedDictionary;
+
+                var words = new List<string>();
                 var relatedEntries = _hashDBService.GetEntriesRelatedToHash(hashEntry.Hash40Hex);
                 foreach (var relatedEntry in relatedEntries)
                 {
                     var label = _hashDBService.GetLabel(relatedEntry.Hash40Hex);
                     if (!string.IsNullOrEmpty(label))
-                        word.AddRange(WordsParsing.SplitWords(label));
+                        words.AddRange(WordsParsing.SplitWords(label));
                 }
-            }
 
-            return word.Distinct().OrderBy(p => p);
+                words = [.. words.Distinct().OrderBy(p => p)];
+                _cachedSearchDictionaries.TryAdd(hashEntry.Hash40Hex, words);
+                return words;
+            }
+            return new List<string>();
         }
 
         private static IEnumerable<string> GenerateCustomDictionary(List<string> words)

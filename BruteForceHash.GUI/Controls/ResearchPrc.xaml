@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="BruteForceHash.GUI.Controls.ResearchPrc"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
@@ -13,14 +13,20 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0"  Orientation="Horizontal">
             <Label Content="File:" />
-            <ComboBox ItemsSource="{Binding PrcFileEntries, Mode=OneWay}" SelectedItem="{Binding SelectedPrcFileEntry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="File" Width="200">
+            <ComboBox ItemsSource="{Binding PrcFileEntries, Mode=OneWay}" SelectedItem="{Binding SelectedPrcFileEntry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="File" Width="400">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding PrcFileSelected}" CommandParameter="{Binding PrcFileSelected.File}" />
+                        <i:InvokeCommandAction Command="{Binding PrcFileSelected}" CommandParameter="{Binding SelectedPrcFileEntry.File, Mode=OneWay}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
         </StackPanel>
-        <ContentControl Grid.Row="1" Content="{Binding PRCFile}"/>
+        <ContentControl Grid.Row="1" Content="{Binding PRCFile, Mode=OneWay}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Loaded">
+                    <i:InvokeCommandAction Command="{Binding PrcFileLoaded, Mode=OneWay}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ContentControl>
     </Grid>
 </UserControl>

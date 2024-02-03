@@ -161,7 +161,7 @@ namespace BruteForceHash.GUI.ViewModels
                 if (_cacheShouldOnlyShowRelated)
                 {
                     label = _hashDBService.GetLabel(entry.Hash40Hex);
-                    if(!string.IsNullOrEmpty(label))
+                    if (!string.IsNullOrEmpty(label))
                         _knownHashes++;
                 }
 

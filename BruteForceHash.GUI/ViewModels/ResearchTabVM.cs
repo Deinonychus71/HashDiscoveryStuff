@@ -5,6 +5,7 @@ using BruteForceHash.Helpers;
 using CommunityToolkit.Mvvm.Input;
 using HashCommon;
 using HashRelationalResearch.Models;
+using System.Threading.Tasks;
 
 namespace BruteForceHash.GUI.ViewModels
 {
@@ -308,6 +309,11 @@ namespace BruteForceHash.GUI.ViewModels
 
                 _nroVM.LoadFiles(_exportEntry.CFiles);
                 _prcVM.LoadFiles(_exportEntry.PRCFiles);
+
+                Task.Run(() =>
+                {
+                    _bruteForceHashService.GenerateResearchDictionary(_exportEntry);
+                });
             }
 
             if (!string.IsNullOrEmpty(_exportEntry?.Hash40Hex))
