@@ -21,6 +21,8 @@ namespace BruteForceHash.GUI.Services
         private Dictionary<string, ExportEntry> _entries = [];
         private Dictionary<string, List<ExportFunctionEntry>> _functions = [];
         private Dictionary<string, string> _labels = [];
+        private readonly Dictionary<string, HashSet<ExportEntry>> _entriesPerPrc = [];
+        private readonly Dictionary<string, List<ExportEntry>> _cachedEntriesRelatedToHashes = [];
 
         public HashDBService(IConfigurationService configurationService)
         {
@@ -29,6 +31,7 @@ namespace BruteForceHash.GUI.Services
 
             LoadHashDBFile(configurationService.HashDBFilePath);
             LoadDiscoveryFiles();
+            RefreshPRCLabels();
         }
 
         public bool LoadHashDBFile(string filePath)
@@ -43,7 +46,11 @@ namespace BruteForceHash.GUI.Services
                         _entries = file.ExportEntries;
                         _functions = file.ExportFunctions;
                         _labels = file.HashLabels.ToDictionary(p => p.Key, p => p.Value.Label);
-                        RefreshPRCLabels();
+                        if (prcEditor.MainWindow.HashToStringLabels.Count != 0)
+                        {
+                            RefreshPRCLabels();
+                        }
+                        RefreshPRCEntries();
                     }
                     return true;
                 }
@@ -73,7 +80,30 @@ namespace BruteForceHash.GUI.Services
             }
         }
 
-        public void LoadDiscoveryFiles()
+        private void RefreshPRCEntries()
+        {
+            _entriesPerPrc.Clear();
+            foreach (var entry in _entries.Values)
+            {
+                if (entry.PRCFiles.Count > 0)
+                {
+                    foreach (var prcFile in entry.PRCFiles)
+                    {
+                        if (_entriesPerPrc.TryGetValue(prcFile.File, out HashSet<ExportEntry>? prcEntries) && prcEntries != null)
+                        {
+                            prcEntries.Add(entry);
+                        }
+                        else
+                        {
+                            prcEntries = [entry];
+                            _entriesPerPrc.Add(prcFile.File, prcEntries);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void LoadDiscoveryFiles()
         {
             _discoveredLabels.Clear();
             LoadDiscoveryFile(DiscoverySource.ParamLabels);
@@ -110,6 +140,9 @@ namespace BruteForceHash.GUI.Services
 
         public IEnumerable<ExportEntry> GetEntriesRelatedToHash(string hash)
         {
+            if (_cachedEntriesRelatedToHashes.TryGetValue(hash, out List<ExportEntry>? exportEntries) && exportEntries != null)
+                return exportEntries;
+
             var output = new List<ExportEntry>();
             var hashEntry = GetEntry(hash);
 
@@ -137,7 +170,10 @@ namespace BruteForceHash.GUI.Services
                 }
             }
 
-            return output.Distinct();
+            output = output.Distinct().ToList();
+            _cachedEntriesRelatedToHashes.TryAdd(hash, output);
+
+            return output;
         }
 
         public IEnumerable<ExportEntry> GetUncrackedEntries()
@@ -145,9 +181,16 @@ namespace BruteForceHash.GUI.Services
             return _entries.Values.Where(p => !_labels.ContainsKey(p.Hash40Hex));
         }
 
+        public IEnumerable<ExportEntry> GetEntries()
+        {
+            return _entries.Values;
+        }
+
         public IEnumerable<ExportEntry> GetEntriesByPRCFile(string file)
         {
-            return _entries.Values.Where(p => p.PRCFiles.Any(p2 => p2.File == file));
+            if (_entriesPerPrc.TryGetValue(file, out HashSet<ExportEntry>? exportEntries) && exportEntries != null)
+                return exportEntries;
+            return new List<ExportEntry>();
         }
 
         public string? GetLabel(string hash40)
@@ -175,6 +218,8 @@ namespace BruteForceHash.GUI.Services
 
             dictDiscovery[hash40] = label;
             _labels[hash40] = label;
+            prcEditor.MainWindow.HashToStringLabels[ulong.Parse(hash40[2..], NumberStyles.HexNumber)] = label;
+            prcEditor.MainWindow.StringToHashLabels[label] = ulong.Parse(hash40[2..], NumberStyles.HexNumber);
             return SaveDiscoveryFile(source);
         }
 

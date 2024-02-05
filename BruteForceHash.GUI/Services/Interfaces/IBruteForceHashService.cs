@@ -11,5 +11,6 @@ namespace BruteForceHash.GUI.Services.Interfaces
         bool StartProcess(HbtFile hbtFile, bool useHashCat);
 
         IEnumerable<string> GenerateResearchDictionary(ExportEntry? hashEntry, bool forceRefresh = false);
+        void WipeResearchDictionaryCache();
     }
 }

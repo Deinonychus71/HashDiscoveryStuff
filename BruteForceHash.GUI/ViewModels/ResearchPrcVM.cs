@@ -16,7 +16,6 @@ namespace BruteForceHash.GUI.ViewModels
     {
         #region Members
         private readonly IConfigurationService _configurationService;
-        private string? _loadedPrcFile;
         private ExportPRCFileEntry? _selectedPrcFileEntry;
         private ParamControl? _prcFile;
         private Dictionary<string, ParamControl> _cachedPrcFiles;
@@ -60,7 +59,6 @@ namespace BruteForceHash.GUI.ViewModels
 
         public void ClearData()
         {
-            _loadedPrcFile = null;
             SelectedPrcFileEntry = null;
             PRCFile = null;
             PrcFileEntries.Clear();
@@ -79,7 +77,7 @@ namespace BruteForceHash.GUI.ViewModels
 
         public void LoadPRCFile(string? prcFile)
         {
-            if (prcFile != null && _loadedPrcFile != prcFile)
+            if (prcFile != null)
             {
                 var file = prcFile;
                 if (file.StartsWith('/'))
@@ -103,7 +101,6 @@ namespace BruteForceHash.GUI.ViewModels
                             PRCFile = paramControl;
                         });
                     }
-                    _loadedPrcFile = prcFile;
                 }
             }
         }

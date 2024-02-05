@@ -8,15 +8,14 @@ using System.Text.RegularExpressions;
 
 namespace NROCrackDictionaryGen
 {
-    class Program
+    partial class Program
     {
-        private readonly static char[] _trimEnd = new[] { ',', '\"', '\'', ';', ')' };
-        private readonly static char[] _trimEndPlusDigits = new[] { ',', '\"', '\'', ';', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-        private readonly static char[] _trimStart = new[] { '*', '(', '\"', '\'', ',' };
-        private readonly static string[] _validOperatorsHash = new[] { "==", "!=" };
-        private readonly static string[] _filterPreviousWord = new[] { "LAB", "FUN", "DAT", "joined" };
-        private readonly static string[] _filterFinalWord = new[] { "aaa", "bbb", "ccc", "ddd", "eee", "fff", "ppp" };
-        private readonly static Regex _regOnlyDigits = new Regex(@"^[0-9]+$", RegexOptions.Compiled);
+
+        private readonly static char[] _trimEnd = [',', '\"', '\'', ';', ')'];
+        private readonly static char[] _trimEndPlusDigits = [',', '\"', '\'', ';', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        private readonly static char[] _trimStart = ['*', '(', '\"', '\'', ','];
+        private readonly static string[] _filterPreviousWord = ["LAB", "FUN", "DAT", "joined"];
+        private readonly static string[] _filterFinalWord = ["aaa", "bbb", "ccc", "ddd", "eee", "fff", "ppp"];
 
         static void Main(string[] args)
         {

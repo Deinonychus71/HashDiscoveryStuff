@@ -131,6 +131,7 @@
                         <ComboBox Width="Auto" ItemsSource="{Binding HashWordsList, Mode=OneTime}" SelectedItem="{Binding HbtFileDictionary.MainCustomWordsMinimumInHash, Mode=TwoWay}"/>
                     </StackPanel>
                     <Label Content="words in hash"/>
+                    <CheckBox Margin="0,5,0,0" Content="Skip Digits" IsChecked="{Binding HbtFileDictionary.MainCustomWordsMinimumInHashSkipDigits, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
                     <CheckBox Margin="0,5,0,0" Content="Add Typos" IsChecked="{Binding HbtFileDictionary.MainCustomWordsMinimumInHashUseTypos, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
                 </StackPanel>
                 <Button Grid.Row="11" Grid.Column="0" Content="Copy from Main" Height="30" Margin="10,0" Command="{Binding CopyCustomWordsFromViewCommand, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}" Visibility="{c:Binding !IsMainDictionary, FalseToVisibility=Hidden}"/>

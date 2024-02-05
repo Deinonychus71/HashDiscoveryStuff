@@ -5,6 +5,7 @@ using BruteForceHash.Helpers;
 using CommunityToolkit.Mvvm.Input;
 using HashCommon;
 using HashRelationalResearch.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace BruteForceHash.GUI.ViewModels
@@ -242,6 +243,7 @@ namespace BruteForceHash.GUI.ViewModels
                 if (_hashDBService.AddOrUpdateLabel(_hbtFile.HexValue, _hbtFile.HexLabel))
                 {
                     _dialogService.ShowMessage($"Successfully saved '{_hbtFile.HexValue},{_hbtFile.HexLabel}'.");
+                    _bruteForceHashService.WipeResearchDictionaryCache();
                     _hashLabelSaved = _hbtFile.HexLabel;
                     _nroVM.RefreshCurrentFunction();
                     _hashesVM.RefreshList();
@@ -263,8 +265,15 @@ namespace BruteForceHash.GUI.ViewModels
 
         private void StartBruteforce(bool useHashcat)
         {
-            if (_hbtFile != null)
-                _bruteForceHashService.StartProcess(_hbtFile, useHashcat);
+            try
+            {
+                if (_hbtFile != null)
+                    _bruteForceHashService.StartProcess(_hbtFile, useHashcat);
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessage(e.Message, true);
+            }
         }
 
         private void QuickLoad()

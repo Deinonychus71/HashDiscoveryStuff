@@ -44,8 +44,9 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Label, Mode=OneTime}" IsReadOnly="True" Header="Label" />
                 <DataGridTextColumn Binding="{Binding Type, Mode=OneTime}" IsReadOnly="True" Header="Type" />
-                <DataGridTextColumn Binding="{Binding CFile, Mode=OneTime}" Width="*" IsReadOnly="True" Header="CFile" />
-                <DataGridTextColumn Binding="{Binding PRCFile, Mode=OneTime}" Width="*"  IsReadOnly="True" Header="PRCFile" />
+                <DataGridTextColumn Binding="{Binding CFile, Mode=OneTime}" Width="*" IsReadOnly="True" Header="C File" />
+                <DataGridTextColumn Binding="{Binding PRCFile, Mode=OneTime}" Width="*"  IsReadOnly="True" Header="PRC File" />
+                <DataGridTextColumn Binding="{Binding PRCPath, Mode=OneTime}" Width="*"  IsReadOnly="True" Header="PRC Path" />
                 <DataGridCheckBoxColumn IsReadOnly="True" Binding="{Binding IsSuspicious, Mode=OneTime}" Header="Suspicious" />
                 <DataGridTemplateColumn  Header="Blacklist">
                     <DataGridTemplateColumn.CellTemplate>

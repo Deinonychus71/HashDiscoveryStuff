@@ -126,7 +126,13 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     if (File.Exists(dictPath))
                     {
-                        allCustomWords.AddRange(File.ReadAllLines(dictPath));
+                        var wordsToAdd = File.ReadAllLines(dictPath);
+                        foreach (var wordToAdd in wordsToAdd)
+                        {
+                            if (_options.DictionariesCustomMinWordsHashSkipDigits && wordToAdd.Any(char.IsDigit))
+                                continue;
+                            allCustomWords.Add(wordToAdd);
+                        }
                     }
                 }
 

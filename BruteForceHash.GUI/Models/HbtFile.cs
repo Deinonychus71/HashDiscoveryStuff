@@ -128,6 +128,7 @@ namespace BruteForceHash.GUI.Models
         public bool MainCacheDynamicSuffix { get; set; } = false;
 
         public int MainCustomWordsMinimumInHash { get; set; } = 0;
+        public bool MainCustomWordsMinimumInHashSkipDigits { get; set; } = false;
         public bool MainCustomWordsMinimumInHashUseTypos { get; set; } = false;
     }
 

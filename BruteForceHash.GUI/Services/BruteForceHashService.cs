@@ -140,6 +140,7 @@ namespace BruteForceHash.GUI.Services
                 options.DictionariesCustomAddTypos = hbtFile.DictionaryAttack.DictionaryMain.CustomWordsAddTypos;
                 options.DictionariesCustomMinWordsHash = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHash;
                 options.DictionariesCustomMinWordsHashUseTypos = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHashUseTypos;
+                options.DictionariesCustomMinWordsHashSkipDigits = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHashSkipDigits;
 
                 //First Dictionary
                 options.DictionariesFirstWord = GetAllDictionaries(hbtFile, hbtFile.DictionaryAttack.DictionaryFirstWord, researchDictionaryContent);
@@ -336,6 +337,11 @@ namespace BruteForceHash.GUI.Services
                 return words;
             }
             return new List<string>();
+        }
+
+        public void WipeResearchDictionaryCache()
+        {
+            _cachedSearchDictionaries.Clear();
         }
 
         private static IEnumerable<string> GenerateCustomDictionary(List<string> words)

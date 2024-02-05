@@ -7,6 +7,7 @@ namespace BruteForceHash.GUI.Services.Interfaces
     {
         bool LoadHashDBFile(string filename);
         ExportEntry? GetEntry(string hash40);
+        IEnumerable<ExportEntry> GetEntries();
         IEnumerable<ExportEntry> GetEntriesRelatedToHash(string hash);
         void RemoveEntry(string hash40);
         ExportFunctionEntry? GetFunction(string file, int functionId);

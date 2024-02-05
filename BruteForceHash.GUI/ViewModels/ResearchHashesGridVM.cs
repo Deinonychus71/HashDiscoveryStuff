@@ -1,10 +1,11 @@
-﻿using BruteForceHash.GUI.Models;
+﻿using BruteForceHash.GUI.Helpers;
+using BruteForceHash.GUI.Models;
 using BruteForceHash.GUI.Services.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 using HashRelationalResearch.Models;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BruteForceHash.GUI.ViewModels
 {
@@ -30,7 +31,7 @@ namespace BruteForceHash.GUI.ViewModels
         #endregion
 
         #region Properties
-        public ObservableCollection<ResearchHashItemView> Items { get; private set; } = [];
+        public WpfObservableRangeCollection<ResearchHashItemView> Items { get; private set; } = [];
 
         public string HashesInfo
         {
@@ -107,6 +108,13 @@ namespace BruteForceHash.GUI.ViewModels
             _currentHash40 = hash40;
             if (ShouldOnlyShowRelated)
                 RefreshList();
+            else
+            {
+                Task.Run(() =>
+                {
+                    _hashDBService.GetEntriesRelatedToHash(hash40);
+                });
+            }
         }
 
         public void RefreshList()
@@ -133,29 +141,45 @@ namespace BruteForceHash.GUI.ViewModels
                 entries = _hashDBService.GetUncrackedEntries();
 
             _knownHashes = 0;
+            var items = new List<ResearchHashItemView>();
             foreach (var entry in entries)
             {
                 if (!_cacheShouldShowSuspicious && entry.SuspiciousHex)
                     continue;
 
-                if (_cacheSourceType == "prc" && entry.PRCFiles.Count == 0)
+                if (entry.PRCFiles.Count == 0 && _cacheSourceType == "prc")
                     continue;
 
-                if (_cacheSourceType == "nro" && entry.CFiles.Count == 0)
+                if (entry.CFiles.Count == 0 && _cacheSourceType == "nro")
                     continue;
 
-                if (_cacheSourceType == "prc_nro" && (entry.CFiles.Count == 0 || entry.PRCFiles.Count == 0))
+                if ((entry.CFiles.Count == 0 || entry.PRCFiles.Count == 0) && _cacheSourceType == "prc_nro")
                     continue;
 
+                string? prcType = null;
+                string? prcPath = null;
+                string? prcFileName = null;
                 var prcFile = entry.PRCFiles.FirstOrDefault();
-                var type = prcFile?.Type;
-                var prcFileName = prcFile?.File;
-                if (entry.PRCFiles.Count > 1)
-                    prcFileName += $" ({entry.PRCFiles.Count} files)";
+                if (prcFile != null)
+                {
+                    prcType = prcFile.Type;
+                    prcPath = prcFile.Path;
+                    if (entry.PRCFiles.Count > 1)
+                        prcFileName += $"{prcFile.File} ({entry.PRCFiles.Count} files)";
+                    else
+                        prcFileName = prcFile.File;
+                }
 
-                var cFileName = entry.CFiles.FirstOrDefault()?.File;
-                if (entry.CFiles.Count > 1)
-                    cFileName += $" ({entry.CFiles.Count} files)";
+                string? cFileName = null;
+                var cFile = entry.CFiles.FirstOrDefault();
+                if (cFile != null)
+                {
+                    var cFileLine = cFile.Instances.FirstOrDefault()?.FileLine;
+                    if (entry.CFiles.Count > 1)
+                        cFileName = $"{cFile.File}:{cFileLine} ({entry.CFiles.Count} files)";
+                    else
+                        cFileName = $"{cFile.File}:{cFileLine}";
+                }
 
                 string? label = null;
                 if (_cacheShouldOnlyShowRelated)
@@ -165,8 +189,10 @@ namespace BruteForceHash.GUI.ViewModels
                         _knownHashes++;
                 }
 
-                Items.Add(new ResearchHashItemView(entry.Hash40Hex, label, type, cFileName, prcFileName, entry.SuspiciousHex));
+                items.Add(new ResearchHashItemView(entry.Hash40Hex, label, prcType, cFileName, prcFileName, prcPath, entry.SuspiciousHex));
             }
+
+            Items.AddRange(items);
 
             UpdateHashesInfo();
         }
