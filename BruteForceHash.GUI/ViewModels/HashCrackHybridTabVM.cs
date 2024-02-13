@@ -108,6 +108,7 @@ namespace BruteForceHash.GUI.ViewModels
         public ListItem<int>[] BruteforceMaxCharsList { get; set; } = ListGenerators.GetIntegerListWithLabel("chars", 1, 11);
         public ListItem<int>[] WordsInHashList { get; set; } = ListGenerators.GetIntegerListWithLabel("words", 1, 4);
         public ListItem<int>[] MinCharHashcatThresholdList { get; set; } = ListGenerators.GetIntegerListWithLabel("min chars.", 0, 9);
+        public ListItem<int>[] MinWordSizeList { get; private set; } = ListGenerators.GetIntegerListWithLabel("characters", 1, 10);
 
         public IRelayCommand CharsetItemCheckedCommand { get; private set; }
         public IRelayCommand ValidCharsChanged { get; private set; }

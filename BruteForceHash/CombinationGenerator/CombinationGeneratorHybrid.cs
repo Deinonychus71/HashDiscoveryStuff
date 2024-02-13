@@ -44,9 +44,9 @@ namespace BruteForceHash.CombinationGenerator
             return CompileCombination(combinationPattern);
         }
 
-        public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
+        public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel, int combinationMinSizeWords = 1)
         {
-            IEnumerable<List<string>> combinationsCustom = GenerateWordCombinations(stringLength, customWordsDictionariesPaths, combinationDeepLevel);
+            IEnumerable<List<string>> combinationsCustom = GenerateWordCombinations(stringLength, customWordsDictionariesPaths, combinationDeepLevel, combinationMinSizeWords);
             var hasCombinationsCustom = combinationsCustom.Any();
 
             //Sorting

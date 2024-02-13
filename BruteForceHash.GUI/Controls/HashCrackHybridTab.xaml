@@ -92,7 +92,9 @@
                         <RowDefinition Height="40"></RowDefinition>
                         <RowDefinition Height="25"></RowDefinition>
                         <RowDefinition Height="85"></RowDefinition>
-                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="75"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="125"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="75"></RowDefinition>
                         <RowDefinition Height="30"></RowDefinition>
@@ -127,10 +129,22 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Vertical" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}">
+                        <Label Content="Min size:"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="At least"/>
+                            <ComboBox Width="75" ItemsSource="{Binding MinWordSizeList, Mode=OneTime}" SelectedValue="{Binding HbtFileHybridAttack.WordsInHashMinSize, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
+                        </StackPanel>
+                        <Label Content="Research Min size:" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseResearchWords, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseResearchWords, Mode=OneWay}">
+                            <Label Content="At least"/>
+                            <ComboBox Width="75" ItemsSource="{Binding MinWordSizeList, Mode=OneTime}" SelectedValue="{Binding HbtFileHybridAttack.Dictionary.ResearchWordsMinSize, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Row="7" Grid.Column="0" Orientation="Vertical" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}">
                         <Label Content="Hashcat Threshold:"/>
                         <ComboBox Width="Auto" ItemsSource="{Binding MinCharHashcatThresholdList, Mode=OneTime}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding HbtFileHybridAttack.MinCharHashcatThreshold, Mode=TwoWay}"/>
                     </StackPanel>
-                    <CheckBox Grid.Row="6" Grid.Column="0" Content="Bypass Size Filters" IsChecked="{Binding HbtFileHybridAttack.IgnoreSizeFilters, Mode=TwoWay}" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}"/>
+                    <CheckBox Grid.Row="8" Grid.Column="0" Content="Bypass Size Filters" IsChecked="{Binding HbtFileHybridAttack.IgnoreSizeFilters, Mode=TwoWay}" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}"/>
                     <!-- Right Panel -->
                     <TextBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="12" Height="Auto" Width="Auto" VerticalContentAlignment="Top" VerticalAlignment="Stretch" AcceptsReturn="True" Text="{Binding MainDictWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HbtFileHybridAttack.Dictionary.UseDictionary, Mode=OneWay}"/>
                 </Grid>

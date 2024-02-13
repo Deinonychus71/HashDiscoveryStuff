@@ -61,7 +61,7 @@ namespace BruteForceHash.Methods
             //Generate combinations
             _combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
             _maxWordLength = Math.Min(options.MaxWordLength, _stringLength);
-            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize, _options.DictionariesCustom, _options.DictionariesCustomMinWordsHash);
+            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize, _options.DictionariesCustom, _options.DictionariesCustomMinWordsHash, _options.DictionariesCustomMinWordsHashWordSize);
 
             //Filter combinations
             var isFirstFilterFrom = !string.IsNullOrEmpty(options.DictionaryFilterFirstFrom);

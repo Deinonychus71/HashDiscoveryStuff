@@ -5,6 +5,7 @@ using BruteForceHash.Helpers;
 using CommandLine;
 using HashCommon;
 using HashRelationalResearch.Models;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -21,7 +22,7 @@ namespace BruteForceHash.GUI.Services
         private readonly IConfigurationService _configurationService;
         private readonly IHashDBService _hashDBService;
         private readonly IHbtFileService _hbtFileService;
-        private readonly Dictionary<string, List<string>> _cachedSearchDictionaries = new Dictionary<string, List<string>>();
+        private readonly ConcurrentDictionary<string, List<string>> _cachedSearchDictionaries = [];
 
         public string LastCommand { get; private set; } = string.Empty;
 
@@ -139,6 +140,7 @@ namespace BruteForceHash.GUI.Services
                 options.DictionariesCustomForceLowercase = hbtFile.DictionaryAttack.DictionaryMain.CustomWordsForceLowercase;
                 options.DictionariesCustomAddTypos = hbtFile.DictionaryAttack.DictionaryMain.CustomWordsAddTypos;
                 options.DictionariesCustomMinWordsHash = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHash;
+                options.DictionariesCustomMinWordsHashWordSize = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsWordsInHashMinSize;
                 options.DictionariesCustomMinWordsHashUseTypos = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHashUseTypos;
                 options.DictionariesCustomMinWordsHashSkipDigits = hbtFile.DictionaryAttack.DictionaryMain.MainCustomWordsMinimumInHashSkipDigits;
 
@@ -198,6 +200,7 @@ namespace BruteForceHash.GUI.Services
                 options.ValidStartingChars = Charsets.GetAllValidChars(hbtFile.HybridAttack.ValidStartingChars, selectedCharsets);
 
                 options.HybridWordsHash = hbtFile.HybridAttack.WordsInHash;
+                options.HybridWordsHashWordSize = hbtFile.HybridAttack.WordsInHashMinSize;
                 options.HybridMinCharacters = hbtFile.HybridAttack.BruteforceMinChars;
                 options.HybridMaxCharacters = hbtFile.HybridAttack.BruteforceMaxChars;
                 options.HybridMinCharHashcatThreshold = hbtFile.HybridAttack.MinCharHashcatThreshold;
@@ -274,7 +277,12 @@ namespace BruteForceHash.GUI.Services
                 dictionaries.AddRange(GenerateCustomDictionary(dictionary.CustomWords));
 
                 if (dictionary.CustomWordsUseResearchWords)
-                    dictionaries.AddRange(researchDictionary);
+                {
+                    if(hbtFile.DictionaryAttack.DictionaryMain.CustomWordsResearchWordsMinSize > 1)
+                        dictionaries.AddRange(researchDictionary.Where(p => p.Length >= hbtFile.DictionaryAttack.DictionaryMain.CustomWordsResearchWordsMinSize));
+                    else
+                        dictionaries.AddRange(researchDictionary);
+                }
 
                 return SaveCustomDictionary(hbtFile, dictName, dictionaries);
             }
@@ -288,7 +296,12 @@ namespace BruteForceHash.GUI.Services
                 var dictionaries = new List<string>();
                 dictionaries.AddRange(GenerateCustomDictionary(dictionary.Words));
                 if (dictionary.UseResearchWords)
-                    dictionaries.AddRange(researchDictionary);
+                {
+                    if (hbtFile.HybridAttack.Dictionary.ResearchWordsMinSize > 1)
+                        dictionaries.AddRange(researchDictionary.Where(p => p.Length >= hbtFile.HybridAttack.Dictionary.ResearchWordsMinSize));
+                    else
+                        dictionaries.AddRange(researchDictionary);
+                }
 
                 return SaveCustomDictionary(hbtFile, dictName, dictionaries);
             }

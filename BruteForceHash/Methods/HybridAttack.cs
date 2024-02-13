@@ -59,7 +59,7 @@ namespace BruteForceHash
 
             //Generate combinations
             _combinationSize = _stringLength - Encoding.UTF8.GetByteCount(options.Prefix) - Encoding.UTF8.GetByteCount(options.Suffix);
-            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize, $"{_options.HybridDictionary};{_options.HybridDictionaryFirstWord};{_options.HybridDictionaryLastWord}", _options.HybridWordsHash).ToList();
+            _combinationPatterns = _combinationGeneration.GenerateCombinations(_combinationSize, $"{_options.HybridDictionary};{_options.HybridDictionaryFirstWord};{_options.HybridDictionaryLastWord}", _options.HybridWordsHash, _options.HybridWordsHashWordSize).ToList();
 
             if (!options.HybridIgnoreSizeFilters)
             {

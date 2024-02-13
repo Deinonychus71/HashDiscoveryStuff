@@ -115,6 +115,7 @@ namespace BruteForceHash.GUI.Models
         public bool CustomWordsSkipSpecials { get; set; } = true;
         public bool CustomWordsForceLowercase { get; set; } = true;
         public bool CustomWordsUseResearchWords { get; set; } = false;
+        public int CustomWordsResearchWordsMinSize { get; set; } = 3;
         public bool CustomWordsAddTypos { get; set; } = false;
 
         public bool UseExcludeWords { get; set; } = false;
@@ -128,6 +129,7 @@ namespace BruteForceHash.GUI.Models
         public bool MainCacheDynamicSuffix { get; set; } = false;
 
         public int MainCustomWordsMinimumInHash { get; set; } = 0;
+        public int MainCustomWordsWordsInHashMinSize { get; set; } = 1;
         public bool MainCustomWordsMinimumInHashSkipDigits { get; set; } = false;
         public bool MainCustomWordsMinimumInHashUseTypos { get; set; } = false;
     }
@@ -152,6 +154,7 @@ namespace BruteForceHash.GUI.Models
         public string ValidStartingChars { get; set; } = "etainoshrdlucmfwygpbvkqjxz";
         public List<string> Charsets { get; set; } = [];
         public int WordsInHash { get; set; } = 1;
+        public int WordsInHashMinSize { get; set; } = 1;
         public int MinCharHashcatThreshold { get; set; } = 7;
         public HbtFileHybridDictionary Dictionary { get; set; } = new()
         {
@@ -166,6 +169,7 @@ namespace BruteForceHash.GUI.Models
     {
         public bool UseDictionary { get; set; } = false;
         public bool UseResearchWords { get; set; } = true;
+        public int ResearchWordsMinSize { get; set; } = 3;
         public List<string> Words { get; set; } = [];
     }
 }

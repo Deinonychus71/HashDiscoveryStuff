@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using HashRelationalResearch.Models;
 using paracobNET;
 using prcEditor.Windows;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace BruteForceHash.GUI.ViewModels
         private readonly IConfigurationService _configurationService;
         private ExportPRCFileEntry? _selectedPrcFileEntry;
         private ParamControl? _prcFile;
-        private Dictionary<string, ParamControl> _cachedPrcFiles;
+        private ConcurrentDictionary<string, ParamControl> _cachedPrcFiles;
         #endregion
 
         #region Properties
@@ -50,7 +51,7 @@ namespace BruteForceHash.GUI.ViewModels
 
         public ResearchPrcVM(IConfigurationService configurationService)
         {
-            _cachedPrcFiles = new Dictionary<string, ParamControl>();
+            _cachedPrcFiles = new ConcurrentDictionary<string, ParamControl>();
             _configurationService = configurationService;
             PrcFileEntries = [];
             PrcFileSelected = new RelayCommand<string?>(LoadPRCFile);
@@ -97,7 +98,7 @@ namespace BruteForceHash.GUI.ViewModels
                             t.Open(filePath);
                             var paramControl = new ParamControl(t.Root);
                             paramControl.Loaded += ExpandPRCFile;
-                            _cachedPrcFiles.Add(filePath, paramControl);
+                            _cachedPrcFiles.TryAdd(filePath, paramControl);
                             PRCFile = paramControl;
                         });
                     }

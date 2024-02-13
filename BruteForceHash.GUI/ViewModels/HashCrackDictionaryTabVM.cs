@@ -83,6 +83,7 @@ namespace BruteForceHash.GUI.ViewModels
         }
 
         public int[] HashWordsList { get; private set; } = ListGenerators.GetIntegerList(0, 4);
+        public ListItem<int>[] MinWordSizeList { get; private set; } = ListGenerators.GetIntegerListWithLabel("characters", 1, 10);
 
         public IRelayCommand UnselectAllCommand { get; private set; }
         public IRelayCommand CopyTreeViewFromViewCommand { get; private set; }

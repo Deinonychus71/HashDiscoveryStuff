@@ -104,6 +104,8 @@
                     <RowDefinition Height="25"></RowDefinition>
                     <RowDefinition Height="25"></RowDefinition>
                     <RowDefinition Height="125"></RowDefinition>
+                    <RowDefinition Height="25"></RowDefinition>
+                    <RowDefinition Height="150"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
@@ -130,11 +132,23 @@
                         <Label Content="At least"/>
                         <ComboBox Width="Auto" ItemsSource="{Binding HashWordsList, Mode=OneTime}" SelectedItem="{Binding HbtFileDictionary.MainCustomWordsMinimumInHash, Mode=TwoWay}"/>
                     </StackPanel>
-                    <Label Content="words in hash"/>
+                    <Label Content="words in hash" Margin="0,0,0,0"/>
                     <CheckBox Margin="0,5,0,0" Content="Skip Digits" IsChecked="{Binding HbtFileDictionary.MainCustomWordsMinimumInHashSkipDigits, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
                     <CheckBox Margin="0,5,0,0" Content="Add Typos" IsChecked="{Binding HbtFileDictionary.MainCustomWordsMinimumInHashUseTypos, Mode=TwoWay}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
                 </StackPanel>
-                <Button Grid.Row="11" Grid.Column="0" Content="Copy from Main" Height="30" Margin="10,0" Command="{Binding CopyCustomWordsFromViewCommand, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}" Visibility="{c:Binding !IsMainDictionary, FalseToVisibility=Hidden}"/>
+                <StackPanel Grid.Row="9" Grid.Column="0" Orientation="Vertical" IsEnabled="{c:Binding 'HbtFileDictionary.UseCustomWords and HbtFileDictionary.MainCustomWordsMinimumInHash > 0'}" Visibility="{Binding IsMainDictionary, Converter={StaticResource Bool2Visibility}}">
+                    <Label Content="Min size:"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="At least"/>
+                        <ComboBox Width="75" ItemsSource="{Binding MinWordSizeList, Mode=OneTime}" SelectedValue="{Binding HbtFileDictionary.MainCustomWordsWordsInHashMinSize, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
+                    </StackPanel>
+                    <Label Content="Research Min size:" IsEnabled="{Binding HbtFileDictionary.CustomWordsUseResearchWords, Mode=OneWay}"/>
+                    <StackPanel Orientation="Horizontal" IsEnabled="{Binding HbtFileDictionary.CustomWordsUseResearchWords, Mode=OneWay}">
+                        <Label Content="At least"/>
+                        <ComboBox Width="75" ItemsSource="{Binding MinWordSizeList, Mode=OneTime}" SelectedValue="{Binding HbtFileDictionary.CustomWordsResearchWordsMinSize, Mode=TwoWay}" DisplayMemberPath="Label" SelectedValuePath="Value"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button Grid.Row="13" Grid.Column="0" Content="Copy from Main" Height="30" Margin="10,0" Command="{Binding CopyCustomWordsFromViewCommand, Mode=OneTime}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}" Visibility="{c:Binding !IsMainDictionary, FalseToVisibility=Hidden}"/>
                 <!-- Right Panel -->
                 <TextBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="12" Height="Auto" Width="Auto" VerticalContentAlignment="Top" VerticalAlignment="Stretch" AcceptsReturn="True" Text="{Binding CustomWords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HbtFileDictionary.UseCustomWords, Mode=OneWay}"/>
             </Grid>

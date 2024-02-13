@@ -140,6 +140,8 @@ namespace BruteForceHash
         public bool DictionariesCustomAddTypos { get; set; }
         [Option('D', "dictionaries_custom_min_words_hash", Required = false, Default = 0, HelpText = "Force at least x words from this dictionary to be used (for custom dictionary attack).")]
         public int DictionariesCustomMinWordsHash { get; set; }
+        [Option('D', "dictionaries_custom_min_words_hash_word_size", Required = false, Default = 1, HelpText = "Minimum word size of the words forced to appear in dictionary (for custom dictionary attack).")]
+        public int DictionariesCustomMinWordsHashWordSize { get; set; }
         [Option('D', "dictionaries_custom_min_words_hash_use_typos", Required = false, Default = false, HelpText = "Force at least x words from this dictionary to be used - Use Typos (for custom dictionary attack).")]
         public bool DictionariesCustomMinWordsHashUseTypos { get; set; }
         [Option('D', "dictionaries_custom_min_words_hash_skip_digits", Required = false, Default = false, HelpText = "Force at least x words from this dictionary to be used - Skip Digits (for custom dictionary attack).")]
@@ -245,6 +247,8 @@ namespace BruteForceHash
         public int HybridMaxCharacters { get; set; }
         [Option('D', "hybrid_words_hash", Required = false, Default = 0, HelpText = "Use x words to use in addition to character bruteforcing (for hybrid attack).")]
         public int HybridWordsHash { get; set; }
+        [Option('D', "hybrid_words_hash_word_size", Required = false, Default = 1, HelpText = "Minimum word size of the characters to use (for hybrid attack).")]
+        public int HybridWordsHashWordSize { get; set; }
         [Option('D', "hybrid_dictionary", Required = false, Default = null, HelpText = "Path of a dictionary for this hash (for hybrid attack). First and Last words can be overriden by other parameters.")]
         public string HybridDictionary { get; set; }
         [Option('D', "hybrid_dictionary_first_word", Required = false, Default = null, HelpText = "Path of a dictionary for this hash for first word (for hybrid attack).")]

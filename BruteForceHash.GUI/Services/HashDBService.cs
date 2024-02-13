@@ -4,6 +4,7 @@ using HashCommon;
 using HashRelationalResearch.Models;
 using ProtoBuf;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -22,7 +23,7 @@ namespace BruteForceHash.GUI.Services
         private Dictionary<string, List<ExportFunctionEntry>> _functions = [];
         private Dictionary<string, string> _labels = [];
         private readonly Dictionary<string, HashSet<ExportEntry>> _entriesPerPrc = [];
-        private readonly Dictionary<string, List<ExportEntry>> _cachedEntriesRelatedToHashes = [];
+        private readonly ConcurrentDictionary<string, List<ExportEntry>> _cachedEntriesRelatedToHashes = [];
 
         public HashDBService(IConfigurationService configurationService)
         {

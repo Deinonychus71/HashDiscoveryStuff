@@ -24,7 +24,7 @@ namespace BruteForceHash.CombinationGenerator
 
         public abstract byte[] CompileCombinationJoin(string combinationPattern);
 
-        public abstract IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel);
+        public abstract IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel, int combinationMinSizeWords = 1);
 
         public IEnumerable<byte[]> CompileCombinations(IEnumerable<string> combinationsPattern)
         {
@@ -114,7 +114,7 @@ namespace BruteForceHash.CombinationGenerator
             return (from KeyValuePair in KeyValueList select KeyValuePair.Key).ToList();
         }
 
-        protected List<List<string>> GenerateWordCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel)
+        protected List<List<string>> GenerateWordCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel, int combinationMinSizeWords = 1)
         {
             //Get combinations of custom words
             var combinationsCustom = new List<List<string>>();
@@ -126,7 +126,7 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     if (File.Exists(dictPath))
                     {
-                        var wordsToAdd = File.ReadAllLines(dictPath);
+                        var wordsToAdd = File.ReadAllLines(dictPath).Where(p => p.Length >= combinationMinSizeWords);
                         foreach (var wordToAdd in wordsToAdd)
                         {
                             if (_options.DictionariesCustomMinWordsHashSkipDigits && wordToAdd.Any(char.IsDigit))

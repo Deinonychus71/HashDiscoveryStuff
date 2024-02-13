@@ -46,6 +46,18 @@ namespace BruteForceHash.GUI.Services
         {
             try
             {
+                hbtFile.DictionaryAttack.DictionaryMain.Words = [.. hbtFile.DictionaryAttack.DictionaryMain.Words.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryFirstWord.Words = [.. hbtFile.DictionaryAttack.DictionaryFirstWord.Words.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryLastWord.Words = [.. hbtFile.DictionaryAttack.DictionaryLastWord.Words.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryMain.CustomWords = [.. hbtFile.DictionaryAttack.DictionaryMain.CustomWords.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryFirstWord.CustomWords = [.. hbtFile.DictionaryAttack.DictionaryFirstWord.CustomWords.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryLastWord.CustomWords = [.. hbtFile.DictionaryAttack.DictionaryLastWord.CustomWords.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryMain.ExcludeWords = [.. hbtFile.DictionaryAttack.DictionaryMain.ExcludeWords.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryFirstWord.ExcludeWords = [.. hbtFile.DictionaryAttack.DictionaryFirstWord.ExcludeWords.Distinct().OrderBy(p => p)];
+                hbtFile.DictionaryAttack.DictionaryLastWord.ExcludeWords = [.. hbtFile.DictionaryAttack.DictionaryLastWord.ExcludeWords.Distinct().OrderBy(p => p)];
+                hbtFile.HybridAttack.Dictionary.Words = [.. hbtFile.HybridAttack.Dictionary.Words.Distinct().OrderBy(p => p)];
+                hbtFile.HybridAttack.DictionaryFirstWord.Words = [.. hbtFile.HybridAttack.DictionaryFirstWord.Words.Distinct().OrderBy(p => p)];
+                hbtFile.HybridAttack.DictionaryLastWord.Words = [.. hbtFile.HybridAttack.DictionaryLastWord.Words.Distinct().OrderBy(p => p)];
                 var directory = Path.GetDirectoryName(filePath);
                 if (!Directory.Exists(directory) && !string.IsNullOrEmpty(directory))
                     Directory.CreateDirectory(directory);
