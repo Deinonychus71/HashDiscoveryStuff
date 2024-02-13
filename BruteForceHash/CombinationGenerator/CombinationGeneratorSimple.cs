@@ -61,7 +61,7 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     index++;
                     bytes.Add(0);
-                    var valueStr = combinationPattern.Substring(index, combinationPattern.Substring(index).IndexOf('}'));
+                    var valueStr = combinationPattern.Substring(index, combinationPattern[index..].IndexOf('}'));
                     bytes.Add(Convert.ToByte(valueStr));
                     index += valueStr.Length + 1;
                 }
@@ -71,7 +71,7 @@ namespace BruteForceHash.CombinationGenerator
                     bytes.Add(Encoding.UTF8.GetBytes(new char[] { chara })[0]);
                 }
             }
-            return bytes.ToArray();
+            return [.. bytes];
         }
 
         public override byte[] CompileCombinationJoin(string combinationPattern)
@@ -81,7 +81,7 @@ namespace BruteForceHash.CombinationGenerator
 
         public override IEnumerable<string> GenerateCombinations(int stringLength, string customWordsDictionariesPaths, int combinationDeepLevel, int combinationMinSizeWords = 1)
         {
-            List<List<string>> combinationsCustom = GenerateWordCombinations(stringLength, customWordsDictionariesPaths, combinationDeepLevel, combinationMinSizeWords);
+            var combinationsCustom = GenerateWordCombinations(stringLength, customWordsDictionariesPaths, combinationDeepLevel, combinationMinSizeWords);
             var hasCombinationsCustom = combinationsCustom.Count > 0;
 
             if (_options.Method == "hybrid")
@@ -108,10 +108,10 @@ namespace BruteForceHash.CombinationGenerator
                     inputList = OrderList(inputList, _options.OrderLongerWordsFirst);
                     break;
                 case "fewer_words_first":
-                    inputList = inputList.OrderBy(p => p.Length).ToList();
+                    inputList = [.. inputList.OrderBy(p => p.Length)];
                     break;
                 case "more_words_first":
-                    inputList = inputList.OrderByDescending(p => p.Length).ToList();
+                    inputList = [.. inputList.OrderByDescending(p => p.Length)];
                     break;
             }
 
@@ -153,12 +153,12 @@ namespace BruteForceHash.CombinationGenerator
                         continue;
                 }
 
-                List<string> nbrChar = new List<string>();
+                var nbrChar = new List<string>();
                 string reducedCombination = combination;
-                while (reducedCombination.IndexOf('}') != -1)
+                while (reducedCombination.Contains('}'))
                 {
-                    nbrChar.Add(reducedCombination.Substring(0, reducedCombination.IndexOf('}') + 1));
-                    reducedCombination = reducedCombination.Substring(reducedCombination.IndexOf('}') + 1);
+                    nbrChar.Add(reducedCombination[..(reducedCombination.IndexOf('}') + 1)]);
+                    reducedCombination = reducedCombination[(reducedCombination.IndexOf('}') + 1)..];
                 }
                 if (nbrChar.Count <= _maxWords &&
                     !excludePatterns.Any(p => combination.Contains(p)) &&
@@ -266,12 +266,7 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     var remainingLength = stringLength - i - delimiterLength;
                     var pattern = i.ToString();
-                    List<string> subCombinations;
-                    if (alreadyFoundMap.ContainsKey(remainingLength))
-                    {
-                        subCombinations = alreadyFoundMap[remainingLength];
-                    }
-                    else
+                    if (!alreadyFoundMap.TryGetValue(remainingLength, out List<string> subCombinations))
                     {
                         subCombinations = GenerateValidCombinations(remainingLength, alreadyFoundMap, delimiterLength, wordsSoFar + 1, longerWordsFirst);
                     }

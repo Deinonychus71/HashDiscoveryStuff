@@ -33,6 +33,9 @@
                 <MenuItem Header="Pick Hashcat File" Command="{Binding PickHashcatFileCommand, Mode=OneTime}" />
                 <MenuItem Header="Pick PRC Root Folder" Command="{Binding PickPRCRootFolderCommand, Mode=OneTime}" />
                 <MenuItem Header="Pick Discovery Folder" Command="{Binding PickDiscoveryFolderCommand, Mode=OneTime}" />
+                <MenuItem Header="Pick Labels Export Folder" Command="{Binding PickLabelExportFolderCommand, Mode=OneTime}" />
+                <Separator />
+                <MenuItem Header="Export Labels" Command="{Binding ExportLabelsCommand, Mode=OneTime}" />
                 <Separator />
                 <MenuItem Header="Print Latest Command" Command="{Binding PrintLastCommandCommand, Mode=OneTime}" />
             </MenuItem>

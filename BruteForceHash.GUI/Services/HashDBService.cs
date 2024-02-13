@@ -224,6 +224,68 @@ namespace BruteForceHash.GUI.Services
             return SaveDiscoveryFile(source);
         }
 
+        public bool ExportLabels()
+        {
+            try
+            {
+                var prcLabels = new Dictionary<string, string>();
+                var nroLabels = new Dictionary<string, string>();
+                var output = new Dictionary<string, Dictionary<string, string>>
+                {
+                    { "prc.prc", prcLabels },
+                    { "nro_only.c", nroLabels },
+                };
+                foreach (var label in _entries.Values)
+                {
+                    if (_labels.TryGetValue(label.Hash40Hex, out string? hexLabelValue))
+                    {
+                        if (label.PRCFiles.Count > 0)
+                        {
+                            prcLabels.Add(label.Hash40Hex, hexLabelValue);
+                        }
+                        if (label.PRCFiles.Count == 0 && label.CFiles.Count > 0)
+                        {
+                            nroLabels.Add(label.Hash40Hex, hexLabelValue);
+                        }
+                        foreach (var cFile in label.CFiles)
+                        {
+                            if (!output.TryGetValue(cFile.File, out Dictionary<string, string>? fileDictionary))
+                            {
+                                fileDictionary = [];
+                                output.Add(cFile.File, fileDictionary);
+                            }
+                            fileDictionary.Add(label.Hash40Hex, hexLabelValue);
+                        }
+                    }
+                }
+
+                var exportLabelsFolder = _configurationService.ExportLabelsPath;
+                if (!Directory.Exists(exportLabelsFolder))
+                    Directory.CreateDirectory(exportLabelsFolder);
+
+                foreach (var fileDict in output)
+                {
+                    string subFolder = string.Empty;
+                    if (fileDict.Key.Contains("lua2cpp_"))
+                        subFolder = "fighters";
+                    var file = Path.Combine(exportLabelsFolder, subFolder, $"{Path.GetFileNameWithoutExtension(fileDict.Key.Replace(".nro", string.Empty).Replace("lua2cpp_", string.Empty))}_labels.csv");
+
+                    var directory = Path.GetDirectoryName(file);
+                    if (directory != null && !Directory.Exists(directory))
+                        Directory.CreateDirectory(directory);
+
+                    File.WriteAllLines(file, fileDict.Value.OrderBy(p => p.Value).Select(p => $"{p.Key},{p.Value}"));
+                }
+
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private bool SaveDiscoveryFile(DiscoverySource source)
         {
             try

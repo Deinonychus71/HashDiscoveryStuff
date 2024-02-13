@@ -278,7 +278,7 @@ namespace BruteForceHash.GUI.Services
 
                 if (dictionary.CustomWordsUseResearchWords)
                 {
-                    if(hbtFile.DictionaryAttack.DictionaryMain.CustomWordsResearchWordsMinSize > 1)
+                    if (hbtFile.DictionaryAttack.DictionaryMain.CustomWordsResearchWordsMinSize > 1)
                         dictionaries.AddRange(researchDictionary.Where(p => p.Length >= hbtFile.DictionaryAttack.DictionaryMain.CustomWordsResearchWordsMinSize));
                     else
                         dictionaries.AddRange(researchDictionary);

@@ -50,7 +50,8 @@ namespace BruteForceHash.GUI
                 { "PrcRootPath", "root" },
                 { "HashDBFilePath", "db.bin" },
                 { "BlacklistFilePath", "blacklist.txt" },
-                { "HashcatFilePath", "Hashcat/hashcat.exe" }
+                { "HashcatFilePath", "Hashcat/hashcat.exe" },
+                { "ExportLabelsPath", "ExportedLabels" }
             };
             return output;
         }

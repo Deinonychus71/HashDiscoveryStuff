@@ -251,7 +251,7 @@ namespace BruteForceHash.CombinationGenerator
                 {
                     if (!wordCandidate.Contains(combinationMatch))
                         continue;
-                    var nbrMatch = Regex.Matches(wordCandidate, combinationRegexp, RegexOptions.Compiled).Count;
+                    var nbrMatch = Regex.Matches(wordCandidate, combinationRegexp).Count;
                     for (int i = 0; i < nbrMatch; i++)
                     {
                         tempWordCandidates.Add(ReplaceNthOccurrence(wordCandidate, combinationMatch, includeWord, i + 1));

@@ -45,10 +45,12 @@ namespace BruteForceHash.GUI.ViewModels
         public IRelayCommand PickHashcatFileCommand { get; private set; }
         public IRelayCommand PickPRCRootFolderCommand { get; private set; }
         public IRelayCommand PickDiscoveryFolderCommand { get; private set; }
+        public IRelayCommand PickLabelExportFolderCommand { get; private set; }
         public IRelayCommand SaveFileCommand { get; private set; }
         public IRelayCommand LoadFileCommand { get; private set; }
         public IRelayCommand CleanHashFolderCommand { get; private set; }
         public IRelayCommand RefreshDictionariesCommand { get; private set; }
+        public IRelayCommand ExportLabelsCommand { get; private set; }
         public IRelayCommand PrintLastCommandCommand { get; private set; }
         #endregion
 
@@ -70,11 +72,13 @@ namespace BruteForceHash.GUI.ViewModels
             PickHashDBFileCommand = new RelayCommand(PickHashDBFile);
             PickHashcatFileCommand = new RelayCommand(PickHashcatFile);
             PickPRCRootFolderCommand = new RelayCommand(PickPRCRootFolder);
+            PickLabelExportFolderCommand = new RelayCommand(PickLabelExportFolder);
             PickDiscoveryFolderCommand = new RelayCommand(PickDiscoveryFolder);
             SaveFileCommand = new RelayCommand(SaveFile);
             LoadFileCommand = new RelayCommand(LoadFile);
             CleanHashFolderCommand = new RelayCommand(CleanHashFolder);
             RefreshDictionariesCommand = new RelayCommand(RefreshDictionaries);
+            ExportLabelsCommand = new RelayCommand(ExportLabels);
             PrintLastCommandCommand = new RelayCommand(PrintLastCommand);
 
             var hbtFiles = hbtFileService.LoadHbtWorkspace();
@@ -132,6 +136,18 @@ namespace BruteForceHash.GUI.ViewModels
                 {
                     researchTabs.LoadHbtFile(researchTabs.HbtFile);
                 }
+            }
+        }
+
+        private void ExportLabels()
+        {
+            if (_hashDBService.ExportLabels())
+            {
+                _dialogService.ShowMessage("Done!");
+            }
+            else
+            {
+                _dialogService.ShowMessage("Fail!");
             }
         }
 
@@ -202,6 +218,17 @@ namespace BruteForceHash.GUI.ViewModels
                 _configurationService.PrcRootPath = folderPath;
                 _configurationService.SaveGlobalConfiguration();
                 _dialogService.ShowMessage($"PRC Root Folder loaded: '{folderPath}'");
+            }
+        }
+
+        private void PickLabelExportFolder()
+        {
+            var folderPath = _dialogService.OpenFolderDialog();
+            if (folderPath != null && _configurationService.ExportLabelsPath != folderPath)
+            {
+                _configurationService.ExportLabelsPath = folderPath;
+                _configurationService.SaveGlobalConfiguration();
+                _dialogService.ShowMessage($"Export Labels Folder loaded: '{folderPath}'");
             }
         }
 

@@ -18,6 +18,7 @@ namespace BruteForceHash.GUI.Services
         public string HashcatFilePath { get => _configuration.HashcatFilePath; set { _configuration.HashcatFilePath = value; } }
         public string PrcRootPath { get => _configuration.PrcRootPath; set { _configuration.PrcRootPath = value; } }
         public string DiscoveredHashesPath { get => _configuration.DiscoveredHashesPath; set { _configuration.DiscoveredHashesPath = value; } }
+        public string ExportLabelsPath { get => _configuration.ExportLabelsPath; set { _configuration.ExportLabelsPath = value; } }
         public string BlacklistFilePath { get => _configuration.BlacklistFilePath; set { _configuration.BlacklistFilePath = value; } }
 
         public ConfigurationService(IOptions<AppConfiguration> configuration)

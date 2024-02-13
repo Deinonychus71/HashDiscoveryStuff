@@ -16,5 +16,6 @@ namespace BruteForceHash.GUI.Services.Interfaces
         string? GetLabel(string hash40);
         IEnumerable<ExportEntry> GetUncrackedEntries();
         bool AddOrUpdateLabel(string hash40, string label);
+        bool ExportLabels();
     }
 }

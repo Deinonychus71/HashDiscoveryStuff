@@ -6,6 +6,7 @@
         string HashcatFilePath { get; set; }
         string PrcRootPath { get; set; }
         string DiscoveredHashesPath { get; set; }
+        string ExportLabelsPath { get; set; }
         string BlacklistFilePath { get; set; }
 
         string[] GetExcludePatterns();
